@@ -2,9 +2,13 @@ package com.example.demo.domain.user.student.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
+@Getter
+@Setter
 @Entity
 public class Student {
 
@@ -20,7 +24,7 @@ public class Student {
     private String student_phone;
 
     @Column(length = 22)
-    private String studnet_name;
+    private String student_name;
 
     @Column
     private String student_img;

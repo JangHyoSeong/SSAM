@@ -4,14 +4,18 @@ package com.example.demo.domain.user.teacher.entity;
 import com.example.demo.domain.classroom.school.entity.School;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
 public class Teacher {
     // Teacher Entity(Table)
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int teacher_id;
+    private int teacherId;
 
     @Column(nullable = false, length = 22)
     private String name;

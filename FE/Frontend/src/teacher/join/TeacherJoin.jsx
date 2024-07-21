@@ -13,29 +13,50 @@ const TeacherJoin = () => {
     <div className={join.joinArray}>
       <h1 className={join.joinTitle}>회원가입</h1>
       <div className={join.joinFormArray}>
-        <form action="" className={join.joinForm}>
-          <input type="text" placeholder="아이디" />
-          <input type="password" placeholder="비밀번호" />
-          <input type="email" placeholder="이메일" />
-          <input type="search" placeholder="학교 검색" />
-          <input type="text" placeholder="이름" />
-          <input type="text" placeholder="생년월일 8자리" />
-          <input type="tel" placeholder="휴대전화 번호" />
-          <div className={join.joinBtnArray}>
-            <button className={join.joinBtn}>가입</button>
-            <button className={join.joinBtn}>취소</button>
-          </div>
-        </form>
+        <div className={join.joinBackground}>
+          <form action="" className={join.joinForm}>
+            <div>
+              <img src={human} className={join.joinIcon} alt="human" />
+              <input type="text" placeholder="아이디" />
+            </div>
+            <hr />
+            <div>
+              <img src={lock} className={join.joinIcon} alt="lock" />
+              <input type="password" placeholder="비밀번호" />
+            </div>
+            <hr />
+            <div>
+              <img src={mail} className={join.joinIcon} alt="mail" />
+              <input type="email" placeholder="이메일" />
+            </div>
+            <hr />
+            <div>
+              <img src={search} className={join.joinIcon} alt="search" />
+              <input type="search" placeholder="학교 검색" />
+            </div>
+            <hr />
+            <div>
+              <img src={human} className={join.joinIcon} alt="human" />
+              <input type="text" placeholder="이름" />
+            </div>
+            <hr />
+            <div>
+              <img src={calendar} className={join.joinIcon} alt="calendar" />
+              <input type="text" placeholder="생년월일 8자리" />
+            </div>
+            <hr />
+            <div>
+              <img src={phone} className={join.joinIcon} alt="phone" />
+              <input type="tel" placeholder="휴대전화 번호" />
+            </div>
+            <div className={join.joinBtnArray}>
+              <button className={join.joinBtn}>가입</button>
+              <button className={join.joinBtn}>취소</button>
+            </div>
+          </form>
+        </div>
       </div>
-      <div className={join.joinIconArray}>
-        <img src={human} className={join.joinIcon} alt="human" />
-        <img src={lock} className={join.joinIcon} alt="lock" />
-        <img src={mail} className={join.joinIcon} alt="mail" />
-        <img src={search} className={join.joinIcon} alt="search" />
-        <img src={human} className={join.joinIcon} alt="human" />
-        <img src={calendar} className={join.joinIcon} alt="calendar" />
-        <img src={phone} className={join.joinIcon} alt="phone" />
-      </div>
+
       <img src={round1} className={join.round1} alt="round1" />
       <img src={round2} className={join.round2} alt="round2" />
       <img src={round1} className={join.round3} alt="round1" />

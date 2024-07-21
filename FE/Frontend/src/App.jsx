@@ -1,10 +1,10 @@
 import "./App.css";
 import { Routes, Route, Link } from "react-router-dom";
 import SSAM from "./assets/SSAM.png";
-import MainPage from "./mainpage/MainPage";
-import TeacherLogin from "./teacher/login/TeacherLogin";
+import MainPage from "./mainPage/MainPage";
 import TeacherJoin from "./teacher/join/TeacherJoin";
-import TeacherSubpage from "./teacher/subpage/TeacherSubpage";
+import TeacherLogin from "./teacher/login/TeacherLogin";
+import TeacherSubpage from "./teacher/subPage/TeacherSubpage";
 
 const App = () => {
   return (

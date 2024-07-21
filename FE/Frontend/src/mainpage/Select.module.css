@@ -11,6 +11,8 @@
   font-size: 300%;
   color: white;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 1);
+  position: relative;
+  z-index: 1;
 }
 
 .menuBoxArray {
@@ -70,7 +72,6 @@
   top: 15%;
   left: 12%;
   width: 15%;
-  z-index: 1;
 }
 
 .round2 {

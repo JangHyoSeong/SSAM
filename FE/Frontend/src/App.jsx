@@ -17,10 +17,7 @@ const App = () => {
       </NavLink>
       <div className="menu-array">
         <h2>학급정보</h2>
-        <NavLink 
-          to="/teacherquestion" 
-          className={({ isActive }) => (isActive ? 'active' : '')}
-        >
+        <NavLink to="/teacherquestion" className={({ isActive }) => (isActive ? 'active' : '')}>
           <h2>문의사항</h2>
         </NavLink>
         <h2>상담예약</h2>

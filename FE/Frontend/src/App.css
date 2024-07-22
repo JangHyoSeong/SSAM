@@ -14,7 +14,7 @@ body {
   position: absolute;
   top: 1%;
   left: 5%;
-  width: 10%;
+  width: 8vw;
 }
 
 .menu-array {
@@ -26,7 +26,7 @@ body {
 
 .menu-array h2 {
   margin: 0% 3%;
-  font-size: 180%;
+  font-size: 150%;
   white-space: nowrap; /* 텍스트가 한 줄로 표시되도록 설정 */
 }
 

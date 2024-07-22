@@ -2,13 +2,14 @@ import "./App.css";
 import { Routes, Route, NavLink } from "react-router-dom";
 import SSAM from "./assets/SSAM.png";
 import MainPage from "./mainPage/MainPage";
+// 선생님
 import TeacherJoin from "./teacher/join/TeacherJoin";
 import TeacherLogin from "./teacher/login/TeacherLogin";
 import TeacherUpdate from './teacher/myPage/TeacherUpdate'; 
 import TeacherSubpage from "./teacher/subPage/TeacherSubpage";
 import TeacherPasswordChange from './teacher/myPage/TeacherPasswordChange';
 import TeacherQuestion from './teacher/question/TeacherQuestion';
-
+// 학부모
 import ParentsJoin from "./parents/join/ParentsJoin";
 import ParentsLogin from "./parents/login/ParentsLogin";
 import ParentsUpdate from './parents/myPage/ParentsUpdate'; 

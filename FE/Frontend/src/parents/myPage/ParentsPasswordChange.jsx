@@ -1,13 +1,13 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import change from "./ParentsPasswordChange.module.css";
 
 const ParentsPasswordChange = () => {
   return (
     <div>
       <div className={change.menuArray}>
-        <Link to="/parentsupdate" className={change.updateMenu}>
+        <NavLink to="/parentsupdate" className={change.updateMenu}>
           <h2>회원정보 수정</h2>
-        </Link>
+        </NavLink>
         <div className={change.changeMenu}>
           <h2>비밀번호 변경</h2>
         </div>

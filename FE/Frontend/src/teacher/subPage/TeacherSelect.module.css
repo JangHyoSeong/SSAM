@@ -1,68 +1,76 @@
+/* 전체 메뉴 배열 스타일 */
 .menuArray {
-  height: 100vh;
+  height: 100vh; /* 전체 화면 높이 사용 */
 }
 
+/* 초대 코드 표시 영역 스타일 */
 .inviteCodeBox {
   position: relative;
   top: 5%;
   left: 25%;
   align-items: center;
-  width: 50vw;
-  height: 20vh;
-  background-color: #dae9ff;
-  border-radius: 25px;
-  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+  width: 50vw; /* 뷰포트 너비의 50% 사용 */
+  height: 20vh; /* 뷰포트 높이의 20% 사용 */
+  background-color: #dae9ff; /* 배경 색상 설정 */
+  border-radius: 25px; /* 모서리 둥글게 처리 */
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5); /* 그림자 효과 */
 }
 
+/* 메뉴 박스 배열 스타일 */
 .menuBoxArray {
   position: relative;
   top: 15%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-evenly; /* 요소 간에 공간 균등하게 배분 */
 }
 
+/* 개별 메뉴 박스 스타일 */
 .menuBox {
-  width: 25vw;
-  height: 45vh;
-  background-color: #5285ee;
-  border-radius: 25px;
-  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
-  text-decoration: none;
-  color: white;
+  width: 25vw; /* 뷰포트 너비의 25% 사용 */
+  height: 45vh; /* 뷰포트 높이의 45% 사용 */
+  background-color: #5285ee; /* 배경 색상 설정 */
+  border-radius: 25px; /* 모서리 둥글게 처리 */
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5); /* 그림자 효과 */
+  text-decoration: none; /* 링크 밑줄 제거 */
+  color: white; /* 글자 색상 */
 }
 
+/* 메뉴 텍스트 스타일 */
 .menuTxt {
   position: relative;
   top: 6%;
-  text-align: center;
-  font-size: 150%;
+  text-align: center; /* 텍스트 가운데 정렬 */
+  font-size: 150%; /* 글자 크기 */
 }
 
+/* 이미지 배열 스타일 */
 .imgArray {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  margin-top: 10%;
+  width: 100%; /* 전체 너비 */
+  margin-top: 10%; /* 상단 여백 */
 }
 
+/* 개별 이미지 스타일 */
 .classroomImg {
-  width: 16vw;
+  width: 16vw; /* 뷰포트 너비의 16% 사용 */
 }
 
 .questionImg {
-  width: 11vw;
+  width: 11vw; /* 뷰포트 너비의 11% 사용 */
 }
 
 .appointmentImg {
-  width: 13.5vw;
+  width: 13.5vw; /* 뷰포트 너비의 13.5% 사용 */
 }
 
+/* 스크롤 안내 텍스트 스타일 */
 .scroll {
   position: relative;
   top: 28%;
-  text-align: center;
-  font-size: 150%;
-  font-weight: bold;
-  color: black;
+  text-align: center; /* 텍스트 가운데 정렬 */
+  font-size: 150%; /* 글자 크기 증가 */
+  font-weight: bold; /* 글자 굵게 */
+  color: black; /* 글자 색상 */
 }

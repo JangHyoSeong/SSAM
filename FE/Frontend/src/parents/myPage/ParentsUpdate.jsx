@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import update from "./ParentsUpdate.module.css";
 
@@ -9,9 +9,9 @@ const ParentsUpdate = () => {
         <div className={update.updateMenu}>
           <h2>회원정보 수정</h2>
         </div>
-        <Link to="/passwordchange" className={update.changeMenu}>
+        <NavLink to="/passwordchange" className={update.changeMenu}>
           <h2>비밀번호 변경</h2>
-        </Link>
+        </NavLink>
       </div>
       <div className={update.infoArray}>
         <div className={update.infoForm}>

@@ -74,24 +74,29 @@
   margin-left: 8%; /* 좌측 마진 설정 */
 }
 
-/* 배경 장식 원의 스타일 */
+.round1,
+.round2,
+.round3 {
+  position: absolute; /* 절대 위치 */
+  width: 15%; /* 너비 */
+  padding: 20px;
+}
+
 .round1 {
-  width: 15%; /* 너비를 화면 너비의 15%로 설정 */
-  position: absolute; /* 절대 위치 설정 */
-  top: 15%; /* 상단에서 15% 아래로 설정 */
-  left: 12%; /* 좌측에서 12% 오른쪽으로 설정 */
+  top: 15%; /* 상단 위치 */
+  left: 8%; /* 좌측 위치 */
+  animation: flyInFromLeft 1.1s ease-out;
 }
 
 .round2 {
-  width: 15%; /* 너비를 화면 너비의 15%로 설정 */
-  position: absolute; /* 절대 위치 설정 */
-  top: 20%; /* 상단에서 20% 아래로 설정 */
-  right: 5%; /* 우측에서 5% 왼쪽으로 설정 */
+  top: 20%; /* 상단 위치 */
+  right: 3%; /* 우측 위치 */
+  animation: flyInFromRight 1.1s ease-out;
 }
 
 .round3 {
-  width: 20%; /* 너비를 화면 너비의 20%로 설정 */
-  position: absolute; /* 절대 위치 설정 */
-  top: 52%; /* 상단에서 52% 아래로 설정 */
-  left: 42%; /* 좌측에서 42% 오른쪽으로 설정 */
+  top: 50%; /* 상단 위치 */
+  left: 42%; /* 좌측 위치 */
+  width: 20%; /* 너비 조정 */
+  animation: flyInFromBottom 1.1s ease-out;
 }

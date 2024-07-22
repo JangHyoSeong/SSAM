@@ -11,31 +11,52 @@ const Select = () => {
       <hr />
       <h1 className={select.inviteCodeBox}></h1> {/* 초대 코드 박스 */}
       <div className={select.menuBoxArray}>
-        <NavLink to="/classroom" className={select.menuBox}>
+        <NavLink
+          to="/classroom"
+          className={`${select.menuBox} ${select.menuBox1}`}
+        >
           <div className={select.menuTxt}>
             <h1>학급 정보</h1>
             <h3>우리 학급을 보여줍니다</h3>
-          </div>
-          <div className={select.imgArray}>
-            <img src={classroom} className={select.classroomImg} alt="classroom" />
+            <div className={select.imgArray}>
+              <img
+                src={classroom}
+                className={select.classroomImg}
+                alt="classroom"
+              />
+            </div>
           </div>
         </NavLink>
-        <NavLink to="/teacherquestion" className={select.menuBox}>
+        <NavLink
+          to="/teacherquestion"
+          className={`${select.menuBox} ${select.menuBox2}`}
+        >
           <div className={select.menuTxt}>
             <h1>문의 사항</h1>
             <h3>문의 사항을 남겨주세요</h3>
-          </div>
-          <div className={select.imgArray}>
-            <img src={question} className={select.questionImg} alt="question" />
+            <div className={select.imgArray}>
+              <img
+                src={question}
+                className={select.questionImg}
+                alt="question"
+              />
+            </div>
           </div>
         </NavLink>
-        <NavLink to="/appointment" className={select.menuBox}>
+        <NavLink
+          to="/appointment"
+          className={`${select.menuBox} ${select.menuBox3}`}
+        >
           <div className={select.menuTxt}>
             <h1>상담 예약</h1>
             <h3>상담 시간을 예약하세요</h3>
-          </div>
-          <div className={select.imgArray}>
-            <img src={appointment} className={select.appointmentImg} alt="appointment" />
+            <div className={select.imgArray}>
+              <img
+                src={appointment}
+                className={select.appointmentImg}
+                alt="appointment"
+              />
+            </div>
           </div>
         </NavLink>
       </div>

@@ -63,9 +63,9 @@ const TeacherLogin = () => {
               placeholder="비밀번호"
               required
             />
-            <button type="submit" className={login.loginBtn}>
+            <NavLink to="/teachersubpage" type="submit" className={login.loginBtn}>
               로그인
-            </button>
+            </NavLink>
             <div className={login.loginRoute}>
               <NavLink to="/teacherjoin" className={login.joinNavLink}>
                 <p>회원가입</p>

@@ -16,19 +16,16 @@ services:
       - "8081:8080"
     depends_on:
       - mysql
-
-  # react-app:
-  #   build:
-  #     context: ./FRONT/Ssam
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3000:3000"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/ssam?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=1234
 
   mysql:
     image: mysql:8
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: myapp
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: ssam
     volumes:
       - mysql_data:/var/lib/mysql
 
@@ -41,7 +38,6 @@ services:
     depends_on:
       - jenkins
       - spring-app
-      # - react-app
 
 volumes:
   jenkins_home:

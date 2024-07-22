@@ -1,5 +1,4 @@
-/* AnswerModal.css */
-.answer-modal-overlay {
+.answerModalOverlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -11,7 +10,7 @@
   align-items: center;
 }
 
-.answer-modal-content {
+.answerModalContent {
   background: white;
   border-radius: 8px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -26,12 +25,12 @@
   align-items: center; /* 수평 중앙 정렬 */
 }
 
-.answer-modal-content h2 {
+.answerModalContent h2 {
   font-size: 18px;
   margin-bottom: 20px;
 }
 
-.answer-modal-content textarea {
+.answerModalContent textarea {
   width: 90%; /* 너비를 90%로 설정 */
   height: 50%; /* 텍스트 영역 높이 조정 */
   padding: 1vh;
@@ -41,14 +40,14 @@
   margin-bottom: 2vh; /* 텍스트 영역과 버튼 사이에 간격 추가 */
 }
 
-.answer-modal-buttons {
+.answerModalButtons {
   display: flex;
   justify-content: flex-end; /* 버튼을 오른쪽 끝으로 정렬 */
   width: 90%; /* 버튼 컨테이너 너비를 텍스트 영역과 동일하게 설정 */
   align-self: flex-end; /* 버튼 컨테이너를 오른쪽 끝으로 정렬 */
 }
 
-.answer-modal-buttons button {
+.answerModalButtons button {
   padding: 1vh 2vw;
   font-size: 16px;
   border: 1px solid #DFD0E8; /* 테두리 추가 */
@@ -61,18 +60,18 @@
   transition: background-color 0.3s, transform 0.3s; /* 전환 효과 추가 */
 }
 
-.answer-modal-buttons .submit-button {
+.submitButton {
   background-color: #F8EDFF; /* 제출 버튼의 배경 색상 */
 }
 
-.answer-modal-buttons .cancel-button {
+.cancelButton {
   background-color: #ffffff; /* 취소 버튼의 배경 색상 */
 }
 
-.answer-modal-buttons .cancel-button:hover {
+.cancelButton:hover {
   background-color: #dfdfdf; /* 취소 버튼에 마우스 오버 시 배경 색상 변경 */
 }
 
-.answer-modal-buttons .submit-button:hover {
+.submitButton:hover {
   background-color: #DFD0E8; /* 제출 버튼에 마우스 오버 시 배경 색상 변경 */
 }

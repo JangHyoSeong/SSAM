@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import './TeacherQuestion.css';
+import styles from './TeacherQuestion.module.css';
 import AnswerModal from './AnswerModal';
-import DeleteModal from './DeleteModal';
+import TeacherDeleteModal from './TeacherDeleteModal';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 
 const TeacherQuestion = () => {
@@ -56,19 +56,19 @@ const TeacherQuestion = () => {
   };
 
   return (
-    <div className="teacher-question-container">
+    <div className={styles.teacherQuestionContainer}>
       {questions.map((item) => (
-        <div key={item.id} className="qa-pair">
-          <div className="box-container">
-            <div className="question-box">
+        <div key={item.id} className={styles.qaPair}>
+          <div className={styles.boxContainer}>
+            <div className={styles.questionBox}>
               <p>{item.question}</p>
-              <FaTrash className="icon" onClick={() => handleDeleteClick(item.id)} />
+              <FaTrash className={styles.icon} onClick={() => handleDeleteClick(item.id)} />
             </div>
-            <div className={`answer-box ${selectedAnswerId === item.id ? 'selected' : ''}`}>
+            <div className={`${styles.answerBox} ${selectedAnswerId === item.id ? styles.selected : ''}`}>
               <div>
                 <p>{item.answer ? item.answer : 'A.'}</p>
               </div>
-              <FaEdit className="icon" onClick={() => handleEditClick(item.id)} />
+              <FaEdit className={styles.icon} onClick={() => handleEditClick(item.id)} />
             </div>
           </div>
         </div>
@@ -81,7 +81,7 @@ const TeacherQuestion = () => {
         />
       )}
       {isDeleteModalOpen && (
-        <DeleteModal 
+        <TeacherDeleteModal 
           onConfirm={handleDeleteModalConfirm} 
           onCancel={handleDeleteModalCancel}
         />

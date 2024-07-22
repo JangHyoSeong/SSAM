@@ -8,6 +8,7 @@ import TeacherSubpage from "./teacher/subPage/TeacherSubpage";
 import PasswordChange from './teacher/myPage/PasswordChange';
 import TeacherUpdate from './teacher/myPage/TeacherUpdate';
 import TeacherQuestion from './teacher/question/TeacherQuestion';
+import ParentsQuestion from './parents/question/ParentsQuestion'; // ParentsQuestion 컴포넌트 import
 
 const App = () => {
   return (
@@ -34,6 +35,7 @@ const App = () => {
           <Route path="/teacherupdate" element={<TeacherUpdate />} />
           <Route path="/passwordchange" element={<PasswordChange />} />
           <Route path="/teacherquestion" element={<TeacherQuestion />} />
+          <Route path="/parentsquestion" element={<ParentsQuestion />} /> {/* ParentsQuestion 라우트 추가 */}
         </Routes>
       </div>
     </div>

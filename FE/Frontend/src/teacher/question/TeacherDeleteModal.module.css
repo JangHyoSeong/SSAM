@@ -1,5 +1,4 @@
-/* DeleteModal.css */
-.delete-modal-overlay {
+.teacherDeleteModalOverlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -11,7 +10,7 @@
   align-items: center;
 }
 
-.delete-modal-content {
+.teacherDeleteModalContent {
   background: white;
   border-radius: 8px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -26,19 +25,19 @@
   align-items: center; /* 수평 중앙 정렬 */
 }
 
-.delete-modal-header {
+.teacherDeleteModalHeader {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
 }
 
-.delete-modal-icon {
+.teacherDeleteModalIcon {
   font-size: 48px; /* 아이콘 크기 */
   color: red; /* 아이콘 색상 */
 }
 
-.delete-modal-content h2 {
+.teacherDeleteModalContent h2 {
   font-size: 18px;
   text-align: center;
   flex: 1; /* 남은 공간을 채우도록 설정 */
@@ -47,13 +46,13 @@
   justify-content: center; /* 가로 중앙 정렬 */
 }
 
-.delete-modal-buttons {
+.teacherDeleteModalButtons {
   display: flex;
   justify-content: space-around;
   width: 100%; /* 버튼 컨테이너 너비를 100%로 설정 */
 }
 
-.delete-modal-buttons button {
+.teacherDeleteModalButtons button {
   padding: 1vh 2vw;
   font-size: 16px;
   border: none;
@@ -61,6 +60,6 @@
   cursor: pointer;
 }
 
-.delete-modal-buttons button:hover {
+.teacherDeleteModalButtons button:hover {
   background-color: #ddd;
 }

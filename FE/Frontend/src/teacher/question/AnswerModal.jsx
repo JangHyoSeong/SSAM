@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './AnswerModal.css';
+import styles from './AnswerModal.module.css';
 
 const AnswerModal = ({ question, onConfirm, onCancel }) => {
   const [answer, setAnswer] = useState('');
@@ -14,17 +14,17 @@ const AnswerModal = ({ question, onConfirm, onCancel }) => {
   };
 
   return (
-    <div className="answer-modal-overlay" onClick={onCancel}>
-      <div className="answer-modal-content" onClick={(e) => e.stopPropagation()}>
+    <div className={styles.answerModalOverlay} onClick={onCancel}>
+      <div className={styles.answerModalContent} onClick={(e) => e.stopPropagation()}>
         <h2>Q. {question}</h2>
         <textarea 
           value={answer}
           onChange={handleChange}
           placeholder="답변을 입력하세요."
         />
-        <div className="answer-modal-buttons">
-          <button className="submit-button" onClick={handleSubmit}>제출</button>
-          <button className="cancel-button" onClick={onCancel}>취소</button>
+        <div className={styles.answerModalButtons}>
+          <button className={styles.submitButton} onClick={handleSubmit}>제출</button>
+          <button className={styles.cancelButton} onClick={onCancel}>취소</button>
         </div>
       </div>
     </div>

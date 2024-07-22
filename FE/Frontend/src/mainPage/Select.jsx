@@ -5,7 +5,6 @@ import teacher from "../assets/teacher.png";
 import parents from "../assets/parents.png";
 import round1 from "../assets/round1.png";
 import round2 from "../assets/round2.png";
-// import arrow from "../assets/arrow.png";
 
 const Select = () => {
   return (
@@ -17,16 +16,18 @@ const Select = () => {
             <h1>선생님 →</h1>
             <h3>선생님으로 시작하세요</h3>
           </div>
-          {/* <img src={arrow} className="arrowimg1" alt="arrow" /> */}
-          <img src={teacher} className={select.teacherImg} alt="teacher" />
+          <div className={select.imgArray}>
+            <img src={teacher} className={select.Img} alt="teacher" />
+          </div>
         </div>
         <div className={select.menuBox}>
           <div className={select.menuTxt}>
             <h1>학생 / 학부모 →</h1>
             <h3>학생과 자녀가 있는 학부모</h3>
           </div>
-          {/* <img src={arrow} className="arrowimg2" alt="arrow" /> */}
-          <img src={parents} className={select.parentsImg} alt="parents" />
+          <div className={select.imgArray}>
+            <img src={parents} className={select.Img} alt="parents" />
+          </div>
         </div>
       </div>
       <img src={round1} className={select.round1} alt="round1" />

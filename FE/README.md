@@ -59,7 +59,7 @@ $ npm run dev
     - 학급관리 :
     - 승인관리 :
 
-  - 문의사항 :
+  - 문의사항 : http://localhost:5173/teacherquestion
 
   - 상담예약
     - 예약관리 :
@@ -82,7 +82,7 @@ $ npm run dev
     - 학급관리 :
     - 승인관리 :
 
-  - 문의사항 :
+  - 문의사항 : http://localhost:5173/parentsquestion
 
   - 상담예약
     - 예약관리 :

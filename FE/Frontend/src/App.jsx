@@ -1,5 +1,5 @@
 import "./App.css";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, NavLink } from "react-router-dom";
 import SSAM from "./assets/SSAM.png";
 import MainPage from "./mainPage/MainPage";
 import TeacherJoin from "./teacher/join/TeacherJoin";
@@ -7,16 +7,22 @@ import TeacherLogin from "./teacher/login/TeacherLogin";
 import TeacherSubpage from "./teacher/subPage/TeacherSubpage";
 import PasswordChange from './teacher/myPage/PasswordChange';
 import TeacherUpdate from './teacher/myPage/TeacherUpdate';
+import TeacherQuestion from './teacher/question/TeacherQuestion';
 
 const App = () => {
   return (
     <div className="navbar-array">
-      <Link to="/">
+      <NavLink to="/" exact="true">
         <img src={SSAM} className="logo" alt="Logo" />
-      </Link>
+      </NavLink>
       <div className="menu-array">
         <h2>학급정보</h2>
-        <h2>문의사항</h2>
+        <NavLink 
+          to="/teacherquestion" 
+          className={({ isActive }) => (isActive ? 'active' : '')}
+        >
+          <h2>문의사항</h2>
+        </NavLink>
         <h2>상담예약</h2>
       </div>
       <div>
@@ -27,6 +33,7 @@ const App = () => {
           <Route path="/teachersubpage" element={<TeacherSubpage />} />
           <Route path="/teacherupdate" element={<TeacherUpdate />} />
           <Route path="/passwordchange" element={<PasswordChange />} />
+          <Route path="/teacherquestion" element={<TeacherQuestion />} />
         </Routes>
       </div>
     </div>

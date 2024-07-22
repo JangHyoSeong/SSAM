@@ -1,0 +1,34 @@
+import React, { useState } from 'react';
+import './AnswerModal.css';
+
+const AnswerModal = ({ question, onConfirm, onCancel }) => {
+  const [answer, setAnswer] = useState('');
+
+  const handleChange = (event) => {
+    setAnswer(event.target.value);
+  };
+
+  const handleSubmit = () => {
+    onConfirm(answer);
+    setAnswer('');
+  };
+
+  return (
+    <div className="answer-modal-overlay" onClick={onCancel}>
+      <div className="answer-modal-content" onClick={(e) => e.stopPropagation()}>
+        <h2>Q. {question}</h2>
+        <textarea 
+          value={answer}
+          onChange={handleChange}
+          placeholder="답변을 입력하세요."
+        />
+        <div className="answer-modal-buttons">
+          <button className="submit-button" onClick={handleSubmit}>제출</button>
+          <button className="cancel-button" onClick={onCancel}>취소</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AnswerModal;

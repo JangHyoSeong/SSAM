@@ -1,3 +1,10 @@
+/* App.css */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+
+body {
+  font-family: 'Noto Sans', sans-serif;
+}
+
 .navbar-array {
   height: 10vh;
   background-color: white;
@@ -20,4 +27,18 @@
 .menu-array h2 {
   margin: 0% 3%;
   font-size: 180%;
+  white-space: nowrap; /* 텍스트가 한 줄로 표시되도록 설정 */
+}
+
+.menu-array a {
+  text-decoration: none; /* 링크 밑줄 제거 */
+  color: inherit; /* 부모 요소의 색상 상속 */
+}
+
+.menu-array a:hover {
+  color: #5285EE; /* 마우스 오버 시 파란색으로 변경 */
+}
+
+.menu-array .active {
+  color: #5285EE; /* 활성화된 링크 색상 */
 }

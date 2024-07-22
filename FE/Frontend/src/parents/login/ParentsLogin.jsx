@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import login from "./ParentsLogin.module.css";
 import round1 from "../../assets/round1.png";
 import round2 from "../../assets/round2.png";
@@ -17,9 +17,9 @@ const ParentsLogin = () => {
             <input type="password" placeholder="비밀번호" />
             <button className={login.loginBtn}>로그인</button>
             <div className={login.loginRoute}>
-              <Link to="/parentsjoin" className={login.joinLink}>
+              <NavLink to="/parentsjoin" className={login.joinNavLink}>
                 <p>회원가입</p>
-              </Link>
+              </NavLink>
               <p>아이디 / 비밀번호 찾기</p>
             </div>
             <button className={login.googleBtn}>

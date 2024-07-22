@@ -1,68 +1,121 @@
+/* 전체 메뉴 배열 스타일 */
 .menuArray {
-  height: 100vh;
+  height: 100vh; /* 전체 화면 높이 사용 */
 }
 
+/* 초대 코드 표시 영역 스타일 */
 .inviteCodeBox {
   position: relative;
   top: 5%;
   left: 25%;
   align-items: center;
-  width: 50vw;
-  height: 20vh;
-  background-color: #dae9ff;
-  border-radius: 25px;
-  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+  width: 50vw; /* 뷰포트 너비의 50% 사용 */
+  height: 20vh; /* 뷰포트 높이의 20% 사용 */
+  background-color: #dae9ff; /* 배경 색상 설정 */
+  border-radius: 25px; /* 모서리 둥글게 처리 */
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.4); /* 그림자 효과 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0; /* 처음에는 보이지 않음 */
+  animation: fadeIn 1s ease-in forwards;
 }
 
+.inviteCodeBox:hover {
+  transform: translateY(-10px);
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2); /* 호버 시 상자 그림자 변경 */
+}
+
+/* 메뉴 박스 배열 스타일 */
 .menuBoxArray {
   position: relative;
   top: 15%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-evenly; /* 요소 간에 공간 균등하게 배분 */
 }
 
+/* 개별 메뉴 박스 스타일 */
 .menuBox {
-  width: 25vw;
-  height: 45vh;
-  background-color: #5285ee;
-  border-radius: 25px;
-  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
-  text-decoration: none;
-  color: white;
+  width: 25vw; /* 뷰포트 너비의 25% 사용 */
+  height: 40vh; /* 뷰포트 높이의 45% 사용 */
+  background-color: #5285ee; /* 배경 색상 설정 */
+  border-radius: 25px; /* 모서리 둥글게 처리 */
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.4); /* 그림자 효과 */
+  text-decoration: none; /* 링크 밑줄 제거 */
+  color: white; /* 글자 색상 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.menuBox:hover {
+  transform: translateY(-10px);
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2); /* 호버 시 상자 그림자 변경 */
+}
+
+.menuBox1 {
+  opacity: 0; /* 처음에는 보이지 않음 */
+  animation: fadeIn 1s ease-in forwards; /* 1초 동안 나타나는 애니메이션 */
+}
+
+.menuBox2 {
+  opacity: 0; /* 처음에는 보이지 않음 */
+  animation: fadeIn 1s ease-in 0.05s forwards; /* 1초 동안 나타나는 애니메이션, 1초 후에 시작 */
+}
+
+.menuBox3 {
+  opacity: 0; /* 처음에는 보이지 않음 */
+  animation: fadeIn 1s ease-in 0.1s forwards; /* 1초 동안 나타나는 애니메이션, 1초 후에 시작 */
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1; /* 최종적으로 보이게 함 */
+  }
+}
+
+/* 메뉴 텍스트 스타일 */
 .menuTxt {
   position: relative;
   top: 6%;
-  text-align: center;
-  font-size: 150%;
+  text-align: center; /* 텍스트 가운데 정렬 */
+  font-size: 150%; /* 글자 크기 */
 }
 
+/* 이미지 배열 스타일 */
 .imgArray {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  margin-top: 10%;
+  width: 100%; /* 전체 너비 */
+  height: 100%;
+  margin-top: 5%; /* 상단 여백 */
 }
 
+/* 개별 이미지 스타일 */
 .classroomImg {
-  width: 16vw;
+  width: 13.2vw; /* 뷰포트 너비의 16% 사용 */
 }
 
 .questionImg {
-  width: 11vw;
+  width: 9vw; /* 뷰포트 너비의 11% 사용 */
 }
 
 .appointmentImg {
-  width: 13.5vw;
+  width: 11vw; /* 뷰포트 너비의 13.5% 사용 */
 }
 
+/* 스크롤 표시 */
 .scroll {
   position: relative;
-  top: 28%;
   text-align: center;
   font-size: 150%;
   font-weight: bold;
-  color: black;
+  animation: moveUpDown 5s infinite; /* 5초 동안 지속되는 무한 반복 애니메이션 */
+}
+
+@keyframes moveUpDown {
+  0%,
+  100% {
+    top: 21%; /* 시작과 끝 위치를 화면의 상단으로 설정 */
+  }
+  50% {
+    top: 23%; /* 중간 위치를 화면의 하단으로 설정 */
+  }
 }

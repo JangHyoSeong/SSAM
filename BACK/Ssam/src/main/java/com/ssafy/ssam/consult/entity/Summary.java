@@ -2,9 +2,14 @@ package com.ssafy.ssam.consult.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Summary {
 
@@ -30,10 +35,10 @@ public class Summary {
     @Column(name = "profanity_level", nullable = false, length = 10)
     private String profanityLevel;
 
-    @Column(name = "parent_concern")
+    @Column(name = "parent_concern", columnDefinition = "TEXT")
     private String parentConcern;
 
-    @Column(name = "teacher_recommendation")
+    @Column(name = "teacher_recommendation", columnDefinition = "TEXT")
     private String teacherRecommendation;
 
     @Temporal(TemporalType.TIMESTAMP)

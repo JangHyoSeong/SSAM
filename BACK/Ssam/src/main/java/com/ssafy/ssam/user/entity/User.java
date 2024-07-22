@@ -9,12 +9,16 @@ import com.ssafy.ssam.notification.entity.Alarm;
 import com.ssafy.ssam.notification.entity.Question;
 import com.ssafy.ssam.user.converter.UserRoleConverter;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
 
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class User {
 
@@ -28,12 +32,11 @@ public class User {
     private String name;
 
     @NotNull
-    @Email
     @Column(name = "email", length = 45, nullable = false)
     private String email;
 
     @NotNull
-    @Column(name = "phone", length = 11, nullable = false)
+    @Column(name = "phone", columnDefinition = "CHAR(11)", length = 11, nullable = false)
     private String phone;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -54,13 +57,13 @@ public class User {
     @Column(nullable = false)
     private Date birth;
 
-    @Column(name = "other_name")
+    @Column(name = "other_name", length = 22)
     private String otherName;
 
-    @Column(name = "other_phone")
+    @Column(name = "other_phone", columnDefinition = "CHAR(11)", length = 11)
     private String otherPhone;
 
-    @Column(name = "other_relation", length = 1)
+    @Column(name = "other_relation", columnDefinition = "CHAR(1)", length = 1)
     private String otherRelation;
 
     @NotNull

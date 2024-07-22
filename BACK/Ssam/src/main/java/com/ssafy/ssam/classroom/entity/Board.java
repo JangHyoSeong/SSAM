@@ -4,9 +4,14 @@ import com.ssafy.ssam.notification.entity.Question;
 import com.ssafy.ssam.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Board {
 
@@ -25,18 +30,22 @@ public class Board {
     @Column(name = "banner_img")
     private String bannerImg;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String notice;
 
-    @Column(columnDefinition = "TINYINT CHECK (grade BETWEEN 1 AND 6)")
+    @NotNull
+    @Column(columnDefinition = "TINYINT CHECK (grade BETWEEN 1 AND 6)", nullable = false)
     private int grade;
 
-    @Column(columnDefinition = "TINYINT")
+    @NotNull
+    @Column(columnDefinition = "TINYINT", nullable = false)
     private int classroom;
 
     @Column(name = "consult_url")
     private String consultUrl;
 
+    // Board와 User 관계 매핑
+    // board가 어떤 user(teacher)와 연결되어있는지 나타냄
     @ManyToMany(mappedBy = "boards")
     private List<User> users;
 

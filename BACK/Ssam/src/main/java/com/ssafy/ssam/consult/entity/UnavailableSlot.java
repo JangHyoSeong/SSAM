@@ -3,10 +3,14 @@ package com.ssafy.ssam.consult.entity;
 import com.ssafy.ssam.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "unavailable_slot")
 public class UnavailableSlot{

@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
 
-import update from "./TeacherUpdate.module.css";
+import update from "./ParentsUpdate.module.css";
 
-const TeacherUpdate = () => {
+const ParentsUpdate = () => {
   return (
     <div>
       <div className={update.menuArray}>
         <div className={update.updateMenu}>
           <h2>회원정보 수정</h2>
         </div>
-        <Link to="/teacherpasswordchange" className={update.changeMenu}>
+        <Link to="/passwordchange" className={update.changeMenu}>
           <h2>비밀번호 변경</h2>
         </Link>
       </div>
@@ -61,4 +61,4 @@ const TeacherUpdate = () => {
   );
 };
 
-export default TeacherUpdate;
+export default ParentsUpdate;

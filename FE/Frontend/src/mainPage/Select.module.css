@@ -21,8 +21,8 @@
 }
 
 .menuBox {
-  width: 30vw;
-  height: 50vh;
+  width: 30%;
+  height: 50%;
   background-color: white;
   border-radius: 10%;
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
@@ -30,9 +30,7 @@
 }
 
 .menuTxt {
-  position: relative;
-  top: 10%;
-  left: 6%;
+  margin: 5%;
 }
 
 .menuTxt h1 {
@@ -44,23 +42,20 @@
   color: gray;
 }
 
-.teacherImg {
-  position: relative;
-  top: 17%;
-  left: 20%;
-  width: 18vw;
+.imgArray {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
-.parentsImg {
-  position: relative;
-  top: 15%;
-  left: 22%;
-  width: 18vw;
+.Img {
+  width: 60%;
+  height: 100%;
 }
 
 .scroll {
   position: relative;
-  top: 15%;
+  top: 14%;
   text-align: center;
   font-size: 150%;
   font-weight: bold;

@@ -1,6 +1,6 @@
-package com.ssafy.ssam.domain.classroom.converter;
+package com.ssafy.ssam.classroom.converter;
 
-import com.ssafy.ssam.domain.classroom.entity.ManageStatus;
+import com.ssafy.ssam.classroom.entity.ManageStatus;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

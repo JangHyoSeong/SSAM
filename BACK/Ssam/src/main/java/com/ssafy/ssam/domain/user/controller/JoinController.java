@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class JoinController{
     private final JoinService joinService;
 
-    @PostMapping("/users/students")
+    @PostMapping("/auth/students")
     public ResponseEntity<CommonResponseDto> studentJoinProcess(UserDto userDto){
         return ResponseEntity.ok(joinService.studentJoinProcess(userDto));
     }
 
-    @PostMapping("/users/teachers")
+    @PostMapping("/auth/teachers")
     public ResponseEntity<CommonResponseDto> teacherJoinProcess(UserDto userDto){
         return ResponseEntity.ok(joinService.teacherJoinProcess(userDto));
     }

@@ -1,7 +1,7 @@
-package com.ssafy.ssam.classroom.entity;
+package com.ssafy.ssam.domain.classroom.entity;
 
-import com.ssafy.ssam.notification.entity.Question;
-import com.ssafy.ssam.user.entity.User;
+import com.ssafy.ssam.domain.notification.entity.Question;
+import com.ssafy.ssam.domain.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

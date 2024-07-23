@@ -36,7 +36,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return webSecurity -> {
             webSecurity.ignoring()
-                    .requestMatchers("/users/**");
+                    .requestMatchers("/auth/**");
         };
     }
     @Bean
@@ -55,11 +55,10 @@ public class SecurityConfig {
                 .httpBasic((auth) -> auth.disable())
                 .authorizeHttpRequests((auth) -> auth
                 // 아무 허용 필요없는 접근 -> 회원가입, 첫 화면, 비밀번호 찾기
-                .requestMatchers("/auth/social-login/**","/auth/login/**", "/", "/join/**", "/users/teachers/**", "/users/students/**").permitAll()
+                .requestMatchers("/auth/**").permitAll()
                 // 선생이라는 권한이 필요한 url
-                .requestMatchers("/info/teacher/**", "/classroom/reissue/**", "/students/**").hasRole("TEACHER")
-                // 학생이라는 권한이 필요한 url
-                .requestMatchers("/info/students").hasRole("STUDENT")
+                .requestMatchers("/classrooms/answers/**", "/classrooms/teachers/**", "/consults/teachers/**").hasRole("TEACHER")
+
                 // 위에 말한 url 제외 모든 url은 로그인만 되어있으면 접근이 가능하다
                 .anyRequest().authenticated())
                // 로그인 당시에 로그인 필터 적용 -> 토큰 저장

@@ -1,3 +1,7 @@
+body {
+  overflow-x: hidden; /* 가로 스크롤바 숨기기 */
+}
+
 // Variables
 $primary-color: #5285ee;
 $white-color: #ffffff;
@@ -89,7 +93,6 @@ $text-shadow-scroll: 1px 1px 2px rgba($black-color, 0.5);
   justify-content: center;
   align-items: center;
   width: 28vw;
-  height: 60vh;
   background-color: $white-color;
   border-radius: 10%;
   box-shadow: $box-shadow-default;
@@ -117,7 +120,7 @@ $text-shadow-scroll: 1px 1px 2px rgba($black-color, 0.5);
 
 .menuTxt {
   text-align: center;
-  
+
   h1 {
     margin-top: 8%;
     font-size: 210%;
@@ -125,7 +128,7 @@ $text-shadow-scroll: 1px 1px 2px rgba($black-color, 0.5);
 
   h3 {
     margin-top: 4%;
-    font-size: 120%;
+    font-size: 150%;
     color: $gray-color;
   }
 }
@@ -137,18 +140,17 @@ $text-shadow-scroll: 1px 1px 2px rgba($black-color, 0.5);
 }
 
 .Img {
-  margin-top: 15%;
-  width: 20vw;
-  height: 38vh;
+  margin-top: 13%;
+  width: 18vw;
 }
 
 .scroll {
   position: relative;
   text-align: center;
-  font-size: 150%;
+  font-size: 120%;
   font-weight: bold;
   color: $white-color;
-  animation: moveUpDown 5s infinite;
+  animation: moveUpDown 4s infinite;
   text-shadow: $text-shadow-scroll;
 }
 

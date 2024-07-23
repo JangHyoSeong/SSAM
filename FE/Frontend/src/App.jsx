@@ -1,4 +1,4 @@
-import "./App.scss";
+import "./App.css";
 import { Routes, Route, NavLink } from "react-router-dom";
 import SSAM from "./assets/SSAM.png";
 import MainPage from "./mainPage/MainPage";

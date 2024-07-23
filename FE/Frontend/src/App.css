@@ -1,12 +1,6 @@
 /* App.css */
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap");
 
-
-
-body {
-  overflow-x: hidden; /* 가로 스크롤바 숨기기 */
-}
-
 .navbar-array {
   height: 10vh;
   background-color: white;
@@ -14,7 +8,7 @@ body {
 
 .logo {
   position: absolute;
-  top: 1.2%;
+  top: 1%;
   left: 5%;
   width: 8vw;
 }

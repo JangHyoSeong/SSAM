@@ -39,7 +39,6 @@
   justify-content: center;
   align-items: center;
   width: 25vw;
-  height: 44.5vh;
   background-color: white;
   border-radius: 10%; /* 모서리 둥글게 */
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.4); /* 그림자 효과 */
@@ -72,10 +71,13 @@
 }
 
 .menuTxt h1 {
+  margin-top: 10%;
+  margin-left: -10%;  
   font-size: 220%; /* 큰 글씨 크기 */
 }
 
 .menuTxt h3 {
+  margin-left: -10%;  
   font-size: 120%; /* 작은 글씨 크기 */
   color: gray; /* 회색 글씨 */
 }
@@ -89,8 +91,7 @@
 
 /* 이미지 스타일 */
 .Img {
-  position: relative;
-  top: 25px;
+  margin-top: 10%;
   width: 18vw; /* 이미지 너비 */
   height: 26.7vh;
 }
@@ -109,10 +110,10 @@
 @keyframes moveUpDown {
   0%,
   100% {
-    top: 12%; /* 시작과 끝 위치를 화면의 상단으로 설정 */
+    top: 13%; /* 시작과 끝 위치를 화면의 상단으로 설정 */
   }
   50% {
-    top: 14%; /* 중간 위치를 화면의 하단으로 설정 */
+    top: 15%; /* 중간 위치를 화면의 하단으로 설정 */
   }
 }
 

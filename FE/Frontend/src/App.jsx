@@ -1,8 +1,7 @@
-import React from 'react';
-import './App.css';
-import { Routes, Route, NavLink } from 'react-router-dom';
-import SSAM from './assets/SSAM.png';
-import MainPage from './mainPage/MainPage';
+import "./App.scss";
+import { Routes, Route, NavLink } from "react-router-dom";
+import SSAM from "./assets/SSAM.png";
+import MainPage from "./mainPage/MainPage";
 // 선생님
 import TeacherJoin from './teacher/join/TeacherJoin';
 import TeacherLogin from './teacher/login/TeacherLogin';

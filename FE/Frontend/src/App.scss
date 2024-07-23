@@ -1,0 +1,41 @@
+.navbar-array {
+  height: 10vh;
+  background-color: white;
+}
+
+.navbar-array a {
+  text-decoration: none; // 링크 밑줄 제거
+  color: inherit; // 부모 요소의 색상 상속
+
+  &:hover {
+    color: #5285ee; // 마우스 오버 시 파란색으로 변경
+  }
+
+  &.active {
+    color: #5285ee; // 활성화된 링크 색상
+  }
+}
+
+.navbar-array .logo {
+  position: absolute;
+  top: 1.5%;
+  left: 5%;
+  width: 8vw;
+}
+
+.navbar-array .menu-array {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10vh;
+}
+
+.menu-array .navtxt {
+  margin: 0 5%;
+  font-size: 100%;
+  white-space: nowrap; // 텍스트가 한 줄로 표시되도록 설정
+
+  &:hover {
+    color: #5285ee;
+  }
+}

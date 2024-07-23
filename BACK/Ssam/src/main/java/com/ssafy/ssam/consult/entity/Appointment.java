@@ -43,9 +43,15 @@ public class Appointment {
     @Column(name = "end_time", columnDefinition = "TIMESTAMP",nullable = false)
     private Date endTime;
 
+//    @Convert(converter = AppointmentStatusConverter.class)
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Convert(converter = AppointmentStatusConverter.class)
     @Column(nullable = false)
     private AppointmentStatus status;
+
+    public enum AppointmentStatus {
+        BEFORE,
+        DONE,
+        CANCEL
+    }
 }

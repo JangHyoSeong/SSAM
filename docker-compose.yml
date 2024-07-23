@@ -4,6 +4,7 @@ services:
     image: jenkins/jenkins:lts
     environment:
       - JENKINS_OPTS="--prefix=/jenkins"
+      - JENKINS_ARGS="--prefix=/jenkins"
     expose:
       - "8080"
     volumes:

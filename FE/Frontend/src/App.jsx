@@ -29,13 +29,13 @@ const App = () => {
       </NavLink>
       <div className="menu-array">
         <NavLink to="/teacherclassroom" className="navtxt">
-          <h2>학급정보</h2>
+          <h3>학급정보</h3>
         </NavLink>
         <NavLink to="/teacherquestion" className="navtxt">
-          <h2>문의사항</h2>
+          <h3>문의사항</h3>
         </NavLink>
         <NavLink to="/teacherappointment" className="navtxt">
-          <h2>상담예약</h2>
+          <h3>상담예약</h3>
         </NavLink>
       </div>
       <div>

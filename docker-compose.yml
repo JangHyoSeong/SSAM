@@ -2,12 +2,14 @@ version: '3'
 services:
   jenkins:
     image: jenkins/jenkins:lts
+    environment:
+      - JENKINS_OPTS="--prefix=/jenkins"
     expose:
       - "8080"
     volumes:
       - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
-    
+  
   spring-app:
     build: 
       context: ./BACK/Ssam

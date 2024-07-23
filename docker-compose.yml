@@ -35,7 +35,7 @@ services:
 
   react-app:
     build:
-      context: ./FRONT/Ssam
+      context: ./FE/Frontend
       dockerfile: Dockerfile
     expose:
       - "3000"

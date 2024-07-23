@@ -16,7 +16,7 @@ services:
       context: ./BACK/Ssam
       dockerfile: Dockerfile
     expose:
-      - "8080"
+      - "8081"
     depends_on:
       - mysql
     environment:

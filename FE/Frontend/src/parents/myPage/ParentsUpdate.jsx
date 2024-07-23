@@ -1,6 +1,6 @@
 // 선생님 정보 수정 페이지 컴포넌트
 import { NavLink } from 'react-router-dom';
-import update from './ParentsUpdate.module.css';
+import update from './ParentsUpdate.module.scss';
 
 const ParentsUpdate = () => {
   return (

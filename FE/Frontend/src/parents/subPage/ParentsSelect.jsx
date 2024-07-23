@@ -1,6 +1,6 @@
 // 선생님 서브 페이지 선택 컴포넌트
 import { NavLink } from "react-router-dom";
-import select from "./ParentsSelect.module.css";
+import select from "./ParentsSelect.module.scss";
 import classroom from "../../assets/classroom.png";
 import question from "../../assets/question.png";
 import appointment from "../../assets/appointment.png";

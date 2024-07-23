@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import axios from "../../axiosConfig";
-import join from "./TeacherJoin.module.css";
+import join from "./TeacherJoin.module.scss";
 import round1 from "../../assets/round1.png";
 import round2 from "../../assets/round2.png";
 import human from "../../assets/human.png";

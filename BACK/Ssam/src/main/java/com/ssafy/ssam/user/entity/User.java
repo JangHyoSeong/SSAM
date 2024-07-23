@@ -12,6 +12,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @Entity
 public class User {
 
@@ -46,11 +48,17 @@ public class User {
     @Column(name = "img_url")
     private String imgUrl;
 
+//    @Convert(converter = UserRoleConverter.class)
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Convert(converter = UserRoleConverter.class)
     @Column(nullable = false)
     private UserRole role;
+
+    public enum UserRole {
+        TEACHER,
+        STUDENT,
+        MANAGER
+    }
 
     @NotNull
     @Temporal(TemporalType.DATE)

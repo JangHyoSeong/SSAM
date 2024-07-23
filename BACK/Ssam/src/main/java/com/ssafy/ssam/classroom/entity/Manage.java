@@ -37,10 +37,16 @@ public class Manage {
     @Column(name = "follow_date", columnDefinition = "TIMESTAMP", nullable = false)
     private Date followDate;
 
+//    @Convert(converter = ManageStatusConverter.class)
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Convert(converter = ManageStatusConverter.class)
     @Column(nullable = false)
     private ManageStatus status;
+
+    public enum ManageStatus {
+        WAITING,
+        ACCEPTED,
+        BLOCKED
+    }
 
 }

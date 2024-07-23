@@ -21,11 +21,18 @@ public class Alarm {
     @Column(name = "alarm_id")
     private int alarmId;
 
+//    @Convert(converter = AlarmTypeConverter.class)
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Convert(converter = AlarmTypeConverter.class)
     @Column(name = "alarm_type", nullable = false)
     private AlarmType alarmType;
+
+    public enum AlarmType {
+        ANSWER,
+        QUESTION,
+        REGISTRATION,
+        ACCEPT
+    }
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")

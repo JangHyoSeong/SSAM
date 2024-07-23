@@ -40,9 +40,18 @@ public class Consult {
     @Column(name = "video_url")
     private String videoUrl;
 
+//    @Convert(converter = ConsultTopicConverter.class)
     @Enumerated(EnumType.STRING)
-    @Convert(converter = ConsultTopicConverter.class)
     private ConsultTopic topic;
+
+    public enum ConsultTopic {
+        FRIEND,
+        BULLYING,
+        SCORE,
+        CAREER,
+        ATTITUDE,
+        OTHER
+    }
 
     @Column(name = "webrtc_session_id", length = 100)
     private String webrtcSessionId;

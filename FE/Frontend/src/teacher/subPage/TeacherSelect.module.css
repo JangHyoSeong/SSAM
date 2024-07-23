@@ -17,11 +17,25 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   opacity: 0; /* 처음에는 보이지 않음 */
   animation: fadeIn 1s ease-in forwards;
+  text-align: center;
 }
 
 .inviteCodeBox:hover {
   transform: translateY(-10px);
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2); /* 호버 시 상자 그림자 변경 */
+}
+
+.inviteTxtBox {
+  padding: 1.5%;
+}
+
+.inviteCodeBox button {
+  padding: 1% 4%;
+  border-radius: 25px;
+  color: #5285ee;
+  font-size: 120%;
+  border-color: #5285ee;
+  background-color: white;
 }
 
 /* 메뉴 박스 배열 스타일 */
@@ -34,8 +48,7 @@
 
 /* 개별 메뉴 박스 스타일 */
 .menuBox {
-  width: 25vw; /* 뷰포트 너비의 25% 사용 */
-  height: 40vh; /* 뷰포트 높이의 45% 사용 */
+  width: 24vw; /* 뷰포트 너비의 24% 사용 */
   background-color: #5285ee; /* 배경 색상 설정 */
   border-radius: 25px; /* 모서리 둥글게 처리 */
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.4); /* 그림자 효과 */
@@ -73,19 +86,18 @@
 /* 메뉴 텍스트 스타일 */
 .menuTxt {
   position: relative;
-  top: 6%;
+  top: 5%;
   text-align: center; /* 텍스트 가운데 정렬 */
-  font-size: 150%; /* 글자 크기 */
+  font-size: 120%; /* 글자 크기 */
 }
 
 /* 이미지 배열 스타일 */
 .imgArray {
   display: flex;
   justify-content: center;
-  align-items: center;
   width: 100%; /* 전체 너비 */
   height: 100%;
-  margin-top: 5%; /* 상단 여백 */
+  margin: 10% 0%;
 }
 
 /* 개별 이미지 스타일 */

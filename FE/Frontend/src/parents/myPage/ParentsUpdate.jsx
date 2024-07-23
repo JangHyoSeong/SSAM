@@ -1,6 +1,6 @@
-import { NavLink } from "react-router-dom";
-
-import update from "./ParentsUpdate.module.css";
+// 선생님 정보 수정 페이지 컴포넌트
+import { NavLink } from 'react-router-dom';
+import update from './ParentsUpdate.module.css';
 
 const ParentsUpdate = () => {
   return (
@@ -9,7 +9,7 @@ const ParentsUpdate = () => {
         <div className={update.updateMenu}>
           <h2>회원정보 수정</h2>
         </div>
-        <NavLink to="/passwordchange" className={update.changeMenu}>
+        <NavLink to="/parentspasswordchange" className={update.changeMenu}>
           <h2>비밀번호 변경</h2>
         </NavLink>
       </div>
@@ -26,30 +26,13 @@ const ParentsUpdate = () => {
                 </div>
               </td>
             </tr>
-            <tr>
-              <th>이름</th>
-              <td></td>
-            </tr>
-            <tr>
-              <th>생년월일</th>
-              <td></td>
-            </tr>
-            <tr>
-              <th>학교</th>
-              <td></td>
-            </tr>
-            <tr>
-              <th>아이디</th>
-              <td></td>
-            </tr>
-            <tr>
-              <th>이메일</th>
-              <td></td>
-            </tr>
-            <tr>
-              <th>휴대전화</th>
-              <td></td>
-            </tr>
+            <tr><th>이름</th><td></td></tr>
+            <tr><th>생년월일</th><td></td></tr>
+            <tr><th>학교</th><td></td></tr>
+            <tr><th>아이디</th><td></td></tr>
+            <tr><th>이메일</th><td></td></tr>
+            <tr><th>학생<br/>전화번호</th><td></td></tr>
+            <tr><th>학부모<br/>전화번호</th><td></td></tr>
           </table>
         </div>
         <div className={update.formBtnArray}>

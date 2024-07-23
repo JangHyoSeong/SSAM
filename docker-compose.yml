@@ -38,10 +38,7 @@ services:
       context: ./FE/Frontend
       dockerfile: Dockerfile
     volumes:
-      - ./FE/Frontend:/app
-      - /app/node_modules
-      - react_build:/app/dist 
-    command: npm run build
+      - react_build:/usr/share/nginx/html
 
   nginx:
     image: nginx:latest

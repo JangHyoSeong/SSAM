@@ -1,8 +1,8 @@
 /* App.css */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap");
 
 body {
-  font-family: 'Noto Sans', sans-serif;
+  font-family: "Noto Sans", sans-serif;
   overflow-x: hidden; /* 가로 스크롤바 숨기기 */
 }
 
@@ -18,17 +18,21 @@ body {
   width: 8vw;
 }
 
+.navtxt {
+  margin: 0% 5%;
+  font-size: 100%;
+  white-space: nowrap; /* 텍스트가 한 줄로 표시되도록 설정 */
+}
+
+.navtxt :hover {
+  color: #5285ee;
+}
+
 .menu-array {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 10vh;
-}
-
-.menu-array h2 {
-  margin: 0% 5%;
-  font-size: 150%;
-  white-space: nowrap; /* 텍스트가 한 줄로 표시되도록 설정 */
 }
 
 .menu-array a {
@@ -37,9 +41,9 @@ body {
 }
 
 .menu-array a:hover {
-  color: #5285EE; /* 마우스 오버 시 파란색으로 변경 */
+  color: #5285ee; /* 마우스 오버 시 파란색으로 변경 */
 }
 
 .menu-array .active {
-  color: #5285EE; /* 활성화된 링크 색상 */
+  color: #5285ee; /* 활성화된 링크 색상 */
 }

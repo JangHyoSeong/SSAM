@@ -23,6 +23,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/ssam?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=1234
+      - SERVER_SERVLET_CONTEXT_PATH=/api
 
   mysql:
     image: mysql:8
@@ -31,6 +32,13 @@ services:
       MYSQL_DATABASE: ssam
     volumes:
       - mysql_data:/var/lib/mysql
+
+  react-app:
+    build:
+      context: ./FRONT/Ssam
+      dockerfile: Dockerfile
+    expose:
+      - "3000"
 
   nginx:
     image: nginx:latest
@@ -43,6 +51,7 @@ services:
     depends_on:
       - jenkins
       - spring-app
+      - react-app
 
 volumes:
   jenkins_home:

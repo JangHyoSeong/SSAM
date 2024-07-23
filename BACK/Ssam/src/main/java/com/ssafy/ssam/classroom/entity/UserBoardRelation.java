@@ -3,10 +3,11 @@ package com.ssafy.ssam.classroom.entity;
 import com.ssafy.ssam.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+@Getter
+@Setter
+@Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -16,7 +17,7 @@ public class UserBoardRelation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_board_relation_id")
-    private int userBoardRelationId;
+    private Integer userBoardRelationId;
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)

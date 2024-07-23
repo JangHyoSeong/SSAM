@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,7 +20,7 @@ public class Alarm {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "alarm_id")
-    private int alarmId;
+    private Integer alarmId;
 
 //    @Convert(converter = AlarmTypeConverter.class)
     @NotNull
@@ -40,11 +41,11 @@ public class Alarm {
 
     @NotNull
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
-    private int state;
+    private Integer state;
 
     @NotNull
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "alarm_time", columnDefinition = "TIMESTAMP", nullable = false)
-    private Date alarmTime;
+    private LocalDateTime alarmTime;
 }

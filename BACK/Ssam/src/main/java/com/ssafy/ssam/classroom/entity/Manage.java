@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,7 +20,7 @@ public class Manage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "follow_id")
-    private int followId;
+    private Integer followId;
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
@@ -35,7 +36,7 @@ public class Manage {
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "follow_date", columnDefinition = "TIMESTAMP", nullable = false)
-    private Date followDate;
+    private LocalDateTime followDate;
 
 //    @Convert(converter = ManageStatusConverter.class)
     @NotNull

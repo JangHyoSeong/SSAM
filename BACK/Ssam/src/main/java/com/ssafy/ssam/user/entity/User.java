@@ -7,7 +7,6 @@ import com.ssafy.ssam.consult.entity.Appointment;
 import com.ssafy.ssam.consult.entity.UnavailableSlot;
 import com.ssafy.ssam.notification.entity.Alarm;
 import com.ssafy.ssam.notification.entity.Question;
-import com.ssafy.ssam.user.converter.UserRoleConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -15,7 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,7 +26,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private int userId;
+    private Integer userId;
 
     @NotNull
     @Column(name = "name", length = 22, nullable = false)
@@ -63,7 +62,7 @@ public class User {
     @NotNull
     @Temporal(TemporalType.DATE)
     @Column(nullable = false)
-    private Date birth;
+    private LocalDate birth;
 
     @Column(name = "other_name", length = 22)
     private String otherName;

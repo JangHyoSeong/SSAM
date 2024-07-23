@@ -9,6 +9,7 @@ import TeacherUpdate from "./teacher/myPage/TeacherUpdate";
 import TeacherSubpage from "./teacher/subPage/TeacherSubpage";
 import TeacherPasswordChange from "./teacher/myPage/TeacherPasswordChange";
 import TeacherQuestion from "./teacher/question/TeacherQuestion";
+import TeacherAppointment from "./teacher/appointment/TeacherAppointment";
 // 학부모
 import ParentsJoin from "./parents/join/ParentsJoin";
 import ParentsLogin from "./parents/login/ParentsLogin";
@@ -24,14 +25,17 @@ const App = () => {
         <img src={SSAM} className="logo" alt="Logo" />
       </NavLink>
       <div className="menu-array">
-        <h2>학급정보</h2>
-        <NavLink
-          to="/teacherquestion"
-          className={({ isActive }) => (isActive ? "active" : "")}
-        >
+        <NavLink to="/teacherclassroom" className="navtxt">
+          <h2>학급정보</h2>
+        </NavLink>
+
+        <NavLink to="/teacherquestion" className="navtxt">
           <h2>문의사항</h2>
         </NavLink>
-        <h2>상담예약</h2>
+
+        <NavLink to="/teacherappointment" className="navtxt">
+          <h2>상담예약</h2>
+        </NavLink>
       </div>
       <div>
         <Routes>
@@ -46,6 +50,7 @@ const App = () => {
             element={<TeacherPasswordChange />}
           />
           <Route path="/teacherquestion" element={<TeacherQuestion />} />
+          <Route path="/teacherappointment" element={<TeacherAppointment />} />
           {/* 학부모 링크 */}
           <Route path="/parentslogin" element={<ParentsLogin />} />
           <Route path="/parentsjoin" element={<ParentsJoin />} />

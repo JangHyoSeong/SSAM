@@ -1,10 +1,12 @@
-FROM node:20.15.0 as build ### YOUR NODE VERSION
+# Build stage
+FROM node:20.15.0 as build
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
 RUN npm run build
 
+# Production stage
 FROM node:20.15.0-alpine
 WORKDIR /app
 COPY --from=build /app/build ./build

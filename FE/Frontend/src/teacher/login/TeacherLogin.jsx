@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import axios from "../../axiosConfig";
-import login from "./TeacherLogin.module.css";
+import login from "./TeacherLogin.module.scss";
 import round1 from "../../assets/round1.png";
 import round2 from "../../assets/round2.png";
 import google from "../../assets/google.png";

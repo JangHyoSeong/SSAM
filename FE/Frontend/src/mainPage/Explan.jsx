@@ -1,6 +1,6 @@
 // 메인 페이지 설명란
 
-import explan from "./Explan.module.css";
+import explan from "./Explan.module.scss";
 
 const Explan = () => {
   return (

@@ -1,6 +1,6 @@
 // 선생님 비밀번호 변경 페이지 컴포넌트
 import { NavLink } from "react-router-dom";
-import change from "./ParentsPasswordChange.module.css";
+import change from "./ParentsPasswordChange.module.scss";
 
 const ParentsPasswordChange = () => {
   return (

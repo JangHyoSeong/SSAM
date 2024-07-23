@@ -3,10 +3,15 @@ package com.ssafy.ssam.domain.consult.entity;
 import com.ssafy.ssam.domain.consult.converter.ConsultTopicConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.util.Date;
 
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Consult {
 
@@ -35,9 +40,18 @@ public class Consult {
     @Column(name = "video_url")
     private String videoUrl;
 
+//    @Convert(converter = ConsultTopicConverter.class)
     @Enumerated(EnumType.STRING)
-    @Convert(converter = ConsultTopicConverter.class)
     private ConsultTopic topic;
+
+    public enum ConsultTopic {
+        FRIEND,
+        BULLYING,
+        SCORE,
+        CAREER,
+        ATTITUDE,
+        OTHER
+    }
 
     @Column(name = "webrtc_session_id", length = 100)
     private String webrtcSessionId;

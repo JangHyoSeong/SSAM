@@ -4,9 +4,14 @@ import com.ssafy.ssam.domain.consult.converter.AppointmentStatusConverter;
 import com.ssafy.ssam.domain.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Appointment {
 
@@ -38,9 +43,15 @@ public class Appointment {
     @Column(name = "end_time", columnDefinition = "TIMESTAMP",nullable = false)
     private Date endTime;
 
+//    @Convert(converter = AppointmentStatusConverter.class)
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Convert(converter = AppointmentStatusConverter.class)
     @Column(nullable = false)
     private AppointmentStatus status;
+
+    public enum AppointmentStatus {
+        BEFORE,
+        DONE,
+        CANCEL
+    }
 }

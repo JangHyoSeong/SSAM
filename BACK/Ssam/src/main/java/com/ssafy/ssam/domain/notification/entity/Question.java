@@ -4,17 +4,22 @@ import com.ssafy.ssam.domain.classroom.entity.Board;
 import com.ssafy.ssam.domain.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "question_id")
-    private int questionId;
+    private Integer questionId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "student_id", nullable = false)
@@ -35,10 +40,10 @@ public class Question {
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "content_date", columnDefinition = "TIMESTAMP", nullable = false)
-    private Date contentDate;
+    private LocalDateTime contentDate;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "answer_date", columnDefinition = "TIMESTAMP")
-    private Date answerDate;
+    private LocalDateTime answerDate;
 
 }

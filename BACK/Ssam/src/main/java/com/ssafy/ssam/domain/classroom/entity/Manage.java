@@ -4,17 +4,23 @@ import com.ssafy.ssam.domain.classroom.converter.ManageStatusConverter;
 import com.ssafy.ssam.domain.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Manage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "follow_id")
-    private int followId;
+    private Integer followId;
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
@@ -30,12 +36,18 @@ public class Manage {
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "follow_date", columnDefinition = "TIMESTAMP", nullable = false)
-    private Date followDate;
+    private LocalDateTime followDate;
 
+//    @Convert(converter = ManageStatusConverter.class)
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Convert(converter = ManageStatusConverter.class)
     @Column(nullable = false)
     private ManageStatus status;
+
+    public enum ManageStatus {
+        WAITING,
+        ACCEPTED,
+        BLOCKED
+    }
 
 }

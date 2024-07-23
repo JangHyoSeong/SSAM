@@ -2,10 +2,15 @@ package com.ssafy.ssam.domain.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "activity_log")
 public class ActivityLog {
@@ -21,13 +26,13 @@ public class ActivityLog {
 
     @NotNull
     @Column(name = "user_id", nullable = false)
-    private int userId;
+    private Integer userId;
 
     @NotNull
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "act_time", columnDefinition = "TIMESTAMP", nullable = false)
-    private Date actTime;
+    private LocalDateTime actTime;
 
     @Column(nullable = false, length = 15)
     private String ipAddress;

@@ -1,6 +1,6 @@
 // 서브 페이지 설명란
 
-import explan from "./ParentsExplan.module.css";
+import explan from "./ParentsExplan.module.scss";
 
 const Explan = () => {
   return (

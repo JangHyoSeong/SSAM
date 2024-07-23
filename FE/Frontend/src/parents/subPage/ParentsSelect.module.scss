@@ -1,0 +1,131 @@
+$menu-primary-color: #5285ee;
+$bg-color-invite-box: #dae9ff;
+$text-size-large: 120%;
+$animation-fadein-duration: 1s;
+$animation-move-duration: 5s;
+$border-radius-large: 25px;
+
+.menuArray {
+  height: 100vh;
+}
+
+.inviteCodeBox {
+  position: relative;
+  top: 5%;
+  left: 25%;
+  align-items: center;
+  width: 50vw;
+  height: 20vh;
+  background-color: $bg-color-invite-box;
+  border-radius: $border-radius-large;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0;
+  animation: fadeIn $animation-fadein-duration ease-in forwards;
+  text-align: center;
+
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.inviteTxtBox {
+  padding: 1.5%;
+}
+
+.inviteCodeBox button {
+  padding: 1% 4%;
+  border-radius: $border-radius-large;
+  color: $menu-primary-color;
+  font-size: $text-size-large;
+  border-color: $menu-primary-color;
+  background-color: white;
+}
+
+.menuBoxArray {
+  position: relative;
+  top: 15%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.menuBox {
+  width: 24vw;
+  background-color: $menu-primary-color;
+  border-radius: $border-radius-large;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.4);
+  text-decoration: none;
+  color: white;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.menuBox1 {
+  opacity: 0;
+  animation: fadeIn $animation-fadein-duration ease-in forwards;
+}
+
+.menuBox2 {
+  opacity: 0;
+  animation: fadeIn $animation-fadein-duration ease-in 0.05s forwards;
+}
+
+.menuBox3 {
+  opacity: 0;
+  animation: fadeIn $animation-fadein-duration ease-in 0.1s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.menuTxt {
+  position: relative;
+  top: 5%;
+  text-align: center;
+  font-size: $text-size-large;
+}
+
+.imgArray {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  margin: 10% 0;
+}
+
+.classroomImg {
+  width: 13.2vw;
+}
+
+.questionImg {
+  width: 9vw;
+}
+
+.appointmentImg {
+  width: 11vw;
+}
+
+.scroll {
+  position: relative;
+  text-align: center;
+  font-size: 150%;
+  font-weight: bold;
+  animation: moveUpDown $animation-move-duration infinite;
+}
+
+@keyframes moveUpDown {
+  0%, 100% {
+    top: 21%;
+  }
+  50% {
+    top: 23%;
+  }
+}

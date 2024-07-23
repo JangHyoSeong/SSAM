@@ -1,6 +1,6 @@
 // 메인 페이지에서의 역할 선택 컴포넌트
 import { NavLink } from "react-router-dom";
-import select from "./Select.module.css";
+import select from "./Select.module.scss";
 import teacher from "../assets/teacher.png";
 import parents from "../assets/parents.png";
 import round1 from "../assets/round1.png";

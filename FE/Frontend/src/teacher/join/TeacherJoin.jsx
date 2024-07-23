@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { NavLink } from "react-router-dom";
 import axios from "../../axiosConfig";
-import join from "./TeacherJoin.module.css";
+import join from "./TeacherJoin.module.scss";
 import round1 from "../../assets/round1.png";
 import round2 from "../../assets/round2.png";
 import human from "../../assets/human.png";
@@ -52,100 +53,102 @@ const TeacherJoin = () => {
     <div className={join.joinArray}>
       <h1 className={join.joinTitle}>회원가입</h1>
       <div className={join.joinFormArray}>
-        <div className={join.joinBackground}>
-          <form onSubmit={handleSubmit} className={join.joinForm}>
-            <div>
-              <img src={human} className={join.joinIcon} alt="human" />
-              <input
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                placeholder="아이디"
-                required
-              />
-            </div>
-            <hr />
-            <div>
-              <img src={lock} className={join.joinIcon} alt="lock" />
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="비밀번호"
-                required
-              />
-            </div>
-            <hr />
-            <div>
-              <img src={mail} className={join.joinIcon} alt="mail" />
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="이메일"
-                required
-              />
-            </div>
-            <hr />
-            <div>
-              <img src={search} className={join.joinIcon} alt="search" />
-              <input
-                type="search"
-                name="school"
-                value={formData.school}
-                onChange={handleChange}
-                placeholder="학교 검색"
-                required
-              />
-            </div>
-            <hr />
-            <div>
-              <img src={human} className={join.joinIcon} alt="human" />
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="이름"
-                required
-              />
-            </div>
-            <hr />
-            <div>
-              <img src={calendar} className={join.joinIcon} alt="calendar" />
-              <input
-                type="text"
-                name="birthdate"
-                value={formData.birthdate}
-                onChange={handleChange}
-                placeholder="생년월일 8자리"
-                required
-              />
-            </div>
-            <hr />
-            <div>
-              <img src={phone} className={join.joinIcon} alt="phone" />
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="휴대전화 번호"
-                required
-              />
-            </div>
-            <div className={join.joinBtnArray}>
-              <button type="submit" className={join.joinBtn}>
-                가입
-              </button>
-              <button type="button" className={join.joinBtn}>
-                취소
-              </button>
-            </div>
-          </form>
+        <div className={join.joinBtnFormArray}>
+          <div className={join.joinBackground}>
+            <form onSubmit={handleSubmit} className={join.joinForm}>
+              <div>
+                <img src={human} className={join.joinIcon} alt="human" />
+                <input
+                  type="text"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  placeholder="아이디"
+                  required
+                />
+              </div>
+              <hr />
+              <div>
+                <img src={lock} className={join.joinIcon} alt="lock" />
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="비밀번호"
+                  required
+                />
+              </div>
+              <hr />
+              <div>
+                <img src={mail} className={join.joinIcon} alt="mail" />
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="이메일"
+                  required
+                />
+              </div>
+              <hr />
+              <div>
+                <img src={search} className={join.joinIcon} alt="search" />
+                <input
+                  type="search"
+                  name="school"
+                  value={formData.school}
+                  onChange={handleChange}
+                  placeholder="학교 검색"
+                  required
+                />
+              </div>
+              <hr />
+              <div>
+                <img src={human} className={join.joinIcon} alt="human" />
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="이름"
+                  required
+                />
+              </div>
+              <hr />
+              <div>
+                <img src={calendar} className={join.joinIcon} alt="calendar" />
+                <input
+                  type="text"
+                  name="birthdate"
+                  value={formData.birthdate}
+                  onChange={handleChange}
+                  placeholder="생년월일 8자리"
+                  required
+                />
+              </div>
+              <hr />
+              <div>
+                <img src={phone} className={join.joinIcon} alt="phone" />
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="휴대전화 번호"
+                  required
+                />
+              </div>
+            </form>
+          </div>
+          <div className={join.joinBtnArray}>
+            <NavLink to="/teacherlogin" type="submit" className={join.joinBtn}>
+              가입
+            </NavLink>
+            <button type="button" className={join.joinBtn}>
+              취소
+            </button>
+          </div>
         </div>
       </div>
 

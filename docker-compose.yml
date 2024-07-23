@@ -38,7 +38,9 @@ services:
       context: ./FE/Frontend
       dockerfile: Dockerfile
     volumes:
-      - ./FE/Frontend/dist:/app/dist
+      - ./FE/Frontend:/app
+      - /app/node_modules
+    command: npm run build
 
   nginx:
     image: nginx:latest

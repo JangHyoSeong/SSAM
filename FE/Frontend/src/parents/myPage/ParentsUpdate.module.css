@@ -1,0 +1,109 @@
+/* 상단 메뉴 배열 스타일 */
+.menuArray {
+  display: flex;
+  margin-top: 0.5%;
+  width: 100vw; /* 뷰포트 너비 전체 사용 */
+  height: 5vh; /* 뷰포트 높이의 5% 사용 */
+}
+
+/* 회원정보 수정 메뉴 스타일 */
+.updateMenu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 100%;
+  border-radius: 50px 50px 0 0;
+  background-color: #4a93e3;
+  color: white;
+}
+
+/* 비밀번호 변경 메뉴 스타일 */
+.changeMenu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 100%;
+  border-radius: 50px 50px 0 0;
+  background-color: #d9d9d9;
+  text-decoration: none; /* 링크 밑줄 제거 */
+  color: black;
+}
+
+/* 정보 배열 스타일 */
+.infoArray {
+  width: 100vw;
+  height: 83vh; /* 뷰포트 높이의 83% 사용 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* 정보 폼 스타일 */
+.infoForm {
+  width: 40vw; /* 뷰포트 너비의 40% 사용 */
+  height: 68vh; /* 뷰포트 높이의 65% 사용 */
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
+}
+
+/* 테이블 스타일 */
+table {
+  width: 100%;
+  height: 100%;
+  border-collapse: collapse;
+}
+
+/* 테이블 행, 열 스타일 */
+th, td {
+  border: 1px solid black;
+  text-align: left;
+  font-size: 120%; /* 글씨 크기 증가 */
+  padding-left: 2%;
+}
+
+/* 프로필 이미지 열 스타일 */
+.imgTd {
+  width: 33vw; /* 뷰포트 너비의 33% 사용 */
+  height: 20vh; /* 뷰포트 높이의 20% 사용 */
+}
+
+/* 프로필 이미지 스타일 */
+.profileImg {
+  width: 10vw; /* 뷰포트 너비의 10% 사용 */
+  height: 25vh; /* 뷰포트 높이의 25% 사용 */
+  margin-top: 2%;
+  background-color: #d9d9d9;
+}
+
+/* 이미지 버튼 스타일 */
+.btn {
+  display: flex;
+}
+
+.imgBtn {
+  width: 4vw; /* 뷰포트 너비의 4% 사용 */
+  height: 4vh; /* 뷰포트 높이의 4% 사용 */
+  font-size: 80%; /* 글씨 크기 */
+  margin: 2%;
+  background-color: white;
+}
+
+/* 폼 버튼 배열 스타일 */
+.formBtnArray {
+  display: flex;
+  justify-content: center;
+  width: 50vw; /* 뷰포트 너비의 50% 사용 */
+}
+
+/* 폼 버튼 스타일 */
+.formBtn {
+  width: 5vw; /* 뷰포트 너비의 5% 사용 */
+  height: 5vh; /* 뷰포트 높이의 5% 사용 */
+  font-size: 120%; /* 글씨 크기 증가 */
+  border-radius: 20px; /* 버튼 모서리 둥글게 */
+  margin: 2%;
+  background-color: white;
+}

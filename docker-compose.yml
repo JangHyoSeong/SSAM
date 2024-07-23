@@ -40,7 +40,6 @@ services:
     volumes:
       - ./FE/Frontend:/app
       - /app/node_modules
-      - react_build:/app/dist
     command: npm run build
 
   nginx:

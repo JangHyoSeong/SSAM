@@ -1,7 +1,5 @@
-package com.ssafy.ssam.classroom.dto.response;
+package com.ssafy.ssam.domain.classroom.dto.response;
 
-import com.ssafy.ssam.notification.entity.Question;
-import com.ssafy.ssam.user.entity.User;
 import lombok.*;
 
 import java.util.List;

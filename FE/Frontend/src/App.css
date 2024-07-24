@@ -1,7 +1,4 @@
-/* App.css */
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap");
-
-
 
 body {
   overflow-x: hidden; /* 가로 스크롤바 숨기기 */
@@ -25,7 +22,7 @@ body {
   white-space: nowrap; /* 텍스트가 한 줄로 표시되도록 설정 */
 }
 
-.navtxt :hover {
+.navtxt:hover {
   color: #5285ee;
 }
 

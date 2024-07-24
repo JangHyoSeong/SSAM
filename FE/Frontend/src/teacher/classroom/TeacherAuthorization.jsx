@@ -1,10 +1,7 @@
-import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import styles from './TeacherAuthorization.module.scss';
 
 const TeacherAuthorization = () => {
-  const [isActive, setIsActive] = useState(false);
-
   const requests = [
     { name: '정종화', id: 'JJH', date: '24.07.16' },
     { name: '권혜경', id: 'KHK', date: '24.07.13' },
@@ -15,20 +12,12 @@ const TeacherAuthorization = () => {
   ];
 
   return (
-    <div className={`${styles.authorizationContainer} ${isActive ? styles.active : ''}`}>
+    <div className={styles.authorizationContainer}>
       <div className={styles.classNavbar}>
-        <NavLink
-          to="/teacherclassroom"
-          className={({ isActive }) => isActive ? `${styles.navItem} ${styles.active}` : styles.navItem}
-          onClick={() => setIsActive(true)}
-        >
+        <NavLink to="/teacherclassroom" className={({ isActive }) => isActive ? `${styles.navItem} ${styles.active}` : styles.navItem}>
           학급 관리
         </NavLink>
-        <NavLink
-          to="/teacherauthorization"
-          className={({ isActive }) => isActive ? `${styles.navItem} ${styles.active}` : styles.navItem}
-          onClick={() => setIsActive(false)}
-        >
+        <NavLink to="/teacherauthorization" className={({ isActive }) => isActive ? `${styles.navItem} ${styles.active}` : styles.navItem}>
           승인 관리
         </NavLink>
       </div>

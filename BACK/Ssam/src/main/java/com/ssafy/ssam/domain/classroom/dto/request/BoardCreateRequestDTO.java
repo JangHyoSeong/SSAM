@@ -3,13 +3,11 @@ package com.ssafy.ssam.domain.classroom.dto.request;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Getter
 @Setter
 public class BoardCreateRequestDTO {
@@ -21,4 +19,5 @@ public class BoardCreateRequestDTO {
 
     @NotNull
     private int classroom;
+
 }

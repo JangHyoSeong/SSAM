@@ -1,5 +1,6 @@
 package com.ssafy.ssam.global.jwt;
 
+import com.ssafy.ssam.domain.user.dto.CustomUserDetails;
 import com.ssafy.ssam.domain.user.entity.User;
 import com.ssafy.ssam.domain.user.entity.UserRole;
 import jakarta.servlet.FilterChain;
@@ -8,6 +9,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -25,7 +29,6 @@ public class JwtFilter extends OncePerRequestFilter {
         if(authorization == null || !authorization.startsWith("Bearer ")) {
             System.out.println("Token null");
             filterChain.doFilter(request, response);
-
             return;
         }
 
@@ -44,7 +47,13 @@ public class JwtFilter extends OncePerRequestFilter {
         User user = User.builder()
                 .username(username)
                 .password("temppassword")
+                .userId(jwtUtil.getUserId(token))
                 .role(role)
                 .build();
+        CustomUserDetails customUserDetails = new CustomUserDetails(user);
+        Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+
+        filterChain.doFilter(request, response);
     }
 }

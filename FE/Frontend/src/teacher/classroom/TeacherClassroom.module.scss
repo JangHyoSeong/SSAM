@@ -28,12 +28,12 @@
 
 .navItem:hover {
   background-color: #5285ee;
-  color: white;
+  color: white !important; /* 글자색 하얀색으로 변경 */
 }
 
 .active {
   background-color: #5285ee;
-  color: white;
+  color: white !important; /* 글자색 하얀색으로 변경 */
 }
 
 .imageContainer {

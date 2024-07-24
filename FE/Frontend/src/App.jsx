@@ -1,7 +1,7 @@
-import "./App.scss";
-import { Routes, Route, NavLink } from "react-router-dom";
-import SSAM from "./assets/SSAM.png";
-import MainPage from "./mainPage/MainPage";
+import { Routes, Route, NavLink, useLocation } from 'react-router-dom';
+import './App.css';
+import SSAM from './assets/SSAM.png';
+import MainPage from './mainPage/MainPage';
 // 선생님
 import TeacherJoin from "./teacher/join/TeacherJoin";
 import TeacherLogin from "./teacher/login/TeacherLogin";
@@ -23,20 +23,25 @@ import ParentsPasswordChange from "./parents/myPage/ParentsPasswordChange";
 import ParentsQuestion from "./parents/question/ParentsQuestion"; // ParentsQuestion 컴포넌트 import
 
 const App = () => {
+  const location = useLocation();
+
   return (
     <div className="navbar-array">
       <NavLink to="/">
         <img src={SSAM} className="logo" alt="Logo" />
       </NavLink>
       <div className="menu-array">
-        <NavLink to="/teacherclassroom" className="navtxt">
-          <h3>학급정보</h3>
+        <NavLink
+          to="/teacherclassroom"
+          className={({ isActive }) => isActive || location.pathname.startsWith('/teacher') ? 'navtxt active' : 'navtxt'}
+        >
+          <h2>학급정보</h2>
         </NavLink>
-        <NavLink to="/teacherquestion" className="navtxt">
-          <h3>문의사항</h3>
+        <NavLink to="/teacherquestion" className={({ isActive }) => isActive ? 'navtxt active' : 'navtxt'}>
+          <h2>문의사항</h2>
         </NavLink>
-        <NavLink to="/teacherappointment" className="navtxt">
-          <h3>상담예약</h3>
+        <NavLink to="/teacherappointment" className={({ isActive }) => isActive ? 'navtxt active' : 'navtxt'}>
+          <h2>상담예약</h2>
         </NavLink>
       </div>
       <div>
@@ -47,10 +52,7 @@ const App = () => {
           <Route path="/teacherjoin" element={<TeacherJoin />} />
           <Route path="/teachersubpage" element={<TeacherSubpage />} />
           <Route path="/teacherupdate" element={<TeacherUpdate />} />
-          <Route
-            path="/teacherpasswordchange"
-            element={<TeacherPasswordChange />}
-          />
+          <Route path="/teacherpasswordchange" element={<TeacherPasswordChange />} />
           <Route path="/teacherquestion" element={<TeacherQuestion />} />
           <Route path="/teacherclassroom" element={<TeacherClassroom />} />
           <Route
@@ -58,7 +60,6 @@ const App = () => {
             element={<TeacherAuthorization />}
           />
           <Route path="/teacherappointment" element={<TeacherAppointment />} />
-          <Route path="/teacherstudent" element={<TeacherStudent />} />
           {/* 학부모 링크 */}
           <Route path="/parentslogin" element={<ParentsLogin />} />
           <Route path="/parentsjoin" element={<ParentsJoin />} />

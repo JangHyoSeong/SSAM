@@ -13,7 +13,7 @@ import TeacherReservationManagement from "./teacher/appointment/TeacherReservati
 import TeacherConsultationList from "./teacher/appointment/TeacherConsultationList";
 import TeacherClassroom from "./teacher/classroom/TeacherClassroom";
 import TeacherAuthorization from "./teacher/classroom/TeacherAuthorization";
-import TeacherStudent from "./teacher/classroom/TeacherStudent";
+import TeacherStudentDetail from "./teacher/classroom/TeacherStudentDetail";
 
 // 학부모
 import ParentsJoin from "./parents/join/ParentsJoin";
@@ -24,33 +24,19 @@ import ParentsPasswordChange from "./parents/myPage/ParentsPasswordChange";
 import ParentsQuestion from "./parents/question/ParentsQuestion"; // ParentsQuestion 컴포넌트 import
 
 const App = () => {
-  const location = useLocation();
   return (
     <div>
       <NavLink to="/">
         <img src={SSAM} className="logo" alt="Logo" />
       </NavLink>
       <div className="menu-array">
-        <NavLink
-          to="/teacherclassroom"
-          className={({ isActive }) =>
-            isActive || location.pathname.startsWith("/teacher")
-              ? "navtxt active"
-              : "navtxt"
-          }
-        >
+        <NavLink to="/teacherclassroom" className="navtxt">
           <h2>학급정보</h2>
         </NavLink>
-        <NavLink
-          to="/teacherquestion"
-          className={({ isActive }) => (isActive ? "navtxt active" : "navtxt")}
-        >
+        <NavLink to="/teacherquestion" className="navtxt">
           <h2>문의사항</h2>
         </NavLink>
-        <NavLink
-          to="/teacherreservationmanagement"
-          className={({ isActive }) => (isActive ? "navtxt active" : "navtxt")}
-        >
+        <NavLink to="/teacherreservationmanagement" className="navtxt">
           <h2>상담예약</h2>
         </NavLink>
       </div>
@@ -80,6 +66,11 @@ const App = () => {
             path="/teacherconsultationlist"
             element={<TeacherConsultationList />}
           />
+          <Route
+            path="/teacherclassroom/student/:id"
+            element={<TeacherStudentDetail />}
+          />{" "}
+          {/* Add this route for student detail */}
           {/* 학부모 링크 */}
           <Route path="/parentslogin" element={<ParentsLogin />} />
           <Route path="/parentsjoin" element={<ParentsJoin />} />

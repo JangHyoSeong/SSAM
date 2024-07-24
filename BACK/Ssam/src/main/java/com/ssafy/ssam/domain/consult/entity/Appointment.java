@@ -1,0 +1,57 @@
+package com.ssafy.ssam.domain.consult.entity;
+
+import com.ssafy.ssam.domain.consult.converter.AppointmentStatusConverter;
+import com.ssafy.ssam.domain.user.entity.User;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+import java.util.Date;
+
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+public class Appointment {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "appointment_id")
+    private int appointmentId;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "student_id", nullable = false)
+    private User student;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "teacher_id", nullable = false)
+    private User teacher;
+
+    @Column(length = 50)
+    private String topic;
+
+    @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "start_time", columnDefinition = "TIMESTAMP", nullable = false)
+    private Date startTime;
+
+    @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "end_time", columnDefinition = "TIMESTAMP",nullable = false)
+    private Date endTime;
+
+//    @Convert(converter = AppointmentStatusConverter.class)
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AppointmentStatus status;
+
+    public enum AppointmentStatus {
+        BEFORE,
+        DONE,
+        CANCEL
+    }
+}

@@ -1,8 +1,6 @@
-/* App.css */
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap");
 
 body {
-  font-family: "Noto Sans", sans-serif;
   overflow-x: hidden; /* 가로 스크롤바 숨기기 */
 }
 
@@ -13,18 +11,18 @@ body {
 
 .logo {
   position: absolute;
-  top: 1.5%;
+  top: 1.2%;
   left: 5%;
   width: 8vw;
 }
 
 .navtxt {
-  margin: 0% 5%;
+  margin: 0% 3%;
   font-size: 100%;
   white-space: nowrap; /* 텍스트가 한 줄로 표시되도록 설정 */
 }
 
-.navtxt :hover {
+.navtxt:hover {
   color: #5285ee;
 }
 

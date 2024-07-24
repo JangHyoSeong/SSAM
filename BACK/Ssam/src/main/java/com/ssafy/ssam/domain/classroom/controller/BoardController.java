@@ -1,7 +1,7 @@
-package com.ssafy.ssam.classroom.controller;
+package com.ssafy.ssam.domain.classroom.controller;
 
-import com.ssafy.ssam.classroom.dto.response.BoardGetResponseDTO;
-import com.ssafy.ssam.classroom.service.BoardService;
+import com.ssafy.ssam.domain.classroom.dto.response.BoardGetResponseDTO;
+import com.ssafy.ssam.domain.classroom.service.BoardService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

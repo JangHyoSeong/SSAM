@@ -1,12 +1,12 @@
-package com.ssafy.ssam.classroom.service;
+package com.ssafy.ssam.domain.classroom.service;
 
-import com.ssafy.ssam.classroom.dto.response.BoardGetResponseDTO;
-import com.ssafy.ssam.classroom.entity.Board;
-import com.ssafy.ssam.classroom.entity.UserBoardRelation;
-import com.ssafy.ssam.classroom.repository.BoardRepository;
-import com.ssafy.ssam.classroom.repository.UserBoardRelationRepository;
-import com.ssafy.ssam.user.entity.User;
-import com.ssafy.ssam.user.repository.UserRepository;
+import com.ssafy.ssam.domain.classroom.dto.response.BoardGetResponseDTO;
+import com.ssafy.ssam.domain.classroom.entity.Board;
+import com.ssafy.ssam.domain.classroom.entity.UserBoardRelation;
+import com.ssafy.ssam.domain.classroom.repository.BoardRepository;
+import com.ssafy.ssam.domain.classroom.repository.UserBoardRelationRepository;
+import com.ssafy.ssam.domain.user.entity.User;
+import com.ssafy.ssam.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class BoardService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException("user doesn't exist"));
 
         Board board = Board.builder()
                 .grade(requestDTO.getGrade())

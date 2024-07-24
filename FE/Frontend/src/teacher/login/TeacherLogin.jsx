@@ -1,44 +1,24 @@
-import { useState } from "react";
-import { NavLink } from "react-router-dom";
-import axios from "../../axiosConfig";
-import login from "./TeacherLogin.module.scss";
-import round1 from "../../assets/round1.png";
-import round2 from "../../assets/round2.png";
-import google from "../../assets/google.png";
-import naver from "../../assets/naver.png";
-import kakao from "../../assets/kakao.png";
+// src/components/TeacherLogin.jsx
+import { NavLink } from 'react-router-dom';
+import useAuthStore from '../../store/AuthStore'
+import login from './TeacherLogin.module.scss';
+import round1 from '../../assets/round1.png';
+import round2 from '../../assets/round2.png';
+import google from '../../assets/google.png';
+import naver from '../../assets/naver.png';
+import kakao from '../../assets/kakao.png';
 
 const TeacherLogin = () => {
-  // 폼 데이터 상태 관리
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-  });
+  const { username, password, setFormData, login: handleLogin } = useAuthStore();
 
-  // 입력값이 변경될 때 상태를 업데이트하는 함수
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData(name, value);
   };
 
-  // 폼 제출 시 호출되는 함수
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      // 백엔드 API에 로그인 요청을 보냄
-      const response = await axios.post("/login", formData);
-      // 응답 데이터를 활용하여 추가 작업 수행
-      console.log(response.data);
-      alert("로그인이 완료되었습니다.");
-      // 로그인 완료 후 메인 페이지로 리다이렉트
-      // window.location.href = "/main";
-    } catch (error) {
-      // 오류 발생 시 사용자에게 알림
-      alert(error.response?.data?.message || "로그인 중 오류가 발생했습니다.");
-    }
+    handleLogin({ username, password });
   };
 
   return (
@@ -50,7 +30,7 @@ const TeacherLogin = () => {
             <input
               type="text"
               name="username"
-              value={formData.username}
+              value={username}
               onChange={handleChange}
               placeholder="아이디"
               required
@@ -58,14 +38,14 @@ const TeacherLogin = () => {
             <input
               type="password"
               name="password"
-              value={formData.password}
+              value={password}
               onChange={handleChange}
               placeholder="비밀번호"
               required
             />
-            <NavLink to="/teachersubpage" type="submit" className={login.loginBtn}>
+            <button type="submit" className={login.loginBtn}>
               로그인
-            </NavLink>
+            </button>
             <div className={login.loginRoute}>
               <NavLink to="/teacherjoin" className={login.joinNavLink}>
                 <p>회원가입</p>

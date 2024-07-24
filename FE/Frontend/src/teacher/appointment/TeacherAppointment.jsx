@@ -1,5 +1,11 @@
+import TeacherCalendar from "./TeacherCalendar";
+
 const TeacherAppointment = () => {
-  return <div>hello</div>;
+  return (
+    <div>
+      <TeacherCalendar />
+    </div>
+  );
 };
 
 export default TeacherAppointment;

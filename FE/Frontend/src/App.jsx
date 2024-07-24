@@ -1,8 +1,7 @@
-import React from 'react';
-import './App.css';
-import { Routes, Route, NavLink } from 'react-router-dom';
-import SSAM from './assets/SSAM.png';
-import MainPage from './mainPage/MainPage';
+import "./App.scss";
+import { Routes, Route, NavLink } from "react-router-dom";
+import SSAM from "./assets/SSAM.png";
+import MainPage from "./mainPage/MainPage";
 // 선생님
 import TeacherJoin from './teacher/join/TeacherJoin';
 import TeacherLogin from './teacher/login/TeacherLogin';
@@ -31,13 +30,13 @@ const App = () => {
       </NavLink>
       <div className="menu-array">
         <NavLink to="/teacherclassroom" className="navtxt">
-          <h2>학급정보</h2>
+          <h3>학급정보</h3>
         </NavLink>
         <NavLink to="/teacherquestion" className="navtxt">
-          <h2>문의사항</h2>
+          <h3>문의사항</h3>
         </NavLink>
         <NavLink to="/teacherappointment" className="navtxt">
-          <h2>상담예약</h2>
+          <h3>상담예약</h3>
         </NavLink>
       </div>
       <div>

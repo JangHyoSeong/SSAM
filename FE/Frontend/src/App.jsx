@@ -12,6 +12,7 @@ import TeacherQuestion from './teacher/question/TeacherQuestion';
 import TeacherAppointment from './teacher/appointment/TeacherAppointment';
 import TeacherClassroom from './teacher/classroom/TeacherClassroom';
 import TeacherAuthorization from './teacher/classroom/TeacherAuthorization';
+import TeacherStudent from './teacher/classroom/TeacherStudent';
 
 // 학부모
 import ParentsJoin from './parents/join/ParentsJoin';
@@ -54,6 +55,7 @@ const App = () => {
           <Route path="/teacherclassroom" element={<TeacherClassroom />} />
           <Route path="/teacherauthorization" element={<TeacherAuthorization />} />
           <Route path="/teacherappointment" element={<TeacherAppointment />} />
+          <Route path="/teacherstudent" element={<TeacherStudent />} />
           {/* 학부모 링크 */}
           <Route path="/parentslogin" element={<ParentsLogin />} />
           <Route path="/parentsjoin" element={<ParentsJoin />} />

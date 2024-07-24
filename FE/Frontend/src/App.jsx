@@ -1,5 +1,5 @@
 import { Routes, Route, NavLink, useLocation } from 'react-router-dom';
-import './App.css';
+import './App.scss';
 import SSAM from './assets/SSAM.png';
 import MainPage from './mainPage/MainPage';
 // 선생님
@@ -31,7 +31,7 @@ const App = () => {
       <div className="menu-array">
         <NavLink
           to="/teacherclassroom"
-          className={({ isActive }) => isActive || location.pathname.startsWith('/teacher') ? 'navtxt active' : 'navtxt'}
+          className={({ isActive }) => isActive || location.pathname === '/teacherclassroom' || location.pathname === '/teacherauthorization' ? 'navtxt active' : 'navtxt'}
         >
           <h2>학급정보</h2>
         </NavLink>

@@ -16,12 +16,12 @@ import TeacherAuthorization from "./teacher/classroom/TeacherAuthorization";
 import TeacherStudentDetail from "./teacher/classroom/TeacherStudentDetail";
 
 // 학부모
-import ParentsJoin from './parents/join/ParentsJoin';
-import ParentsLogin from './parents/login/ParentsLogin';
-import ParentsUpdate from './parents/myPage/ParentsUpdate';
-import ParentsSubpage from './parents/subPage/ParentsSubpage';
-import ParentsPasswordChange from './parents/myPage/ParentsPasswordChange';
-import ParentsQuestion from './parents/question/ParentsQuestion'; // ParentsQuestion 컴포넌트 import
+import ParentsJoin from "./parents/join/ParentsJoin";
+import ParentsLogin from "./parents/login/ParentsLogin";
+import ParentsUpdate from "./parents/myPage/ParentsUpdate";
+import ParentsSubpage from "./parents/subPage/ParentsSubpage";
+import ParentsPasswordChange from "./parents/myPage/ParentsPasswordChange";
+import ParentsQuestion from "./parents/question/ParentsQuestion"; // ParentsQuestion 컴포넌트 import
 
 const App = () => {
   return (
@@ -36,11 +36,7 @@ const App = () => {
         <NavLink to="/teacherquestion" className="navtxt">
           <h2>문의사항</h2>
         </NavLink>
-<<<<<<< HEAD
-        <NavLink to="/teacherappointment" className="navtxt">
-=======
         <NavLink to="/teacherreservationmanagement" className="navtxt">
->>>>>>> FE
           <h2>상담예약</h2>
         </NavLink>
       </div>
@@ -58,10 +54,6 @@ const App = () => {
           />
           <Route path="/teacherquestion" element={<TeacherQuestion />} />
           <Route path="/teacherclassroom" element={<TeacherClassroom />} />
-<<<<<<< HEAD
-          <Route path="/teacherauthorization" element={<TeacherAuthorization />} />
-          <Route path="/teacherappointment" element={<TeacherAppointment />} />
-=======
           <Route
             path="/teacherauthorization"
             element={<TeacherAuthorization />}
@@ -79,7 +71,6 @@ const App = () => {
             element={<TeacherStudentDetail />}
           />{" "}
           {/* Add this route for student detail */}
->>>>>>> FE
           {/* 학부모 링크 */}
           <Route path="/parentslogin" element={<ParentsLogin />} />
           <Route path="/parentsjoin" element={<ParentsJoin />} />
@@ -89,11 +80,7 @@ const App = () => {
             path="/parentspasswordchange"
             element={<ParentsPasswordChange />}
           />
-<<<<<<< HEAD
-          <Route path="/parentsquestion" element={<ParentsQuestion />} /> {/* ParentsQuestion 라우트 추가 */}
-=======
           <Route path="/parentsquestion" element={<ParentsQuestion />} />
->>>>>>> FE
         </Routes>
       </div>
     </div>

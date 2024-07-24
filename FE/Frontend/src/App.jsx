@@ -1,17 +1,19 @@
-import "./App.scss";
 import { Routes, Route, NavLink } from "react-router-dom";
+import "./App.scss";
 import SSAM from "./assets/SSAM.png";
 import MainPage from "./mainPage/MainPage";
 // 선생님
-import TeacherJoin from './teacher/join/TeacherJoin';
-import TeacherLogin from './teacher/login/TeacherLogin';
-import TeacherUpdate from './teacher/myPage/TeacherUpdate';
-import TeacherSubpage from './teacher/subPage/TeacherSubpage';
-import TeacherPasswordChange from './teacher/myPage/TeacherPasswordChange';
-import TeacherQuestion from './teacher/question/TeacherQuestion';
-import TeacherAppointment from './teacher/appointment/TeacherAppointment';
-import TeacherClassroom from './teacher/classroom/TeacherClassroom';
-import TeacherAuthorization from './teacher/classroom/TeacherAuthorization';
+import TeacherJoin from "./teacher/join/TeacherJoin";
+import TeacherLogin from "./teacher/login/TeacherLogin";
+import TeacherUpdate from "./teacher/myPage/TeacherUpdate";
+import TeacherSubpage from "./teacher/subPage/TeacherSubpage";
+import TeacherPasswordChange from "./teacher/myPage/TeacherPasswordChange";
+import TeacherQuestion from "./teacher/question/TeacherQuestion";
+import TeacherReservationManagement from "./teacher/appointment/TeacherReservationManagement";
+import TeacherConsultationList from "./teacher/appointment/TeacherConsultationList";
+import TeacherClassroom from "./teacher/classroom/TeacherClassroom";
+import TeacherAuthorization from "./teacher/classroom/TeacherAuthorization";
+import TeacherStudentDetail from "./teacher/classroom/TeacherStudentDetail";
 
 // 학부모
 import ParentsJoin from './parents/join/ParentsJoin';
@@ -23,7 +25,7 @@ import ParentsQuestion from './parents/question/ParentsQuestion'; // ParentsQues
 
 const App = () => {
   return (
-    <div className="navbar-array">
+    <div>
       <NavLink to="/">
         <img src={SSAM} className="logo" alt="Logo" />
       </NavLink>
@@ -34,7 +36,11 @@ const App = () => {
         <NavLink to="/teacherquestion" className="navtxt">
           <h2>문의사항</h2>
         </NavLink>
+<<<<<<< HEAD
         <NavLink to="/teacherappointment" className="navtxt">
+=======
+        <NavLink to="/teacherreservationmanagement" className="navtxt">
+>>>>>>> FE
           <h2>상담예약</h2>
         </NavLink>
       </div>
@@ -52,8 +58,28 @@ const App = () => {
           />
           <Route path="/teacherquestion" element={<TeacherQuestion />} />
           <Route path="/teacherclassroom" element={<TeacherClassroom />} />
+<<<<<<< HEAD
           <Route path="/teacherauthorization" element={<TeacherAuthorization />} />
           <Route path="/teacherappointment" element={<TeacherAppointment />} />
+=======
+          <Route
+            path="/teacherauthorization"
+            element={<TeacherAuthorization />}
+          />
+          <Route
+            path="/teacherreservationmanagement"
+            element={<TeacherReservationManagement />}
+          />
+          <Route
+            path="/teacherconsultationlist"
+            element={<TeacherConsultationList />}
+          />
+          <Route
+            path="/teacherclassroom/student/:id"
+            element={<TeacherStudentDetail />}
+          />{" "}
+          {/* Add this route for student detail */}
+>>>>>>> FE
           {/* 학부모 링크 */}
           <Route path="/parentslogin" element={<ParentsLogin />} />
           <Route path="/parentsjoin" element={<ParentsJoin />} />
@@ -63,7 +89,11 @@ const App = () => {
             path="/parentspasswordchange"
             element={<ParentsPasswordChange />}
           />
+<<<<<<< HEAD
           <Route path="/parentsquestion" element={<ParentsQuestion />} /> {/* ParentsQuestion 라우트 추가 */}
+=======
+          <Route path="/parentsquestion" element={<ParentsQuestion />} />
+>>>>>>> FE
         </Routes>
       </div>
     </div>

@@ -1,14 +1,22 @@
-import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './TeacherClassroom.module.scss';
+import TeacherStudent from './TeacherStudent';
+import TeacherStudentDetail from './TeacherStudentDetail';
 import ClassImage from '../../assets/background.png'; // 이미지 파일 경로를 정확히 설정하세요
 
 const TeacherClassroom = () => {
-  const [isActive, setIsActive] = useState(false);
+  const [selectedStudentId, setSelectedStudentId] = useState(null);
+  const navigate = useNavigate();
+
+  const handleAuthorizationClick = () => {
+    navigate('/teacherauthorization');
+  };
 
   return (
     <div className={`${styles.classInfoContainer} ${isActive ? styles.active : ''}`}>
       <div className={styles.classNavbar}>
+<<<<<<< HEAD
         <NavLink
           to="/teacherclassroom"
           className={({ isActive }) => isActive ? `${styles.navItem} ${styles.active}` : styles.navItem}
@@ -21,8 +29,17 @@ const TeacherClassroom = () => {
           className={({ isActive }) => isActive ? `${styles.navItem} ${styles.active}` : styles.navItem}
           onClick={() => setIsActive(false)}
         >
+=======
+        <div
+          className={`${styles.navItem} ${selectedStudentId === null ? styles.active : ''}`}
+          onClick={() => setSelectedStudentId(null)}
+        >
+          학급 관리
+        </div>
+        <div className={styles.navItem} onClick={handleAuthorizationClick}>
+>>>>>>> FE
           승인 관리
-        </NavLink>
+        </div>
       </div>
       <div className={styles.imageContainer}>
         <img src={ClassImage} alt="Class Management" className={styles.classImage} />
@@ -40,10 +57,18 @@ const TeacherClassroom = () => {
         <div className={styles.inquiryBox}>
           <h3>문의사항</h3>
           <p>점심메뉴가 뭔가요: 운영자</p>
-          <p>교무실 전화번호 plz: 박범준</p>
+          <p>교무실 전화번호: 박범준</p>
           <p>소풍 날짜 언제죠: 조성인</p>
         </div>
       </div>
+<<<<<<< HEAD
+=======
+      {selectedStudentId === null ? (
+        <TeacherStudent onSelectStudent={setSelectedStudentId} />
+      ) : (
+        <TeacherStudentDetail studentId={selectedStudentId} onBack={() => setSelectedStudentId(null)} />
+      )}
+>>>>>>> FE
     </div>
   );
 };

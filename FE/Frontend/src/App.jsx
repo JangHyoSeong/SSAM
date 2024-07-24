@@ -3,24 +3,24 @@ import { Routes, Route, NavLink } from "react-router-dom";
 import SSAM from "./assets/SSAM.png";
 import MainPage from "./mainPage/MainPage";
 // 선생님
-import TeacherJoin from './teacher/join/TeacherJoin';
-import TeacherLogin from './teacher/login/TeacherLogin';
-import TeacherUpdate from './teacher/myPage/TeacherUpdate';
-import TeacherSubpage from './teacher/subPage/TeacherSubpage';
-import TeacherPasswordChange from './teacher/myPage/TeacherPasswordChange';
-import TeacherQuestion from './teacher/question/TeacherQuestion';
-import TeacherAppointment from './teacher/appointment/TeacherAppointment';
-import TeacherClassroom from './teacher/classroom/TeacherClassroom';
-import TeacherAuthorization from './teacher/classroom/TeacherAuthorization';
-import TeacherStudent from './teacher/classroom/TeacherStudent';
+import TeacherJoin from "./teacher/join/TeacherJoin";
+import TeacherLogin from "./teacher/login/TeacherLogin";
+import TeacherUpdate from "./teacher/myPage/TeacherUpdate";
+import TeacherSubpage from "./teacher/subPage/TeacherSubpage";
+import TeacherPasswordChange from "./teacher/myPage/TeacherPasswordChange";
+import TeacherQuestion from "./teacher/question/TeacherQuestion";
+import TeacherAppointment from "./teacher/appointment/TeacherAppointment";
+import TeacherClassroom from "./teacher/classroom/TeacherClassroom";
+import TeacherAuthorization from "./teacher/classroom/TeacherAuthorization";
+import TeacherStudent from "./teacher/classroom/TeacherStudent";
 
 // 학부모
-import ParentsJoin from './parents/join/ParentsJoin';
-import ParentsLogin from './parents/login/ParentsLogin';
-import ParentsUpdate from './parents/myPage/ParentsUpdate';
-import ParentsSubpage from './parents/subPage/ParentsSubpage';
-import ParentsPasswordChange from './parents/myPage/ParentsPasswordChange';
-import ParentsQuestion from './parents/question/ParentsQuestion'; // ParentsQuestion 컴포넌트 import
+import ParentsJoin from "./parents/join/ParentsJoin";
+import ParentsLogin from "./parents/login/ParentsLogin";
+import ParentsUpdate from "./parents/myPage/ParentsUpdate";
+import ParentsSubpage from "./parents/subPage/ParentsSubpage";
+import ParentsPasswordChange from "./parents/myPage/ParentsPasswordChange";
+import ParentsQuestion from "./parents/question/ParentsQuestion"; // ParentsQuestion 컴포넌트 import
 
 const App = () => {
   return (
@@ -53,7 +53,10 @@ const App = () => {
           />
           <Route path="/teacherquestion" element={<TeacherQuestion />} />
           <Route path="/teacherclassroom" element={<TeacherClassroom />} />
-          <Route path="/teacherauthorization" element={<TeacherAuthorization />} />
+          <Route
+            path="/teacherauthorization"
+            element={<TeacherAuthorization />}
+          />
           <Route path="/teacherappointment" element={<TeacherAppointment />} />
           <Route path="/teacherstudent" element={<TeacherStudent />} />
           {/* 학부모 링크 */}
@@ -65,7 +68,8 @@ const App = () => {
             path="/parentspasswordchange"
             element={<ParentsPasswordChange />}
           />
-          <Route path="/parentsquestion" element={<ParentsQuestion />} /> {/* ParentsQuestion 라우트 추가 */}
+          <Route path="/parentsquestion" element={<ParentsQuestion />} />{" "}
+          {/* ParentsQuestion 라우트 추가 */}
         </Routes>
       </div>
     </div>

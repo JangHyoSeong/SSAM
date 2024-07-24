@@ -37,6 +37,8 @@ services:
     build:
       context: ./FE/Frontend
       dockerfile: Dockerfile
+    volumes:
+      - react_build:/usr/share/nginx/html
 
   nginx:
     image: nginx:latest
@@ -46,6 +48,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - /etc/letsencrypt:/etc/letsencrypt:ro
+      - react_build:/usr/share/nginx/html
     depends_on:
       - jenkins
       - spring-app
@@ -54,3 +57,4 @@ services:
 volumes:
   jenkins_home:
   mysql_data:
+  react_build:

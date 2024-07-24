@@ -2,12 +2,14 @@ package com.ssafy.ssam.domain.user.dto;
 
 import com.ssafy.ssam.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Slf4j
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails{
 

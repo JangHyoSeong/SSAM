@@ -36,7 +36,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return webSecurity -> {
             webSecurity.ignoring()
-                    .requestMatchers("/auth/**");
+                    .requestMatchers("api/v1/auth/students", "api/v1/auth/teachers");
         };
     }
     @Bean
@@ -54,10 +54,10 @@ public class SecurityConfig {
                 .logout((auth) -> auth.disable())
                 .httpBasic((auth) -> auth.disable())
                 .authorizeHttpRequests((auth) -> auth
-                // 아무 허용 필요없는 접근 -> 회원가입, 첫 화면, 비밀번호 찾기
-                .requestMatchers("/auth/**").permitAll()
+//                 아무 허용 필요없는 접근 -> 회원가입, 첫 화면, 비밀번호 찾기
+                .requestMatchers("api/v1/auth/**", "login").permitAll()
                 // 선생이라는 권한이 필요한 url
-                .requestMatchers("/classrooms/answers/**", "/classrooms/teachers/**", "/consults/teachers/**").hasRole("TEACHER")
+                .requestMatchers("api/v1/classrooms/answers/**", "api/v1/classrooms/teachers/**", "api/v1/consults/teachers/**").hasRole("TEACHER")
 
                 // 위에 말한 url 제외 모든 url은 로그인만 되어있으면 접근이 가능하다
                 .anyRequest().authenticated())

@@ -7,7 +7,7 @@ import com.ssafy.ssam.domain.consult.entity.Appointment;
 import com.ssafy.ssam.domain.consult.entity.UnavailableSlot;
 import com.ssafy.ssam.domain.notification.entity.Alarm;
 import com.ssafy.ssam.domain.notification.entity.Question;
-import com.ssafy.ssam.domain.user.converter.UserRoleConverter;
+//import com.ssafy.ssam.domain.user.converter.UserRoleConverter;
 import com.ssafy.ssam.domain.user.dto.UserDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -54,7 +54,7 @@ public class User {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Convert(converter = UserRoleConverter.class)
+//    @Convert(converter = UserRoleConverter.class)
     @Column(nullable = false)
     private UserRole role;
 

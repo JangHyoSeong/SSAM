@@ -1,4 +1,4 @@
-package com.ssafy.ssam.classroom.dto.request;
+package com.ssafy.ssam.domain.classroom.dto.request;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

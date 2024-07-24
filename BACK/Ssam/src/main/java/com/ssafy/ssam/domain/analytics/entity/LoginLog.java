@@ -1,4 +1,4 @@
-package com.ssafy.ssam.domain.entity;
+package com.ssafy.ssam.domain.analytics.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -12,17 +12,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "activity_log")
-public class ActivityLog {
+@Table(name = "login_log")
+public class LoginLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "activity_log_id")
-    private int activityLogId;
-
-    @NotNull
-    @Column(name = "activity_type", nullable = false, length = 45)
-    private String activityType;
+    @Column(name = "login_log_id")
+    private Integer loginLogId;
 
     @NotNull
     @Column(name = "user_id", nullable = false)
@@ -31,10 +27,15 @@ public class ActivityLog {
     @NotNull
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "act_time", columnDefinition = "TIMESTAMP", nullable = false)
-    private LocalDateTime actTime;
+    @Column(name = "login_time", columnDefinition = "TIMESTAMP", nullable = false)
+    private LocalDateTime loginTime;
 
-    @Column(nullable = false, length = 15)
+    @NotNull
+    @Column(name = "ip_address", nullable = false, length = 15)
     private String ipAddress;
+
+    @NotNull
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    private Integer success;
 
 }

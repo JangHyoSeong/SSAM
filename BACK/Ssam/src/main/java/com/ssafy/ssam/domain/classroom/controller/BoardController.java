@@ -1,23 +1,19 @@
-package com.ssafy.ssam.classroom.controller;
+package com.ssafy.ssam.domain.classroom.controller;
 
-import com.ssafy.ssam.classroom.dto.response.BoardGetResponseDTO;
-import com.ssafy.ssam.classroom.service.BoardService;
+import com.ssafy.ssam.domain.classroom.dto.response.BoardGetResponseDTO;
+import com.ssafy.ssam.domain.classroom.service.BoardService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/classrooms")
 public class BoardController {
 
     private final BoardService boardService;
-
-    @Autowired
-    public BoardController(BoardService boardService) {
-        this.boardService = boardService;
-    }
 
     // Post(학급 생성) 성공시 반환할 메세지. 수정 필요
     @PreAuthorize("hasRole('TEACHER')")

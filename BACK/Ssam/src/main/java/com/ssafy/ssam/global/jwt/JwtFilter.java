@@ -47,6 +47,4 @@ public class JwtFilter extends OncePerRequestFilter {
                 .role(role)
                 .build();
     }
-
-
 }

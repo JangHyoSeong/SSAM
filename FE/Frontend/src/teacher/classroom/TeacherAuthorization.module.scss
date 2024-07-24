@@ -28,12 +28,12 @@
 
 .navItem:hover {
   background-color: #5285ee;
-  color: white !important; /* 글자색 하얀색으로 변경 */
+  color: white;
 }
 
 .active {
   background-color: #5285ee;
-  color: white !important; /* 글자색 하얀색으로 변경 */
+  color: white;
 }
 
 .table {
@@ -63,7 +63,7 @@
 }
 
 .rejectButton {
-  background-color: #d4d4d4;
+  background-color: #e0e0e0;
   color: white;
   border: none;
   border-radius: 5px;

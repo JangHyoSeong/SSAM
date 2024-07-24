@@ -1,0 +1,62 @@
+version: '3'
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    environment:
+      - JENKINS_OPTS="--prefix=/jenkins"
+      - JENKINS_ARGS="--prefix=/jenkins"
+    expose:
+      - "8080"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+  
+  spring-app:
+    build: 
+      context: ./BACK/Ssam
+      dockerfile: Dockerfile
+    expose:
+      - "8081"
+    depends_on:
+      - mysql
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/ssam?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=1234
+      - SERVER_SERVLET_CONTEXT_PATH=/api
+
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: ssam
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  react-app:
+    build:
+      context: ./FE/Frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./FE/Frontend:/app
+      - /app/node_modules
+    command: npm run build
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - react_build:/usr/share/nginx/html
+    depends_on:
+      - jenkins
+      - spring-app
+      - react-app
+
+volumes:
+  jenkins_home:
+  mysql_data:
+  react_build:

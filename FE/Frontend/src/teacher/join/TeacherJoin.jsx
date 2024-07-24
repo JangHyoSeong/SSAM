@@ -1,5 +1,6 @@
-// src/components/TeacherJoin.jsx
-import useAuthStore from "../../store/AuthStore";
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
+import axios from "../../axiosConfig";
 import join from "./TeacherJoin.module.scss";
 import round1 from "../../assets/round1.png";
 import round2 from "../../assets/round2.png";
@@ -11,34 +12,41 @@ import calendar from "../../assets/calendar.png";
 import phone from "../../assets/phone.png";
 
 const TeacherJoin = () => {
-  const {
-    username,
-    password,
-    email,
-    school,
-    name,
-    birthdate,
-    phone: phoneValue,
-    setFormData,
-    signup,
-  } = useAuthStore();
+  // 폼 데이터 상태 관리
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    email: "",
+    school: "",
+    name: "",
+    birthdate: "",
+    phone: "",
+  });
 
+  // 입력값이 변경될 때 상태를 업데이트하는 함수
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(name, value);
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
+  // 폼 제출 시 호출되는 함수
   const handleSubmit = async (e) => {
     e.preventDefault();
-    signup({
-      username,
-      password,
-      email,
-      school,
-      name,
-      birthdate,
-      phone: phoneValue,
-    });
+    try {
+      // 백엔드 API에 회원가입 요청을 보냄
+      const response = await axios.post("/signup", formData);
+      // 응답 데이터를 활용하여 추가 작업 수행
+      console.log(response.data);
+      alert("회원가입이 완료되었습니다.");
+    } catch (error) {
+      // 오류 발생 시 사용자에게 알림
+      alert(
+        error.response?.data?.message || "회원가입 중 오류가 발생했습니다."
+      );
+    }
   };
 
   return (
@@ -53,7 +61,7 @@ const TeacherJoin = () => {
                 <input
                   type="text"
                   name="username"
-                  value={username}
+                  value={formData.username}
                   onChange={handleChange}
                   placeholder="아이디"
                   required
@@ -65,7 +73,7 @@ const TeacherJoin = () => {
                 <input
                   type="password"
                   name="password"
-                  value={password}
+                  value={formData.password}
                   onChange={handleChange}
                   placeholder="비밀번호"
                   required
@@ -77,7 +85,7 @@ const TeacherJoin = () => {
                 <input
                   type="email"
                   name="email"
-                  value={email}
+                  value={formData.email}
                   onChange={handleChange}
                   placeholder="이메일"
                   required
@@ -89,7 +97,7 @@ const TeacherJoin = () => {
                 <input
                   type="search"
                   name="school"
-                  value={school}
+                  value={formData.school}
                   onChange={handleChange}
                   placeholder="학교 검색"
                   required
@@ -101,7 +109,7 @@ const TeacherJoin = () => {
                 <input
                   type="text"
                   name="name"
-                  value={name}
+                  value={formData.name}
                   onChange={handleChange}
                   placeholder="이름"
                   required
@@ -113,7 +121,7 @@ const TeacherJoin = () => {
                 <input
                   type="text"
                   name="birthdate"
-                  value={birthdate}
+                  value={formData.birthdate}
                   onChange={handleChange}
                   placeholder="생년월일 8자리"
                   required
@@ -121,12 +129,11 @@ const TeacherJoin = () => {
               </div>
               <hr />
               <div>
-                <img src={phone} className={join.joinIcon} alt="phone" />{" "}
-                {/* 이미지 사용 */}
+                <img src={phone} className={join.joinIcon} alt="phone" />
                 <input
                   type="tel"
                   name="phone"
-                  value={phoneValue}
+                  value={formData.phone}
                   onChange={handleChange}
                   placeholder="휴대전화 번호"
                   required
@@ -135,15 +142,16 @@ const TeacherJoin = () => {
             </form>
           </div>
           <div className={join.joinBtnArray}>
-            <button type="submit" className={join.joinBtn}>
+            <NavLink to="/teacherlogin" type="submit" className={join.joinBtn}>
               가입
-            </button>
+            </NavLink>
             <button type="button" className={join.joinBtn}>
               취소
             </button>
           </div>
         </div>
       </div>
+
       <img src={round1} className={join.round1} alt="round1" />
       <img src={round2} className={join.round2} alt="round2" />
       <img src={round1} className={join.round3} alt="round1" />

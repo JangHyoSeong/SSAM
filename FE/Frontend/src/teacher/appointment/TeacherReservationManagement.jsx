@@ -1,10 +1,12 @@
 import { NavLink } from "react-router-dom";
-import styles from "./TeacherConsultationList.module.scss";
+import TeacherCalendar from "./TeacherCalendar";
+import TeacherReservationList from "./TeacherReservationList";
+import styles from "./TeacherReservationManagement.module.scss";
 
-const TeacherConsultationList = () => {
+const TeacherAppointment = () => {
   return (
-    <div className={styles.consultationlistContainer}>
-      <div className={styles.classNavbar}>
+    <div>
+      <nav className={styles.container}>
         <NavLink
           to="/teacherreservationmanagement"
           className={({ isActive }) =>
@@ -21,10 +23,13 @@ const TeacherConsultationList = () => {
         >
           상담 목록
         </NavLink>
-      </div>
-      hello
+      </nav>
+      <section className={styles.classNavbar}>
+        <TeacherCalendar />
+        <TeacherReservationList />
+      </section>
     </div>
   );
 };
 
-export default TeacherConsultationList;
+export default TeacherAppointment;

@@ -54,7 +54,9 @@
   margin-top: 2vh;
 }
 
-.noticeBox, .classInfoBox, .inquiryBox {
+.noticeBox,
+.classInfoBox,
+.inquiryBox {
   display: flex;
   flex-direction: column;
   justify-content: center;

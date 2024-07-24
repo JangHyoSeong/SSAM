@@ -1,5 +1,5 @@
-import { Routes, Route, NavLink, useLocation } from "react-router-dom";
-import "./App.css";
+import { Routes, Route, NavLink } from "react-router-dom";
+import "./App.scss";
 import SSAM from "./assets/SSAM.png";
 import MainPage from "./mainPage/MainPage";
 // 선생님

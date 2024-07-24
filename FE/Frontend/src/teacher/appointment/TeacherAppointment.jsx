@@ -1,9 +1,12 @@
 import TeacherCalendar from "./TeacherCalendar";
+import TeacherConsultationList from "./TeacherConsultationList";
+import styles from "./TeacherAppointment.module.scss";
 
 const TeacherAppointment = () => {
   return (
-    <div>
+    <div className={styles.container}>
       <TeacherCalendar />
+      <TeacherConsultationList />
     </div>
   );
 };

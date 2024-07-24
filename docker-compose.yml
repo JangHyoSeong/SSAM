@@ -37,6 +37,8 @@ services:
     build:
       context: ./FE/Frontend
       dockerfile: Dockerfile
+    volumes:
+      - react-build:/usr/share/nginx/html
 
   nginx:
     image: nginx:latest
@@ -55,3 +57,4 @@ services:
 volumes:
   jenkins_home:
   mysql_data:
+  react-build:

@@ -16,12 +16,12 @@ import TeacherAuthorization from './teacher/classroom/TeacherAuthorization';
 import TeacherStudentDetail from './teacher/classroom/TeacherStudentDetail'; // Ensure this import is added
 
 // 학부모
-import ParentsJoin from './parents/join/ParentsJoin';
-import ParentsLogin from './parents/login/ParentsLogin';
-import ParentsUpdate from './parents/myPage/ParentsUpdate';
-import ParentsSubpage from './parents/subPage/ParentsSubpage';
-import ParentsPasswordChange from './parents/myPage/ParentsPasswordChange';
-import ParentsQuestion from './parents/question/ParentsQuestion'; // ParentsQuestion 컴포넌트 import
+import ParentsJoin from "./parents/join/ParentsJoin";
+import ParentsLogin from "./parents/login/ParentsLogin";
+import ParentsUpdate from "./parents/myPage/ParentsUpdate";
+import ParentsSubpage from "./parents/subPage/ParentsSubpage";
+import ParentsPasswordChange from "./parents/myPage/ParentsPasswordChange";
+import ParentsQuestion from "./parents/question/ParentsQuestion"; // ParentsQuestion 컴포넌트 import
 
 const App = () => {
   return (
@@ -51,7 +51,10 @@ const App = () => {
           <Route path="/teacherpasswordchange" element={<TeacherPasswordChange />} />
           <Route path="/teacherquestion" element={<TeacherQuestion />} />
           <Route path="/teacherclassroom" element={<TeacherClassroom />} />
-          <Route path="/teacherauthorization" element={<TeacherAuthorization />} />
+          <Route
+            path="/teacherauthorization"
+            element={<TeacherAuthorization />}
+          />
           <Route path="/teacherappointment" element={<TeacherAppointment />} />
           <Route path="/teacherclassroom/student/:id" element={<TeacherStudentDetail />} /> {/* Add this route for student detail */}
           {/* 학부모 링크 */}

@@ -1,26 +1,17 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import styles from './TeacherClassroom.module.scss';
+import TeacherStudent from './TeacherStudent';
 import ClassImage from '../../assets/background.png'; // 이미지 파일 경로를 정확히 설정하세요
 
 const TeacherClassroom = () => {
-  const [isActive, setIsActive] = useState(false);
-
   return (
-    <div className={`${styles.classInfoContainer} ${isActive ? styles.active : ''}`}>
+    <div className={styles.classInfoContainer}>
       <div className={styles.classNavbar}>
-        <NavLink
-          to="/teacherclassroom"
-          className={({ isActive }) => isActive ? `${styles.navItem} ${styles.active}` : styles.navItem}
-          onClick={() => setIsActive(true)}
-        >
+        <NavLink to="/teacherclassroom" className={({ isActive }) => isActive ? `${styles.navItem} ${styles.active}` : styles.navItem}>
           학급 관리
         </NavLink>
-        <NavLink
-          to="/teacherauthorization"
-          className={({ isActive }) => isActive ? `${styles.navItem} ${styles.active}` : styles.navItem}
-          onClick={() => setIsActive(false)}
-        >
+        <NavLink to="/teacherauthorization" className={({ isActive }) => isActive ? `${styles.navItem} ${styles.active}` : styles.navItem}>
           승인 관리
         </NavLink>
       </div>
@@ -43,6 +34,10 @@ const TeacherClassroom = () => {
           <p>교무실 전화번호 plz: 박범준</p>
           <p>소풍 날짜 언제죠: 조성인</p>
         </div>
+      </div>
+      {/* 학생 리스트를 담을 컨테이너 추가 */}
+      <div className={styles.studentListContainer}>
+        <TeacherStudent />
       </div>
     </div>
   );

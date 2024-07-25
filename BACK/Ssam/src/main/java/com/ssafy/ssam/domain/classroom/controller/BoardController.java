@@ -58,4 +58,12 @@ public class BoardController {
         return ResponseEntity.ok(res);
     }
 
+    @PreAuthorize("hasRole('TEACHER')")
+    @PutMapping("pin/{boardId}")
+    public ResponseEntity<CommonResponseDto> refreshPin(@PathVariable Integer boardId) {
+        boardService.refreshPin(boardId);
+        CommonResponseDto res = new CommonResponseDto();
+        return ResponseEntity.ok(res);
+    }
+
 }

@@ -74,6 +74,13 @@ public class BoardService {
         boardRepository.save(board);
     }
 
+    public void refreshPin(int boardId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new RuntimeException("Board not found"));
+        board.setPin(generateUniquePin());
+        boardRepository.save(board);
+    }
+
     // 응답 객체 생성
     private BoardGetResponseDTO convertToResponseDTO(Board board) {
         return BoardGetResponseDTO.builder()

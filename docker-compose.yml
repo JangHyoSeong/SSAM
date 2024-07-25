@@ -22,13 +22,13 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/ssam?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=0rFyfav$shuQO
+      - SPRING_DATASOURCE_PASSWORD='0rFyfav$shuQO'
       - SERVER_SERVLET_CONTEXT_PATH=/api
 
   mysql:
     image: mysql:8
     environment:
-      MYSQL_ROOT_PASSWORD: 0rFyfav$shuQO
+      MYSQL_ROOT_PASSWORD: '0rFyfav$shuQO'
       MYSQL_DATABASE: ssam
     volumes:
       - mysql_data:/var/lib/mysql

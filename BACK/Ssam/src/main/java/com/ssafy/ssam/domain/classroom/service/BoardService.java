@@ -28,7 +28,7 @@ public class BoardService {
 
     // 보드 생성
     @Transactional
-    public BoardGetResponseDTO createBoard(BoardGetResponseDTO requestDTO) {
+    public BoardGetResponseDTO createBoard(BoardCreateRequestDTO requestDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userRepository.findByUsername(username);
@@ -58,12 +58,23 @@ public class BoardService {
         return convertToResponseDTO(board);
     }
 
+    // 학급 공지사항 수정
+    public void updateNotice(int boardId, String notice) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new RuntimeException("Board not found"));
+        board.setNotice(notice);
+        boardRepository.save(board);
+    }
+
     // 응답 객체 생성
     private BoardGetResponseDTO convertToResponseDTO(Board board) {
         return BoardGetResponseDTO.builder()
                 .classId(board.getClassId())
+                .banner(board.getBanner())
+                .bannerImg(board.getBannerImg())
                 .pin(board.getPin())
                 .grade(board.getGrade())
+                .notice(board.getNotice())
                 .classroom(board.getClassroom())
                 .build();
     }

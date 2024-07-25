@@ -1,8 +1,10 @@
 package com.ssafy.ssam.domain.classroom.controller;
 
 import com.ssafy.ssam.domain.classroom.dto.request.BoardCreateRequestDTO;
+import com.ssafy.ssam.domain.classroom.dto.request.BoardNoticeUpdateRequestDTO;
 import com.ssafy.ssam.domain.classroom.dto.response.BoardGetResponseDTO;
 import com.ssafy.ssam.domain.classroom.service.BoardService;
+import com.ssafy.ssam.global.dto.CommonResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +24,6 @@ public class BoardController {
     @PreAuthorize("hasRole('TEACHER')")
     @PostMapping
     public ResponseEntity<BoardGetResponseDTO> createBoard(@Valid @RequestBody BoardCreateRequestDTO requestDTO) {
-        System.out.println("controller");
         return ResponseEntity.ok(boardService.createBoard(requestDTO));
     }
 
@@ -32,6 +33,17 @@ public class BoardController {
 
         BoardGetResponseDTO boardResponseDTO = boardService.getBoardById(boardId);
         return ResponseEntity.ok(boardResponseDTO);
+    }
+
+    // 학급 공지사항 수정
+    @PreAuthorize("hasRole('TEACHER')")
+    @PutMapping("/notice/{boardId}")
+    public ResponseEntity<CommonResponseDto> changeNotice(
+            @PathVariable Integer boardId,
+            @Valid @RequestBody BoardNoticeUpdateRequestDTO requestDTO) {
+        boardService.updateNotice(boardId, requestDTO.getNotice());
+        CommonResponseDto res = new CommonResponseDto();
+        return ResponseEntity.ok(res);
     }
 
 }

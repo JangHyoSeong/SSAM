@@ -28,12 +28,12 @@
 
 .navItem:hover {
   background-color: #5285ee;
-  color: white;
+  color: white !important; /* 글자색 하얀색으로 변경 */
 }
 
 .active {
   background-color: #5285ee;
-  color: white;
+  color: white !important; /* 글자색 하얀색으로 변경 */
 }
 
 .imageContainer {
@@ -49,7 +49,7 @@
 
 .infoBoxes {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   width: 100%;
   margin-top: 2vh;
 }
@@ -66,7 +66,7 @@
   border-radius: 1vh;
   width: 30%;
   text-align: center;
-  margin: 0 1vw; /* 좌우 간격 추가 */
+  margin: 0 1vh; /* 좌우 간격 추가 */
 }
 
 .noticeBox {
@@ -89,6 +89,9 @@
   margin: 0.5vh 0;
 }
 
-.active .classNavbar {
-  background-color: #5285ee;
+.studentListContainer {
+  width: 100%;
+  margin-top: 2vh;
+  display: flex;
+  justify-content: flex-start; /* 시작 부분에 맞추기 */
 }

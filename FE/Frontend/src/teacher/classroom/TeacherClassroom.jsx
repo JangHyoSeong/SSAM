@@ -1,29 +1,23 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import styles from "./TeacherClassroom.module.scss";
-import TeacherStudent from "./TeacherStudent";
-import TeacherStudentDetail from "./TeacherStudentDetail";
-import ClassImage from "../../assets/background.png"; // 이미지 파일 경로를 정확히 설정하세요
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styles from './TeacherClassroom.module.scss';
+import TeacherStudent from './TeacherStudent';
+import TeacherStudentDetail from './TeacherStudentDetail';
+import ClassImage from '../../assets/background.png'; // 이미지 파일 경로를 정확히 설정하세요
 
 const TeacherClassroom = () => {
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const navigate = useNavigate();
 
   const handleAuthorizationClick = () => {
-    navigate("/teacherauthorization");
+    navigate('/teacherauthorization');
   };
 
   return (
-    <div
-      className={`${styles.classInfoContainer} ${
-        isActive ? styles.active : ""
-      }`}
-    >
+    <div className={styles.classInfoContainer}>
       <div className={styles.classNavbar}>
         <div
-          className={`${styles.navItem} ${
-            selectedStudentId === null ? styles.active : ""
-          }`}
+          className={`${styles.navItem} ${selectedStudentId === null ? styles.active : ''}`}
           onClick={() => setSelectedStudentId(null)}
         >
           학급 관리
@@ -33,11 +27,7 @@ const TeacherClassroom = () => {
         </div>
       </div>
       <div className={styles.imageContainer}>
-        <img
-          src={ClassImage}
-          alt="Class Management"
-          className={styles.classImage}
-        />
+        <img src={ClassImage} alt="Class Management" className={styles.classImage} />
       </div>
       <div className={styles.infoBoxes}>
         <div className={styles.noticeBox}>
@@ -59,10 +49,7 @@ const TeacherClassroom = () => {
       {selectedStudentId === null ? (
         <TeacherStudent onSelectStudent={setSelectedStudentId} />
       ) : (
-        <TeacherStudentDetail
-          studentId={selectedStudentId}
-          onBack={() => setSelectedStudentId(null)}
-        />
+        <TeacherStudentDetail studentId={selectedStudentId} onBack={() => setSelectedStudentId(null)} />
       )}
     </div>
   );

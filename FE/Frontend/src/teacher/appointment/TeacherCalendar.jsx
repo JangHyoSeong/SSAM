@@ -4,12 +4,11 @@ import interactionPlugin from "@fullcalendar/interaction";
 import koLocale from "@fullcalendar/core/locales/ko";
 import styles from "./TeacherCalendar.module.scss";
 
-const TeacherCalendar = () => {
+const TeacherCalendar = ({ onDateSelect }) => {
   const handleDateSelect = (selectInfo) => {
     const calendarApi = selectInfo.view.calendar;
     calendarApi.unselect(); // 날짜 선택 해제
 
-    // alert창 없애고 모달로 바꿔야함
     if (confirm(`${selectInfo.startStr}에 상담을 예약하시겠습니까?`)) {
       calendarApi.addEvent({
         title: "상담예정",
@@ -17,6 +16,8 @@ const TeacherCalendar = () => {
         end: selectInfo.endStr,
         allDay: selectInfo.allDay,
       });
+
+      onDateSelect(selectInfo.startStr); // 선택된 날짜를 부모 컴포넌트에 전달
     }
   };
 
@@ -39,11 +40,6 @@ const TeacherCalendar = () => {
           center: "title",
           right: "next",
         }}
-        // footerToolbar={{
-        //   left: "",
-        //   center: "",
-        //   right: "dayGridMonth dayGridWeek,dayGridDay",
-        // }}
         locale={koLocale} // 로케일을 한국어로 설정
         titleContent={(arg) => <span>{renderTitle(arg.date)}</span>} // 사용자 정의 제목 렌더링
         dayCellContent={(arg) => arg.dayNumberText.replace("일", "")} // 날짜 셀에서 '일' 제거

@@ -71,7 +71,6 @@ const App = () => {
             path="/teacherclassroom/student/:id"
             element={<TeacherStudentDetail />}
           />{" "}
-          {/* Add this route for student detail */}
           {/* 학부모 링크 */}
           <Route path="/parentslogin" element={<ParentsLogin />} />
           <Route path="/parentsjoin" element={<ParentsJoin />} />

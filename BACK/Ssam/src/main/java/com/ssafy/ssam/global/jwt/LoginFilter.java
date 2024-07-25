@@ -41,12 +41,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         //특정한 유저 확인
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         String username = customUserDetails.getUsername();
+        Integer userId = customUserDetails.getUserId();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
 
         String role = auth.getAuthority();
-        String token = jwtUtil.createJwt(username, role, Duration.ofHours(4).toMillis());
+        String token = jwtUtil.createJwt(username, role, userId, Duration.ofHours(4).toMillis());
 
         log.info("role : {}", role);
         log.info("token: {}", token);

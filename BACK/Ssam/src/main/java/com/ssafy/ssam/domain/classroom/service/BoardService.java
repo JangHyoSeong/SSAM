@@ -9,7 +9,6 @@ import com.ssafy.ssam.domain.classroom.repository.UserBoardRelationRepository;
 import com.ssafy.ssam.domain.user.entity.User;
 import com.ssafy.ssam.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -29,14 +28,10 @@ public class BoardService {
 
     // 보드 생성
     @Transactional
-    public BoardGetResponseDTO createBoard(@Valid BoardCreateRequestDTO requestDTO) {
-
-        System.out.println("service");
+    public BoardGetResponseDTO createBoard(BoardGetResponseDTO requestDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        System.out.println("service2");
         User user = userRepository.findByUsername(username);
-        log.info(username);
         if(user == null) throw new IllegalArgumentException("user doesn't exist");
 
         Board board = Board.builder()
@@ -54,20 +49,13 @@ public class BoardService {
         return convertToResponseDTO(savedBoard);
     }
 
-    // 핀번호 생성
-    private String generateUniquePin() {
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        StringBuilder pin = new StringBuilder();
-        Random random = new Random();
 
-        do {
-            pin.setLength(0); // Clear the StringBuilder
-            for (int i = 0; i < 6; i++) {
-                pin.append(characters.charAt(random.nextInt(characters.length())));
-            }
-        } while (boardRepository.existsByPin(pin.toString()));
-
-        return pin.toString();
+    // id를 통해 board 찾기
+    @Transactional
+    public BoardGetResponseDTO getBoardById(int classId) {
+        Board board = boardRepository.findById(classId)
+                .orElseThrow(() -> new RuntimeException("Board not found"));
+        return convertToResponseDTO(board);
     }
 
     // 응답 객체 생성
@@ -80,12 +68,21 @@ public class BoardService {
                 .build();
     }
 
-    // id를 통해 board 찾기
-    @Transactional
-    public BoardGetResponseDTO getBoardById(int classId) {
-        Board board = boardRepository.findById(classId)
-                .orElseThrow(() -> new RuntimeException("Board not found"));
-        return convertToResponseDTO(board);
+    // 핀번호 생성
+    private String generateUniquePin() {
+
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder pin = new StringBuilder();
+        Random random = new Random();
+
+        do {
+            pin.setLength(0); // Clear the StringBuilder
+            for (int i = 0; i < 6; i++) {
+                pin.append(characters.charAt(random.nextInt(characters.length())));
+            }
+        } while (boardRepository.existsByPin(pin.toString()));
+
+        return pin.toString();
     }
 
 

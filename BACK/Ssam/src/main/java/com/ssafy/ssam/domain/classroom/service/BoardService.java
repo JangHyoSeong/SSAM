@@ -66,6 +66,14 @@ public class BoardService {
         boardRepository.save(board);
     }
 
+    // 학급 배너 수정
+    public void updateBanner(int boardId, String banner) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new RuntimeException("Board not found"));
+        board.setBanner(banner);
+        boardRepository.save(board);
+    }
+
     // 응답 객체 생성
     private BoardGetResponseDTO convertToResponseDTO(Board board) {
         return BoardGetResponseDTO.builder()

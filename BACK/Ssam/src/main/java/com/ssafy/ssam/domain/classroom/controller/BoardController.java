@@ -1,5 +1,6 @@
 package com.ssafy.ssam.domain.classroom.controller;
 
+import com.ssafy.ssam.domain.classroom.dto.request.BoardBannerUpdateRequestDTO;
 import com.ssafy.ssam.domain.classroom.dto.request.BoardCreateRequestDTO;
 import com.ssafy.ssam.domain.classroom.dto.request.BoardNoticeUpdateRequestDTO;
 import com.ssafy.ssam.domain.classroom.dto.response.BoardGetResponseDTO;
@@ -42,6 +43,17 @@ public class BoardController {
             @PathVariable Integer boardId,
             @Valid @RequestBody BoardNoticeUpdateRequestDTO requestDTO) {
         boardService.updateNotice(boardId, requestDTO.getNotice());
+        CommonResponseDto res = new CommonResponseDto();
+        return ResponseEntity.ok(res);
+    }
+
+    // 학급 배너 수정
+    @PreAuthorize("hasRole('TEACHER')")
+    @PutMapping("/banner/{boardId}")
+    public ResponseEntity<CommonResponseDto> changeBanner(
+            @PathVariable Integer boardId,
+            @Valid @RequestBody BoardBannerUpdateRequestDTO requestDTO) {
+        boardService.updateBanner(boardId, requestDTO.getBanner());
         CommonResponseDto res = new CommonResponseDto();
         return ResponseEntity.ok(res);
     }

@@ -1,4 +1,3 @@
-/* TeacherClassroom.module.scss */
 .classInfoContainer {
   display: flex;
   flex-direction: column;
@@ -28,12 +27,17 @@
 
 .navItem:hover {
   background-color: #5285ee;
-  color: white !important; /* 글자색 하얀색으로 변경 */
+  color: white;
 }
 
 .active {
   background-color: #5285ee;
-  color: white !important; /* 글자색 하얀색으로 변경 */
+  color: white;
+}
+
+.altActive {
+  background-color: #5285ee;
+  color: white;
 }
 
 .imageContainer {
@@ -54,9 +58,7 @@
   margin-top: 2vh;
 }
 
-.noticeBox,
-.classInfoBox,
-.inquiryBox {
+.noticeBox, .classInfoBox, .inquiryBox {
   display: flex;
   flex-direction: column;
   justify-content: center;

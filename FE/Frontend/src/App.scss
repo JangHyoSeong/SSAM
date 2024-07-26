@@ -1,7 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap");
 
 body {
-  font-family: "Noto Sans", sans-serif;
   overflow-x: hidden; /* 가로 스크롤바 숨기기 */
 }
 
@@ -12,17 +11,19 @@ body {
 
 .logo {
   position: absolute;
-  top: 1.5%;
+  top: 1.2%;
   left: 5%;
   width: 8vw;
 }
 
 .navtxt {
-  margin: 0% 5%;
+  margin: 0% 3%;
   font-size: 100%;
   white-space: nowrap; /* 텍스트가 한 줄로 표시되도록 설정 */
-  text-decoration: none;
-  color: inherit; /* 부모 요소의 색상 상속 */
+}
+
+.navtxt:hover {
+  color: #5285ee;
 }
 
 .menu-array {
@@ -32,11 +33,11 @@ body {
   height: 10vh;
 }
 
-.menu-array a:hover {
-  color: #5285ee; /* 마우스 오버 시 색상 변경 */
+.menu-array a {
+  text-decoration: none; /* 링크 밑줄 제거 */
+  color: inherit; /* 부모 요소의 색상 상속 */
 }
 
-.menu-array a.active {
+.menu-array .active {
   color: #5285ee; /* 활성화된 링크 색상 */
-  font-weight: bold; /* 활성화된 링크 굵게 */
 }

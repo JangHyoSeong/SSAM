@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styles from './AnswerModal.module.css';
 
 const AnswerModal = ({ question, onConfirm, onCancel }) => {

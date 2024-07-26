@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import Footer from '../../mainPage/Footer';
 import styles from './TeacherQuestion.module.css';
 import AnswerModal from './AnswerModal';
 import TeacherDeleteModal from './TeacherDeleteModal';
@@ -56,6 +57,7 @@ const TeacherQuestion = () => {
   };
 
   return (
+    <>
     <div className={styles.teacherQuestionContainer}>
       {questions.map((item) => (
         <div key={item.id} className={styles.qaPair}>
@@ -87,6 +89,8 @@ const TeacherQuestion = () => {
         />
       )}
     </div>
+    <Footer />
+    </>
   );
 };
 

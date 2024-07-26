@@ -1,16 +1,12 @@
 /* App.css */
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap");
 
-.navbar-array {
-  height: 10vh;
-  background-color: white;
-}
-
 .logo {
   position: absolute;
   top: 1%;
   left: 5%;
   width: 8vw;
+  height: 8vh;
 }
 
 .navtxt {

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequiredArgsConstructor
 @Controller
 @ResponseBody
-@RequestMapping("api/v1/auth")
+@RequestMapping("/api/v1/auth")
 public class JoinController{
     private final JoinService joinService;
 

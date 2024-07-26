@@ -1,5 +1,6 @@
 package com.ssafy.ssam.domain.classroom.service;
 
+import com.ssafy.ssam.domain.classroom.dto.request.BoardCreateRequestDTO;
 import com.ssafy.ssam.domain.classroom.dto.response.BoardGetResponseDTO;
 import com.ssafy.ssam.domain.classroom.entity.Board;
 import com.ssafy.ssam.domain.classroom.entity.UserBoardRelation;
@@ -10,13 +11,14 @@ import com.ssafy.ssam.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class BoardService {
@@ -27,10 +29,14 @@ public class BoardService {
 
     // 보드 생성
     @Transactional
-    public BoardGetResponseDTO createBoard(@Valid BoardGetResponseDTO requestDTO) {
+    public BoardGetResponseDTO createBoard(@Valid BoardCreateRequestDTO requestDTO) {
+
+        System.out.println("service");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
+        System.out.println("service2");
         User user = userRepository.findByUsername(username);
+        log.info(username);
         if(user == null) throw new IllegalArgumentException("user doesn't exist");
 
         Board board = Board.builder()
@@ -40,7 +46,6 @@ public class BoardService {
                 .build();
 
         Board savedBoard = boardRepository.save(board);
-
         UserBoardRelation relation = UserBoardRelation.builder()
                 .user(user)
                 .board(savedBoard)

@@ -1,7 +1,8 @@
-import { Routes, Route, NavLink } from "react-router-dom";
+import { Routes, Route, NavLink, useLocation } from "react-router-dom"; // Add useLocation here
 import "./App.css";
 import SSAM from "./assets/SSAM.png";
 import MainPage from "./mainPage/MainPage";
+
 // 선생님
 import TeacherJoin from "./teacher/join/TeacherJoin";
 import TeacherLogin from "./teacher/login/TeacherLogin";
@@ -86,7 +87,7 @@ const App = () => {
           <Route
             path="/teacherclassroom/student/:id"
             element={<TeacherStudentDetail />}
-          />{" "}
+          />
           {/* 학부모 링크 */}
           <Route path="/parentslogin" element={<ParentsLogin />} />
           <Route path="/parentsjoin" element={<ParentsJoin />} />
@@ -97,8 +98,7 @@ const App = () => {
             element={<ParentsPasswordChange />}
           />
           <Route path="/parentsquestion" element={<ParentsQuestion />} />
-          <Route path="/parentsclassroom" element={<ParentsClassroom />} />{" "}
-          {/* ParentsClassroom 라우트 추가 */}
+          <Route path="/parentsclassroom" element={<ParentsClassroom />} />
         </Routes>
       </div>
     </div>

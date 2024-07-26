@@ -1,5 +1,5 @@
-import "./App.css";
 import { Routes, Route, NavLink } from "react-router-dom";
+import "./App.scss";
 import SSAM from "./assets/SSAM.png";
 import MainPage from "./mainPage/MainPage";
 // 선생님
@@ -22,21 +22,38 @@ import ParentsUpdate from "./parents/myPage/ParentsUpdate";
 import ParentsSubpage from "./parents/subPage/ParentsSubpage";
 import ParentsPasswordChange from "./parents/myPage/ParentsPasswordChange";
 import ParentsQuestion from "./parents/question/ParentsQuestion"; // ParentsQuestion 컴포넌트 import
+import ParentsClassroom from "./parents/classroom/ParentsClassroom"; // ParentsClassroom 컴포넌트 import
 
 const App = () => {
+  const location = useLocation();
+
   return (
     <div>
       <NavLink to="/">
         <img src={SSAM} className="logo" alt="Logo" />
       </NavLink>
       <div className="menu-array">
-        <NavLink to="/teacherclassroom" className="navtxt">
+        <NavLink
+          to="/teacherclassroom"
+          className={
+            location.pathname.startsWith("/teacherclassroom") ||
+            location.pathname.startsWith("/parentsclassroom")
+              ? "navtxt active"
+              : "navtxt"
+          }
+        >
           <h2>학급정보</h2>
         </NavLink>
-        <NavLink to="/teacherquestion" className="navtxt">
+        <NavLink
+          to="/teacherquestion"
+          className={({ isActive }) => (isActive ? "navtxt active" : "navtxt")}
+        >
           <h2>문의사항</h2>
         </NavLink>
-        <NavLink to="/teacherreservationmanagement" className="navtxt">
+        <NavLink
+          to="/teacherreservationmanagement"
+          className={({ isActive }) => (isActive ? "navtxt active" : "navtxt")}
+        >
           <h2>상담예약</h2>
         </NavLink>
       </div>
@@ -80,6 +97,8 @@ const App = () => {
             element={<ParentsPasswordChange />}
           />
           <Route path="/parentsquestion" element={<ParentsQuestion />} />
+          <Route path="/parentsclassroom" element={<ParentsClassroom />} />{" "}
+          {/* ParentsClassroom 라우트 추가 */}
         </Routes>
       </div>
     </div>

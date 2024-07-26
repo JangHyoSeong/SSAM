@@ -20,6 +20,9 @@ public class JwtUtil {
     //1
     public String getUsername(String token){
         return Jwts.parser().verifyWith(secertKey).build().parseSignedClaims(token).getPayload().get("username", String.class);
+    }//1
+    public Integer getUserId(String token){
+        return Jwts.parser().verifyWith(secertKey).build().parseSignedClaims(token).getPayload().get("userId", Integer.class);
     }
     //2
     public String getRole(String token){
@@ -32,10 +35,11 @@ public class JwtUtil {
     // 1 2 3 토큰의 특정요소 검증
 
     //4
-    public String createJwt(String username, String role, Long expireMs){
+    public String createJwt(String username, String role, Integer userId, Long expireMs){
         return Jwts.builder()
                 .claim("username", username)
                 .claim("role", role)
+                .claim("userId", userId)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis()+expireMs))
                 .signWith(secertKey)

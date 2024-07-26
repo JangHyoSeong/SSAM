@@ -1,9 +1,16 @@
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import TeacherCalendar from "./TeacherCalendar";
 import TeacherReservationList from "./TeacherReservationList";
 import styles from "./TeacherReservationManagement.module.scss";
 
 const TeacherAppointment = () => {
+  const [selectedDate, setSelectedDate] = useState("날짜를 선택해 주세요");
+
+  const handleDateSelect = (date) => {
+    setSelectedDate(date);
+  };
+
   return (
     <div>
       <nav className={styles.container}>
@@ -25,8 +32,8 @@ const TeacherAppointment = () => {
         </NavLink>
       </nav>
       <section className={styles.classNavbar}>
-        <TeacherCalendar />
-        <TeacherReservationList />
+        <TeacherCalendar onDateSelect={handleDateSelect} />
+        <TeacherReservationList selectedDate={selectedDate} />
       </section>
     </div>
   );

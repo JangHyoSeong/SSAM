@@ -5,8 +5,9 @@ import { FiCalendar } from "react-icons/fi"; // Ensure you have react-icons inst
 const ConsultationList = ({ selectedDate }) => {
   const [consultations, setConsultations] = useState([]);
 
+  // selectedDate가 변경될 때마다 상태를 초기화
   useEffect(() => {
-    const updatedConsultations = [
+    const initializeConsultations = [
       { time: "14:00 ~ 14:20", available: true },
       { time: "14:30 ~ 14:50", available: true },
       { time: "15:00 ~ 15:20", available: true },
@@ -15,8 +16,19 @@ const ConsultationList = ({ selectedDate }) => {
       { time: "16:30 ~ 16:50", available: true },
       { time: "17:00 ~ 17:20", available: false },
     ];
-    setConsultations(updatedConsultations);
+    setConsultations(initializeConsultations);
   }, [selectedDate]);
+
+  // 버튼 클릭 핸들러 추가
+  const toggleAvailability = (index) => {
+    setConsultations((prevConsultations) =>
+      prevConsultations.map((consultation, i) =>
+        i === index
+          ? { ...consultation, available: !consultation.available }
+          : consultation
+      )
+    );
+  };
 
   return (
     <div className={styles.consultationList}>
@@ -37,7 +49,9 @@ const ConsultationList = ({ selectedDate }) => {
                 className={
                   consultation.available ? styles.available : styles.unavailable
                 }
-                disabled={!consultation.available}
+                // disabled={!consultation.available}
+                // 버튼 클릭 시 신청 가능/불가능 상태 변경
+                onClick={() => toggleAvailability(index)}
               >
                 {consultation.available ? "신청가능" : "신청불가"}
               </button>

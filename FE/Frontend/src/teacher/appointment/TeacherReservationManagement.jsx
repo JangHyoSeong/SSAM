@@ -5,10 +5,17 @@ import TeacherReservationList from "./TeacherReservationList";
 import styles from "./TeacherReservationManagement.module.scss";
 
 const TeacherAppointment = () => {
-  const [selectedDate, setSelectedDate] = useState("날짜를 선택해 주세요");
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [availableCount, setAvailableCount] = useState(0);
 
+  // 선택된 날짜를 설정하는 함수
   const handleDateSelect = (date) => {
-    setSelectedDate(date);
+    setSelectedDate(new Date(date));
+  };
+
+  // 사용 가능한 상담 횟수를 설정하는 함수
+  const handleAvailableCountChange = (count) => {
+    setAvailableCount(count);
   };
 
   return (
@@ -32,8 +39,14 @@ const TeacherAppointment = () => {
         </NavLink>
       </nav>
       <section className={styles.classNavbar}>
-        <TeacherCalendar onDateSelect={handleDateSelect} />
-        <TeacherReservationList selectedDate={selectedDate} />
+        <TeacherCalendar
+          onDateSelect={handleDateSelect}
+          availableCount={availableCount}
+        />
+        <TeacherReservationList
+          selectedDate={selectedDate}
+          onAvailableCountChange={handleAvailableCountChange}
+        />
       </section>
     </div>
   );

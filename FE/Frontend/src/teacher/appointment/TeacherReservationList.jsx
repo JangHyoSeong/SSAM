@@ -1,59 +1,18 @@
-import { useState, useEffect } from "react";
 import styles from "./TeacherReservationList.module.scss";
 import { FiCalendar } from "react-icons/fi"; // Ensure you have react-icons installed
+import useTeacherCalendarStore from "../../store/TeacherCalendarStore";
 
-const ConsultationList = ({ selectedDate, onAvailableCountChange }) => {
-  const [consultations, setConsultations] = useState([]);
-
-  // selectedDate가 변경될 때마다 상태를 초기화
-  useEffect(() => {
-    const initializeConsultations = [
-      { time: "14:00 ~ 14:20", available: true },
-      { time: "14:30 ~ 14:50", available: true },
-      { time: "15:00 ~ 15:20", available: true },
-      { time: "15:30 ~ 15:50", available: true },
-      { time: "16:00 ~ 16:20", available: false },
-      { time: "16:30 ~ 16:50", available: true },
-      { time: "17:00 ~ 17:20", available: false },
-    ];
-    setConsultations(initializeConsultations);
-
-    // 사용 가능한 상담 횟수를 계산하여 부모 컴포넌트에 전달
-    const availableCount = initializeConsultations.filter(
-      (consultation) => consultation.available
-    ).length;
-    if (typeof onAvailableCountChange === "function") {
-      onAvailableCountChange(availableCount);
-    }
-  }, [selectedDate, onAvailableCountChange]);
-
-  // 버튼 클릭 핸들러 추가
-  const toggleAvailability = (index) => {
-    setConsultations((prevConsultations) => {
-      // 상담 가능 상태를 토글
-      const updatedConsultations = prevConsultations.map((consultation, i) =>
-        i === index
-          ? { ...consultation, available: !consultation.available }
-          : consultation
-      );
-
-      // 사용 가능한 상담 횟수를 계산하여 부모 컴포넌트에 전달
-      const availableCount = updatedConsultations.filter(
-        (consultation) => consultation.available
-      ).length;
-      if (typeof onAvailableCountChange === "function") {
-        onAvailableCountChange(availableCount);
-      }
-
-      return updatedConsultations;
-    });
-  };
+const TeacherReservationList = ({ selectedDate }) => {
+  const consultations = useTeacherCalendarStore((state) => state.consultations);
+  const toggleAvailability = useTeacherCalendarStore(
+    (state) => state.toggleAvailability
+  );
 
   // selectedDate를 문자열로 변환하여 표시
   const formatDate = (date) => {
     if (date instanceof Date) {
       const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, "0"); // getMonth() is zero-based
+      const month = String(date.getMonth() + 1).padStart(2, "0"); // getMonth()는 0부터 시작
       const day = String(date.getDate()).padStart(2, "0");
       return `${year}-${month}-${day}`;
     }
@@ -96,4 +55,4 @@ const ConsultationList = ({ selectedDate, onAvailableCountChange }) => {
   );
 };
 
-export default ConsultationList;
+export default TeacherReservationList;

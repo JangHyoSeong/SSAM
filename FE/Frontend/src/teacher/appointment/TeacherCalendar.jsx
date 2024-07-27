@@ -3,11 +3,18 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import koLocale from "@fullcalendar/core/locales/ko";
 import styles from "./TeacherCalendar.module.scss";
+import useTeacherCalendarStore from "../../store/TeacherCalendarStore";
 
-const TeacherCalendar = ({ onDateSelect, availableCount }) => {
+const TeacherCalendar = ({ onDateSelect }) => {
+  const getAvailableCount = useTeacherCalendarStore(
+    (state) => state.getAvailableCount
+  );
+
   const handleDateSelect = (selectInfo) => {
     const calendarApi = selectInfo.view.calendar;
     calendarApi.unselect(); // 날짜 선택 해제
+
+    const availableCount = getAvailableCount(); // 상담 신청 가능 횟수 가져오기
 
     // 상담 신청 가능 횟수를 이벤트로 추가
     calendarApi.addEvent({

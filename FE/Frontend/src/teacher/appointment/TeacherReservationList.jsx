@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import styles from "./TeacherReservationList.module.scss";
+import { FiCalendar } from "react-icons/fi"; // Ensure you have react-icons installed
 
 const ConsultationList = ({ selectedDate }) => {
   const [consultations, setConsultations] = useState([]);
 
   useEffect(() => {
-    // Update consultations based on selectedDate
-    // This is a placeholder, replace with actual data fetching or logic
     const updatedConsultations = [
       { time: "14:00 ~ 14:20", available: true },
       { time: "14:30 ~ 14:50", available: true },
@@ -23,34 +22,29 @@ const ConsultationList = ({ selectedDate }) => {
     <div className={styles.consultationList}>
       <div className={styles.header}>
         <h2>{selectedDate}</h2>
+        <FiCalendar className={styles.calendarIcon} />
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>상담 시간</th>
-            <th>상담 신청</th>
-          </tr>
-        </thead>
-        <tbody>
-          {consultations.map((consultation, index) => (
-            <tr key={index}>
-              <td>{consultation.time}</td>
-              <td>
-                <button
-                  className={
-                    consultation.available
-                      ? styles.available
-                      : styles.unavailable
-                  }
-                  disabled={!consultation.available}
-                >
-                  {consultation.available ? "신청가능" : "신청불가"}
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className={styles.table}>
+        <div className={styles.row}>
+          <div className={styles.cellHeader}>상담 시간</div>
+          <div className={styles.cellHeader}>상담 신청</div>
+        </div>
+        {consultations.map((consultation, index) => (
+          <div className={styles.row} key={index}>
+            <div className={styles.cell}>{consultation.time}</div>
+            <div className={styles.cell}>
+              <button
+                className={
+                  consultation.available ? styles.available : styles.unavailable
+                }
+                disabled={!consultation.available}
+              >
+                {consultation.available ? "신청가능" : "신청불가"}
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
       <div className={styles.actions}>
         <button className={styles.modify}>수정</button>
         <button className={styles.cancel}>취소</button>

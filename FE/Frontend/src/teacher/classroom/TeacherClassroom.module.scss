@@ -1,4 +1,3 @@
-/* TeacherClassroom.module.scss */
 .classInfoContainer {
   display: flex;
   flex-direction: column;
@@ -36,6 +35,11 @@
   color: white;
 }
 
+.altActive {
+  background-color: #5285ee;
+  color: white;
+}
+
 .imageContainer {
   width: 100%;
   display: flex;
@@ -49,14 +53,12 @@
 
 .infoBoxes {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   width: 100%;
   margin-top: 2vh;
 }
 
-.noticeBox,
-.classInfoBox,
-.inquiryBox {
+.noticeBox, .classInfoBox, .inquiryBox {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -66,7 +68,7 @@
   border-radius: 1vh;
   width: 30%;
   text-align: center;
-  margin: 0 1vw; /* 좌우 간격 추가 */
+  margin: 0 1vh; /* 좌우 간격 추가 */
 }
 
 .noticeBox {
@@ -89,6 +91,9 @@
   margin: 0.5vh 0;
 }
 
-.active .classNavbar {
-  background-color: #5285ee;
+.studentListContainer {
+  width: 100%;
+  margin-top: 2vh;
+  display: flex;
+  justify-content: flex-start; /* 시작 부분에 맞추기 */
 }

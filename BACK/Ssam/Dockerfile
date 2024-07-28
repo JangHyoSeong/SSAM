@@ -10,6 +10,8 @@ COPY gradlew .
 COPY build.gradle settings.gradle ./
 RUN ./gradlew --version
 
+RUN chmod +x ./gradlew
+
 # 전체 소스 코드 복사
 COPY . .
 

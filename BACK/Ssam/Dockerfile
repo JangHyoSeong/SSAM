@@ -8,7 +8,6 @@ WORKDIR /app
 COPY gradle/ gradle/
 COPY gradlew .
 COPY build.gradle settings.gradle ./
-RUN ./gradlew --version
 
 RUN chmod +x ./gradlew
 
@@ -16,6 +15,7 @@ RUN chmod +x ./gradlew
 COPY . .
 
 # 빌드 실행
+RUN chmod +x ./gradlew
 RUN ./gradlew build --no-daemon
 
 # 실행 스테이지
@@ -25,7 +25,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # 빌드 스테이지에서 생성된 JAR 파일을 복사
-COPY --from=build /app/build/libs/*.jar app.jar
+COPY --from=build /app/build/libs/Ssam-0.0.1-SNAPSHOT.jar app.jar
 
 # 애플리케이션 포트 노출
 EXPOSE 8081

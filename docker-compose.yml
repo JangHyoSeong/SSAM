@@ -16,7 +16,7 @@ services:
     build: 
       context: ./BACK/Ssam
       dockerfile: Dockerfile
-    expose:
+    ports:
       - "8081:8081"
     depends_on:
       - mysql

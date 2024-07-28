@@ -12,6 +12,16 @@ services:
       - ~/jenkins_home/jenkins.war:/usr/share/jenkins/jenkins.war
       - /var/run/docker.sock:/var/run/docker.sock
   
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: 
+      MYSQL_DATABASE: ssam
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
   spring-app:
     build: 
       context: ./BACK/Ssam
@@ -25,16 +35,6 @@ services:
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=
       - SERVER_SERVLET_CONTEXT_PATH=/api
-
-  mysql:
-    image: mysql:8
-    environment:
-      MYSQL_ROOT_PASSWORD: 
-      MYSQL_DATABASE: ssam
-    volumes:
-      - mysql_data:/var/lib/mysql
-    ports:
-      - "3306:3306"
 
   react-app:
     build:

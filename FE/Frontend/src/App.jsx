@@ -23,6 +23,7 @@ import ParentsSubpage from "./parents/subPage/ParentsSubpage";
 import ParentsPasswordChange from "./parents/myPage/ParentsPasswordChange";
 import ParentsQuestion from "./parents/question/ParentsQuestion"; // ParentsQuestion 컴포넌트 import
 import ParentsClassroom from "./parents/classroom/ParentsClassroom"; // ParentsClassroom 컴포넌트 import
+import ParentsReservationPage from "./parents/appointment/ParentsReservationPage";
 
 const App = () => {
   const location = useLocation();
@@ -37,6 +38,7 @@ const App = () => {
           to="/teacherclassroom"
           className={
             location.pathname.startsWith("/teacherclassroom") ||
+            location.pathname.startsWith("/teacherauthorization") ||
             location.pathname.startsWith("/parentsclassroom")
               ? "navtxt active"
               : "navtxt"
@@ -86,7 +88,7 @@ const App = () => {
           <Route
             path="/teacherclassroom/student/:id"
             element={<TeacherStudentDetail />}
-          />{" "}
+          />
           {/* 학부모 링크 */}
           <Route path="/parentslogin" element={<ParentsLogin />} />
           <Route path="/parentsjoin" element={<ParentsJoin />} />
@@ -97,7 +99,11 @@ const App = () => {
             element={<ParentsPasswordChange />}
           />
           <Route path="/parentsquestion" element={<ParentsQuestion />} />
-          <Route path="/parentsclassroom" element={<ParentsClassroom />} />{" "}
+          <Route path="/parentsclassroom" element={<ParentsClassroom />} />
+          <Route
+            path="/parentsreservationpage"
+            element={<ParentsReservationPage />}
+          />
           {/* ParentsClassroom 라우트 추가 */}
         </Routes>
       </div>

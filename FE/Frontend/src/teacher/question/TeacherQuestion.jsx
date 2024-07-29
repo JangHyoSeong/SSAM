@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import styles from './TeacherQuestion.module.css';
-import AnswerModal from './AnswerModal';
-import TeacherDeleteModal from './TeacherDeleteModal';
-import { FaTrash, FaEdit } from 'react-icons/fa';
+import styles from './TeacherQuestion.module.scss';
+import { FaTrash, FaEdit, FaSave } from 'react-icons/fa';
 
 const TeacherQuestion = () => {
   const initialQuestions = [
@@ -12,36 +10,27 @@ const TeacherQuestion = () => {
   ];
 
   const [questions, setQuestions] = useState(initialQuestions);
-  const [selectedAnswerId, setSelectedAnswerId] = useState(null);
-  const [isAnswerModalOpen, setIsAnswerModalOpen] = useState(false);
+  const [editingAnswerId, setEditingAnswerId] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [questionToAnswer, setQuestionToAnswer] = useState(null);
   const [questionToDelete, setQuestionToDelete] = useState(null);
+  const [newAnswer, setNewAnswer] = useState('');
 
-  const handleEditClick = (id) => {
-    setSelectedAnswerId(id);
-    setQuestionToAnswer(questions.find(question => question.id === id));
-    setIsAnswerModalOpen(true);
+  const handleEditClick = (id, currentAnswer) => {
+    setEditingAnswerId(id);
+    setNewAnswer(currentAnswer);
+  };
+
+  const handleSaveClick = (id) => {
+    setQuestions(questions.map(question =>
+      question.id === id ? { ...question, answer: newAnswer } : question
+    ));
+    setEditingAnswerId(null);
+    setNewAnswer('');
   };
 
   const handleDeleteClick = (id) => {
     setIsDeleteModalOpen(true);
     setQuestionToDelete(id);
-  };
-
-  const handleAnswerModalConfirm = (answer) => {
-    setQuestions(questions.map(question =>
-      question.id === selectedAnswerId ? { ...question, answer: answer } : question
-    ));
-    setIsAnswerModalOpen(false);
-    setSelectedAnswerId(null);
-    setQuestionToAnswer(null);
-  };
-
-  const handleAnswerModalCancel = () => {
-    setIsAnswerModalOpen(false);
-    setSelectedAnswerId(null);
-    setQuestionToAnswer(null);
   };
 
   const handleDeleteModalConfirm = () => {
@@ -64,22 +53,27 @@ const TeacherQuestion = () => {
               <p>{item.question}</p>
               <FaTrash className={styles.icon} onClick={() => handleDeleteClick(item.id)} />
             </div>
-            <div className={`${styles.answerBox} ${selectedAnswerId === item.id ? styles.selected : ''}`}>
-              <div>
+            <div className={`${styles.answerBox}`}>
+              {editingAnswerId === item.id ? (
+                <input
+                  type="text"
+                  value={newAnswer}
+                  onChange={(e) => setNewAnswer(e.target.value)}
+                  className={styles.inputField}
+                  placeholder="답변을 입력하세요"
+                />
+              ) : (
                 <p>{item.answer ? item.answer : 'A.'}</p>
-              </div>
-              <FaEdit className={styles.icon} onClick={() => handleEditClick(item.id)} />
+              )}
+              {editingAnswerId === item.id ? (
+                <FaSave className={styles.icon} onClick={() => handleSaveClick(item.id)} />
+              ) : (
+                <FaEdit className={styles.icon} onClick={() => handleEditClick(item.id, item.answer)} />
+              )}
             </div>
           </div>
         </div>
       ))}
-      {isAnswerModalOpen && (
-        <AnswerModal 
-          question={questionToAnswer?.question} 
-          onConfirm={handleAnswerModalConfirm} 
-          onCancel={handleAnswerModalCancel}
-        />
-      )}
       {isDeleteModalOpen && (
         <TeacherDeleteModal 
           onConfirm={handleDeleteModalConfirm} 

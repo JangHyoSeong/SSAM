@@ -23,6 +23,7 @@ import ParentsSubpage from "./parents/subPage/ParentsSubpage";
 import ParentsPasswordChange from "./parents/myPage/ParentsPasswordChange";
 import ParentsQuestion from "./parents/question/ParentsQuestion"; // ParentsQuestion 컴포넌트 import
 import ParentsClassroom from "./parents/classroom/ParentsClassroom"; // ParentsClassroom 컴포넌트 import
+import ParentsReservationPage from "./parents/appointment/ParentsReservationPage";
 
 const App = () => {
   const location = useLocation();
@@ -97,7 +98,11 @@ const App = () => {
             element={<ParentsPasswordChange />}
           />
           <Route path="/parentsquestion" element={<ParentsQuestion />} />
-          <Route path="/parentsclassroom" element={<ParentsClassroom />} />{" "}
+          <Route path="/parentsclassroom" element={<ParentsClassroom />} />
+          <Route
+            path="/parentsreservationpage"
+            element={<ParentsReservationPage />}
+          />
           {/* ParentsClassroom 라우트 추가 */}
         </Routes>
       </div>

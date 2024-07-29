@@ -1,7 +1,7 @@
 package com.ssafy.ssam.domain.user.controller;
 
 import com.ssafy.ssam.domain.user.dto.UserDto;
-import com.ssafy.ssam.domain.user.service.JoinService;
+import com.ssafy.ssam.domain.user.service.UserService;
 import com.ssafy.ssam.global.dto.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -3,10 +3,16 @@ package com.ssafy.ssam.domain.classroom.controller;
 import com.ssafy.ssam.domain.classroom.dto.request.BoardCreateRequestDTO;
 import com.ssafy.ssam.domain.classroom.dto.response.BoardGetResponseDTO;
 import com.ssafy.ssam.domain.classroom.service.BoardService;
+import com.ssafy.ssam.global.error.ErrorCode;
+import com.ssafy.ssam.global.error.exception.BindingException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -19,10 +25,11 @@ public class BoardController {
     // Post(학급 생성) 성공시 반환할 메세지. 수정 필요
 //    @PreAuthorize("hasRole('TEACHER')")
     @PostMapping("/teachers")
-    public ResponseEntity<BoardGetResponseDTO> createBoard( @RequestBody BoardCreateRequestDTO responseDTO) {
+    public ResponseEntity<BoardGetResponseDTO> createBoard(@Valid @RequestBody BoardCreateRequestDTO responseDTO,
+                                                           BindingResult bindingResult) {
         log.info(responseDTO.getGrade()+" 확인");
         log.info(responseDTO.getClassroom()+" 확인");
-
+        if(bindingResult.hasErrors()) throw new BindingException(ErrorCode.BINDING_ERROR, Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         return ResponseEntity.ok(boardService.createBoard(responseDTO));
     }
 

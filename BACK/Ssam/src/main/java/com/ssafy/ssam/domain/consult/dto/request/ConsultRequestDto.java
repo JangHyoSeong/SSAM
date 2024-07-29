@@ -14,14 +14,9 @@ public class ConsultRequestDto {
     private Integer consultId;
     private Appointment appointment;
     private Date actualDate;
-    private Integer runningTime;
     private String content;
     private String videoUrl;
     private ConsultTopic topic;
     private String webrtcSessionId;
     private String accessCode;
-    private Integer attSchool;
-    private Integer attGrade;
-    private Integer attClassroom;
-
 }

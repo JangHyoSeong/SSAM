@@ -16,9 +16,8 @@ public class Summary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "summary_id")
-    private int summaryId;
+    private Integer summaryId;
 
-    @NotNull
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "consult_id", nullable = false)
     private Consult consult;
@@ -31,7 +30,7 @@ public class Summary {
     @Column(name = "profanity_count", nullable = false)
     private int profanityCount;
 
-    @NotNull
+
     @Column(name = "profanity_level", nullable = false, length = 10)
     private String profanityLevel;
 

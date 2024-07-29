@@ -2,11 +2,15 @@ package com.ssafy.ssam.global.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+@RequiredArgsConstructor
 @AllArgsConstructor
 @Getter
 public enum ErrorCode {
+
+    BINDING_ERROR(HttpStatus.BAD_REQUEST),
 
     // userException
     DuplicateUserName(HttpStatus.BAD_REQUEST, "이미 존재하는 사용자 아이디 입니다"),
@@ -25,5 +29,5 @@ public enum ErrorCode {
 
 
     private final HttpStatus httpStatus;
-    private final String errorMessage;
+    private String errorMessage;
 }

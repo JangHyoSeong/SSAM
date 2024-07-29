@@ -1,6 +1,5 @@
 package com.ssafy.ssam.domain.consult.entity;
 
-import com.ssafy.ssam.domain.consult.converter.AppointmentStatusConverter;
 import com.ssafy.ssam.domain.consult.dto.request.AppointmentRequestDto;
 import com.ssafy.ssam.domain.consult.dto.response.AppointmentResponseDto;
 import com.ssafy.ssam.domain.user.entity.User;
@@ -43,11 +42,9 @@ public class Appointment {
     @Column(name = "end_time", columnDefinition = "TIMESTAMP",nullable = false)
     private LocalDateTime endTime;
 
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AppointmentStatus status;
-
 
     public static Appointment toAppointment(User student, User teacher, AppointmentRequestDto appointmentRequestDto){
         return Appointment.builder()

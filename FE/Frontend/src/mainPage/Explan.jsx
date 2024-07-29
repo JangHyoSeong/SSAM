@@ -5,7 +5,7 @@ import explan from "./Explan.module.scss";
 const Explan = () => {
   return (
     <div className={explan.explanArray}>
-      <h1>AI를 활용한 화상 상담 서비스</h1>
+      <h1>새로 만나는 화상상담</h1>
       <h2>환영합니다 SSAM입니다</h2>
     </div>
   );

@@ -121,7 +121,8 @@ const TeacherJoin = () => {
               </div>
               <hr />
               <div>
-                <img src={phone} className={join.joinIcon} alt="phone" />
+                <img src={phone} className={join.joinIcon} alt="phone" />{" "}
+                {/* 이미지 사용 */}
                 <input
                   type="tel"
                   name="phone"
@@ -131,16 +132,15 @@ const TeacherJoin = () => {
                   required
                 />
               </div>
-              <hr />
-              <div className={join.joinBtnArray}>
-                <button type="submit" className={join.joinBtn}>
-                  가입
-                </button>
-                <button type="button" className={join.joinBtn}>
-                  취소
-                </button>
-              </div>
             </form>
+          </div>
+          <div className={join.joinBtnArray}>
+            <button type="submit" className={join.joinBtn}>
+              가입
+            </button>
+            <button type="button" className={join.joinBtn}>
+              취소
+            </button>
           </div>
         </div>
       </div>

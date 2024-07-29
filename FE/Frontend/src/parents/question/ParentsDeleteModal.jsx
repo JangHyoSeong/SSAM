@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './ParentsDeleteModal.module.scss';
+import styles from './ParentsDeleteModal.module.css';
 import { BsExclamationTriangle } from 'react-icons/bs';
 
 const ParentsDeleteModal = ({ onConfirm, onCancel }) => {

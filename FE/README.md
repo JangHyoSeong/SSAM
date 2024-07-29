@@ -1,13 +1,16 @@
 # SSAM_PJT_KDH
+
 공통프로젝트 SSAM - 메인 페이지 및 로그인, 회원가입 담당
 
 ### 기술 스택
+
 HTML, CSS, JavaScript
 React
 Vite
 Zustand
 
 ### 규칙
+
 - 폴더 이름 : 카멜 케이스 (첫 번째 단어는 소문자, 그 이후의 단어는 대문자)
 
 - 파일명 : .jsx
@@ -25,23 +28,28 @@ Zustand
   - 반응형 디자인과 동적 레이아웃에 효과적입니다
 
 ### 설치 방법
+
 $ npm create vite@latest
 $ npm install
 $ cd [파일명]
 $ npm run dev
 
 ### 담당 업무
+
 - 김동현
+
   - 상위메인, 하위메인 (초대코드, 알림, 설명)
   - 로그인, 회원가입
   - 회원정보 (회원정보, 비밀번호 변경)
 
 - 정유진
+
   - 고객센터
   - 문의사항
   - 학급정보 (학급관리, 승인관리)
 
 - 박범준
+
   - 상담예약 (예약관리, 상담내역, 상담신청)
   - AI 챗봇
 
@@ -50,47 +58,49 @@ $ npm run dev
 ### 메인페이지 : http://localhost:5173/
 
 ### 선생님
-  - 서브페이지 : http://localhost:5173/teachersubpage
 
-  - 로그인 : http://localhost:5173/teacherlogin
-  - 회원가입 : http://localhost:5173/teacherjoin
+- 서브페이지 : http://localhost:5173/teachersubpage
 
-  - 학급정보 :
-    - 학급관리 :
-    - 승인관리 :
+- 로그인 : http://localhost:5173/teacherlogin
+- 회원가입 : http://localhost:5173/teacherjoin
 
-  - 문의사항 : http://localhost:5173/teacherquestion
+- 학급정보
 
-  - 상담예약
-    - 예약관리 :
-    - 상담내역 :
-    - 상담신청 :
+  - 학급관리 : http://localhost:5173/teacherclassroom
+  - 승인관리 : http://localhost:5173/teacherauthorization
 
-  - 회원정보
-    - 회원정보 수정 : http://localhost:5173/teacherupdate
-    - 비밀번호 변경 : http://localhost:5173/passwordchange
+- 문의사항 : http://localhost:5173/teacherquestion
 
-  - 고객센터 :
+- 상담예약
+
+  - 예약관리 : http://localhost:5173/teacherreservationmanagement
+  - 상담내역 : http://localhost:5173/teacherconsultationlist
+  - 상담신청 :
+
+- 회원정보
+  - 회원정보 수정 : http://localhost:5173/teacherupdate
+  - 비밀번호 변경 : http://localhost:5173/passwordchange
 
 ### 학부모
-  - 서브페이지 :
 
-  - 로그인 :
-  - 회원가입 :
+- 서브페이지 : http://localhost:5173/parentssubpage
 
-  - 학급정보 :
-    - 학급관리 :
-    - 승인관리 :
+- 로그인 : http://localhost:5173/parentslogin
+- 회원가입 : http://localhost:5173/parentsjoin
 
-  - 문의사항 : http://localhost:5173/parentsquestion
+- 학급정보
 
-  - 상담예약
-    - 예약관리 :
-    - 상담내역 :
-    - 상담신청 :
+  - 학급관리 : http://localhost:5173/parentsclassroom
+  - 승인관리 : http://localhost:5173/parentsauthorization
 
-  - 회원정보
-    - 회원정보 수정 :
-    - 비밀번호 변경 :
+- 문의사항 : http://localhost:5173/parentsquestion
 
-  - 고객센터 :
+- 상담예약
+
+  - 예약관리 : http://localhost:5173/parentsreservationmanagement
+  - 상담내역 : http://localhost:5173/parentsconsultationlist
+  - 상담신청 :
+
+- 회원정보
+  - 회원정보 수정 : http://localhost:5173/parentsupdate
+  - 비밀번호 변경 : http://localhost:5173/passwordchange

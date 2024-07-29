@@ -1,9 +1,6 @@
-//TeacherQuestion.jsx
-
 import React, { useState } from 'react';
-import styles from './TeacherQuestion.module.scss';
-import { FaTrash, FaEdit } from 'react-icons/fa';
-import { useQuestions } from '../../store/QuestionContext';
+import styles from './TeacherQuestion.module.css';
+import AnswerModal from './AnswerModal';
 import TeacherDeleteModal from './TeacherDeleteModal';
 
 const TeacherQuestion = () => {
@@ -42,6 +39,7 @@ const TeacherQuestion = () => {
   };
 
   return (
+    <>
     <div className={styles.teacherQuestionContainer}>
       {questions.map((item) => (
         <div key={item.id} className={styles.qaPair}>
@@ -75,6 +73,8 @@ const TeacherQuestion = () => {
         />
       )}
     </div>
+    <Footer />
+    </>
   );
 };
 

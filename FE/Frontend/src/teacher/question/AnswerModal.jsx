@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './AnswerModal.module.scss';
+import styles from './AnswerModal.module.css';
 
 const AnswerModal = ({ question, onConfirm, onCancel }) => {
   const [answer, setAnswer] = useState('');

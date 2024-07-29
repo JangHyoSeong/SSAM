@@ -50,7 +50,7 @@ const Select = () => {
           </div>
         </NavLink>
         <NavLink
-          to="/parentsappointment"
+          to="/parentsreservationpage"
           className={`${select.menuBox} ${select.menuBox3}`}
         >
           <div className={select.menuTxt}>

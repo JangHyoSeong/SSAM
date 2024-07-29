@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/classrooms")
+@RequestMapping("/v1/classrooms")
 public class BoardController {
 
     private final BoardService boardService;

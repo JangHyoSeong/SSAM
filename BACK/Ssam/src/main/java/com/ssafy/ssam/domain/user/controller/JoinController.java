@@ -36,7 +36,7 @@ public class JoinController{
     @GetMapping("/test")
     public ResponseEntity<Optional<User>> testGet() {
 
-        Optional<User> userDto = userRepository.findById(1);
+        Optional<User> userDto = userRepository.findById(2);
 
         return ResponseEntity.ok(userDto);
     }

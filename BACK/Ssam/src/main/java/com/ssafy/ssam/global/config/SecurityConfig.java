@@ -36,7 +36,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return webSecurity -> {
             webSecurity.ignoring()
-                    .requestMatchers("/api/v1/auth/students", "/api/v1/auth/teachers");
+                    .requestMatchers("/v1/auth/students", "/v1/auth/teachers");
         };
     }
     @Bean

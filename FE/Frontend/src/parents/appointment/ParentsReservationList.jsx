@@ -1,8 +1,8 @@
-import styles from "./TeacherReservationList.module.scss";
 import { FiCalendar } from "react-icons/fi"; // Ensure you have react-icons installed
 import useTeacherCalendarStore from "../../store/TeacherCalendarStore";
+import styles from "./ParentsReservationList.module.scss";
 
-const TeacherReservationList = ({ selectedDate }) => {
+const ParentsReservationList = ({ selectedDate }) => {
   const consultations = useTeacherCalendarStore((state) => state.consultations);
   const toggleAvailability = useTeacherCalendarStore(
     (state) => state.toggleAvailability
@@ -55,4 +55,4 @@ const TeacherReservationList = ({ selectedDate }) => {
   );
 };
 
-export default TeacherReservationList;
+export default ParentsReservationList;

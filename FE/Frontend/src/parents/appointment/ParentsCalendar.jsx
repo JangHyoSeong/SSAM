@@ -2,10 +2,10 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import koLocale from "@fullcalendar/core/locales/ko";
-import styles from "./TeacherCalendar.module.scss";
+import styles from "./ParentsCalendar.module.scss";
 import useTeacherCalendarStore from "../../store/TeacherCalendarStore";
 
-const TeacherCalendar = ({ onDateSelect }) => {
+const ParentsCalendar = ({ onDateSelect }) => {
   const getAvailableCount = useTeacherCalendarStore(
     (state) => state.getAvailableCount
   );
@@ -54,4 +54,4 @@ const TeacherCalendar = ({ onDateSelect }) => {
   );
 };
 
-export default TeacherCalendar;
+export default ParentsCalendar;

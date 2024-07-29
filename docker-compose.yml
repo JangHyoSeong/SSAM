@@ -11,7 +11,9 @@ services:
       - ~/jenkins_home:/var/jenkins_home
       - ~/jenkins_home/jenkins.war:/usr/share/jenkins/jenkins.war
       - /var/run/docker.sock:/var/run/docker.sock
-  
+    group_add:
+      - ${DOCKER_GROUP_ID:-$(getent group docker | cut -d: -f3)}
+
   mysql:
     image: mysql:8
     environment:

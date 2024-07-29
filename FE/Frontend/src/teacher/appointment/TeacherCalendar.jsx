@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -27,12 +28,6 @@ const TeacherCalendar = ({ onDateSelect }) => {
     onDateSelect(selectInfo.startStr); // 선택된 날짜를 부모 컴포넌트에 전달
   };
 
-  const renderTitle = (date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1; // getMonth() is zero-based
-    return `${year}년 ${month}월`;
-  };
-
   return (
     <div className={styles.calendarContainer}>
       <FullCalendar
@@ -47,11 +42,14 @@ const TeacherCalendar = ({ onDateSelect }) => {
           right: "next",
         }}
         locale={koLocale} // 로케일을 한국어로 설정
-        titleContent={(arg) => <span>{renderTitle(arg.date)}</span>} // 사용자 정의 제목 렌더링
         dayCellContent={(arg) => arg.dayNumberText.replace("일", "")} // 날짜 셀에서 '일' 제거
       />
     </div>
   );
+};
+
+TeacherCalendar.propTypes = {
+  onDateSelect: PropTypes.func.isRequired, // onDateSelect prop 타입 정의
 };
 
 export default TeacherCalendar;

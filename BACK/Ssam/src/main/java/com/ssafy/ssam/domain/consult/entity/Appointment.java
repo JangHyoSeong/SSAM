@@ -6,8 +6,6 @@ import com.ssafy.ssam.domain.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -18,7 +16,6 @@ import java.util.Date;
 @Getter
 @Setter
 @Builder
-@DynamicInsert // 애초에 날릴때 null은 배제하고 날려야 default값이 입력된다. 그래서 배제하도록 해주는 어노테이션
 public class Appointment {
 
     @Id
@@ -46,7 +43,7 @@ public class Appointment {
     private LocalDateTime endTime;
 
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("'BEFORE'") // default 값 설정
+    @Column(nullable = false)
     private AppointmentStatus status;
 
     public static Appointment toAppointment(User student, User teacher, AppointmentRequestDto appointmentRequestDto){
@@ -65,7 +62,7 @@ public class Appointment {
                 .startTime(appointment.getStartTime())
                 .endTime(appointment.getEndTime())
                 .topic(appointment.getTopic())
-                .status(appointment.getStatus())
+                .status(AppointmentStatus.BEFORE)
                 .build();
     }
 }

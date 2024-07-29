@@ -18,15 +18,7 @@ public enum ErrorCode {
     UserNotFoundException(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."),
     Forbidden(HttpStatus.FORBIDDEN, "접근 권한이 없는 사용자입니다."),
     IllegalArgument(HttpStatus.NOT_FOUND, "잘못된 인자 값입니다."),
-
-    // consultException
-
-    UnavailableDate(HttpStatus.BAD_REQUEST, "예약이 불가능한 날짜입니다."),
-    Unfilled(HttpStatus.BAD_REQUEST, "필요한 정보가 전부 기입되지 않았습니다.");
-
-
-    // hiException
-
+    InvalidImageType(HttpStatus.BAD_REQUEST, "잘못된 이미지 파일입니다.");
 
     private final HttpStatus httpStatus;
     private String errorMessage;

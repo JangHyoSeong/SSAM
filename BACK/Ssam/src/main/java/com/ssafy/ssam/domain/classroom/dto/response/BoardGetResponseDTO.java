@@ -12,13 +12,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardGetResponseDTO {
-    private int classId;
+    private Integer classId;
     private String pin;
     private String banner;
     private String bannerImg;
     private String notice;
-    private int grade;
-    private int classroom;
+    private Integer grade;
+    private Integer classroom;
     private String consultUrl;
 
     // 학급에서 나타낼 유저, 질문을 위해 UserDTO, QuestionDTO 추가 필요

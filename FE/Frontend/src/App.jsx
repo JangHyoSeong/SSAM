@@ -37,6 +37,7 @@ const App = () => {
           to="/teacherclassroom"
           className={
             location.pathname.startsWith("/teacherclassroom") ||
+            location.pathname.startsWith("/teacherauthorization") ||
             location.pathname.startsWith("/parentsclassroom")
               ? "navtxt active"
               : "navtxt"
@@ -86,7 +87,7 @@ const App = () => {
           <Route
             path="/teacherclassroom/student/:id"
             element={<TeacherStudentDetail />}
-          />{" "}
+          />
           {/* 학부모 링크 */}
           <Route path="/parentslogin" element={<ParentsLogin />} />
           <Route path="/parentsjoin" element={<ParentsJoin />} />
@@ -97,8 +98,7 @@ const App = () => {
             element={<ParentsPasswordChange />}
           />
           <Route path="/parentsquestion" element={<ParentsQuestion />} />
-          <Route path="/parentsclassroom" element={<ParentsClassroom />} />{" "}
-          {/* ParentsClassroom 라우트 추가 */}
+          <Route path="/parentsclassroom" element={<ParentsClassroom />} />
         </Routes>
       </div>
     </div>

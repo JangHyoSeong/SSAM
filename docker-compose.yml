@@ -17,6 +17,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: 
       MYSQL_DATABASE: ssam
+    networks:
+      - app-network
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
@@ -28,6 +30,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8081:8081"
+    networks:
+      - app-network
     depends_on:
       - mysql
     environment:
@@ -56,6 +60,9 @@ services:
       - jenkins
       - spring-app
       - react-app
+
+networks:
+  app-network:
 
 volumes:
   jenkins_home:

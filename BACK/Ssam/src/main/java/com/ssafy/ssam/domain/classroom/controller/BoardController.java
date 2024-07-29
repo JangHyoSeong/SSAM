@@ -1,5 +1,6 @@
 package com.ssafy.ssam.domain.classroom.controller;
 
+import com.ssafy.ssam.domain.classroom.dto.request.BoardBannerImageRequestDTO;
 import com.ssafy.ssam.domain.classroom.dto.request.BoardBannerUpdateRequestDTO;
 import com.ssafy.ssam.domain.classroom.dto.request.BoardCreateRequestDTO;
 import com.ssafy.ssam.domain.classroom.dto.request.BoardNoticeUpdateRequestDTO;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("api/v1/classrooms")
+@RequestMapping("v1/classrooms")
 public class BoardController {
 
     private final BoardService boardService;
@@ -58,10 +59,22 @@ public class BoardController {
         return ResponseEntity.ok(res);
     }
 
+    // 학급 pin번호 재발급
     @PreAuthorize("hasRole('TEACHER')")
     @PutMapping("pin/{boardId}")
     public ResponseEntity<CommonResponseDto> refreshPin(@PathVariable Integer boardId) {
         boardService.refreshPin(boardId);
+        CommonResponseDto res = new CommonResponseDto();
+        return ResponseEntity.ok(res);
+    }
+
+    // 학급 배너 이미지 수정
+    @PreAuthorize("hasRole('TEACHER')")
+    @PutMapping("/banner-img/{boardId}")
+    public ResponseEntity<CommonResponseDto> changeBannerImage(
+            @PathVariable Integer boardId,
+            @Valid @RequestBody BoardBannerImageRequestDTO request) {
+        boardService.updateBannerImage(boardId, request.getBannerImage());
         CommonResponseDto res = new CommonResponseDto();
         return ResponseEntity.ok(res);
     }

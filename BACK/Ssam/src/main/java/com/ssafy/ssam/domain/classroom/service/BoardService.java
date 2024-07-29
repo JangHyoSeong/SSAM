@@ -1,5 +1,6 @@
 package com.ssafy.ssam.domain.classroom.service;
 
+import com.ssafy.ssam.domain.AmazonS3.service.S3ImageService;
 import com.ssafy.ssam.domain.classroom.dto.request.BoardCreateRequestDTO;
 import com.ssafy.ssam.domain.classroom.dto.response.BoardGetResponseDTO;
 import com.ssafy.ssam.domain.classroom.entity.Board;
@@ -8,12 +9,14 @@ import com.ssafy.ssam.domain.classroom.repository.BoardRepository;
 import com.ssafy.ssam.domain.classroom.repository.UserBoardRelationRepository;
 import com.ssafy.ssam.domain.user.entity.User;
 import com.ssafy.ssam.domain.user.repository.UserRepository;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Random;
 
@@ -25,6 +28,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final UserBoardRelationRepository userBoardRelationRepository;
+    private final S3ImageService s3ImageService;
 
     // 보드 생성
     @Transactional
@@ -74,10 +78,20 @@ public class BoardService {
         boardRepository.save(board);
     }
 
+    // 학급 pin번호 재발급
     public void refreshPin(int boardId) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new RuntimeException("Board not found"));
         board.setPin(generateUniquePin());
+        boardRepository.save(board);
+    }
+
+    // 학급 배너이미지 수정
+    public void updateBannerImage(int boardId, MultipartFile image) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new RuntimeException("Board not found"));
+        String imageUrl = s3ImageService.upload(image);
+        board.setBannerImg(imageUrl);
         boardRepository.save(board);
     }
 

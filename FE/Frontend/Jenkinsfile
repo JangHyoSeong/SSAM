@@ -16,7 +16,7 @@ pipeline {
         stage('Build and Push Frontend') {
             steps {
                 script {
-                    def frontendImage = docker.build("${FRONTEND_IMAGE_NAME}:${BUILD_NUMBER}")
+                    def frontendImage = docker.build("${FRONTEND_IMAGE_NAME}:${BUILD_NUMBER}", "./FE/Frontend")
                     docker.withRegistry('', 'docker-hub-credentials') {
                         frontendImage.push()
                     }

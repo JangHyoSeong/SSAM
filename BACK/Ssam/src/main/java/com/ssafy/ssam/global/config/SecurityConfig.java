@@ -54,10 +54,15 @@ public class SecurityConfig {
                 .logout((auth) -> auth.disable())
                 .httpBasic((auth) -> auth.disable())
                 .authorizeHttpRequests((auth) -> auth
+<<<<<<< HEAD
 	//아무 허용 필요없는 접근 -> 회원가입, 첫 화면, 비밀번호 찾기
                     .requestMatchers("/api/v1/auth/**", "/login").permitAll()
+=======
+//                 아무 허용 필요없는 접근 -> 회원가입, 첫 화면, 비밀번호 찾기
+                    .requestMatchers("/v1/auth/**", "/login").permitAll()
+>>>>>>> 36d05ca6ac6e8f820361060b3c4cf478dd146214
                 // 선생이라는 권한이 필요한 url
-                    .requestMatchers("/api/v1/classrooms/answers/**", "/api/v1/classrooms/teachers/**", "/api/v1/consults/teachers/**").permitAll()
+                    .requestMatchers("/v1/classrooms/answers/**", "/v1/classrooms/teachers/**", "/v1/consults/teachers/**").permitAll()
 
                 // 위에 말한 url 제외 모든 url은 로그인만 되어있으면 접근이 가능하다
                     .anyRequest().authenticated())

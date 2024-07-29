@@ -7,33 +7,30 @@
 }
 
 .consultationList {
-  // @include radius(2rem); /* 둥근 모서리 */
-  width: 40%; /* 너비를 45%로 설정하여 두 요소가 나란히 배치 */
-  margin: 2%; /* 위치를 조정 */
-  padding: 1.5vh; /* 패딩 조정 */
-  // border: 1px solid #ddd; /* 기존 테두리 유지 */
-  // box-shadow: 0 2vh 4vh rgba(0, 0, 0, 0.1); /* 그림자 추가 */
-  background-color: white; /* 배경색 설정 */
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 40%;
+  margin: 2%;
+  padding: 1.5vh;
+  background-color: white;
 
   .header {
-    @include radius(2rem); /* 둥근 모서리 */
-    width: auto;
-    text-align: center;
-    background-color: #e0eaff;
-    padding: 1vh 2vw;
-    margin-bottom: 1.6vh;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    width: auto;
+    margin-bottom: 1.6vh;
+    padding: 1vh 2vw;
+    background-color: #e0eaff;
+    @include radius(2rem); // Grouped with box model properties
+    box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.1);
+    text-align: center;
 
     h2 {
-      font-size: 1.5rem;
       margin: 0;
+      font-size: 1.5rem;
     }
 
     .calendarIcon {
@@ -63,7 +60,6 @@
       }
 
       .cellHeader {
-        // background-color: #f8f9fa;
         font-weight: bold;
       }
     }
@@ -71,21 +67,21 @@
 
   .available {
     @include radius(2rem);
-    background-color: #ffff;
-    color: black;
-    border: 1px solid #ddd; /* 기존 테두리 유지 */
     padding: 0.5vh 1vh;
-    box-shadow: 0 0.2vh 0.5vh rgba(1, 1, 1, 0.1); /* 그림자 추가 */
+    background-color: #fff;
+    color: black;
+    border: 1px solid #ddd;
+    box-shadow: 0 0.2vh 0.5vh rgba(1, 1, 1, 0.3);
     cursor: pointer;
   }
 
   .unavailable {
     @include radius(2rem);
+    padding: 0.5vh 1vh;
     background-color: #d9d9d9;
     color: black;
-    border: 1px solid #ddd; /* 기존 테두리 유지 */
-    padding: 0.5vh 1vh;
-    cursor: not-allowed;
+    border: 1px solid #ddd;
+    cursor: pointer;
   }
 
   .actions {
@@ -95,10 +91,11 @@
 
     button {
       @include radius(1.5rem);
-      border: none;
-      background-color: #dce7fc;
       padding: 1vh 2vh;
       margin: 0 1vw;
+      border: none;
+      background-color: #dce7fc;
+      box-shadow: 0 0.2vh 0.5vh rgba(1, 1, 1, 0.3);
       cursor: pointer;
       font-size: 1rem;
 
@@ -108,11 +105,17 @@
     }
 
     .cancel {
-      background-color: #ffff;
+      background-color: #fff;
 
       &:hover {
         background-color: #d9d9d9;
       }
     }
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    margin: 1% 0;
+    padding: 1vh;
   }
 }

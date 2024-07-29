@@ -6,6 +6,7 @@ import com.ssafy.ssam.global.dto.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,5 +26,12 @@ public class JoinController{
     @PostMapping("/teachers")
     public ResponseEntity<CommonResponseDto> teacherJoinProcess(UserDto userDto){
         return ResponseEntity.ok(joinService.teacherJoinProcess(userDto));
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<CommonResponseDto> testGet() {
+        CommonResponseDto dto = new CommonResponseDto();
+        dto.setMessage("testOk");
+        return ResponseEntity.ok(dto);
     }
 }

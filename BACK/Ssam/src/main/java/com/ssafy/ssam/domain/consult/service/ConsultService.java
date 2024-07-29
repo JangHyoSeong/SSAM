@@ -46,12 +46,8 @@ public class ConsultService {
 
         User student = userRepository.findByUsername(authentication.getName());
         // 토큰이 가진 예약자랑 넘겨받은 예약자 값이 다르면 에러
-        if(student == null || !student.getUserId().equals(appointmentRequestDto.getStudentId())) new CustomException(ErrorCode.UserNotFoundException);
-
-        // requestDto가 비어있으면 에러
-        if(appointmentRequestDto.getStudentId()==null || appointmentRequestDto.getTopic()==null
-                ||appointmentRequestDto.getStartTime()==null || appointmentRequestDto.getEndTime()==null)
-            throw new CustomException(ErrorCode.Unfilled);
+        if(student == null || !student.getUserId().equals(appointmentRequestDto.getStudentId()))
+            new CustomException(ErrorCode.UserNotFoundException);
 
         User teacher = userRepository.findByUserIdAndRole(teacherId, UserRole.TEACHER)
                 .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
@@ -79,7 +75,7 @@ public class ConsultService {
 
         // 토큰이 가진 예약자가 없는 사람이면 에러
         if(user == null) new CustomException(ErrorCode.UserNotFoundException);
-        // 학생일때는 자신 예약만 수정 가능함
+            // 학생일때는 자신 예약만 수정 가능함
         else if(user.getRole().equals(UserRole.STUDENT)){
             if(!appointment.getStudent().equals(user)) throw new CustomException(ErrorCode.Unauthorized);
             appointment.setStatus(AppointmentStatus.CANCEL);

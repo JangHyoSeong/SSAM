@@ -4,7 +4,7 @@ import TeacherCalendar from "./TeacherCalendar";
 import TeacherReservationList from "./TeacherReservationList";
 import styles from "./TeacherReservationManagement.module.scss";
 
-const TeacherAppointment = () => {
+const TeacherReservationManagement = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [availableCount, setAvailableCount] = useState(0);
 
@@ -52,4 +52,4 @@ const TeacherAppointment = () => {
   );
 };
 
-export default TeacherAppointment;
+export default TeacherReservationManagement;

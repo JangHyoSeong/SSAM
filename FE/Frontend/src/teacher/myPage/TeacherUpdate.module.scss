@@ -92,6 +92,12 @@ table {
   background-color: $background-white;
 }
 
+.imgBtn:hover {
+  border: none;
+  background-color: #4a93e3;
+  color: white;
+}
+
 .formBtnArray {
   display: flex;
   justify-content: center;
@@ -105,4 +111,10 @@ table {
   border-radius: 20px;
   margin: 2%;
   background-color: $background-white;
+}
+
+.formBtn:hover {
+  border: none;
+  background-color: #4a93e3;
+  color: white;
 }

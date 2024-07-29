@@ -4,7 +4,6 @@ import com.ssafy.ssam.domain.classroom.entity.Board;
 import com.ssafy.ssam.domain.classroom.entity.Manage;
 import com.ssafy.ssam.domain.classroom.entity.School;
 import com.ssafy.ssam.domain.consult.entity.Appointment;
-import com.ssafy.ssam.domain.consult.entity.UnavailableSlot;
 import com.ssafy.ssam.domain.notification.entity.Alarm;
 import com.ssafy.ssam.domain.notification.entity.Question;
 //import com.ssafy.ssam.domain.user.converter.UserRoleConverter;
@@ -102,9 +101,6 @@ public class User {
 
     @OneToMany(mappedBy = "teacher")
     private List<Appointment> teacherAppointments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "teacher")
-    private List<UnavailableSlot> unavailableSlots = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<Alarm> alarms = new ArrayList<>();

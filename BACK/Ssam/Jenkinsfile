@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+    
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('docker-hub-credentials')
+        BACKEND_IMAGE_NAME = "asz2325/backend-image"
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        
+        stage('Build and Push Backend') {
+            steps {
+                script {
+                    def backendImage = docker.build("${BACKEND_IMAGE_NAME}:${BUILD_NUMBER}")
+                    docker.withRegistry('', 'docker-hub-credentials') {
+                        backendImage.push()
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy Backend') {
+            steps {
+                dir('../..') {
+                    sh "docker-compose up -d --no-deps --build spring-app"
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            sh "docker logout"
+        }
+    }
+}

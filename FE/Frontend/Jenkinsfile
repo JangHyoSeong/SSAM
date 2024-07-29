@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+    
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('docker-hub-credentials')
+        FRONTEND_IMAGE_NAME = "asz2325/frontend-image"
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        
+        stage('Build and Push Frontend') {
+            steps {
+                script {
+                    def frontendImage = docker.build("${FRONTEND_IMAGE_NAME}:${BUILD_NUMBER}")
+                    docker.withRegistry('', 'docker-hub-credentials') {
+                        frontendImage.push()
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy Frontend') {
+            steps {
+                dir('../..') {
+                    sh "docker-compose up -d --no-deps --build react-app"
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            sh "docker logout"
+        }
+    }
+}

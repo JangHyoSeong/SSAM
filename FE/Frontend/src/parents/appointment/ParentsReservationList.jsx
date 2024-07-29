@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { FiCalendar } from "react-icons/fi"; // Ensure you have react-icons installed
 import useTeacherCalendarStore from "../../store/TeacherCalendarStore";
 import styles from "./ParentsReservationList.module.scss";
@@ -53,6 +54,14 @@ const ParentsReservationList = ({ selectedDate }) => {
       </div>
     </div>
   );
+};
+
+// PropTypes 설정
+ParentsReservationList.propTypes = {
+  selectedDate: PropTypes.oneOfType([
+    PropTypes.instanceOf(Date),
+    PropTypes.string,
+  ]).isRequired,
 };
 
 export default ParentsReservationList;

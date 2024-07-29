@@ -1,27 +1,19 @@
+//TeacherQuestion.jsx
+
 import React, { useState } from 'react';
-import styles from './TeacherQuestion.module.css';
-import AnswerModal from './AnswerModal';
-import TeacherDeleteModal from './TeacherDeleteModal';
+import styles from './TeacherQuestion.module.scss';
 import { FaTrash, FaEdit } from 'react-icons/fa';
+import { useQuestions } from '../../store/QuestionContext';
+import TeacherDeleteModal from './TeacherDeleteModal';
 
 const TeacherQuestion = () => {
-  const initialQuestions = [
-    { id: 1, question: "점심 메뉴는 어디서 확인하나요?", answer: "", answerText: "" },
-    { id: 2, question: "교무실 전화번호는 무엇인가요?", answer: "", answerText: "" },
-    { id: 3, question: "교장실 전화번호는 무엇인가요?", answer: "", answerText: "" },
-  ];
-
-  const [questions, setQuestions] = useState(initialQuestions);
+  const { questions, updateQuestion, deleteQuestion } = useQuestions();
   const [selectedAnswerId, setSelectedAnswerId] = useState(null);
-  const [isAnswerModalOpen, setIsAnswerModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [questionToAnswer, setQuestionToAnswer] = useState(null);
   const [questionToDelete, setQuestionToDelete] = useState(null);
 
   const handleEditClick = (id) => {
     setSelectedAnswerId(id);
-    setQuestionToAnswer(questions.find(question => question.id === id));
-    setIsAnswerModalOpen(true);
   };
 
   const handleDeleteClick = (id) => {
@@ -29,23 +21,8 @@ const TeacherQuestion = () => {
     setQuestionToDelete(id);
   };
 
-  const handleAnswerModalConfirm = (answer) => {
-    setQuestions(questions.map(question =>
-      question.id === selectedAnswerId ? { ...question, answer: answer } : question
-    ));
-    setIsAnswerModalOpen(false);
-    setSelectedAnswerId(null);
-    setQuestionToAnswer(null);
-  };
-
-  const handleAnswerModalCancel = () => {
-    setIsAnswerModalOpen(false);
-    setSelectedAnswerId(null);
-    setQuestionToAnswer(null);
-  };
-
   const handleDeleteModalConfirm = () => {
-    setQuestions(questions.filter(question => question.id !== questionToDelete));
+    deleteQuestion(questionToDelete);
     setIsDeleteModalOpen(false);
     setQuestionToDelete(null);
   };
@@ -53,6 +30,15 @@ const TeacherQuestion = () => {
   const handleDeleteModalCancel = () => {
     setIsDeleteModalOpen(false);
     setQuestionToDelete(null);
+  };
+
+  const handleAnswerChange = (event, id) => {
+    const updatedAnswer = event.target.value;
+    updateQuestion(id, updatedAnswer);
+  };
+
+  const handleAnswerBlur = () => {
+    setSelectedAnswerId(null);
   };
 
   return (
@@ -66,20 +52,22 @@ const TeacherQuestion = () => {
             </div>
             <div className={`${styles.answerBox} ${selectedAnswerId === item.id ? styles.selected : ''}`}>
               <div>
-                <p>{item.answer ? item.answer : 'A.'}</p>
+                {selectedAnswerId === item.id ? (
+                  <textarea
+                    className={styles.inputField}
+                    value={item.answer}
+                    onChange={(event) => handleAnswerChange(event, item.id)}
+                    onBlur={handleAnswerBlur}
+                  />
+                ) : (
+                  <p>{item.answer ? item.answer : 'A.'}</p>
+                )}
               </div>
               <FaEdit className={styles.icon} onClick={() => handleEditClick(item.id)} />
             </div>
           </div>
         </div>
       ))}
-      {isAnswerModalOpen && (
-        <AnswerModal 
-          question={questionToAnswer?.question} 
-          onConfirm={handleAnswerModalConfirm} 
-          onCancel={handleAnswerModalCancel}
-        />
-      )}
       {isDeleteModalOpen && (
         <TeacherDeleteModal 
           onConfirm={handleDeleteModalConfirm} 

@@ -36,17 +36,15 @@ public class ConsultService {
     public AppointmentResponseDto createAppointment(Integer teacherId, AppointmentRequestDto appointmentRequestDto){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        log.info("token exist");
         User student = userRepository.findByUsername(authentication.getName()).orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
 
         // 토큰이 가진 예약자랑 넘겨받은 예약자 값이 다르면 비정상적 접근
         if(!student.getUserId().equals(appointmentRequestDto.getStudentId()))
             throw new CustomException(ErrorCode.IllegalArgument);
-        log.info("student == token");
+
         // 선생이 없으면 사람 없다
         User teacher = userRepository.findByUserIdAndRole(teacherId, UserRole.TEACHER)
                 .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
-        log.info("teacher exist");
 
         // 상담예약시간이 이전에 지난 시간일 때 에러
         if(appointmentRequestDto.getStartTime().isBefore(LocalDateTime.now()))

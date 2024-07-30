@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -33,9 +34,7 @@ public class BoardController {
     // 학급 페이지 진입
     @GetMapping("/{boardId}")
     public ResponseEntity<BoardGetResponseDTO> getBoard(@PathVariable Integer boardId) {
-
-        BoardGetResponseDTO boardResponseDTO = boardService.getBoardById(boardId);
-        return ResponseEntity.ok(boardResponseDTO);
+        return ResponseEntity.ok(boardService.getBoardById(boardId));
     }
 
     // 학급 공지사항 수정

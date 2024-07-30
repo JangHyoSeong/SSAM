@@ -56,7 +56,6 @@ public class BoardService {
         return convertToResponseDTO(savedBoard);
     }
 
-
     // id를 통해 board 찾기
     @Transactional
     public BoardGetResponseDTO getBoardById(int classId) {
@@ -167,18 +166,11 @@ public class BoardService {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username).orElseThrow(()->new CustomException(ErrorCode.UserNotFoundException));
 
         return user;
     }
 
-    // id를 통해 board 찾기
-    @Transactional
-    public BoardGetResponseDTO getBoardById(int classId) {
-        Board board = boardRepository.findById(classId)
-                .orElseThrow(() -> new RuntimeException("Board not found"));
-        return convertToResponseDTO(board);
-    }
 
 
 }

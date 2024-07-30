@@ -26,6 +26,8 @@ const ParentsReservationList = ({ selectedDate }) => {
         <h2>{formatDate(selectedDate)}</h2>
         <FiCalendar className={styles.calendarIcon} />
       </div>
+
+      {/* 상담 시간 테이블 */}
       <div className={styles.table}>
         <div className={styles.row}>
           <div className={styles.cellHeader}>상담 시간</div>
@@ -48,8 +50,14 @@ const ParentsReservationList = ({ selectedDate }) => {
           </div>
         ))}
       </div>
+
+      {/* 상담 신청 내용을 입력할 수 있는 공간 */}
+      <textarea
+        className={styles.consultationInput}
+        placeholder="상담 내용을 입력해 주세요. (50자 이내)"
+      />
       <div className={styles.actions}>
-        <button className={styles.modify}>수정</button>
+        <button className={styles.modify}>예약하기</button>
         <button className={styles.cancel}>취소</button>
       </div>
     </div>

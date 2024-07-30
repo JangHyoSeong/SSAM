@@ -23,7 +23,7 @@ services:
       context: ./FE/Frontend
       dockerfile: Dockerfile
     volumes:
-      - react-build:/app
+      - react-build:/usr/share/nginx/html
       
 volumes:
   react-build:

@@ -17,8 +17,6 @@ services:
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=
       - SERVER_SERVLET_CONTEXT_PATH=/api
-    depends_on:
-      - mysql
       
   react-app:
     build:

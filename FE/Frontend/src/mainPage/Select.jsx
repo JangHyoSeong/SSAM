@@ -16,7 +16,7 @@ const Select = () => {
           className={`${select.menuBox} ${select.menuBox1}`}
         >
           <div className={select.menuTxt}>
-            <h1>선생님 →</h1>
+            <h1>선생님</h1>
             <h3>선생님으로 시작하세요</h3>
             <div className={select.imgArray}>
               <img src={teacher} className={select.Img} alt="teacher" />
@@ -28,7 +28,7 @@ const Select = () => {
           className={`${select.menuBox} ${select.menuBox2}`}
         >
           <div className={select.menuTxt}>
-            <h1>학생 / 학부모 →</h1>
+            <h1>학생 / 학부모</h1>
             <h3>학생과 자녀가 있는 학부모</h3>
             <div className={select.imgArray}>
               <img src={parents} className={select.Img} alt="parents" />

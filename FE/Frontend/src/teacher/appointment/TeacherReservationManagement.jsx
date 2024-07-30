@@ -1,9 +1,23 @@
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import TeacherCalendar from "./TeacherCalendar";
 import TeacherReservationList from "./TeacherReservationList";
 import styles from "./TeacherReservationManagement.module.scss";
 
-const TeacherAppointment = () => {
+const TeacherReservationManagement = () => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [availableCount, setAvailableCount] = useState(0);
+
+  // 선택된 날짜를 설정하는 함수
+  const handleDateSelect = (date) => {
+    setSelectedDate(new Date(date));
+  };
+
+  // 사용 가능한 상담 횟수를 설정하는 함수
+  const handleAvailableCountChange = (count) => {
+    setAvailableCount(count);
+  };
+
   return (
     <div>
       <nav className={styles.container}>
@@ -25,11 +39,17 @@ const TeacherAppointment = () => {
         </NavLink>
       </nav>
       <section className={styles.classNavbar}>
-        <TeacherCalendar />
-        <TeacherReservationList />
+        <TeacherCalendar
+          onDateSelect={handleDateSelect}
+          availableCount={availableCount}
+        />
+        <TeacherReservationList
+          selectedDate={selectedDate}
+          onAvailableCountChange={handleAvailableCountChange}
+        />
       </section>
     </div>
   );
 };
 
-export default TeacherAppointment;
+export default TeacherReservationManagement;

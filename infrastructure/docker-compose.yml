@@ -1,4 +1,10 @@
 version: '3'
+
+networks:
+  app-network:
+    external: true
+    name: app-network  # 이 줄을 추가합니다
+
 services:
   mysql:
     image: mysql:8

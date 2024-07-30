@@ -2,6 +2,7 @@ version: '3'
 services:
   jenkins:
     build: .  # 커스텀 Dockerfile 사용
+    user: root
     environment:
       - JENKINS_OPTS="--prefix=/jenkins"
       - JENKINS_ARGS="--prefix=/jenkins"
@@ -12,8 +13,6 @@ services:
       - ~/jenkins_home:/var/jenkins_home:z
       - ~/jenkins_home/jenkins.war:/usr/share/jenkins/jenkins.war:z
       - /var/run/docker.sock:/var/run/docker.sock
-    group_add:
-      - ${DOCKER_GROUP_ID:-$(getent group docker | cut -d: -f3)}
 
   mysql:
     image: mysql:8
@@ -64,3 +63,4 @@ volumes:
   jenkins_home:
   mysql_data:
   react-build:
+

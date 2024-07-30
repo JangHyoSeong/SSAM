@@ -18,7 +18,7 @@
   .header {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     gap: 0.5rem;
     width: auto;
     margin-bottom: 1.6vh;
@@ -35,6 +35,22 @@
 
     .calendarIcon {
       font-size: 1.5rem;
+    }
+
+    .filterContainer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .filterLabel {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .filterSelect {
+        padding: 0.5rem;
+        border: 1px solid #dce7fc;
+      }
     }
   }
 
@@ -73,6 +89,12 @@
     border: 1px solid #ddd;
     box-shadow: 0 0.2vh 0.5vh rgba(1, 1, 1, 0.3);
     cursor: pointer;
+    transition: background-color 0.1s ease, transform 0.1s ease;
+
+    &:hover {
+      background-color: #dce7fc;
+      transform: scale(1.1);
+    }
   }
 
   .unavailable {
@@ -81,6 +103,16 @@
     background-color: #d9d9d9;
     color: black;
     border: 1px solid #ddd;
+    cursor: not-allowed;
+  }
+
+  .clicked {
+    @include radius(2rem);
+    padding: 0.5vh 1vh;
+    background-color: #dce7fc;
+    color: black;
+    border: 1px solid #ddd;
+    box-shadow: 0 0.2vh 0.5vh rgba(1, 1, 1, 0.3);
     cursor: pointer;
   }
 
@@ -125,5 +157,39 @@
     width: 100%;
     margin: 1% 0;
     padding: 1vh;
+  }
+  /* 모달 스타일 추가 */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+
+    .modalContent {
+      background: white;
+      padding: 2rem;
+      text-align: center;
+      border-radius: 0.5rem;
+
+      p {
+        margin: 0 0 1rem 0;
+      }
+
+      button {
+        padding: 0.5rem 1rem;
+        border: none;
+        background-color: #dce7fc;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #5285ee;
+        }
+      }
+    }
   }
 }

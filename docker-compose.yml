@@ -17,8 +17,6 @@ services:
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=
       - SERVER_SERVLET_CONTEXT_PATH=/api
-    networks:
-      - app-network
     depends_on:
       - mysql
       
@@ -28,8 +26,6 @@ services:
       dockerfile: Dockerfile
     volumes:
       - react-build:/usr/share/nginx/html
-    networks:
-      - app-network
       
 volumes:
   react-build:

@@ -19,8 +19,6 @@ services:
       - ~/jenkins_home:/var/jenkins_home:z
       - ~/jenkins_home/jenkins.war:/usr/share/jenkins/jenkins.war:z
       - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - app-network
 
 volumes:
   jenkins_home:

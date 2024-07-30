@@ -15,8 +15,6 @@ services:
       - mysql_data:/var/lib/mysql
     ports:
       - "3306:3306"
-    networks:
-      - app-network
 
   nginx:
     image: nginx:latest
@@ -29,8 +27,6 @@ services:
       - react-build:/usr/share/nginx/html
     depends_on:
       - jenkins
-    networks:
-      - app-network
 
 volumes:
   mysql_data:

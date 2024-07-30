@@ -9,13 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM', 
-                    branches: [[name: '*/test']], 
-                    userRemoteConfigs: [[
-                        url: 'https://lab.ssafy.com/s11-webmobile1-sub2/S11P12E201.git', 
-                        credentialsId: 'gitlab-credentials'
-                    ]]
-                ])
+                checkout scm
             }
         }
         

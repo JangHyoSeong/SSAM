@@ -1,9 +1,9 @@
 version: '3'
 
 networks:
-  app-network:
-    external: true
-    name: app-network  # 이 줄을 추가합니다
+  default:
+    external:
+      name: app-network
 
 services:
   mysql:

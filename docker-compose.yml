@@ -1,9 +1,9 @@
 version: '3'
 
 networks:
-  app-network:
-    external: true
-    name: app-network
+  default:
+    external:
+      name: app-network
     
 services:
   spring-app:

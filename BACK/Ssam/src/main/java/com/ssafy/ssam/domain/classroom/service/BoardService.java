@@ -8,6 +8,8 @@ import com.ssafy.ssam.domain.classroom.repository.BoardRepository;
 import com.ssafy.ssam.domain.classroom.repository.UserBoardRelationRepository;
 import com.ssafy.ssam.domain.user.entity.User;
 import com.ssafy.ssam.domain.user.repository.UserRepository;
+import com.ssafy.ssam.global.error.CustomException;
+import com.ssafy.ssam.global.error.ErrorCode;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +37,8 @@ public class BoardService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         System.out.println("service2");
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
         log.info(username);
-        if(user == null) throw new IllegalArgumentException("user doesn't exist");
 
         Board board = Board.builder()
                 .grade(requestDTO.getGrade())
@@ -73,7 +74,7 @@ public class BoardService {
     // 응답 객체 생성
     private BoardGetResponseDTO convertToResponseDTO(Board board) {
         return BoardGetResponseDTO.builder()
-                .classId(board.getClassId())
+                .classId(board.getBoardId())
                 .pin(board.getPin())
                 .grade(board.getGrade())
                 .classroom(board.getClassroom())

@@ -25,11 +25,9 @@ public class BoardController {
     // Post(학급 생성) 성공시 반환할 메세지. 수정 필요
 //    @PreAuthorize("hasRole('TEACHER')")
     @PostMapping("/teachers")
-    public ResponseEntity<BoardGetResponseDTO> createBoard(@Valid @RequestBody BoardCreateRequestDTO responseDTO,
-                                                           BindingResult bindingResult) {
+    public ResponseEntity<BoardGetResponseDTO> createBoard(@Valid @RequestBody BoardCreateRequestDTO responseDTO) {
         log.info(responseDTO.getGrade()+" 확인");
         log.info(responseDTO.getClassroom()+" 확인");
-        if(bindingResult.hasErrors()) throw new BindingException(ErrorCode.BINDING_ERROR, Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         return ResponseEntity.ok(boardService.createBoard(responseDTO));
     }
 

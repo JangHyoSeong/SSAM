@@ -18,7 +18,7 @@ public class Consult {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "consult_id")
-    private int consultId;
+    private Integer consultId;
 
     @NotNull
     @OneToOne(fetch = FetchType.EAGER)

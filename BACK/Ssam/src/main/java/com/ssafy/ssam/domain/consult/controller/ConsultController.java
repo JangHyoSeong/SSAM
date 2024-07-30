@@ -21,11 +21,16 @@ public class ConsultController {
     // 상담가능 날짜는 넘어오는 데이터를 잘 모르겠어서 나중에 하겟씁니다
     // 상담신청 넘어오는 데이터 아마도 선생Id, 학부모Id, 날짜시간 데이터
 
-    @PostMapping("/{teacherId}")
-    public ResponseEntity<AppointmentResponseDto> creatAppointment (@Valid  @PathVariable Integer teacherId, @RequestBody AppointmentRequestDto appointmentRequestDto, BindingResult bindingResult) {
+//    @PostMapping("/{teacherId}")
+//    public ResponseEntity<AppointmentResponseDto> createAppointment (@PathVariable Integer teacherId, @Valid @RequestBody AppointmentRequestDto appointmentRequestDto, BindingResult bindingResult) {
 //        log.info("Creating appointment for teacher id {}", teacherId);
 //        log.info("Creating appointment for AppointmentRequestDto {}", appointmentRequestDto);
-        if(bindingResult.hasErrors()) throw new BindingException(ErrorCode.BINDING_ERROR,bindingResult.getFieldError().getDefaultMessage());
+//        if(bindingResult.hasErrors()) throw new BindingException(ErrorCode.BINDING_ERROR,bindingResult.getFieldError().getDefaultMessage());
+//        return ResponseEntity.ok(consultService.createAppointment(teacherId, appointmentRequestDto));
+//    }
+
+    @PostMapping("/{teacherId}")
+    public ResponseEntity<AppointmentResponseDto> createAppointment (@PathVariable Integer teacherId, @Valid @RequestBody AppointmentRequestDto appointmentRequestDto) {
         return ResponseEntity.ok(consultService.createAppointment(teacherId, appointmentRequestDto));
     }
 

@@ -18,8 +18,8 @@ public class Board {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "class_id")
-    private Integer classId;
+    @Column(name = "board_id")
+    private Integer boardId;
 
     @NotNull
     @Column(unique = true, nullable = false, length = 6)

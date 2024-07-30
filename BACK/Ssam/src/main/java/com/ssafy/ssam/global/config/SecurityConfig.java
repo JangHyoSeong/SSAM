@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -26,8 +27,7 @@ public class SecurityConfig {
     private final JwtUtil jwtUtil;
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-
+    public static AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
@@ -36,7 +36,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return webSecurity -> {
             webSecurity.ignoring()
-                    .requestMatchers("/api/v1/auth/students", "/api/v1/auth/teachers");
+                    .requestMatchers("/v1/auth/students", "/v1/auth/teachers");
         };
     }
     @Bean
@@ -55,19 +55,41 @@ public class SecurityConfig {
                 .httpBasic((auth) -> auth.disable())
                 .authorizeHttpRequests((auth) -> auth
 //                 아무 허용 필요없는 접근 -> 회원가입, 첫 화면, 비밀번호 찾기
-                    .requestMatchers("/api/v1/auth/**", "/login").permitAll()
+                    .requestMatchers("/v1/auth/**", "/login").permitAll()
                 // 선생이라는 권한이 필요한 url
-                    .requestMatchers("/api/v1/classrooms/answers/**", "/api/v1/classrooms/teachers/**", "/api/v1/consults/teachers/**").permitAll()
+                    .requestMatchers("/v1/classrooms/answers/**", "/v1/classrooms/teachers/**", "/v1/consults/teachers/**").permitAll()
 
                 // 위에 말한 url 제외 모든 url은 로그인만 되어있으면 접근이 가능하다
                     .anyRequest().authenticated())
-               // 로그인 당시에 로그인 필터 적용 -> 토큰 저장
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class)
-               // 다른 곳에 접근할려 할 때 권한을 가졌는지 토큰확인 필터 적용
-                .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class)
 
+               // 필터 모아서 처리
+                .with(new Custom(
+                       authenticationConfiguration,
+                       jwtUtil), Custom::getClass
+                )
                 .sessionManagement((session) -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
+    @RequiredArgsConstructor
+    public static class Custom extends AbstractHttpConfigurer<Custom, HttpSecurity> {
+        private final AuthenticationConfiguration authenticationConfiguration;
+        private final JwtUtil jwtUtil;
+
+        @Override
+        public void configure(HttpSecurity http) throws Exception {
+            LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil);
+
+            // login url 수정
+            loginFilter.setFilterProcessesUrl("/v1/auth/login");
+            loginFilter.setPostOnly(true);
+
+            http
+                    // 로그인 당시에 로그인 필터 적용 -> 토큰 저장
+                    .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class)
+                    // 다른 곳에 접근할려 할 때 권한을 가졌는지 토큰확인 필터 적용
+                    .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);
+        }
+    }
+
 }

@@ -18,10 +18,10 @@ $text-shadow-scroll: 1px 1px 2px rgba($black-color, 0.5);
 @keyframes moveUpDown {
   0%,
   100% {
-    top: 13%;
+    top: 0%;
   }
   50% {
-    top: 15%;
+    top: 5%;
   }
 }
 
@@ -81,14 +81,15 @@ $text-shadow-scroll: 1px 1px 2px rgba($black-color, 0.5);
 .menuBoxArray {
   display: flex;
   justify-content: center;
-  gap: 10%;
+  gap: 8%;
 }
 
 .menuBox {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 25vw;
+  width: 28vw;
+  height: 60vh;
   background-color: $white-color;
   border-radius: 10%;
   box-shadow: $box-shadow-default;
@@ -115,14 +116,15 @@ $text-shadow-scroll: 1px 1px 2px rgba($black-color, 0.5);
 }
 
 .menuTxt {
+  text-align: center;
+  
   h1 {
-    margin-top: 10%;
-    margin-left: -10%;
-    font-size: 220%;
+    margin-top: 8%;
+    font-size: 210%;
   }
 
   h3 {
-    margin-left: -10%;
+    margin-top: 4%;
     font-size: 120%;
     color: $gray-color;
   }
@@ -135,9 +137,9 @@ $text-shadow-scroll: 1px 1px 2px rgba($black-color, 0.5);
 }
 
 .Img {
-  margin-top: 10%;
-  width: 18vw;
-  height: 26.7vh;
+  margin-top: 15%;
+  width: 20vw;
+  height: 38vh;
 }
 
 .scroll {

@@ -32,14 +32,13 @@ public class SecurityConfig {
     }
 
     // 얘가 진짜 찐으로 무시할때 쓰는 코드
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        return webSecurity -> {
-//            webSecurity.ignoring()
-//                    .requestMatchers("/api/v1/auth/students", "/api/v1/auth/teachers");
-//        };
-//    }
-
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return webSecurity -> {
+            webSecurity.ignoring()
+                    .requestMatchers("/v1/auth/students", "/v1/auth/teachers");
+        };
+    }
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -56,7 +55,7 @@ public class SecurityConfig {
                 .httpBasic((auth) -> auth.disable())
                 .authorizeHttpRequests((auth) -> auth
 //                 아무 허용 필요없는 접근 -> 회원가입, 첫 화면, 비밀번호 찾기
-                    .requestMatchers("/v1/auth/**").permitAll()
+                    .requestMatchers("/v1/auth/**", "/login").permitAll()
                 // 선생이라는 권한이 필요한 url
                     .requestMatchers("/v1/classrooms/answers/**", "/v1/classrooms/teachers/**", "/v1/consults/teachers/**").permitAll()
 

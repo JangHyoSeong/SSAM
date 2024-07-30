@@ -15,9 +15,8 @@ public class BoardCreateRequestDTO {
     @NotNull
     @Min(1)
     @Max(6)
-    private int grade;
+    private Integer grade;
 
     @NotNull
-    private int classroom;
-
+    private Integer classroom;
 }

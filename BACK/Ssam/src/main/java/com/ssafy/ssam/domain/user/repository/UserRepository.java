@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     boolean existsByUserIdAndRole(int id, UserRole role);
 
     // username 기반 DB에 존재하는 User 가져오는 jpa
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
     Optional<User> findByUserId(int id);
     Optional<User> findByUserIdAndRole(int id, UserRole role);
 }

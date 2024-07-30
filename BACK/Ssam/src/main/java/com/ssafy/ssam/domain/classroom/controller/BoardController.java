@@ -73,7 +73,7 @@ public class BoardController {
     @PutMapping("/banner-img/{boardId}")
     public ResponseEntity<CommonResponseDto> changeBannerImage(
             @PathVariable Integer boardId,
-            @Valid @RequestBody BoardBannerImageRequestDTO request) {
+            @Valid BoardBannerImageRequestDTO request) {
         boardService.updateBannerImage(boardId, request.getBannerImage());
         CommonResponseDto res = new CommonResponseDto();
         return ResponseEntity.ok(res);

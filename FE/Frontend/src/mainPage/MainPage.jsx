@@ -1,6 +1,7 @@
 import Select from "./Select";
 import Explan from "./Explan";
 import Direct from "./Direct";
+import Footer from "./Footer";
 
 const MainPage = () => {
   return (
@@ -8,6 +9,7 @@ const MainPage = () => {
       <Select />
       <Explan />
       <Direct />
+      <Footer />
     </>
   );
 };

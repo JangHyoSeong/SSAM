@@ -1,3 +1,6 @@
+$black-color: #000000;
+$box-shadow-default: 4px 4px 4px rgba($black-color, 0.4);
+
 .explanArray {
   width: 100vw;
   height: 100vh;
@@ -15,6 +18,8 @@
 .img {
   width: 30vw;
   height: 70vh;
+  box-shadow: $box-shadow-default;
+  border-radius: 100%;
 }
 
 .txtArray {

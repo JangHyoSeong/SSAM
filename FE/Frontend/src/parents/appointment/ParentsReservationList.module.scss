@@ -84,6 +84,14 @@
     cursor: pointer;
   }
 
+  .consultationInput {
+    width: 100%;
+    height: 10vh; // textarea 높이 조절
+    padding: 1vh;
+    margin-top: 2vh; // 입력란과 테이블 사이 간격 추가
+    border: 5px solid #dce7fc;
+  }
+
   .actions {
     display: flex;
     justify-content: center;

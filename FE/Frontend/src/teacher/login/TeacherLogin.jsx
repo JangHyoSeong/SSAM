@@ -4,6 +4,7 @@ import useAuthStore from '../../store/AuthStore'
 import login from './TeacherLogin.module.scss';
 import round1 from '../../assets/round1.png';
 import round2 from '../../assets/round2.png';
+import round3 from '../../assets/round3.png';
 import google from '../../assets/google.png';
 import naver from '../../assets/naver.png';
 import kakao from '../../assets/kakao.png';
@@ -69,7 +70,7 @@ const TeacherLogin = () => {
       </div>
       <img src={round1} className={login.round1} alt="round1" />
       <img src={round2} className={login.round2} alt="round2" />
-      <img src={round1} className={login.round3} alt="round1" />
+      <img src={round3} className={login.round3} alt="round" />
     </div>
   );
 };

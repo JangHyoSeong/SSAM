@@ -18,7 +18,7 @@
   .header {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     gap: 0.5rem;
     width: auto;
     margin-bottom: 1.6vh;
@@ -35,6 +35,22 @@
 
     .calendarIcon {
       font-size: 1.5rem;
+    }
+
+    .filterContainer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .filterLabel {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .filterSelect {
+        padding: 0.5rem;
+        border: 1px solid #dce7fc;
+      }
     }
   }
 
@@ -73,6 +89,12 @@
     border: 1px solid #ddd;
     box-shadow: 0 0.2vh 0.5vh rgba(1, 1, 1, 0.3);
     cursor: pointer;
+    transition: background-color 0.1s ease, transform 0.1s ease;
+
+    &:hover {
+      background-color: #dce7fc;
+      transform: scale(1.1);
+    }
   }
 
   .unavailable {
@@ -81,7 +103,29 @@
     background-color: #d9d9d9;
     color: black;
     border: 1px solid #ddd;
+    cursor: not-allowed;
+  }
+
+  .clicked {
+    @include radius(2rem);
+    padding: 0.5vh 1vh;
+    background-color: #dce7fc;
+    color: black;
+    border: 1px solid #ddd;
+    box-shadow: 0 0.2vh 0.5vh rgba(1, 1, 1, 0.3);
     cursor: pointer;
+  }
+
+  .reservationCancel {
+    cursor: pointer; /* 예약 취소일 때 커서를 포인터로 변경 */
+  }
+
+  .consultationInput {
+    width: 100%;
+    height: 10vh; // textarea 높이 조절
+    padding: 1vh;
+    margin-top: 2vh; // 입력란과 테이블 사이 간격 추가
+    border: 5px solid #dce7fc;
   }
 
   .actions {
@@ -113,9 +157,52 @@
     }
   }
 
-  @media (max-width: 768px) {
+  /* 모달 스타일 추가 */
+  .modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    margin: 1% 0;
-    padding: 1vh;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(10px); /* 배경 블러 추가 */
+    z-index: 1000; /* 다른 요소보다 앞에 오도록 설정 */
+  }
+
+  .modalContent {
+    // z-index: 1001; /* 다른 요소보다 앞에 오도록 설정 */
+    width: 300px; /* 너비를 좀 더 넓게 설정 */
+    background: white;
+    padding: 2rem;
+    border-radius: 8px; /* 더 부드러운 모서리 */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+    text-align: center;
+  }
+
+  .buttonContainer {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .button {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    width: 30%; /* 버튼 크기를 더 작게 설정 */
+  }
+
+  .approveButton {
+    background-color: #6eb4ff; /* 애플의 블루 색상 */
+    color: white;
+  }
+
+  .approveButton:hover {
+    background-color: #52a1f4; /* 어두운 블루 색상 */
   }
 }

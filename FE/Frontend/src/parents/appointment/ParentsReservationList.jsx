@@ -1,13 +1,16 @@
 import PropTypes from "prop-types";
-import { FiCalendar } from "react-icons/fi"; // Ensure you have react-icons installed
+import { useState } from "react";
+import { FiCalendar } from "react-icons/fi"; // react-icons를 설치했는지 확인하세요.
 import useTeacherCalendarStore from "../../store/TeacherCalendarStore";
 import styles from "./ParentsReservationList.module.scss";
 
 const ParentsReservationList = ({ selectedDate }) => {
-  const consultations = useTeacherCalendarStore((state) => state.consultations);
-  const toggleAvailability = useTeacherCalendarStore(
-    (state) => state.toggleAvailability
+  const initialConsultations = useTeacherCalendarStore(
+    (state) => state.consultations
   );
+  const [consultations, setConsultations] = useState(initialConsultations);
+  const [showModal, setShowModal] = useState(false);
+  const [clickedIndex, setClickedIndex] = useState(null);
 
   // selectedDate를 문자열로 변환하여 표시
   const formatDate = (date) => {
@@ -20,12 +23,72 @@ const ParentsReservationList = ({ selectedDate }) => {
     return date;
   };
 
+  // 버튼 클릭 시 색상 변경 및 상태 업데이트
+  const handleClick = (index) => {
+    const updatedConsultations = consultations.map((consultation, i) => {
+      if (i === index) {
+        return {
+          ...consultation,
+          text: consultation.text === "신청 취소" ? "" : consultation.text,
+          available:
+            consultation.text === "신청 취소" ? true : consultation.available,
+        };
+      }
+      return consultation;
+    });
+    setConsultations(updatedConsultations);
+    setClickedIndex(index);
+  };
+
+  // 예약하기 버튼 클릭 시 실행되는 함수
+  const handleReservation = () => {
+    if (clickedIndex !== null) {
+      const updatedConsultations = consultations.map((consultation, i) => {
+        if (i === clickedIndex) {
+          return {
+            ...consultation,
+            text: "신청 취소",
+            available: false,
+          };
+        }
+        return consultation;
+      });
+      setConsultations(updatedConsultations);
+      setClickedIndex(null);
+      setShowModal(true); // 모달 표시
+    }
+  };
+
+  // 취소 버튼 클릭 시 실행되는 함수
+  const handleCancel = () => {
+    window.location.reload(); // 페이지 새로고침
+  };
+
   return (
     <div className={styles.consultationList}>
       <div className={styles.header}>
         <h2>{formatDate(selectedDate)}</h2>
         <FiCalendar className={styles.calendarIcon} />
+
+        {/* 상담 목적 선택 필터 */}
+        <div className={styles.filterContainer}>
+          <select
+            id="consultationPurpose"
+            className={styles.filterSelect}
+            defaultValue=""
+          >
+            <option value="" disabled>
+              상담 목적을 선택해주세요!
+            </option>
+            <option value="정기 상담">정기 상담</option>
+            <option value="학교 생활">학교 생활</option>
+            <option value="교육 관계">교육 관계</option>
+            <option value="기타">기타</option>
+          </select>
+        </div>
       </div>
+
+      {/* 상담 시간 테이블 */}
       <div className={styles.table}>
         <div className={styles.row}>
           <div className={styles.cellHeader}>상담 시간</div>
@@ -37,21 +100,58 @@ const ParentsReservationList = ({ selectedDate }) => {
             <div className={styles.cell}>
               <button
                 className={
-                  consultation.available ? styles.available : styles.unavailable
+                  consultation.available
+                    ? index === clickedIndex
+                      ? styles.clicked
+                      : styles.available
+                    : consultation.text === "신청 취소"
+                    ? `${styles.unavailable} ${styles.reservationCancel}`
+                    : styles.unavailable
                 }
-                // 버튼 클릭 시 신청 가능/불가능 상태 변경
-                onClick={() => toggleAvailability(index)}
+                onClick={() => handleClick(index)}
+                style={
+                  consultation.text === "신청 취소"
+                    ? { backgroundColor: "#FF0000", color: "#FFFFFF" }
+                    : {}
+                }
               >
-                {consultation.available ? "신청가능" : "신청불가"}
+                {consultation.text ? consultation.text : "신청 가능"}
               </button>
             </div>
           </div>
         ))}
       </div>
+
+      {/* 상담 신청 내용을 입력할 수 있는 공간 */}
+      <textarea
+        className={styles.consultationInput}
+        placeholder="상담 내용을 입력해 주세요. (50자 이내)"
+      />
       <div className={styles.actions}>
-        <button className={styles.modify}>수정</button>
-        <button className={styles.cancel}>취소</button>
+        <button className={styles.modify} onClick={handleReservation}>
+          예약하기
+        </button>
+        <button className={styles.cancel} onClick={handleCancel}>
+          취소
+        </button>
       </div>
+
+      {/* 예약 완료 모달 창 */}
+      {showModal && (
+        <div className={styles.modalBackdrop}>
+          <div className={styles.modalContent}>
+            <h3>예약되었습니다.</h3>
+            <div className={styles.buttonContainer}>
+              <button
+                className={`${styles.button} ${styles.approveButton}`}
+                onClick={() => setShowModal(false)}
+              >
+                확인
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

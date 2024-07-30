@@ -1,0 +1,26 @@
+version: '3'
+
+networks:
+  app-network:
+    external: true
+    
+services:
+  jenkins:
+    build: .  # 커스텀 Dockerfile 사용
+    user: root
+    environment:
+      - JENKINS_OPTS="--prefix=/jenkins"
+      - JENKINS_ARGS="--prefix=/jenkins"
+    expose:
+      - "8080"
+    volumes:
+      # :z 옵션: SELinux 환경에서 볼륨 공유 문제 해결 (비 SELinux 시스템에서는 무시됨)
+      - ~/jenkins_home:/var/jenkins_home:z
+      - ~/jenkins_home/jenkins.war:/usr/share/jenkins/jenkins.war:z
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - app-network
+
+volumes:
+  jenkins_home:
+    external: true

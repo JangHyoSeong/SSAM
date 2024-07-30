@@ -1,14 +1,3 @@
-// Variables
-$primary-color: #5285ee;
-$white-color: #ffffff;
-$black-color: #000000;
-$gray-color: gray;
-$box-shadow-default: 4px 4px 4px rgba($black-color, 0.4);
-$box-shadow-hover: 4px 4px 4px rgba($black-color, 0.2);
-$text-shadow: 2px 2px 4px rgba($black-color, 0.5);
-$text-shadow-scroll: 1px 1px 2px rgba($black-color, 0.5);
-
-// Keyframes
 @keyframes fadeIn {
   to {
     opacity: 1;
@@ -58,10 +47,10 @@ $text-shadow-scroll: 1px 1px 2px rgba($black-color, 0.5);
   }
 }
 
-// Styles
+/* Styles */
 .selectArray {
   height: 100vh;
-  background-color: $primary-color;
+  background-color: #5285ee;
 }
 
 .mainTxt {
@@ -70,8 +59,8 @@ $text-shadow-scroll: 1px 1px 2px rgba($black-color, 0.5);
   align-items: center;
   height: 25vh;
   font-size: 280%;
-  color: $white-color;
-  text-shadow: $text-shadow;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   position: relative;
   z-index: 1;
   opacity: 0;
@@ -90,18 +79,18 @@ $text-shadow-scroll: 1px 1px 2px rgba($black-color, 0.5);
   align-items: center;
   width: 28vw;
   height: 55vh;
-  background-color: $white-color;
+  background-color: #ffffff;
   border-radius: 10%;
-  box-shadow: $box-shadow-default;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.4);
   z-index: 1;
   text-decoration: none;
-  color: $black-color;
+  color: #000000;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
     transform: translateY(-10px);
-    box-shadow: $box-shadow-hover;
-    color: $primary-color;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
+    color: #5285ee;
   }
 }
 
@@ -117,7 +106,7 @@ $text-shadow-scroll: 1px 1px 2px rgba($black-color, 0.5);
 
 .menuTxt {
   text-align: center;
-  
+
   h1 {
     margin-top: 8%;
     font-size: 210%;
@@ -126,7 +115,7 @@ $text-shadow-scroll: 1px 1px 2px rgba($black-color, 0.5);
   h3 {
     margin-top: 4%;
     font-size: 120%;
-    color: $gray-color;
+    color: gray;
   }
 }
 
@@ -147,9 +136,9 @@ $text-shadow-scroll: 1px 1px 2px rgba($black-color, 0.5);
   text-align: center;
   font-size: 150%;
   font-weight: bold;
-  color: $white-color;
+  color: #ffffff;
   animation: moveUpDown 5s infinite;
-  text-shadow: $text-shadow-scroll;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .round1,

@@ -20,6 +20,19 @@ services:
       - ~/jenkins_home/jenkins.war:/usr/share/jenkins/jenkins.war:z
       - /var/run/docker.sock:/var/run/docker.sock
 
+services:
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: 
+      MYSQL_DATABASE: ssam
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
 volumes:
   jenkins_home:
+    external: true
+  mysql_data:
     external: true

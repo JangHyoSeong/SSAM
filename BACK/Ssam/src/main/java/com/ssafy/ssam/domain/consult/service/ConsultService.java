@@ -1,16 +1,9 @@
 package com.ssafy.ssam.domain.consult.service;
 
-import com.ssafy.ssam.domain.classroom.dto.request.BoardCreateRequestDTO;
-import com.ssafy.ssam.domain.classroom.dto.response.BoardGetResponseDTO;
-import com.ssafy.ssam.domain.classroom.entity.Board;
-import com.ssafy.ssam.domain.consult.controller.ConsultController;
 import com.ssafy.ssam.domain.consult.dto.request.AppointmentRequestDto;
-import com.ssafy.ssam.domain.consult.dto.request.ConsultRequestDto;
 import com.ssafy.ssam.domain.consult.dto.response.AppointmentResponseDto;
-import com.ssafy.ssam.domain.consult.dto.response.ConsultResponseDto;
 import com.ssafy.ssam.domain.consult.entity.Appointment;
 import com.ssafy.ssam.domain.consult.entity.AppointmentStatus;
-import com.ssafy.ssam.domain.consult.entity.Consult;
 import com.ssafy.ssam.domain.consult.repository.AppointmentRepository;
 import com.ssafy.ssam.domain.consult.repository.ConsultRepository;
 import com.ssafy.ssam.domain.user.entity.User;
@@ -19,18 +12,17 @@ import com.ssafy.ssam.domain.user.repository.UserRepository;
 import com.ssafy.ssam.global.error.CustomException;
 import com.ssafy.ssam.global.error.ErrorCode;
 import jakarta.persistence.EntityManager;
-import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 
+@Slf4j
 @Builder
 @Service
 @Transactional
@@ -44,11 +36,13 @@ public class ConsultService {
     public AppointmentResponseDto createAppointment(Integer teacherId, AppointmentRequestDto appointmentRequestDto){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        User student = userRepository.findByUsername(authentication.getName());
-        // 토큰이 가진 예약자랑 넘겨받은 예약자 값이 다르면 에러
-        if(student == null || !student.getUserId().equals(appointmentRequestDto.getStudentId()))
-            new CustomException(ErrorCode.UserNotFoundException);
+        User student = userRepository.findByUsername(authentication.getName()).orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
 
+        // 토큰이 가진 예약자랑 넘겨받은 예약자 값이 다르면 비정상적 접근
+        if(!student.getUserId().equals(appointmentRequestDto.getStudentId()))
+            throw new CustomException(ErrorCode.IllegalArgument);
+
+        // 선생이 없으면 사람 없다
         User teacher = userRepository.findByUserIdAndRole(teacherId, UserRole.TEACHER)
                 .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
 
@@ -70,13 +64,13 @@ public class ConsultService {
     public AppointmentResponseDto deleteAppointment(Integer appointmentId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        User user = userRepository.findByUsername(authentication.getName());
+        // 토큰이 가진 예약자가 없는 사람이면 에러
+        User user = userRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
         Appointment appointment = em.find(Appointment.class, appointmentId);
 
-        // 토큰이 가진 예약자가 없는 사람이면 에러
-        if(user == null) new CustomException(ErrorCode.UserNotFoundException);
-        // 학생일때는 자신 예약만 수정 가능함
-        else if(user.getRole().equals(UserRole.STUDENT)){
+
+        if(user.getRole().equals(UserRole.STUDENT)){
             if(!appointment.getStudent().equals(user)) throw new CustomException(ErrorCode.Unauthorized);
             appointment.setStatus(AppointmentStatus.CANCEL);
         }

@@ -1,9 +1,4 @@
 version: '3'
-
-networks:
-  default:
-    external:
-      name: app-network
     
 services:
   spring-app:
@@ -22,6 +17,6 @@ services:
     build:
       context: ./FE/Frontend
       dockerfile: Dockerfile
-    volumes:
-            - ~/react_build:/usr/share/nginx/html
+    ports:
+      - "3000:3000"
       

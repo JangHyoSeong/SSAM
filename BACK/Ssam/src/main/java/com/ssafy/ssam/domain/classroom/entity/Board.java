@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Setter
 @Builder
 @Entity
 public class Board {
@@ -45,12 +46,16 @@ public class Board {
     @Column(name = "consult_url")
     private String consultUrl;
 
-    // Board와 User 관계 매핑
-    // board가 어떤 user(teacher)와 연결되어있는지 나타냄
-    @ManyToMany(mappedBy = "boards")
-    private List<User> users = new ArrayList<>();
+    @OneToOne()
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @OneToMany(mappedBy = "board")
+//    // Board와 User 관계 매핑
+//    // board가 어떤 user(teacher)와 연결되어있는지 나타냄
+//    @ManyToMany(mappedBy = "boards")
+//    private List<User> users = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Question> questions = new ArrayList<>();
 
 }

@@ -13,7 +13,7 @@ services:
     ports:
       - "8081:8081"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/ssam?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_URL=
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=
       - SERVER_SERVLET_CONTEXT_PATH=/api
@@ -23,8 +23,5 @@ services:
       context: ./FE/Frontend
       dockerfile: Dockerfile
     volumes:
-            - react-build:/build
+            - ~/react_build:/usr/share/nginx/html
       
-volumes:
-  react-build:
-    external: true

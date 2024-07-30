@@ -19,7 +19,7 @@ const Select = () => {
       {/* 초대 코드 박스 */}
       <div className={select.menuBoxArray}>
         <NavLink
-          to="/classroom"
+          to="/teacherclassroom"
           className={`${select.menuBox} ${select.menuBox1}`}
         >
           <div className={select.menuTxt}>
@@ -51,7 +51,7 @@ const Select = () => {
           </div>
         </NavLink>
         <NavLink
-          to="/appointment"
+          to="/teacherappointment"
           className={`${select.menuBox} ${select.menuBox3}`}
         >
           <div className={select.menuTxt}>

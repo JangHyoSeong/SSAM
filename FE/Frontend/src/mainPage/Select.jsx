@@ -5,6 +5,7 @@ import teacher from "../assets/teacher.png";
 import parents from "../assets/parents.png";
 import round1 from "../assets/round1.png";
 import round2 from "../assets/round2.png";
+import round3 from "../assets/round3.png";
 
 const Select = () => {
   return (
@@ -38,7 +39,7 @@ const Select = () => {
       </div>
       <img src={round1} className={select.round1} alt="round1" />
       <img src={round2} className={select.round2} alt="round2" />
-      <img src={round1} className={select.round3} alt="round1" />
+      <img src={round3} className={select.round3} alt="round3" />
       <p className={select.scroll}>Scroll ▽</p>
     </div>
   );

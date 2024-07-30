@@ -7,14 +7,23 @@ pipeline {
     }
     
     stages {
-        stage('Cleanup'){
-            steps{
-                cleanWs()
+        stage('Check Docker') {
+            steps {
+                script {
+                    try {
+                        sh 'docker --version'
+                    } catch(Exception e) {
+                        echo 'ERROR: Docker is not installed or not found in PATH'
+                        echo "Caught: ${e}"
+                    }
+                }
             }
         }
-        stage('Checkout') {
+        stage('Clone Repository') {
             steps {
-                checkout scm
+                git branch: 'test',
+                credentialsId: 'gitlab-credentials',
+                url: "https://lab.ssafy.com/s11-webmobile1-sub2/S11P12E201.git"
             }
         }
         

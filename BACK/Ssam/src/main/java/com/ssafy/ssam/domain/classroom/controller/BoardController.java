@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,7 +25,7 @@ public class BoardController {
 
     // Post(학급 생성) 성공시 반환할 메세지. 수정 필요
     @PreAuthorize("hasRole('TEACHER')")
-    @PostMapping
+    @PostMapping("/teachers")
     public ResponseEntity<BoardGetResponseDTO> createBoard(@Valid @RequestBody BoardCreateRequestDTO requestDTO) {
         return ResponseEntity.ok(boardService.createBoard(requestDTO));
     }
@@ -41,7 +40,7 @@ public class BoardController {
 
     // 학급 공지사항 수정
     @PreAuthorize("hasRole('TEACHER')")
-    @PutMapping("/notice/{boardId}")
+    @PutMapping("/teachers/notice/{boardId}")
     public ResponseEntity<CommonResponseDto> changeNotice(
             @PathVariable Integer boardId,
             @Valid @RequestBody BoardNoticeUpdateRequestDTO requestDTO) {
@@ -52,7 +51,7 @@ public class BoardController {
 
     // 학급 배너 수정
     @PreAuthorize("hasRole('TEACHER')")
-    @PutMapping("/banner/{boardId}")
+    @PutMapping("/teachers/banner/{boardId}")
     public ResponseEntity<CommonResponseDto> changeBanner(
             @PathVariable Integer boardId,
             @Valid @RequestBody BoardBannerUpdateRequestDTO requestDTO) {
@@ -61,9 +60,9 @@ public class BoardController {
         return ResponseEntity.ok(res);
     }
 
-    // 학급 pin번호 재발급
+    // 학급 pin 번호 재발급
     @PreAuthorize("hasRole('TEACHER')")
-    @PutMapping("pin/{boardId}")
+    @PutMapping("/teachers/pin/{boardId}")
     public ResponseEntity<CommonResponseDto> refreshPin(@PathVariable Integer boardId) {
         boardService.refreshPin(boardId);
         CommonResponseDto res = new CommonResponseDto();
@@ -72,13 +71,21 @@ public class BoardController {
 
     // 학급 배너 이미지 수정
     @PreAuthorize("hasRole('TEACHER')")
-    @PutMapping("/banner-img/{boardId}")
+    @PutMapping("/teachers/banner-img/{boardId}")
     public ResponseEntity<CommonResponseDto> changeBannerImage(
             @PathVariable Integer boardId,
             @Valid BoardBannerImageRequestDTO request) {
         boardService.updateBannerImage(boardId, request.getBannerImage());
         CommonResponseDto res = new CommonResponseDto();
         return ResponseEntity.ok(res);
+    }
+
+    // 학급 삭제
+    @PreAuthorize("hasRole('TEACHER')")
+    @DeleteMapping("/teachers/{boardId}")
+    public ResponseEntity<CommonResponseDto> deleteClass(
+            @PathVariable Integer boardId) {
+        return ResponseEntity.ok(boardService.deleteClass(boardId));
     }
 
 }

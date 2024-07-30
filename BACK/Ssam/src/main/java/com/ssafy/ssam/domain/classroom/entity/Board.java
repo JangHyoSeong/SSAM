@@ -19,8 +19,8 @@ public class Board {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "class_id")
-    private Integer classId;
+    @Column(name = "board_id")
+    private Integer boardId;
 
     @NotNull
     @Column(unique = true, nullable = false, length = 6)
@@ -46,12 +46,16 @@ public class Board {
     @Column(name = "consult_url")
     private String consultUrl;
 
-    // Board와 User 관계 매핑
-    // board가 어떤 user(teacher)와 연결되어있는지 나타냄
-    @ManyToMany(mappedBy = "boards")
-    private List<User> users = new ArrayList<>();
+    @OneToOne()
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @OneToMany(mappedBy = "board")
+//    // Board와 User 관계 매핑
+//    // board가 어떤 user(teacher)와 연결되어있는지 나타냄
+//    @ManyToMany(mappedBy = "boards")
+//    private List<User> users = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Question> questions = new ArrayList<>();
 
 }

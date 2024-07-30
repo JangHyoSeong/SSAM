@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardGetResponseDTO {
-    private Integer classId;
+    private Integer boardId;
     private String pin;
     private String banner;
     private String bannerImg;

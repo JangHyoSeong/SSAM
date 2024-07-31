@@ -1,28 +1,4 @@
-.FieldArray {
-  position: fixed;
-  bottom: -1%;
-  right: 0%;
-}
-
-.ChatbotImg {
-  width: 4vw;
-  height: 7.5vh;
-  cursor: pointer;
-}
-
-.FieldArray {
-  position: fixed;
-  bottom: -1%;
-  right: 0%;
-}
-
-.ChatbotImg {
-  width: 4vw;
-  height: 7.5vh;
-  cursor: pointer;
-}
-
-.formBox {
+.modalContent {
   position: fixed;
   bottom: 2%;
   right: 4%;
@@ -34,7 +10,7 @@
   margin-bottom: 2%;
 }
 
-.formBox hr {
+.modalContent hr {
   border: 1px solid #aaaaaa;
 }
 
@@ -70,9 +46,9 @@
 .chatMenu p {
   font-size: 90%;
   width: 2vw;
-  margin: -20% 9%;
+  margin: -20% 10%;
 }
 
-.studyTxt {
+.chatTxt {
   color: #5285ee;
 }

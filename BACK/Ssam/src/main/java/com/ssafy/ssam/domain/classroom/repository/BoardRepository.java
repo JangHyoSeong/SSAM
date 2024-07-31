@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface BoardRepository extends JpaRepository<Board, Integer> {
     boolean existsByPin(String pin);
     Optional<Board> findByBoardId(Integer boardId);
+
 }

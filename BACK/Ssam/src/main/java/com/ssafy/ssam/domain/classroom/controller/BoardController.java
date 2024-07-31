@@ -43,9 +43,8 @@ public class BoardController {
     public ResponseEntity<CommonResponseDto> changeNotice(
             @PathVariable Integer boardId,
             @Valid @RequestBody BoardNoticeUpdateRequestDTO requestDTO) {
-        boardService.updateNotice(boardId, requestDTO.getNotice());
-        CommonResponseDto res = new CommonResponseDto();
-        return ResponseEntity.ok(res);
+
+        return ResponseEntity.ok(boardService.updateNotice(boardId, requestDTO.getNotice()));
     }
 
     // 학급 배너 수정
@@ -54,18 +53,16 @@ public class BoardController {
     public ResponseEntity<CommonResponseDto> changeBanner(
             @PathVariable Integer boardId,
             @Valid @RequestBody BoardBannerUpdateRequestDTO requestDTO) {
-        boardService.updateBanner(boardId, requestDTO.getBanner());
-        CommonResponseDto res = new CommonResponseDto();
-        return ResponseEntity.ok(res);
+
+        return ResponseEntity.ok(boardService.updateBanner(boardId, requestDTO.getBanner()));
     }
 
     // 학급 pin 번호 재발급
     @PreAuthorize("hasRole('TEACHER')")
     @PutMapping("/teachers/pin/{boardId}")
     public ResponseEntity<CommonResponseDto> refreshPin(@PathVariable Integer boardId) {
-        boardService.refreshPin(boardId);
-        CommonResponseDto res = new CommonResponseDto();
-        return ResponseEntity.ok(res);
+
+        return ResponseEntity.ok(boardService.refreshPin(boardId));
     }
 
     // 학급 배너 이미지 수정
@@ -74,9 +71,7 @@ public class BoardController {
     public ResponseEntity<CommonResponseDto> changeBannerImage(
             @PathVariable Integer boardId,
             @Valid BoardBannerImageRequestDTO request) {
-        boardService.updateBannerImage(boardId, request.getBannerImage());
-        CommonResponseDto res = new CommonResponseDto();
-        return ResponseEntity.ok(res);
+        return ResponseEntity.ok(boardService.updateBannerImage(boardId, request.getBannerImage()));
     }
 
     // 학급 삭제

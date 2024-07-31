@@ -45,8 +45,8 @@ public class Board {
     @Column(name = "consult_url")
     private String consultUrl;
 
-    @Column(nullable = false)
-    private Integer is_deprecated;
+    @Column(name = "is_deprecated", nullable = false)
+    private Integer isDeprecated;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Question> questions = new ArrayList<>();

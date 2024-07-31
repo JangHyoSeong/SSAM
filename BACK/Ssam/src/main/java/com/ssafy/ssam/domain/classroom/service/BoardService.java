@@ -42,7 +42,7 @@ public class BoardService {
         if (user == null) throw new IllegalArgumentException("user doesn't exist");
         if (user.getBoards() != null && !user.getBoards().isEmpty()) {
             for (UserBoardRelation relation : user.getBoards()) {
-                if (relation.getBoard().getIs_deprecated() == 0) {
+                if (relation.getBoard().getIsDeprecated() == 0) {
                     throw new CustomException(ErrorCode.BoardAlreadyExistsException);
                 }
             }
@@ -58,7 +58,7 @@ public class BoardService {
                 .grade(requestDTO.getGrade())
                 .classroom(requestDTO.getClassroom())
                 .pin(generateUniquePin())
-                .is_deprecated(0)
+                .isDeprecated(0)
                 .build();
 
         Board savedBoard = boardRepository.save(board);

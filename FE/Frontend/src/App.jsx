@@ -1,10 +1,17 @@
 // App.jsx
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, NavLink, useLocation } from "react-router-dom";
-import './App.scss';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  NavLink,
+  useLocation,
+} from "react-router-dom";
+import "./App.scss";
 import SSAM from "./assets/SSAM.png";
 import MainPage from "./mainPage/MainPage";
 import { QuestionProvider } from "./store/QuestionContext";
+import Chatbot from "./chatbot/Chatbot.jsx";
 
 // 선생님
 import TeacherJoin from "./teacher/join/TeacherJoin";
@@ -27,10 +34,19 @@ import ParentsSubpage from "./parents/subPage/ParentsSubpage";
 import ParentsPasswordChange from "./parents/myPage/ParentsPasswordChange";
 import ParentsQuestion from "./parents/question/ParentsQuestion"; // ParentsQuestion 컴포넌트 import
 import ParentsClassroom from "./parents/classroom/ParentsClassroom";
-import ParentsReservationPage from './parents/appointment/ParentsReservationPage';
+import ParentsReservationPage from "./parents/appointment/ParentsReservationPage";
 
 const App = () => {
   const location = useLocation();
+
+  const hideChatbotOnRoutes = [
+    "/",
+    "/teacherlogin",
+    "/teacherjoin",
+    "/parentslogin",
+    "/parentsjoin",
+  ];
+  const showChatbot = !hideChatbotOnRoutes.includes(location.pathname);
 
   return (
     <QuestionProvider>
@@ -52,13 +68,17 @@ const App = () => {
           </NavLink>
           <NavLink
             to="/teacherquestion"
-            className={({ isActive }) => (isActive ? "navtxt active" : "navtxt")}
+            className={({ isActive }) =>
+              isActive ? "navtxt active" : "navtxt"
+            }
           >
             <h2>문의사항</h2>
           </NavLink>
           <NavLink
             to="/teacherreservationmanagement"
-            className={({ isActive }) => (isActive ? "navtxt active" : "navtxt")}
+            className={({ isActive }) =>
+              isActive ? "navtxt active" : "navtxt"
+            }
           >
             <h2>상담예약</h2>
           </NavLink>
@@ -103,11 +123,17 @@ const App = () => {
               element={<ParentsPasswordChange />}
             />
             <Route path="/parentsquestion" element={<ParentsQuestion />} />
-            <Route path="/parentsclassroom" element={<ParentsClassroom />} />{" "}
-            <Route path="/parentsreservationpage" element={<ParentsReservationPage />} />
-            {/* ParentsClassroom 라우트 추가 */}
+            <Route
+              path="/parentsclassroom"
+              element={<ParentsClassroom />}
+            />{" "}
+            <Route
+              path="/parentsreservationpage"
+              element={<ParentsReservationPage />}
+            />
           </Routes>
         </div>
+        {showChatbot && <Chatbot />}
       </div>
     </QuestionProvider>
   );

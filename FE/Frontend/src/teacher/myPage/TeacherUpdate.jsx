@@ -1,28 +1,28 @@
 // 선생님 정보 수정 페이지 컴포넌트
 import { NavLink } from 'react-router-dom';
-import update from './TeacherUpdate.module.scss';
+import styles from './TeacherUpdate.module.scss';
 
 const TeacherUpdate = () => {
   return (
     <div>
-      <div className={update.menuArray}>
-        <div className={update.updateMenu}>
-          <h2>회원정보 수정</h2>
+      <div className={styles.menuArray}>
+        <div className={styles.updateMenu}>
+          회원정보 수정
         </div>
-        <NavLink to="/teacherpasswordchange" className={update.changeMenu}>
-          <h2>비밀번호 변경</h2>
+        <NavLink to="/teacherpasswordchange" className={styles.changeMenu}>
+          비밀번호 변경
         </NavLink>
       </div>
-      <div className={update.infoArray}>
-        <div className={update.infoForm}>
-          <table className={update.tableArray}>
+      <div className={styles.infoArray}>
+        <div className={styles.infoForm}>
+          <table className={styles.tableArray}>
             <tr>
               <th>사진</th>
-              <td className={update.imgTd}>
-                <div className={update.profileImg}></div>
-                <div className={update.btn}>
-                  <button className={update.imgBtn}>수정</button>
-                  <button className={update.imgBtn}>삭제</button>
+              <td className={styles.imgTd}>
+                <div className={styles.profileImg}></div>
+                <div className={styles.btn}>
+                  <button className={styles.imgBtn}>수정</button>
+                  <button className={styles.imgBtn}>삭제</button>
                 </div>
               </td>
             </tr>
@@ -34,9 +34,9 @@ const TeacherUpdate = () => {
             <tr><th>휴대전화</th><td></td></tr>
           </table>
         </div>
-        <div className={update.formBtnArray}>
-          <button className={update.formBtn}>저장</button>
-          <button className={update.formBtn}>취소</button>
+        <div className={styles.formBtnArray}>
+          <button className={styles.formBtn}>저장</button>
+          <button className={styles.formBtn}>취소</button>
         </div>
       </div>
     </div>

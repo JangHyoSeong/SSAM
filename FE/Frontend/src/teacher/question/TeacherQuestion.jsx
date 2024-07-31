@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styles from "./TeacherQuestion.module.scss";
 import { FaTrash, FaEdit, FaSave } from "react-icons/fa";
 import Footer from "../../mainPage/Footer";

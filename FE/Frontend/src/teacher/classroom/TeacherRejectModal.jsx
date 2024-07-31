@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './TeacherRejectModal.module.scss';
 
 const TeacherRejectModal = ({ onClose, onReject }) => {

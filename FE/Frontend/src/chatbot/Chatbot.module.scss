@@ -7,22 +7,22 @@
 .ChatbotImg {
     position: absolute;
     bottom: 0%;
-    right: 0%;
-    width: 70px;
-    height: 60px;
-    margin: 0.5%;
+    right: 1%;
+    width: 4vw;
+    height: 7.5vh;
     cursor: pointer;
 }
 
 .formBox {
     position: absolute;
-    bottom: 60px;
+    bottom: 0%;
     right: 5%;
     width: 20vw;
     height: 60vh;
     background-color:white;
     border: 1px solid #aaaaaa;
     border-radius: 20px;
+    margin-bottom: 2%;
 }
 
 .formBox hr {

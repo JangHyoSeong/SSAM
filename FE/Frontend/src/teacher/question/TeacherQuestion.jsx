@@ -1,7 +1,6 @@
 import { useState } from "react";
 import styles from "./TeacherQuestion.module.scss";
 import { FaTrash, FaEdit, FaSave } from "react-icons/fa";
-import Footer from "../../mainPage/Footer";
 
 const TeacherQuestion = () => {
   const initialQuestions = [
@@ -22,7 +21,7 @@ const TeacherQuestion = () => {
       question: "교장실 전화번호는 무엇인가요?",
       answer: "",
       answerText: "",
-    },
+    }
   ];
 
   const [questions, setQuestions] = useState(initialQuestions);
@@ -65,7 +64,6 @@ const TeacherQuestion = () => {
   };
 
   return (
-    <>
       <div className={styles.teacherQuestionContainer}>
         {questions.map((item) => (
           <div key={item.id} className={styles.qaPair}>
@@ -111,8 +109,6 @@ const TeacherQuestion = () => {
           />
         )}
       </div>
-      <Footer />
-    </>
   );
 };
 

@@ -15,4 +15,5 @@ public interface UserBoardRelationRepository extends JpaRepository<UserBoardRela
     Optional<UserBoardRelation> findByUserAndBoard(User user, Board board);
     Optional<UserBoardRelation> findByBoardAndStatus(Board board, UserBoardRelationStatus status);
     Optional<List<UserBoardRelation>> findUserBoardRelationsByUser(User user);
+    Optional<List<User>> findUsersByBoardAndStatus(Board board, UserBoardRelationStatus status);
 }

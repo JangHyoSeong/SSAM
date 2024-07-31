@@ -1,7 +1,34 @@
+// import { useEffect } from 'react';
 import { NavLink } from "react-router-dom";
 import styles from "./TeacherConsultationList.module.scss";
+import ConsultationItem from "./ConsultationItem";
+// import useConsultationStore from '../../store/consultationStore'
 
 const TeacherConsultationList = () => {
+  // 예제 데이터
+  const consultations = [
+    {
+      date: "2024-07-15",
+      time: "15:00 ~ 15:20",
+      studentName: "박범준",
+      subject: "학교 생활",
+      content: "우리 아이가 잘 지내고 있는지 궁금해요",
+    },
+    {
+      date: "2024-07-16",
+      time: "16:00 ~ 16:20",
+      studentName: "김철수",
+      subject: "학교 생활",
+      content: "우리 아이가 잘 지내고 있는지 궁금해요",
+    },
+    // 백 연결할경우
+    // const { consultations, fetchConsultations } = useConsultationStore();
+
+    // useEffect(() => {
+    //   fetchConsultations(); // Fetch consultations when the component mounts
+    // }, [fetchConsultations]);
+  ];
+
   return (
     <div className={styles.consultationlistContainer}>
       <nav className={styles.classNavbar}>
@@ -30,15 +57,16 @@ const TeacherConsultationList = () => {
           <h3>주제</h3>
           <h3>내용</h3>
         </header>
-        <article className={styles.consultationRow}>
-          <div>2024-07-15</div>
-          <div>15:00 ~ 15:20</div>
-          <div>박범준</div>
-          <div>학교 생활</div>
-          <div>우리 아이가 잘 지내고 있는지 궁금해요</div>
-          <button className={styles.approveButton}>승인</button>
-          <button className={styles.editButton}>거절</button>
-        </article>
+        {consultations.map((consultation, index) => (
+          <ConsultationItem
+            key={index}
+            date={consultation.date}
+            time={consultation.time}
+            studentName={consultation.studentName}
+            subject={consultation.subject}
+            content={consultation.content}
+          />
+        ))}
       </section>
     </div>
   );

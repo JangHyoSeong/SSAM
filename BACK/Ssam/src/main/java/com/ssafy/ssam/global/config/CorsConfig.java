@@ -16,7 +16,8 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true);
-        config.addAllowedOriginPattern("https://i11e201.p.ssafy.io/api/**");
+        config.addAllowedOriginPattern("*");
+        //config.addAllowedOriginPattern("https://i11e201.p.ssafy.io/api/**");
         config.addAllowedHeader("*");
         //config.addExposedHeader("*");
         config.addAllowedMethod("*");

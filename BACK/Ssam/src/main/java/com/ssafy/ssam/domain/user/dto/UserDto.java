@@ -1,18 +1,22 @@
 package com.ssafy.ssam.domain.user.dto;
 
-import com.ssafy.ssam.domain.classroom.entity.Board;
-import com.ssafy.ssam.domain.classroom.entity.School;
-import com.ssafy.ssam.domain.user.entity.UserRole;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.context.annotation.Bean;
-
 import java.time.LocalDate;
 import java.util.List;
 
+import com.ssafy.ssam.domain.classroom.entity.Board;
+import com.ssafy.ssam.domain.classroom.entity.School;
+import com.ssafy.ssam.domain.user.entity.UserRole;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class UserDto {
     private Integer userId;

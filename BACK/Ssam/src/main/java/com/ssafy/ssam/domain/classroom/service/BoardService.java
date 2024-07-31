@@ -2,6 +2,7 @@ package com.ssafy.ssam.domain.classroom.service;
 
 import com.ssafy.ssam.domain.AmazonS3.service.S3ImageService;
 import com.ssafy.ssam.domain.classroom.dto.request.BoardCreateRequestDTO;
+import com.ssafy.ssam.domain.classroom.dto.response.BoardGetByPinResponseDTO;
 import com.ssafy.ssam.domain.classroom.dto.response.BoardGetResponseDTO;
 import com.ssafy.ssam.domain.classroom.entity.Board;
 import com.ssafy.ssam.domain.classroom.entity.UserBoardRelation;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Random;
 
 @Slf4j
@@ -44,7 +46,7 @@ public class BoardService {
         // 기존에 생성한 학급이 있다면 예외처리
         if (user.getBoards() != null && !user.getBoards().isEmpty()) {
             for (UserBoardRelation relation : user.getBoards()) {
-                if (relation.getBoard().getIs_deprecated() == 0) {
+                if (relation.getBoard().getIsDeprecated() == 0) {
                     throw new CustomException(ErrorCode.BoardAlreadyExistsException);
                 }
             }
@@ -60,7 +62,7 @@ public class BoardService {
                 .grade(requestDTO.getGrade())
                 .classroom(requestDTO.getClassroom())
                 .pin(generateUniquePin())
-                .is_deprecated(0)
+                .isDeprecated(0)
                 .build();
 
         Board savedBoard = boardRepository.save(board);
@@ -83,6 +85,31 @@ public class BoardService {
         Board board = boardRepository.findById(classId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
         return convertToResponseDTO(board);
+    }
+
+    // 학급 검색 - 학생
+    public BoardGetByPinResponseDTO getBoardByPin(String pin) {
+        Board board = boardRepository.findByPin(pin)
+                .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
+
+        UserBoardRelation relation = userBoardRelationRepository.findByBoardAndStatus(board, UserBoardRelationStatus.OWNER)
+                .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
+
+        User teacher = relation.getUser();
+
+        String schoolName = (teacher.getSchool() != null) ? teacher.getSchool().getName() : "학교가 등록되지 않았습니다";
+        Integer grade = board.getGrade();
+        Integer classroom = board.getClassroom();
+        String teacherName = teacher.getName();
+        String teacherImage = teacher.getImgUrl();
+
+        return BoardGetByPinResponseDTO.builder()
+                .schoolName(schoolName)
+                .grade(grade)
+                .classroom(classroom)
+                .teacherName(teacherName)
+                .teacherImage(teacherImage)
+                .build();
     }
 
     // 학급 공지사항 수정
@@ -156,7 +183,7 @@ public class BoardService {
         UserBoardRelation relation = userBoardRelationRepository.findByUserAndBoard(user, board)
                 .orElseThrow(() -> new CustomException(ErrorCode.BoardAccessDeniedException));
 
-        board.setIs_deprecated(1);
+        board.setIsDeprecated(1);
         boardRepository.save(board);
 
         return new CommonResponseDto("OK");

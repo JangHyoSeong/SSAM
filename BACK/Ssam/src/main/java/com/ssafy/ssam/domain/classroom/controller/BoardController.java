@@ -1,9 +1,7 @@
 package com.ssafy.ssam.domain.classroom.controller;
 
-import com.ssafy.ssam.domain.classroom.dto.request.BoardBannerImageRequestDTO;
-import com.ssafy.ssam.domain.classroom.dto.request.BoardBannerUpdateRequestDTO;
-import com.ssafy.ssam.domain.classroom.dto.request.BoardCreateRequestDTO;
-import com.ssafy.ssam.domain.classroom.dto.request.BoardNoticeUpdateRequestDTO;
+import com.ssafy.ssam.domain.classroom.dto.request.*;
+import com.ssafy.ssam.domain.classroom.dto.response.BoardGetByPinResponseDTO;
 import com.ssafy.ssam.domain.classroom.dto.response.BoardGetResponseDTO;
 import com.ssafy.ssam.domain.classroom.service.BoardService;
 import com.ssafy.ssam.global.dto.CommonResponseDto;
@@ -24,7 +22,7 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    // Post(학급 생성) 성공시 반환할 메세지. 수정 필요
+    // Post(학급 생성)
     @PreAuthorize("hasRole('TEACHER')")
     @PostMapping("/teachers")
     public ResponseEntity<BoardGetResponseDTO> createBoard(@Valid @RequestBody BoardCreateRequestDTO requestDTO) {
@@ -35,6 +33,14 @@ public class BoardController {
     @GetMapping("/{boardId}")
     public ResponseEntity<BoardGetResponseDTO> getBoard(@PathVariable Integer boardId) {
         return ResponseEntity.ok(boardService.getBoardById(boardId));
+    }
+
+    // Pin번호로 학급 찾기
+    @PreAuthorize("hasRole('STUDENT')")
+    @GetMapping()
+    public ResponseEntity<BoardGetByPinResponseDTO> getByPin(
+            @RequestBody BoardGetByPinRequestDTO requestDTO){
+        return ResponseEntity.ok(boardService.getBoardByPin(requestDTO.getPin()));
     }
 
     // 학급 공지사항 수정

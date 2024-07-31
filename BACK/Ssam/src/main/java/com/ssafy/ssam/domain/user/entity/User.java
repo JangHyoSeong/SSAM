@@ -23,6 +23,7 @@ import java.util.List;
 @Setter
 @Builder
 @Entity
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

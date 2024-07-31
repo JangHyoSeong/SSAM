@@ -12,6 +12,8 @@ const TeacherCalendar = ({ onDateSelect }) => {
   );
 
   const handleDateSelect = (selectInfo) => {
+    console.log("handleDateSelect called", selectInfo);
+
     const calendarApi = selectInfo.view.calendar;
     calendarApi.unselect(); // 날짜 선택 해제
 

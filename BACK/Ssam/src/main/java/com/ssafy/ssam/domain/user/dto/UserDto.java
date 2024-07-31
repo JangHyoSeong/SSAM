@@ -30,7 +30,7 @@ public class UserDto {
 
     private String username;
     private String password;
-
+    
     @Override
     public String toString() {
         return "UserDto [userId=" + userId + ", name=" + name + ", email=" + email + ", phone=" + phone + ", school=" + school + ", role=" + role + ", boards=" + boards + ", imgUrl=" + imgUrl + ", birth=" + birth + ", otherName=" + otherName + ", otherPhone=" + otherPhone + ", otherRelation=" + otherRelation + ", username=" + username + ", password=" + password + "]";

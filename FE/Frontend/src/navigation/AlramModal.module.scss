@@ -1,0 +1,35 @@
+.alramArray {
+  position: absolute;
+  top: 195%;
+  left: -60%;
+  width: 18vw;
+  height: 55vh;
+  background-color: #eeeeee;
+  z-index: 1;
+  border-radius: 15px;
+  border: 2px solid #cccccc;
+
+  hr {
+    border: 1px solid #cccccc;
+  }
+}
+
+.triangle {
+  position: absolute;
+  top: -4%;
+  left: 10%;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 16px solid #eeeeee;
+}
+
+.titleArray {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 17.8vw;
+  height: 6vh;
+  background-color: white;
+  border-radius: 15px 15px 0px 0px;
+  font-size: 150%;
+}

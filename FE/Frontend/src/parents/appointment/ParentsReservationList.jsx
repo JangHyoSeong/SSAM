@@ -25,7 +25,7 @@ const ParentsReservationList = ({ selectedDate }) => {
     return date;
   };
 
-  // 버튼 클릭 시 색상 변경 및 상태 업데이트
+  // 신청취소 클릭 시 색상 변경 및 상태 업데이트
   const handleClick = (index) => {
     const updatedConsultations = consultations.map((consultation, i) => {
       if (i === index) {

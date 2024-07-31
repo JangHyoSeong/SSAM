@@ -1,4 +1,4 @@
-import styles from "./Video.module.css";
+import styles from "./Video.module.scss";
 import whitelogo from "../assets/whitelogo.png";
 import whitelock from "../assets/whitelock.png";
 import whiteshare from "../assets/whiteshare.png";
@@ -13,18 +13,18 @@ function Video() {
         <div className={styles.menubarArray}>
           <div className={styles.menubar}>
             <div className={styles.logoArray}>
-              <img src={whitelogo} className={styles.logo} />
+              <img src={whitelogo} className={styles.logo} alt="Logo" />
             </div>
             <div className={styles.dayArray}>
               <p>2024. 08. 01 목요일</p>
               <p>000학부모 상담</p>
             </div>
             <div className={styles.iconArray}>
-              <img src={whitelock} />
-              <img src={whiteshare} />
-              <img src={whitecamera} />
-              <img src={whitemike} />
-              <img src={whitevideo} />
+              <img src={whitelock} alt="Lock" />
+              <img src={whiteshare} alt="Share" />
+              <img src={whitecamera} alt="Camera" />
+              <img src={whitemike} alt="Microphone" />
+              <img src={whitevideo} alt="Video" />
             </div>
           </div>
         </div>

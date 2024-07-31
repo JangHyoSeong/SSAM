@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './QuestionModal.module.css';
+import styles from './QuestionModal.module.scss';
 
 const QuestionModal = ({ isOpen, onClose, onSubmit, children }) => {
   if (!isOpen) return null;

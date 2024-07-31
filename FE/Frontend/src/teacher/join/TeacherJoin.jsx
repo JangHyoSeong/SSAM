@@ -1,14 +1,14 @@
-// src/components/TeacherJoin.jsx
-import useAuthStore from "../../store/AuthStore";
-import join from "./TeacherJoin.module.scss";
-import round1 from "../../assets/round1.png";
-import round2 from "../../assets/round2.png";
-import human from "../../assets/human.png";
-import lock from "../../assets/lock.png";
-import mail from "../../assets/mail.png";
-import search from "../../assets/search.png";
-import calendar from "../../assets/calendar.png";
-import phone from "../../assets/phone.png";
+import useAuthStore from '../../store/AuthStore';
+import styles from './TeacherJoin.module.scss';
+import round1 from '../../assets/round1.png';
+import round2 from '../../assets/round2.png';
+import round3 from '../../assets/round3.png';
+import human from '../../assets/human.png';
+import lock from '../../assets/lock.png';
+import mail from '../../assets/mail.png';
+import search from '../../assets/search.png';
+import calendar from '../../assets/calendar.png';
+import phone from '../../assets/phone.png';
 
 const TeacherJoin = () => {
   const {
@@ -30,7 +30,7 @@ const TeacherJoin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    signup({
+    await signup({
       username,
       password,
       email,
@@ -42,14 +42,14 @@ const TeacherJoin = () => {
   };
 
   return (
-    <div className={join.joinArray}>
-      <h1 className={join.joinTitle}>회원가입</h1>
-      <div className={join.joinFormArray}>
-        <div className={join.joinBtnFormArray}>
-          <div className={join.joinBackground}>
-            <form onSubmit={handleSubmit} className={join.joinForm}>
+    <div className={styles.joinArray}>
+      <h1 className={styles.joinTitle}>회원가입</h1>
+      <div className={styles.joinFormArray}>
+        <div className={styles.joinBtnFormArray}>
+          <div className={styles.joinBackground}>
+            <form onSubmit={handleSubmit} className={styles.joinForm}>
               <div>
-                <img src={human} className={join.joinIcon} alt="human" />
+                <img src={human} className={styles.joinIcon} alt="human" />
                 <input
                   type="text"
                   name="username"
@@ -61,7 +61,7 @@ const TeacherJoin = () => {
               </div>
               <hr />
               <div>
-                <img src={lock} className={join.joinIcon} alt="lock" />
+                <img src={lock} className={styles.joinIcon} alt="lock" />
                 <input
                   type="password"
                   name="password"
@@ -73,7 +73,7 @@ const TeacherJoin = () => {
               </div>
               <hr />
               <div>
-                <img src={mail} className={join.joinIcon} alt="mail" />
+                <img src={mail} className={styles.joinIcon} alt="mail" />
                 <input
                   type="email"
                   name="email"
@@ -85,7 +85,7 @@ const TeacherJoin = () => {
               </div>
               <hr />
               <div>
-                <img src={search} className={join.joinIcon} alt="search" />
+                <img src={search} className={styles.joinIcon} alt="search" />
                 <input
                   type="search"
                   name="school"
@@ -97,7 +97,7 @@ const TeacherJoin = () => {
               </div>
               <hr />
               <div>
-                <img src={human} className={join.joinIcon} alt="human" />
+                <img src={human} className={styles.joinIcon} alt="human" />
                 <input
                   type="text"
                   name="name"
@@ -109,7 +109,7 @@ const TeacherJoin = () => {
               </div>
               <hr />
               <div>
-                <img src={calendar} className={join.joinIcon} alt="calendar" />
+                <img src={calendar} className={styles.joinIcon} alt="calendar" />
                 <input
                   type="text"
                   name="birthdate"
@@ -121,8 +121,7 @@ const TeacherJoin = () => {
               </div>
               <hr />
               <div>
-                <img src={phone} className={join.joinIcon} alt="phone" />{" "}
-                {/* 이미지 사용 */}
+                <img src={phone} className={styles.joinIcon} alt="phone" />
                 <input
                   type="tel"
                   name="phone"
@@ -132,21 +131,22 @@ const TeacherJoin = () => {
                   required
                 />
               </div>
+              <hr />
+              <div className={styles.joinBtnArray}>
+                <button type="submit" className={styles.joinBtn}>
+                  가입
+                </button>
+                <button type="button" className={styles.joinBtn} onClick={() => window.location.reload()}>
+                  취소
+                </button>
+              </div>
             </form>
-          </div>
-          <div className={join.joinBtnArray}>
-            <button type="submit" className={join.joinBtn}>
-              가입
-            </button>
-            <button type="button" className={join.joinBtn}>
-              취소
-            </button>
           </div>
         </div>
       </div>
-      <img src={round1} className={join.round1} alt="round1" />
-      <img src={round2} className={join.round2} alt="round2" />
-      <img src={round1} className={join.round3} alt="round1" />
+      <img src={round1} className={styles.round1} alt="round1" />
+      <img src={round2} className={styles.round2} alt="round2" />
+      <img src={round3} className={styles.round3} alt="round3" />
     </div>
   );
 };

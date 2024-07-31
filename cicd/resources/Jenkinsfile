@@ -54,6 +54,17 @@ pipeline {
                 }
             }
         }
+        stage('Cleanup') {
+            steps {
+                script {
+                    // 최신 5개 이미지만 유지하고 나머지 삭제
+                    sh """
+                        docker images | grep ${BACKEND_IMAGE_NAME} | sort -r | awk 'NR>5 {print \$3}' | xargs -r docker rmi
+                        docker images | grep ${FRONTEND_IMAGE_NAME} | sort -r | awk 'NR>5 {print \$3}' | xargs -r docker rmi
+                    """
+                }
+            }
+        }
     }
     
     post {

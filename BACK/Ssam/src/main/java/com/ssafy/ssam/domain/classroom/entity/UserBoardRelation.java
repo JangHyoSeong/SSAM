@@ -4,6 +4,9 @@ import com.ssafy.ssam.domain.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -28,5 +31,15 @@ public class UserBoardRelation {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserBoardRelationStatus status;
+
+    @NotNull
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "follow_date", columnDefinition = "TIMESTAMP", nullable = false)
+    private LocalDateTime followDate;
 
 }

@@ -1,15 +1,17 @@
+//TeacherQuestion.module.scss
+
 .teacherQuestionContainer {
   display: flex;
   flex-direction: column;
   gap: 3vh;
   padding: 5vh;
-  align-items: center; /* 중앙 정렬 추가 */
+  align-items: center;
 }
 
 .qaPair {
   display: flex;
   flex-direction: column;
-  align-items: center; /* 중앙 정렬 추가 */
+  align-items: center;
 }
 
 .boxContainer {
@@ -51,4 +53,17 @@
 
 .answerBox.selected {
   background-color: #ecd3fc; /* 선택된 답변 박스 색상 */
+}
+
+.inputField {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 25px;
+  padding: 1.5vh;
+  font-size: 1rem;
+}
+
+.inputField:focus {
+  outline: none;
 }

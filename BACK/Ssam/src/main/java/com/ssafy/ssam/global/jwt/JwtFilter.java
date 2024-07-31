@@ -29,6 +29,7 @@ public class JwtFilter extends OncePerRequestFilter {
         if(authorization == null || !authorization.startsWith("Bearer ")) {
             System.out.println("Token null");
             filterChain.doFilter(request, response);
+
             return;
         }
 
@@ -37,21 +38,19 @@ public class JwtFilter extends OncePerRequestFilter {
         if(jwtUtil.isExpired(token)){
             System.out.println("Token expired");
             filterChain.doFilter(request, response);
-
             return;
         }
 
+        Integer userId = jwtUtil.getUserId(token);
+        Integer boardId = jwtUtil.getBoardId(token);
         String username = jwtUtil.getUsername(token);
-        UserRole role = UserRole.valueOf(jwtUtil.getRole(token));
+        String role = jwtUtil.getRole(token);
 
-        User user = User.builder()
-                .username(username)
-                .password("temppassword")
-                .userId(jwtUtil.getUserId(token))
-                .role(role)
-                .build();
-        CustomUserDetails customUserDetails = new CustomUserDetails(user);
+        CustomUserDetails customUserDetails = new CustomUserDetails(userId, boardId, username, "temppassword", role);
+
+        //스프링 시큐리티 인증 토큰 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+        //세션에 사용자 등록
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);

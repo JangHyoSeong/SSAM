@@ -22,12 +22,12 @@ const ConsultationButton = ({ consultation, index, clickedIndex, onClick }) => {
 
   let buttonText;
   if (consultation.available) {
-    buttonText = "신청가능";
+    buttonText = consultation.text || "신청가능";
   } else {
     if (buttonStyle.color === "#FFFFFF") {
       buttonText = "신청취소";
     } else {
-      buttonText = consultation.text || "신청불가";
+      buttonText = "신청불가";
     }
   }
 
@@ -36,7 +36,7 @@ const ConsultationButton = ({ consultation, index, clickedIndex, onClick }) => {
       className={getButtonClasses()}
       onClick={handleClick}
       style={buttonStyle}
-      disabled={!consultation.available}
+      disabled={!consultation.available && consultation.text !== "신청취소"}
     >
       {buttonText}
     </button>

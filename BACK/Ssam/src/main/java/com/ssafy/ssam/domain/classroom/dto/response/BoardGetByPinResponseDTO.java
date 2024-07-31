@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class BoardGetByPinResponseDTO {
 
+    private Integer boardId;
     private String schoolName;
     private Integer grade;
     private Integer classroom;

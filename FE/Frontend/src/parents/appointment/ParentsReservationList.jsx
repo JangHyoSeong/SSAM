@@ -1,7 +1,9 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
-import { FiCalendar } from "react-icons/fi"; // react-icons를 설치했는지 확인하세요.
+import { FiCalendar } from "react-icons/fi";
 import useTeacherCalendarStore from "../../store/TeacherCalendarStore";
+import Modal from "./Modal";
+import ConsultationButton from "./ConsultationButton";
 import styles from "./ParentsReservationList.module.scss";
 
 const ParentsReservationList = ({ selectedDate }) => {
@@ -29,9 +31,9 @@ const ParentsReservationList = ({ selectedDate }) => {
       if (i === index) {
         return {
           ...consultation,
-          text: consultation.text === "신청 취소" ? "" : consultation.text,
+          text: consultation.text === "신청취소" ? "" : consultation.text,
           available:
-            consultation.text === "신청 취소" ? true : consultation.available,
+            consultation.text === "신청취소" ? true : consultation.available,
         };
       }
       return consultation;
@@ -40,6 +42,21 @@ const ParentsReservationList = ({ selectedDate }) => {
     setClickedIndex(index);
   };
 
+  // 테이블 정보 렌더링
+  const renderConsultationRow = (consultation, index) => (
+    <div className={styles.row} key={index}>
+      <div className={styles.cell}>{consultation.time}</div>
+      <div className={styles.cell}>
+        <ConsultationButton
+          consultation={consultation}
+          index={index}
+          clickedIndex={clickedIndex}
+          onClick={handleClick}
+        />
+      </div>
+    </div>
+  );
+
   // 예약하기 버튼 클릭 시 실행되는 함수
   const handleReservation = () => {
     if (clickedIndex !== null) {
@@ -47,7 +64,7 @@ const ParentsReservationList = ({ selectedDate }) => {
         if (i === clickedIndex) {
           return {
             ...consultation,
-            text: "신청 취소",
+            text: "신청취소",
             available: false,
           };
         }
@@ -94,35 +111,10 @@ const ParentsReservationList = ({ selectedDate }) => {
           <div className={styles.cellHeader}>상담 시간</div>
           <div className={styles.cellHeader}>상담 신청</div>
         </div>
-        {consultations.map((consultation, index) => (
-          <div className={styles.row} key={index}>
-            <div className={styles.cell}>{consultation.time}</div>
-            <div className={styles.cell}>
-              <button
-                className={
-                  consultation.available
-                    ? index === clickedIndex
-                      ? styles.clicked
-                      : styles.available
-                    : consultation.text === "신청 취소"
-                    ? `${styles.unavailable} ${styles.reservationCancel}`
-                    : styles.unavailable
-                }
-                onClick={() => handleClick(index)}
-                style={
-                  consultation.text === "신청 취소"
-                    ? { backgroundColor: "#FF0000", color: "#FFFFFF" }
-                    : {}
-                }
-              >
-                {consultation.text ? consultation.text : "신청 가능"}
-              </button>
-            </div>
-          </div>
-        ))}
+        {consultations.map(renderConsultationRow)}
       </div>
 
-      {/* 상담 신청 내용을 입력할 수 있는 공간 */}
+      {/* 상담 내용 입력*/}
       <textarea
         className={styles.consultationInput}
         placeholder="상담 내용을 입력해 주세요. (50자 이내)"
@@ -137,21 +129,7 @@ const ParentsReservationList = ({ selectedDate }) => {
       </div>
 
       {/* 예약 완료 모달 창 */}
-      {showModal && (
-        <div className={styles.modalBackdrop}>
-          <div className={styles.modalContent}>
-            <h3>예약되었습니다.</h3>
-            <div className={styles.buttonContainer}>
-              <button
-                className={`${styles.button} ${styles.approveButton}`}
-                onClick={() => setShowModal(false)}
-              >
-                확인
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Modal show={showModal} onClose={() => setShowModal(false)} />
     </div>
   );
 };

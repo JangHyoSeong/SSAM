@@ -18,5 +18,5 @@ services:
       context: ./FE/Frontend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "3000:80"
       

@@ -26,7 +26,5 @@ services:
       - "3306:3306"
 
 volumes:
-  jenkins_home:
-    external: true
   mysql_data:
     external: true

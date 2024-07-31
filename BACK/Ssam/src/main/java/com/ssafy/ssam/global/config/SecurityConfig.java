@@ -62,12 +62,13 @@ public class SecurityConfig {
                            @Override
                            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                                CorsConfiguration config = new CorsConfiguration();
+                               config.setAllowedOrigins(Collections.singletonList("*"));
                                //config.setAllowedOrigins(Collections.singletonList("https://i11e201.p.ssafy.io:3000"));
-                               config.setAllowedOrigins(Arrays.asList(
+                               /*config.setAllowedOrigins(Arrays.asList(
                                        "https://i11e201.p.ssafy.io:3000",
                                        "http://localhost:3000",
                                        "http://127.0.0.1:3000"
-                                   ));
+                                   ));*/
                                
                                config.setAllowedMethods(Collections.singletonList("*"));
                                config.setAllowCredentials(true);

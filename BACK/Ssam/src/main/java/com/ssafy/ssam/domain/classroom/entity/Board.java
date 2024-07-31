@@ -1,7 +1,6 @@
 package com.ssafy.ssam.domain.classroom.entity;
 
 import com.ssafy.ssam.domain.notification.entity.Question;
-import com.ssafy.ssam.domain.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -46,16 +45,13 @@ public class Board {
     @Column(name = "consult_url")
     private String consultUrl;
 
-    @OneToOne()
-    @JoinColumn(name = "user_id")
-    private User user;
-
-//    // Board와 User 관계 매핑
-//    // board가 어떤 user(teacher)와 연결되어있는지 나타냄
-//    @ManyToMany(mappedBy = "boards")
-//    private List<User> users = new ArrayList<>();
+    @Column(nullable = false)
+    private Integer is_deprecated;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Question> questions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board")
+    private List<UserBoardRelation> userBoardRelations = new ArrayList<>();
 
 }

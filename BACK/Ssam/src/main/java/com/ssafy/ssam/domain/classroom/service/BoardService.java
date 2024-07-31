@@ -97,6 +97,7 @@ public class BoardService {
 
         User teacher = relation.getUser();
 
+        Integer boardId = board.getBoardId();
         String schoolName = (teacher.getSchool() != null) ? teacher.getSchool().getName() : "학교가 등록되지 않았습니다";
         Integer grade = board.getGrade();
         Integer classroom = board.getClassroom();
@@ -104,12 +105,30 @@ public class BoardService {
         String teacherImage = teacher.getImgUrl();
 
         return BoardGetByPinResponseDTO.builder()
+                .boardId(boardId)
                 .schoolName(schoolName)
                 .grade(grade)
                 .classroom(classroom)
                 .teacherName(teacherName)
                 .teacherImage(teacherImage)
                 .build();
+    }
+
+    // 학급 등록 - 학생
+    public CommonResponseDto registClass(int boardId) {
+        Board board = boardRepository.findByBoardId(boardId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
+
+        User student = findUserByToken();
+        UserBoardRelation relation = UserBoardRelation.builder()
+                .user(student)
+                .board(board)
+                .status(UserBoardRelationStatus.WAITING)
+                .followDate(LocalDateTime.now())
+                .build();
+
+        userBoardRelationRepository.save(relation);
+        return new CommonResponseDto("regist completed");
     }
 
     // 학급 공지사항 수정

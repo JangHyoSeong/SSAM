@@ -43,6 +43,14 @@ public class BoardController {
         return ResponseEntity.ok(boardService.getBoardByPin(requestDTO.getPin()));
     }
 
+    // 학급 등록 - 학생
+    @PreAuthorize("hasRole('STUDENT')")
+    @PostMapping("/{boardId}")
+    public ResponseEntity<CommonResponseDto> registClass (
+            @PathVariable Integer boardId) {
+        return ResponseEntity.ok(boardService.registClass(boardId));
+    }
+
     // 학급 공지사항 수정
     @PreAuthorize("hasRole('TEACHER')")
     @PutMapping("/teachers/notice/{boardId}")

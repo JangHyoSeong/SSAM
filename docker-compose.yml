@@ -2,9 +2,7 @@ version: '3'
     
 services:
   spring-app:
-    build: 
-      context: ./BACK/Ssam
-      dockerfile: Dockerfile
+    image: ${BACKEND_IMAGE_NAME:-asz2325/backend-image}:${BUILD_NUMBER:-latest}
     ports:
       - "8081:8081"
     environment:
@@ -14,9 +12,6 @@ services:
       - SERVER_SERVLET_CONTEXT_PATH=/api
       
   react-app:
-    build:
-      context: ./FE/Frontend
-      dockerfile: Dockerfile
+    image: ${FRONTEND_IMAGE_NAME:-asz2325/frontend-image}:${BUILD_NUMBER:-latest}
     ports:
-      - "3000:80"
-      
+      - "3000:3000"

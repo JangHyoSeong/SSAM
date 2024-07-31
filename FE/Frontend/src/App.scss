@@ -8,41 +8,7 @@ body {
   padding: auto;
 }
 
-.navbar-array {
-  height: 10vh;
-  background-color: white;
-}
-
-.logo {
-  position: absolute;
-  top: 1.2%;
-  left: 5%;
-  width: 8vw;
-  height: 8vh;
-}
-
-.navtxt {
-  margin: 0% 3%;
-  font-size: 100%;
-  white-space: nowrap; /* 텍스트가 한 줄로 표시되도록 설정 */
-}
-
-.navtxt:hover {
-  color: #5285ee;
-}
-
-.menu-array {
+.navbarArray {
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 10vh;
-}
-
-.menu-array a {
-  text-decoration: none; /* 링크 밑줄 제거 */
-  color: inherit; /* 부모 요소의 색상 상속 */
-}
-
-.menu-array .active {
-  color: #5285ee; /* 활성화된 링크 색상 */
 }

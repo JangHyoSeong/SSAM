@@ -1,9 +1,9 @@
 import { useState } from "react";
 import styles from "./Chatbot.module.scss";
-import chatbotImg from "../assets/chatbot.png";
 import SSAM from "../assets/SSAM.png";
-import book from "../assets/book.png";
-import chat from "../assets/chat.png";
+import chatbotImg from "../assets/chatbot.png";
+import book from "../assets/book_black.png";
+import chat from "../assets/chat_black.png";
 
 const Chatbot = () => {
   const [isBoxVisible, setIsBoxVisible] = useState(false);

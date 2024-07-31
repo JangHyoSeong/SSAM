@@ -1,0 +1,25 @@
+.navArray {
+  white-space: nowrap;
+  position: relative;
+  top: 0%;
+  left: 68%;
+  display: flex;
+  justify-content: space-evenly;
+  gap: 10%;
+  margin-top: 2%;
+
+  p:hover {
+    color: #5285ee;
+    cursor: pointer;
+  }
+}
+
+.nav {
+  text-decoration: none;
+  color: black;
+}
+
+.nav:hover {
+  color: #5285ee;
+  cursor: pointer;
+}

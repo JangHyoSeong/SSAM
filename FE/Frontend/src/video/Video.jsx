@@ -30,7 +30,7 @@ function Video() {
         </div>
         <div className={styles.timeArray}>
           <div className={styles.time}>
-            <h1>04:49</h1>
+            <h1>04 : 49</h1>
           </div>
         </div>
       </div>
@@ -48,7 +48,7 @@ function Video() {
         </div>
         <div className={styles.chatingArray}>
           <div className={styles.chating}>
-            <div className={styles.chatForm}></div>
+            <input form="text" className={styles.chatForm} placeholder="채팅을 입력해주세요"></input>
           </div>
         </div>
       </div>

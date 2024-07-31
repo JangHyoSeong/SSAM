@@ -1,11 +1,11 @@
-import {BrowserRouter as Router, Routes, Route, useLocation} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import "./App.scss";
 import MainPage from "./mainPage/MainPage";
 import Chatbot from "./chatbot/Chatbot.jsx";
 import SubNavbar from "./navigation/SubNavbar.jsx";
 import MainNavbar from "./navigation/MainNavbar.jsx";
+import Video from "./video/Video.jsx";
 import { QuestionProvider } from "./store/QuestionContext";
-
 // 선생님
 import TeacherJoin from "./teacher/join/TeacherJoin";
 import TeacherLogin from "./teacher/login/TeacherLogin";
@@ -18,7 +18,6 @@ import TeacherConsultationList from "./teacher/appointment/TeacherConsultationLi
 import TeacherClassroom from "./teacher/classroom/TeacherClassroom";
 import TeacherAuthorization from "./teacher/classroom/TeacherAuthorization";
 import TeacherStudentDetail from "./teacher/classroom/TeacherStudentDetail";
-
 // 학부모
 import ParentsJoin from "./parents/join/ParentsJoin";
 import ParentsLogin from "./parents/login/ParentsLogin";
@@ -31,16 +30,17 @@ import ParentsReservationPage from "./parents/appointment/ParentsReservationPage
 
 const App = () => {
   const location = useLocation();
-  const hideChatbotOnRoutes = ["/", "/teacherlogin", "/teacherjoin", "/parentslogin", "/parentsjoin",];
+
+  const hideChatbotOnRoutes = ["/", "/teacherlogin", "/teacherjoin", "/parentslogin", "/parentsjoin", "/video"];
   const showChatbot = !hideChatbotOnRoutes.includes(location.pathname);
+
+  const hideNavbarOnRoutes = ["/video"];
+  const showNavbar = !hideNavbarOnRoutes.includes(location.pathname);
 
   return (
     <QuestionProvider>
       <div>
-        <div className="navbarArray">
-          <MainNavbar />
-          <SubNavbar />
-        </div>
+        {showNavbar && (<div className="navbarArray"><MainNavbar /><SubNavbar /></div>)}
         <div>
           <Routes>
             <Route path="/" element={<MainPage />} />
@@ -61,12 +61,15 @@ const App = () => {
             <Route path="/parentsjoin" element={<ParentsJoin />} />
             <Route path="/parentssubpage" element={<ParentsSubpage />} />
             <Route path="/parentsupdate" element={<ParentsUpdate />} />
-            <Route path="/parentspasswordchange" element={<ParentsPasswordChange />}/>
+            <Route path="/parentspasswordchange" element={<ParentsPasswordChange />} />
             <Route path="/parentsquestion" element={<ParentsQuestion />} />
             <Route path="/parentsclassroom" element={<ParentsClassroom />} />
             <Route path="/parentsreservationpage" element={<ParentsReservationPage />} />
+            {/* 비디오 링크 */}
+            <Route path="/video" element={<Video />} />
           </Routes>
         </div>
+        {/* 챗봇 링크 */}
         {showChatbot && <Chatbot />}
       </div>
     </QuestionProvider>

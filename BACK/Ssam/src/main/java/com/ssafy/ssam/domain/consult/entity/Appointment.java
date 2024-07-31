@@ -1,31 +1,35 @@
 package com.ssafy.ssam.domain.consult.entity;
 
-import com.ssafy.ssam.domain.consult.converter.AppointmentStatusConverter;
+import com.ssafy.ssam.domain.consult.dto.request.AppointmentRequestDto;
+import com.ssafy.ssam.domain.consult.dto.response.AppointmentResponseDto;
 import com.ssafy.ssam.domain.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Getter
+@Setter
+@Builder
+@DynamicInsert // 애초에 날릴때 null은 배제하고 날려야 default값이 입력된다. 그래서 배제하도록 해주는 어노테이션
 public class Appointment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "appointment_id")
-    private int appointmentId;
+    private Integer appointmentId;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "student_id", nullable = false)
     private User student;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "teacher_id", nullable = false)
     private User teacher;
@@ -33,25 +37,35 @@ public class Appointment {
     @Column(length = 50)
     private String topic;
 
-    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_time", columnDefinition = "TIMESTAMP", nullable = false)
-    private Date startTime;
+    private LocalDateTime startTime;
 
-    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_time", columnDefinition = "TIMESTAMP",nullable = false)
-    private Date endTime;
+    private LocalDateTime endTime;
 
-//    @Convert(converter = AppointmentStatusConverter.class)
-    @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @ColumnDefault("'BEFORE'") // default 값 설정
     private AppointmentStatus status;
 
-    public enum AppointmentStatus {
-        BEFORE,
-        DONE,
-        CANCEL
+    public static Appointment toAppointment(User student, User teacher, AppointmentRequestDto appointmentRequestDto){
+        return Appointment.builder()
+                .teacher(teacher)
+                .student(student)
+                .topic(appointmentRequestDto.getTopic())
+                .startTime(appointmentRequestDto.getStartTime())
+                .endTime(appointmentRequestDto.getEndTime())
+                .build();
+    }
+    public static AppointmentResponseDto toAppointmentDto(Appointment appointment){
+        return AppointmentResponseDto.builder()
+                .studentId(appointment.getStudent().getUserId())
+                .teacherId(appointment.getTeacher().getUserId())
+                .startTime(appointment.getStartTime())
+                .endTime(appointment.getEndTime())
+                .topic(appointment.getTopic())
+                .status(appointment.getStatus())
+                .build();
     }
 }

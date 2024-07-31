@@ -1,6 +1,9 @@
 .navbarArray {
+  width: 84vw;
   height: 10vh;
-  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .logo {
@@ -20,13 +23,8 @@
 }
 
 .menuArray {
-  position: relative;
-  left: 240%;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 10vh;
-  gap: 40%;
+  gap: 58%;
 }
 
 .menuArray a {

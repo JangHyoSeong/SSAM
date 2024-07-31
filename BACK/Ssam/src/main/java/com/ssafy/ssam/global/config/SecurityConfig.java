@@ -80,7 +80,7 @@ public class SecurityConfig {
                            }
                        })))
                .csrf((auth) -> auth.disable())
-               .cors((auth) -> auth.disable())
+               //.cors((auth) -> auth.disable())
                .formLogin((auth) -> auth.disable())
                .logout((auth) -> auth.disable())
                .httpBasic((auth) -> auth.disable())

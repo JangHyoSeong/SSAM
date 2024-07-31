@@ -4,6 +4,7 @@ import axios from "../../axiosConfig";
 import join from "./ParentsJoin.module.scss";
 import round1 from "../../assets/round1.png";
 import round2 from "../../assets/round2.png";
+import round3 from "../../assets/round3.png";
 import human from "../../assets/human.png";
 import lock from "../../assets/lock.png";
 import mail from "../../assets/mail.png";
@@ -140,7 +141,7 @@ const ParentsJoin = () => {
 
       <img src={round1} className={join.round1} alt="round1" />
       <img src={round2} className={join.round2} alt="round2" />
-      <img src={round1} className={join.round3} alt="round1" />
+      <img src={round3} className={join.round3} alt="round1" />
     </div>
   );
 };

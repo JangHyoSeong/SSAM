@@ -1,0 +1,28 @@
+.directArray {
+    width: 100vw;
+    height: 100vh;
+    background-color: #dce7fc;
+}
+
+.txtArray {
+    height: 30vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 5%;
+    font-size: 120%;
+}
+
+.txtArray h3 {
+    color: #5285ee;
+}
+
+.txtP {
+    text-align: center;
+    color: #777777;
+}
+
+.detailArray {
+    height: 70vh;
+}

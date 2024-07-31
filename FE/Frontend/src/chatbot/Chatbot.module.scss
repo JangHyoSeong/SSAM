@@ -1,0 +1,65 @@
+.FieldArray {
+    position: sticky;
+    bottom: 0%;
+    right: 0%;
+}
+
+.ChatbotImg {
+    position: absolute;
+    bottom: 0%;
+    right: 0%;
+    width: 70px;
+    height: 60px;
+    margin: 0.5%;
+    cursor: pointer;
+}
+
+.formBox {
+    position: absolute;
+    bottom: 60px;
+    right: 5%;
+    width: 20vw;
+    height: 60vh;
+    background-color:white;
+    border: 1px solid #aaaaaa;
+    border-radius: 20px;
+}
+
+.formBox hr {
+    border: 1px solid #aaaaaa;
+}
+
+.logo {
+    width: 3vw;
+    height: 4vh;
+    margin: 2.5% 0% 1.5% 5%;
+}
+
+.chatContent {
+    width: 20vw;
+    height: 45vh;
+}
+
+.chatMenu {
+    width: 19.9vw;
+    height: 8.1vh;
+    border-radius: 0px 0px 20px 20px;
+    background-color: #F2F2F2;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.img {
+    width: 2.5vw;
+    margin-top: 5%;
+}
+
+.imgBox:hover {
+    color: #5285EE;
+}
+
+.chatMenu p {
+    font-size: 90%;
+    width: 2vw;
+    margin: -25% 20%;
+}

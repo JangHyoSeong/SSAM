@@ -79,13 +79,16 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_board_relation",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "board_id")
-    )
-    private List<Board> boards = new ArrayList<>();
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private Board board;
+
+//    @ManyToMany
+//    @JoinTable(
+//            name = "user_board_relation",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "board_id")
+//    )
+//    private List<Board> boards = new ArrayList<>();
 
     @OneToMany(mappedBy = "student", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Manage> followings = new ArrayList<>();
@@ -112,7 +115,7 @@ public class User {
                 .email(userEntity.email)
                 .phone(userEntity.phone)
                 .school(userEntity.school)
-                .boards(userEntity.boards)
+//                .boards(userEntity.boards)
                 .imgUrl(userEntity.imgUrl)
                 .role(userEntity.role)
                 .birth(userEntity.birth)
@@ -131,7 +134,7 @@ public class User {
                 .email(ssamUserDto.getEmail())
                 .phone(ssamUserDto.getPhone())
                 .school(ssamUserDto.getSchool())
-                .boards(ssamUserDto.getBoards())
+//                .boards(ssamUserDto.getBoards())
                 .imgUrl(ssamUserDto.getImgUrl())
                 .role(ssamUserDto.getRole())
                 .birth(ssamUserDto.getBirth())

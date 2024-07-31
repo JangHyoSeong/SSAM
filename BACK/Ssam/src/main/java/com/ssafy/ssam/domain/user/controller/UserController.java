@@ -31,4 +31,5 @@ public class UserController {
     public ResponseEntity<CommonResponseDto> teacherJoinProcess(@Valid UserDto userDto){
         return ResponseEntity.ok(joinService.teacherJoinProcess(userDto));
     }
+    
 }

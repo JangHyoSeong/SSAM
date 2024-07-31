@@ -1,11 +1,8 @@
 package com.ssafy.ssam.global.config;
 
-import com.ssafy.ssam.global.jwt.JwtFilter;
-import com.ssafy.ssam.global.jwt.JwtUtil;
-import com.ssafy.ssam.global.jwt.LoginFilter;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.Builder;
-import lombok.RequiredArgsConstructor;
+import java.util.Arrays;
+import java.util.Collections;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,8 +18,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import java.util.Collection;
-import java.util.Collections;
+import com.ssafy.ssam.global.jwt.JwtFilter;
+import com.ssafy.ssam.global.jwt.JwtUtil;
+import com.ssafy.ssam.global.jwt.LoginFilter;
+
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 
 @Builder
 @RequiredArgsConstructor
@@ -60,7 +62,13 @@ public class SecurityConfig {
                            @Override
                            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                                CorsConfiguration config = new CorsConfiguration();
-                               config.setAllowedOrigins(Collections.singletonList("https://i11e201.p.ssafy.io:3000"));
+                               //config.setAllowedOrigins(Collections.singletonList("https://i11e201.p.ssafy.io:3000"));
+                               config.setAllowedOrigins(Arrays.asList(
+                                       "https://i11e201.p.ssafy.io:3000",
+                                       "http://localhost:3000",
+                                       "http://127.0.0.1:3000"
+                                   ));
+                               
                                config.setAllowedMethods(Collections.singletonList("*"));
                                config.setAllowCredentials(true);
                                config.setAllowedHeaders(Collections.singletonList("*"));

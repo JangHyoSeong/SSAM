@@ -14,4 +14,4 @@ services:
   react-app:
     image: ${FRONTEND_IMAGE_NAME:-asz2325/frontend-image}:${BUILD_NUMBER:-latest}
     ports:
-      - "3000:3000"
+      - "3000:80"

@@ -20,6 +20,7 @@ public enum ErrorCode {
     UserNotFoundException(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."),
     Forbidden(HttpStatus.FORBIDDEN, "접근 권한이 없는 사용자입니다."),
     InvalidImageType(HttpStatus.BAD_REQUEST, "잘못된 이미지 파일입니다."),
+    NotFoundRegistration(HttpStatus.NOT_FOUND, "대기 중인 요청이 없습니다"),
 
     // consultException
     AppointmentNotFoundException(HttpStatus.NOT_FOUND, "존재하지 않는 예약입니다"),

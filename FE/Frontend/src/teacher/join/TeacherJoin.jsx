@@ -1,45 +1,46 @@
-import { useState } from 'react';
-import axios from 'axios';
-import styles from './TeacherJoin.module.scss';
-import round1 from '../../assets/round1.png';
-import round2 from '../../assets/round2.png';
-import round3 from '../../assets/round3.png';
-import human from '../../assets/human.png';
-import lock from '../../assets/lock.png';
-import mail from '../../assets/mail.png';
-import search from '../../assets/search.png';
-import calendar from '../../assets/calendar.png';
-import phone from '../../assets/phone.png';
+import axios from "axios";
+import { useState } from "react";
+import styles from "./TeacherJoin.module.scss";
+import round1 from "../../assets/round1.png";
+import round2 from "../../assets/round2.png";
+import round3 from "../../assets/round3.png";
+import human from "../../assets/human.png";
+import lock from "../../assets/lock.png";
+import mail from "../../assets/mail.png";
+import search from "../../assets/search.png";
+import calendar from "../../assets/calendar.png";
+import phone from "../../assets/phone.png";
 
 const TeacherJoin = () => {
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-    email: '',
-    schoolId: '',
-    name: '',
-    birth: '',
-    phone: ''
+    username: "",
+    password: "",
+    email: "",
+    schoolId: "",
+    name: "",
+    birth: "",
+    phone: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:8081/v1/auth/teachers', formData)
+    axios
+      .post("http://localhost:8081/v1/auth/teachers", formData)
       .then(function (response) {
-        console.log('axios 성공', response);
-        alert('성공')
+        console.log("axios 성공", response);
+        alert("성공");
       })
       .catch(function (error) {
-        console.error('axios 실패', error);
-        alert('실패', error)
+        console.error("axios 실패", error);
+        alert("실패", error);
       });
   };
 
@@ -110,7 +111,11 @@ const TeacherJoin = () => {
               </div>
               <hr />
               <div>
-                <img src={calendar} className={styles.joinIcon} alt="calendar" />
+                <img
+                  src={calendar}
+                  className={styles.joinIcon}
+                  alt="calendar"
+                />
                 <input
                   type="text"
                   name="birth"
@@ -137,7 +142,11 @@ const TeacherJoin = () => {
                 <button type="submit" className={styles.joinBtn}>
                   가입
                 </button>
-                <button type="button" className={styles.joinBtn} onClick={() => window.location.reload()}>
+                <button
+                  type="button"
+                  className={styles.joinBtn}
+                  onClick={() => window.location.reload()}
+                >
                   취소
                 </button>
               </div>

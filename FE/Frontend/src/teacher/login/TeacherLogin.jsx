@@ -34,11 +34,11 @@ const TeacherLogin = () => {
       })
       .then(function (response) {
         console.log("axios 성공", response);
-        alert('성공')
+        alert("성공");
       })
       .catch(function (error) {
         console.error("axios 실패", error);
-        alert('실패', error)
+        alert("실패", error);
       });
   };
 

@@ -21,7 +21,6 @@ public class Consult {
     @Column(name = "consult_id")
     private Integer consultId;
 
-    @NotNull
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "appointment_id", nullable = false)
     private Appointment appointment;
@@ -31,7 +30,6 @@ public class Consult {
     @Column(name = "actual_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime actualDate;
 
-    @NotNull
     @Column(name = "running_time")
     private Integer runningTime;
 
@@ -43,8 +41,6 @@ public class Consult {
 
     @Enumerated(EnumType.STRING)
     private ConsultTopic topic;
-
-
 
     @Column(name = "webrtc_session_id", length = 100)
     private String webrtcSessionId;

@@ -6,11 +6,14 @@ import com.ssafy.ssam.domain.consult.service.ConsultService;
 import com.ssafy.ssam.global.error.ErrorCode;
 import com.ssafy.ssam.global.error.exception.BindingException;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,6 +31,10 @@ public class ConsultController {
 //        if(bindingResult.hasErrors()) throw new BindingException(ErrorCode.BINDING_ERROR,bindingResult.getFieldError().getDefaultMessage());
 //        return ResponseEntity.ok(consultService.createAppointment(teacherId, appointmentRequestDto));
 //    }
+    @GetMapping("/{teacherId}")
+    public ResponseEntity<List<AppointmentResponseDto>> getAppointments(@PathVariable Integer teacherId) {
+        return ResponseEntity.ok(consultService.getAppointments(teacherId));
+    }
 
     @PostMapping("/{teacherId}")
     public ResponseEntity<AppointmentResponseDto> createAppointment (@PathVariable Integer teacherId, @Valid @RequestBody AppointmentRequestDto appointmentRequestDto) {

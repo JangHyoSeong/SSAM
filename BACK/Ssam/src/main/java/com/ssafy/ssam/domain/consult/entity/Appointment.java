@@ -50,10 +50,10 @@ public class Appointment {
     @ColumnDefault("'BEFORE'") // default 값 설정
     private AppointmentStatus status;
 
-    public static Appointment toAppointment(User student, User teacher, AppointmentRequestDto appointmentRequestDto){
+    public static Appointment toAppointment(User teacher, User user, AppointmentRequestDto appointmentRequestDto){
         return Appointment.builder()
                 .teacher(teacher)
-                .student(student)
+                .student(user)
                 .topic(appointmentRequestDto.getTopic())
                 .startTime(appointmentRequestDto.getStartTime())
                 .endTime(appointmentRequestDto.getEndTime())

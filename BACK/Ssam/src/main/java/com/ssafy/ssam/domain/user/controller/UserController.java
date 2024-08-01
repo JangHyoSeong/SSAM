@@ -1,5 +1,6 @@
 package com.ssafy.ssam.domain.user.controller;
 
+import com.ssafy.ssam.domain.user.dto.request.JoinRequestDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,13 +30,13 @@ public class UserController {
     
     
     @PostMapping("/students")
-    public ResponseEntity<CommonResponseDto> studentJoinProcess(@Valid @RequestBody UserDto userDto){
-        return ResponseEntity.ok(joinService.studentJoinProcess(userDto));
+    public ResponseEntity<CommonResponseDto> studentJoinProcess(@Valid @RequestBody JoinRequestDto joinRequestDto){
+        return ResponseEntity.ok(joinService.studentJoinProcess(joinRequestDto));
     }
 
     @PostMapping("/teachers")
-    public ResponseEntity<CommonResponseDto> teacherJoinProcess(@Valid @RequestBody UserDto userDto){
-        return ResponseEntity.ok(joinService.teacherJoinProcess(userDto));
+    public ResponseEntity<CommonResponseDto> teacherJoinProcess(@Valid @RequestBody  JoinRequestDto joinRequestDto){
+        return ResponseEntity.ok(joinService.teacherJoinProcess(joinRequestDto));
     }
     
 }

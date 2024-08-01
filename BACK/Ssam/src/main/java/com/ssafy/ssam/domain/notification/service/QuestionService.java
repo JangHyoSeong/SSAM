@@ -102,7 +102,6 @@ public class QuestionService {
             throw new CustomException(ErrorCode.IllegalArgument);
         if(!question.getBoard().getBoardId().equals(answerRequestDto.getBoardId()))
             throw new CustomException(ErrorCode.IllegalArgument);
-
         question.setAnswer(answerRequestDto.getAnswer());
 
         return Question.toAnswerResponseDto(question);

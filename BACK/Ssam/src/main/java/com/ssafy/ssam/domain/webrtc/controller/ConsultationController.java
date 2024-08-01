@@ -22,7 +22,7 @@ import com.google.gson.JsonObject;
 import com.ssafy.ssam.domain.webrtc.model.ConsultationRoom;
 
 @RestController
-@RequestMapping("/api/consultation")
+@RequestMapping("v1/kurento")
 public class ConsultationController extends TextWebSocketHandler {
 
     @Autowired
@@ -138,6 +138,7 @@ public class ConsultationController extends TextWebSocketHandler {
 
     private void handleError(WebSocketSession session, String message) throws IOException {
         JsonObject response = new JsonObject();
+        System.out.println("Handle Error!!\n");
         response.addProperty("id", "error");
         response.addProperty("message", message);
         sendMessage(session, response.toString());

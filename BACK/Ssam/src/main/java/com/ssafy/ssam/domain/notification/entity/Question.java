@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @DynamicInsert
+@Table(name = "question")
 public class Question {
 
     @Id

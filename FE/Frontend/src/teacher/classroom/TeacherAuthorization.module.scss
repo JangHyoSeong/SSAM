@@ -37,9 +37,8 @@
 }
 
 .table {
-  width: 80%; /* 테이블을 중앙에 정렬하기 위해 너비를 조정 */
+  width: 100%; /* 테이블을 중앙에 정렬하기 위해 너비를 조정 */
   border-collapse: collapse; /* 테이블 셀 간의 경계를 제거 */
-  margin-top: 1rem;
   text-align: center; /* 모든 텍스트를 중앙 정렬 */
 
   thead {
@@ -53,6 +52,22 @@
         border-right: none;
         font-weight: bold;
         border-top: none; /* 헤더 셀의 윗쪽 경계선 제거 */
+      }
+
+      .nameColumn {
+        width: 20%; /* 신청한 사람 열 너비 */
+      }
+
+      .idColumn {
+        width: 20%; /* 아이디 열 너비 */
+      }
+
+      .dateColumn {
+        width: 15%; /* 신청일 열 너비 */
+      }
+
+      .actionColumn {
+        width: 25%; /* 관리 열 너비 */
       }
     }
   }
@@ -79,7 +94,7 @@
 .approveButton {
   border-radius: 25px; /* 둥근 모서리 */
   padding: 0.8vh 2vh;
-  margin: 0 1vw;
+  margin: 0 0.5vw;
   color: black;
   border: 0.5px solid #d7e4ff;
   background-color: #d7e4ff;
@@ -95,7 +110,7 @@
 .rejectButton {
   border-radius: 25px; /* 둥근 모서리 */
   padding: 0.8vh 2vh;
-  margin: 0 1vw;
+  margin: 0 0.5vw;
   border: 1px solid #b7b7b7;
   background-color: white;
   // box-shadow: 0 0.2vh 0.5vh rgba(1, 1, 1, 0.3);

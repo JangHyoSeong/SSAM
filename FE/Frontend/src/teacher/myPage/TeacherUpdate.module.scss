@@ -80,7 +80,7 @@ table {
 }
 
 .profileImg {
-  width: 10vw;
+  width: 11vw;
   height: 25vh;
   margin-top: 2%;
   background-color: #e0e0e0;
@@ -91,18 +91,19 @@ table {
 }
 
 .imgBtn {
-  width: 4vw;
-  height: 4vh;
+  width: 5.5vw;
+  height: 3.7vh;
   font-size: 80%;
-  margin: 2%;
+  margin: 2% 0%;
   background-color: white;
+  cursor: pointer;
 }
 
-.imgBtn:hover {
-  background-color: #5285ee;
-  color: white;
-  border: none;
-}
+// .imgBtn:hover {
+//   background-color: #5285ee;
+//   color: white;
+//   border: none;
+// }
 
 .formBtnArray {
   display: flex;

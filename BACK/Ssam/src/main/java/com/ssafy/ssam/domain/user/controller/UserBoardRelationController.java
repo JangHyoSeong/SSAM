@@ -1,8 +1,7 @@
 package com.ssafy.ssam.domain.user.controller;
 
-import com.amazonaws.Response;
 import com.ssafy.ssam.domain.user.dto.response.StudentRegistInfoDTO;
-import com.ssafy.ssam.domain.user.service.StudentManagementService;
+import com.ssafy.ssam.domain.user.service.UserBoardRelationService;
 import com.ssafy.ssam.global.dto.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +12,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("v1/classrooms/teachers/students")
-public class StudentManagementController {
+public class UserBoardRelationController {
 
-    private final StudentManagementService studentManagementService;
+    private final UserBoardRelationService studentManagementService;
 
     // 학급에 보낸 등록 요청을 확인하는 컨트롤러
     @GetMapping()

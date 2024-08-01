@@ -1,4 +1,4 @@
-package com.ssafy.ssam.domain.webrtc.model;
+package com.ssafy.ssam.global.webrtc.model;
 
 import java.io.Closeable;
 import java.io.IOException;

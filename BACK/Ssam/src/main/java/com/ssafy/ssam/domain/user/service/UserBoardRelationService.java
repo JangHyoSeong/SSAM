@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class StudentManagementService {
+public class UserBoardRelationService {
 
     private final UserRepository userRepository;
     private final UserBoardRelationRepository userBoardRelationRepository;

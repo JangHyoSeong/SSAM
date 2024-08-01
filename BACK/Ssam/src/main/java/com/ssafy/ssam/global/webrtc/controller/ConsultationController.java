@@ -19,7 +19,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.ssafy.ssam.domain.webrtc.model.ConsultationRoom;
+import com.ssafy.ssam.global.webrtc.model.ConsultationRoom;
 
 @RestController
 @RequestMapping("/api/consultation")

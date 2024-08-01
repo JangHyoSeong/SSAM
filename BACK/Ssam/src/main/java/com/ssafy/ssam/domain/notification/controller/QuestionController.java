@@ -1,6 +1,7 @@
 package com.ssafy.ssam.domain.notification.controller;
 
 import com.ssafy.ssam.domain.consult.service.ConsultService;
+import com.ssafy.ssam.domain.notification.dto.request.AnswerRequestDto;
 import com.ssafy.ssam.domain.notification.dto.request.QuestionRequestDto;
 import com.ssafy.ssam.domain.notification.dto.response.QuestionResponseDto;
 import com.ssafy.ssam.domain.notification.service.QuestionService;
@@ -41,4 +42,10 @@ public class QuestionController {
         log.info("controller - deleteQuestion");
         return ResponseEntity.ok(questionService.deleteQuestion(questionId));
     }
+    @PutMapping("/answers/{questionId}")
+    public ResponseEntity<QuestionResponseDto> createAnswer(@PathVariable Integer questionId, @Valid @RequestBody AnswerRequestDto answerRequestDto) {
+        log.info("controller - createAnswer");
+        return ResponseEntity.ok(questionService.createAnswer(questionId, answerRequestDto));
+    }
+
 }

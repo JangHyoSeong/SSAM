@@ -34,6 +34,8 @@ public class CustomUserDetails implements UserDetails{
         });
         return collection;
     }
+    public String getRole() { return role; }
+
     public Integer getUserId() { return userId; }
 
     public Integer getBoardId() { return boardId; }

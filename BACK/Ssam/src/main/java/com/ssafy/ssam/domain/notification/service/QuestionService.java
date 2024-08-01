@@ -2,12 +2,14 @@ package com.ssafy.ssam.domain.notification.service;
 
 import com.ssafy.ssam.domain.classroom.entity.Board;
 import com.ssafy.ssam.domain.classroom.repository.BoardRepository;
+import com.ssafy.ssam.domain.notification.dto.request.AnswerRequestDto;
 import com.ssafy.ssam.domain.notification.dto.request.QuestionRequestDto;
 import com.ssafy.ssam.domain.notification.dto.response.QuestionResponseDto;
 import com.ssafy.ssam.domain.notification.entity.Question;
 import com.ssafy.ssam.domain.notification.repository.QuestionRepository;
 import com.ssafy.ssam.domain.user.dto.CustomUserDetails;
 import com.ssafy.ssam.domain.user.entity.User;
+import com.ssafy.ssam.domain.user.entity.UserRole;
 import com.ssafy.ssam.domain.user.repository.UserRepository;
 import com.ssafy.ssam.global.dto.CommonResponseDto;
 import com.ssafy.ssam.global.error.CustomException;
@@ -70,9 +72,17 @@ public class QuestionService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails details = (CustomUserDetails) authentication.getPrincipal();
 
+        // 사용자 존재여부 검증
+        User user = userRepository.findByUsername(details.getUsername())
+                .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
+        // 질문의 존재여부 검증
         Question question = questionRepository.findByQuestionId(questionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.QuestionNotFoundException));
+        // 질문을 지울 권한이 있는 사용자인지 확인
+        // 1) 같은 반 선생님 2) 작성자 본인
         if(!question.getBoard().getBoardId().equals(details.getBoardId()))
+            throw new CustomException(ErrorCode.IllegalArgument);
+        if(!details.getRole().equals(UserRole.STUDENT.toString()) && !details.getUserId().equals(question.getStudent().getUserId()))
             throw new CustomException(ErrorCode.IllegalArgument);
 
         questionRepository.delete(question);
@@ -80,18 +90,22 @@ public class QuestionService {
         return new CommonResponseDto("ok");
     }
 
-    public CommonResponseDto deleteQuestion(Integer questionId) {
+    public QuestionResponseDto createAnswer(Integer questionId, AnswerRequestDto answerRequestDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails details = (CustomUserDetails) authentication.getPrincipal();
 
+        // 질문의 존재여부 검증
         Question question = questionRepository.findByQuestionId(questionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.QuestionNotFoundException));
+        // 질문의 학급 == 요청된 학급 == 사용자가 포함된 학급 확인
         if(!question.getBoard().getBoardId().equals(details.getBoardId()))
             throw new CustomException(ErrorCode.IllegalArgument);
+        if(!question.getBoard().getBoardId().equals(answerRequestDto.getBoardId()))
+            throw new CustomException(ErrorCode.IllegalArgument);
 
-        questionRepository.delete(question);
+        question.setAnswer(answerRequestDto.getAnswer());
 
-        return new CommonResponseDto("ok");
+        return Question.toAnswerResponseDto(question);
     }
 
 

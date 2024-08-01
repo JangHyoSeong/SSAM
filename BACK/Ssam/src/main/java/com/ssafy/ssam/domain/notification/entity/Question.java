@@ -69,4 +69,14 @@ public class Question {
                 .answerDate(question.getAnswerDate())
                 .build();
     }
+    public static QuestionResponseDto toAnswerResponseDto(Question question) {
+        return QuestionResponseDto.builder()
+                .boardId(question.getBoard().getBoardId())
+                .studentId(question.getStudent().getUserId())
+                .content(question.getContent())
+                .answer(question.getAnswer())
+                .contentDate(question.getContentDate())
+                .answerDate(question.getAnswerDate())
+                .build();
+    }
 }

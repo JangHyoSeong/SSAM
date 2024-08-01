@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.ssafy.ssam.domain.classroom.entity.Board;
 import com.ssafy.ssam.domain.classroom.entity.School;
+import com.ssafy.ssam.domain.classroom.entity.UserBoardRelation;
 import com.ssafy.ssam.domain.user.entity.UserRole;
 
 import lombok.AllArgsConstructor;
@@ -25,7 +26,7 @@ public class UserDto {
     private String phone;
     private School school;
     private UserRole role;
-    private List<Board> boards;
+    private List<UserBoardRelation> boards;
     private String imgUrl;
     private LocalDate birth;
     private String otherName;

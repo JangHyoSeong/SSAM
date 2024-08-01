@@ -22,6 +22,8 @@ public enum ErrorCode {
     InvalidImageType(HttpStatus.BAD_REQUEST, "잘못된 이미지 파일입니다."),
 
     // consultException
+    AppointmentNotFoundException(HttpStatus.NOT_FOUND, "존재하지 않는 예약입니다"),
+    ConsultNotFountException(HttpStatus.NOT_FOUND, "존재하지 않는 상담입니다"),
     UnavailableDate(HttpStatus.BAD_REQUEST, "예약이 불가능한 날짜입니다."),
 
     // boardException

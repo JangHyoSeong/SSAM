@@ -8,6 +8,7 @@ import com.ssafy.ssam.domain.notification.entity.Alarm;
 import com.ssafy.ssam.domain.notification.entity.Question;
 //import com.ssafy.ssam.domain.user.converter.UserRoleConverter;
 import com.ssafy.ssam.domain.user.dto.UserDto;
+import com.ssafy.ssam.domain.user.dto.request.JoinRequestDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -126,7 +127,7 @@ public class User {
                 .email(ssamUserDto.getEmail())
                 .phone(ssamUserDto.getPhone())
                 .school(ssamUserDto.getSchool())
-//                .boards(ssamUserDto.getBoards())
+                .boards(ssamUserDto.getBoards())
                 .imgUrl(ssamUserDto.getImgUrl())
                 .role(ssamUserDto.getRole())
                 .birth(ssamUserDto.getBirth())
@@ -135,6 +136,17 @@ public class User {
                 .otherRelation(ssamUserDto.getOtherRelation())
                 .username(ssamUserDto.getUsername())
                 .password(ssamUserDto.getPassword())
+                .build();
+    }
+
+    public static User JoinRequestToUser(JoinRequestDto requestDto){
+        return User.builder()
+                .name(requestDto.getName())
+                .email(requestDto.getEmail())
+                .phone(requestDto.getPhone())
+                .birth(requestDto.getBirth())
+                .username(requestDto.getUsername())
+                .password(requestDto.getPassword())
                 .build();
     }
 

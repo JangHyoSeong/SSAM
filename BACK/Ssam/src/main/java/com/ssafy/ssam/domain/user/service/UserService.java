@@ -3,6 +3,7 @@ package com.ssafy.ssam.domain.user.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.ssafy.ssam.domain.user.dto.request.JoinRequestDto;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,26 +23,27 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Builder
 @Service
+@Transactional
 public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Transactional
-    public CommonResponseDto teacherJoinProcess(UserDto userDto){
+    public CommonResponseDto teacherJoinProcess(JoinRequestDto userDto){
         if(userRepository.existsByUsername(userDto.getUsername())) throw new DuplicateUserNameException(ErrorCode.DuplicateUserName);
-        userDto.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
-        userDto.setRole(UserRole.TEACHER);
-        userRepository.save(User.toUser(userDto));
+        User user = User.JoinRequestToUser(userDto);
+        user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+        user.setRole(UserRole.TEACHER);
+        userRepository.save(user);
 
         return new CommonResponseDto("OK");
     }
-    
-    @Transactional
-    public CommonResponseDto studentJoinProcess(UserDto userDto){
+
+    public CommonResponseDto studentJoinProcess(JoinRequestDto userDto){
         if(userRepository.existsByUsername(userDto.getUsername())) throw new DuplicateUserNameException(ErrorCode.DuplicateUserName);
-        userDto.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
-        userDto.setRole(UserRole.STUDENT);
-        userRepository.save(User.toUser(userDto));
+        User user = User.JoinRequestToUser(userDto);
+        user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+        user.setRole(UserRole.STUDENT);
+        userRepository.save(user);
 
         return new CommonResponseDto("OK");
     }

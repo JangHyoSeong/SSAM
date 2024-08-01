@@ -61,8 +61,19 @@ public class ConsultationController extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         // WebSocket 연결 성공 시 처리
+        JsonObject response = new JsonObject();
+        response.addProperty("id", "connectionEstablished");
+        response.addProperty("message", "WebSocket connection established successfully");
+        sendMessage(session, response.toString());
+        
+        System.out.println("New WebSocket connection established: " + session.getId());
     }
+    
+    
 
+    
+    
+    
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();

@@ -80,9 +80,13 @@ public class SecurityConfig {
                .httpBasic((auth) -> auth.disable())
                .authorizeHttpRequests((auth) -> auth
 //                 아무 허용 필요없는 접근 -> 회원가입, 첫 화면, 비밀번호 찾기
+<<<<<<< HEAD
             		   .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
             		.requestMatchers("/v1/kurento/**", "/v1/kurento").permitAll()
                     .requestMatchers("/v1/auth/**").permitAll()
+=======
+                    .requestMatchers("/v1/auth/**", "v1/schools").permitAll()
+>>>>>>> d73480385c8e9683d3155f9f17779edad0df3ac9
                 // 선생이라는 권한이 필요한 url
                     .requestMatchers("/v1/classrooms/answers/**", "/v1/classrooms/teachers/**", "/v1/consults/teachers/**").permitAll()
 

@@ -14,6 +14,7 @@ import java.util.List;
 @Setter
 @Builder
 @Entity
+@Table(name = "board")
 public class Board {
 
     @Id

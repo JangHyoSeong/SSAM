@@ -9,6 +9,7 @@ import com.ssafy.ssam.domain.classroom.entity.UserBoardRelation;
 import com.ssafy.ssam.domain.classroom.entity.UserBoardRelationStatus;
 import com.ssafy.ssam.domain.classroom.repository.BoardRepository;
 import com.ssafy.ssam.domain.classroom.repository.UserBoardRelationRepository;
+import com.ssafy.ssam.domain.user.dto.response.StudentInfoListDTO;
 import com.ssafy.ssam.domain.user.entity.User;
 import com.ssafy.ssam.domain.user.repository.UserRepository;
 import com.ssafy.ssam.global.dto.CommonResponseDto;
@@ -23,8 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -38,7 +40,7 @@ public class BoardService {
 
     // 보드 생성
     @Transactional
-    public BoardGetResponseDTO createBoard(BoardCreateRequestDTO requestDTO) {
+    public CommonResponseDto createBoard(BoardCreateRequestDTO requestDTO) {
         User user = findUserByToken();
 
         if (user == null) throw new IllegalArgumentException("user doesn't exist");
@@ -76,7 +78,7 @@ public class BoardService {
 
         userBoardRelationRepository.save(relation);
 
-        return convertToResponseDTO(savedBoard);
+        return new CommonResponseDto("Successfully Make Board");
     }
 
     // id를 통해 board 찾기
@@ -84,7 +86,16 @@ public class BoardService {
     public BoardGetResponseDTO getBoardById(int classId) {
         Board board = boardRepository.findById(classId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
-        return convertToResponseDTO(board);
+
+        List<User> users = userBoardRelationRepository.findUsersByBoardAndStatus(board, UserBoardRelationStatus.ACCEPTED);
+        log.info(users.toString());
+        List<StudentInfoListDTO> userInfoList = users != null ? users.stream()
+                .map(user -> StudentInfoListDTO.builder()
+                        .name(user.getName())
+                        .profileImage(user.getImgUrl())
+                        .build())
+                .collect(Collectors.toList()) : null;
+        return convertToResponseDTO(board, userInfoList);
     }
 
     // 학급 검색 - 학생
@@ -209,7 +220,7 @@ public class BoardService {
     }
 
     // 응답 객체 생성
-    private BoardGetResponseDTO convertToResponseDTO(Board board) {
+    private BoardGetResponseDTO convertToResponseDTO(Board board, List<StudentInfoListDTO> users) {
         return BoardGetResponseDTO.builder()
                 .boardId(board.getBoardId())
                 .banner(board.getBanner())
@@ -218,6 +229,7 @@ public class BoardService {
                 .grade(board.getGrade())
                 .notice(board.getNotice())
                 .classroom(board.getClassroom())
+                .students(users)
                 .build();
     }
 

@@ -19,6 +19,7 @@ import java.util.Date;
 @Setter
 @Builder
 @DynamicInsert // 애초에 날릴때 null은 배제하고 날려야 default값이 입력된다. 그래서 배제하도록 해주는 어노테이션
+@Table(name = "appointment")
 public class Appointment {
 
     @Id

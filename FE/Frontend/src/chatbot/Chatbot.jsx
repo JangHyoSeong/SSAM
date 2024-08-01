@@ -1,9 +1,10 @@
 import { useState } from "react";
 import styles from "./Chatbot.module.scss";
 import SSAM from "../assets/SSAM.png";
-import chatbotImg from "../assets/chatbot.png";
-import book from "../assets/bookblue.png";
 import chat from "../assets/chat.png";
+import upload from "../assets/upload.png";
+import book from "../assets/bookblue.png";
+import chatbotImg from "../assets/chatbot.png";
 import ChatbotChatModal from "./ChatbotChatModal";
 
 const Chatbot = () => {
@@ -36,8 +37,11 @@ const Chatbot = () => {
         <div className={styles.formBox}>
           <img src={SSAM} className={styles.logo} />
           <hr />
-          <div className={styles.chatContent}>
-            <p>이곳은 학습방입니다</p>
+          <div className={styles.chatArray}>
+            <h4>SSAM 학습하기</h4>
+            <div className={styles.chatContent}></div>
+            <img src={upload} className={styles.uploadImg} />
+            <input form="text" className={styles.textInput} placeholder="채팅을 입력하세요" />
           </div>
           <div className={styles.chatMenu}>
             <div className={styles.imgBox}>

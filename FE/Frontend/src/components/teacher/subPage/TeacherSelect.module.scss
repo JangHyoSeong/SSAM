@@ -1,15 +1,3 @@
-// Variables
-$primary-color: #5285ee;
-$background-color-light: #dae9ff;
-$white-color: #ffffff;
-$black-color: #000000;
-$box-shadow-default: 4px 4px 4px rgba($black-color, 0.4);
-$box-shadow-hover: 4px 4px 4px rgba($black-color, 0.2);
-$text-color: $white-color;
-$button-color: $primary-color;
-$button-bg-color: $white-color;
-
-// Keyframes
 @keyframes fadeIn {
   to {
     opacity: 1;
@@ -26,7 +14,7 @@ $button-bg-color: $white-color;
   }
 }
 
-// Styles
+/* Styles */
 .menuArray {
   height: 100vh;
 }
@@ -38,27 +26,28 @@ $button-bg-color: $white-color;
   align-items: center;
   width: 50vw;
   height: 20vh;
-  background-color: $background-color-light;
+  background-color: #dae9ff;
   border-radius: 25px;
-  box-shadow: $box-shadow-default;
+  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   opacity: 0;
   animation: fadeIn 1s ease-in forwards;
   text-align: center;
+}
 
-  &:hover {
-    transform: translateY(-10px);
-    box-shadow: $box-shadow-hover;
-  }
+.classBtn {
+  padding: 1% 4%;
+  border-radius: 25px;
+  color: #5285ee;
+  font-size: 120%;
+  border-color: #5285ee;
+  background-color: white;
+}
 
-  button {
-    padding: 1% 4%;
-    border-radius: 25px;
-    color: $button-color;
-    font-size: 120%;
-    border-color: $button-color;
-    background-color: $button-bg-color;
-  }
+.classBtn:hover {
+  border: none;
+  background-color: #5285ee;
+  color: white;
 }
 
 .inviteTxtBox {
@@ -74,17 +63,17 @@ $button-bg-color: $white-color;
 
 .menuBox {
   width: 24vw;
-  background-color: $primary-color;
+  background-color: #5285ee;
   border-radius: 25px;
-  box-shadow: $box-shadow-default;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.4);
   text-decoration: none;
-  color: $text-color;
+  color: #ffffff;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-  &:hover {
-    transform: translateY(-10px);
-    box-shadow: $box-shadow-hover;
-  }
+.menuBox:hover {
+  transform: translateY(-10px);
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
 }
 
 .menuBox1 {
@@ -136,4 +125,3 @@ $button-bg-color: $white-color;
   font-weight: bold;
   animation: moveUpDown 5s infinite;
 }
-

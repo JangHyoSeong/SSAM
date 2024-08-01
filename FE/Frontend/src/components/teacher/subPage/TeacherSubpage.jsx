@@ -1,11 +1,15 @@
 import TeacherSelect from "./TeacherSelect";
-import TeacherExplan from "./TeacherExplan";
+import Explan from "../../mainPage/Explan";
+import Direct from "../../mainPage/Direct";
+import Footer from "../../mainPage/Footer";
 
 const TeacherSubpage = () => {
   return (
     <>
       <TeacherSelect />
-      <TeacherExplan />
+      <Direct />
+      <Explan />
+      <Footer />
     </>
   );
 };

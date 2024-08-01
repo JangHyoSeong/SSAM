@@ -14,6 +14,7 @@ import java.util.List;
 @Setter
 @Builder
 @Entity
+@Table(name = "board")
 public class Board {
 
     @Id
@@ -21,7 +22,6 @@ public class Board {
     @Column(name = "board_id")
     private Integer boardId;
 
-    @NotNull
     @Column(unique = true, nullable = false, length = 6)
     private String pin;
 
@@ -34,18 +34,16 @@ public class Board {
     @Column(columnDefinition = "TEXT")
     private String notice;
 
-    @NotNull
     @Column(columnDefinition = "TINYINT CHECK (grade BETWEEN 1 AND 6)", nullable = false)
     private Integer grade;
 
-    @NotNull
     @Column(columnDefinition = "TINYINT", nullable = false)
     private Integer classroom;
 
     @Column(name = "consult_url")
     private String consultUrl;
 
-    @Column(name = "is_deprecated", nullable = false)
+    @Column(name = "is_deprecated", columnDefinition = "TINYINT(1)", nullable = false)
     private Integer isDeprecated;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true)

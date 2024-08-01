@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './TeacherDeleteModal.module.scss';
 import { BsExclamationTriangle } from 'react-icons/bs';
 

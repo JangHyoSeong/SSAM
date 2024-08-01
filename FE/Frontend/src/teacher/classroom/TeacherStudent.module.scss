@@ -1,7 +1,7 @@
 .studentList {
   display: grid;
   grid-template-columns: repeat(6, 1fr); /* 6열로 설정 */
-  gap: 4vw; /* 각 학생 아이템 간의 간격 조정 */
+  // gap: 4vw; /* 각 학생 아이템 간의 간격 조정 */
   width: 100%; /* 부모 요소의 너비를 채우도록 설정 */
 }
 
@@ -31,10 +31,8 @@
 
 .studentName {
   margin-top: 1vh; /* 사진과 이름 간의 간격을 줄임 */
-  margin-bottom: -13vh;
   text-align: center;
   font-size: 23px;
-  padding-bottom: 5vh;
 }
 
 .studentLink {

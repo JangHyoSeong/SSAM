@@ -6,14 +6,17 @@ import com.ssafy.ssam.domain.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Setter
 @Getter
 public class QuestionRequestDto {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import axios from "../../../utils/axiosConfig";
+import axios from "../../../utils/axiosInstance";
 import login from "./ParentsLogin.module.scss";
 import round1 from "../../../assets/round1.png";
 import round2 from "../../../assets/round2.png";

@@ -1,23 +1,11 @@
-// 예시코드
-
-// import { localAxios } from "@/utils/request";
-
-// const axios = localAxios();
-
-// export const getUser = (nickname, success, fail) => {
-//   console.log("getUser");
-//   axios.get(`/user/${nickname}`).then(success).catch(fail);
-// };
-
-// import axiosConfig from "../utils/axiosConfig";
-
-import axios from "axios";
+// 로그인은 qurystring으로 요청 보내야함.
+import axiosConfig from "../utils/axiosInstance";
 
 const loginUser = (username, password) => {
-  return axios.post("http://localhost:8081/v1/auth/login", {
-    username: username,
-    password: password,
-  });
+  const queryString = `username=${encodeURIComponent(
+    username
+  )}&password=${encodeURIComponent(password)}`;
+  return axiosConfig.post(`http://localhost:8081/v1/auth/login?${queryString}`);
 };
 
 export { loginUser };

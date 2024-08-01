@@ -1,4 +1,4 @@
-package com.ssafy.ssam.global.webrtc.controller;
+package com.ssafy.ssam.domain.webrtc.controller;
 
 import com.google.gson.JsonObject;
 import io.openvidu.java.client.*;

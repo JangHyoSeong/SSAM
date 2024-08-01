@@ -1,8 +1,9 @@
 import axios from "axios";
 
+// instance를 사용한 axios요청은 main.jsx에서 사용한 default값을 덮어씌운다.
 const axiosInstance = axios.create({
   withCredentials: true,
-  baseURL: "http://localhost:8081/api/v1",
+  // 로그인 할때는 baseURL필요없음. /api/v1을 작성안함.
 });
 
 // 가지고 있는 토큰 넣어주기!

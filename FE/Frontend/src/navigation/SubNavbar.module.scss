@@ -1,8 +1,5 @@
 .navArray {
   white-space: nowrap;
-  position: relative;
-  top: 0%;
-  left: 68%;
   display: flex;
   justify-content: space-evenly;
   gap: 10%;
@@ -25,8 +22,6 @@
 }
 
 .alram {
-  position: absolute;
-  top: -20%;
-  left: -40%;
-  width: 1.8vw;
+  width: 1.5vw;
+  cursor: pointer;
 }

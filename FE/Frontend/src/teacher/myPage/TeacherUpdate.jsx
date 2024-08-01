@@ -4,12 +4,12 @@ import styles from './TeacherUpdate.module.scss';
 
 const TeacherUpdate = () => {
   return (
-    <div className={styles.array}>
-      <div className={styles.menuArray}>
-        <div className={styles.updateMenu}>
+    <div className={styles.Container}>
+      <div className={styles.menuNavbar}>
+        <div className={styles.updateItem}>
           회원정보 수정
         </div>
-        <NavLink to="/teacherpasswordchange" className={styles.changeMenu}>
+        <NavLink to="/teacherpasswordchange" className={styles.changeItem}>
           비밀번호 변경
         </NavLink>
       </div>

@@ -4,12 +4,12 @@ import styles from "./TeacherPasswordChange.module.scss";
 
 const TeacherPasswordChange = () => {
   return (
-    <div className={styles.array}>
-      <div className={styles.menuArray}>
-        <NavLink to="/teacherupdate" className={styles.updateMenu}>
+    <div className={styles.Container}>
+      <div className={styles.menuNavbar}>
+        <NavLink to="/teacherupdate" className={styles.updateItem}>
           회원정보 수정
         </NavLink>
-        <div className={styles.changeMenu}>비밀번호 변경</div>
+        <div className={styles.changeItem}>비밀번호 변경</div>
       </div>
       <div className={styles.formArray}>
         <div className={styles.passwordFormArray}>

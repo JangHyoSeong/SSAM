@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -20,6 +20,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.ssafy.ssam.domain.webrtc.model.ConsultationRoom;
+import com.ssafy.ssam.global.webrtc.dto.RoomRequest;
 
 @RestController
 @RequestMapping("v1/kurento")
@@ -31,8 +32,9 @@ public class ConsultationController extends TextWebSocketHandler {
     private final ConcurrentHashMap<String, ConsultationRoom> consultationRooms = new ConcurrentHashMap<>();
 
     @PostMapping("/room")
-    public ResponseEntity<String> createRoom(@RequestParam String roomName) {
-    	System.out.println("REQUESTED");
+    public ResponseEntity<String> createRoom(@RequestBody RoomRequest roomRequest) {
+    	System.out.println("createRoom Function Called");
+        String roomName = roomRequest.getRoomName();
         if (consultationRooms.containsKey(roomName)) {
             return ResponseEntity.badRequest().body("Room already exists");
         }
@@ -97,6 +99,7 @@ public class ConsultationController extends TextWebSocketHandler {
     }
 
     private void joinRoom(JsonObject params, WebSocketSession session) throws IOException {
+    	System.out.println("joinRoom Function Called");
         String roomName = params.get("room").getAsString();
         String userName = params.get("name").getAsString();
 

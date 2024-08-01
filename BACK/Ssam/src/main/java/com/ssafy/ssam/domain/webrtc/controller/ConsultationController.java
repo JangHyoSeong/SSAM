@@ -32,6 +32,7 @@ public class ConsultationController extends TextWebSocketHandler {
 
     @PostMapping("/room")
     public ResponseEntity<String> createRoom(@RequestParam String roomName) {
+    	System.out.println("REQUESTED");
         if (consultationRooms.containsKey(roomName)) {
             return ResponseEntity.badRequest().body("Room already exists");
         }

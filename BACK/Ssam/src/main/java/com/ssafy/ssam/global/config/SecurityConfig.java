@@ -1,10 +1,5 @@
 package com.ssafy.ssam.global.config;
 
-import com.ssafy.ssam.global.auth.jwt.JwtFilter;
-import com.ssafy.ssam.global.auth.jwt.JwtUtil;
-import com.ssafy.ssam.global.auth.jwt.LoginFilter;
-import lombok.Builder;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +11,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsUtils;
+
+import com.ssafy.ssam.global.auth.jwt.JwtFilter;
+import com.ssafy.ssam.global.auth.jwt.JwtUtil;
+import com.ssafy.ssam.global.auth.jwt.LoginFilter;
+
+import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 
 @Builder
 @RequiredArgsConstructor
@@ -77,7 +80,8 @@ public class SecurityConfig {
                .httpBasic((auth) -> auth.disable())
                .authorizeHttpRequests((auth) -> auth
 //                 아무 허용 필요없는 접근 -> 회원가입, 첫 화면, 비밀번호 찾기
-            		.requestMatchers("/v1/kurento/**").permitAll()
+            		   .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+            		.requestMatchers("/v1/kurento/**", "/v1/kurento").permitAll()
                     .requestMatchers("/v1/auth/**").permitAll()
                 // 선생이라는 권한이 필요한 url
                     .requestMatchers("/v1/classrooms/answers/**", "/v1/classrooms/teachers/**", "/v1/consults/teachers/**").permitAll()

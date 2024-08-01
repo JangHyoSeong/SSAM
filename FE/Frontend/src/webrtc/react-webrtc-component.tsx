@@ -28,12 +28,12 @@ const WebRTCChat = () => {
         }
 
         try {
-            const response = await fetch(`http://i11e201.p.ssafy.io:8888/v1/kurento/room`, {
+            const response = await fetch(`http://localhost:8081/v1/kurento/room`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ roomName: room }), // 서버 API에 맞게 조정
+                body: JSON.stringify({ roomName: room }),
             });
 
             if (!response.ok) {
@@ -60,67 +60,90 @@ const WebRTCChat = () => {
     };
 
     const connectWebSocket = () => {
-        webSocketRef.current = new WebSocket('ws://i11e201.p.ssafy.io:8888/v1/kurento');
+        console.log('Attempting to connect WebSocket...');
+        const wsUrl = `ws://localhost:8081/v1/kurento`;
 
-        webSocketRef.current.onopen = () => {
-            console.log('WebSocket connection established');
+        console.log(`Connecting to WebSocket URL: ${wsUrl}`);
+        webSocketRef.current = new WebSocket(wsUrl);
+
+        webSocketRef.current.onopen = (event) => {
+            console.log('WebSocket connection established', event);
             setIsConnected(true);
             sendJoinRoomMessage();
         };
 
-        if (webSocketRef.current) {
-            webSocketRef.current.onmessage = (event) => {
+        webSocketRef.current.onmessage = (event) => {
+            console.log('WebSocket message received:', event.data);
+            try {
                 const message = JSON.parse(event.data);
                 handleMessage(message);
-            };
+            } catch (error) {
+                console.error('Error parsing message:', error);
+            }
+        };
 
-            webSocketRef.current.onclose = () => {
-                console.log('WebSocket connection closed');
-                setIsConnected(false);
-            };
+        webSocketRef.current.onclose = (event) => {
+            console.log('WebSocket connection closed', event);
+            setIsConnected(false);
+        };
 
-            webSocketRef.current.onerror = (error) => {
-                console.error('WebSocket error:', error);
-                setIsConnected(false);
-            };
-        }
+        webSocketRef.current.onerror = (error) => {
+            console.error('WebSocket error:', error);
+            setIsConnected(false);
+        };
     };
 
     const sendJoinRoomMessage = () => {
+        console.log('Sending join room message');
         const joinMessage = {
-            id: 'join',
-            room: room,
-            name: 'User_' + Math.floor(Math.random() * 1000),
+            jsonrpc: '2.0',
+            method: 'join',
+            params: {
+                room: room,
+                name: 'User_' + Math.floor(Math.random() * 1000),
+            },
+            id: Date.now(),
         };
         sendWebSocketMessage(joinMessage);
     };
+
     const handleMessage = (message) => {
         console.log('Received message:', message);
-        switch (message.id) {
-            case 'joinedRoom':
-                console.log('Successfully joined room:', message.roomName);
-                break;
-            case 'leftRoom':
-                console.log('Left room');
-                break;
-            case 'receiveVideoAnswer':
-                // Handle incoming video stream
-                break;
-            case 'iceCandidate':
-                // Handle ICE candidate
-                break;
-            default:
-                console.log('Unhandled message:', message);
+        if (message.error) {
+            console.error('Received error:', message.error);
+            return;
+        }
+        if (message.result) {
+            switch (message.result.id) {
+                case 'joinedRoom':
+                    console.log('Successfully joined room:', message.result.roomName);
+                    break;
+                case 'leftRoom':
+                    console.log('Left room');
+                    break;
+                case 'newChatMessage':
+                    if (message.result.user && message.result.message) {
+                        setChatMessages((prev) => [...prev, { sender: message.result.user, text: message.result.message }]);
+                    }
+                    break;
+                default:
+                    console.log('Unhandled message:', message);
+            }
         }
     };
 
     const sendChatMessage = () => {
         if (message && isConnected) {
+            console.log('Sending chat message');
             const chatMessage = {
-                id: 'chatMessage',
-                room: room,
-                name: 'User_' + Math.floor(Math.random() * 1000),
-                message: message,
+                jsonrpc: '2.0',
+                method: 'chatMessage',
+                params: {
+                    room: room,
+                    name: 'User_' + Math.floor(Math.random() * 1000),
+                    message: message,
+                },
+                id: Date.now(),
             };
             sendWebSocketMessage(chatMessage);
             setChatMessages((prev) => [...prev, { sender: 'You', text: message }]);
@@ -132,9 +155,10 @@ const WebRTCChat = () => {
 
     const sendWebSocketMessage = (message) => {
         if (webSocketRef.current && webSocketRef.current.readyState === WebSocket.OPEN) {
+            console.log('Sending WebSocket message:', message);
             webSocketRef.current.send(JSON.stringify(message));
         } else {
-            console.error('WebSocket is not connected');
+            console.error('WebSocket is not connected. Current state:', webSocketRef.current?.readyState);
         }
     };
 

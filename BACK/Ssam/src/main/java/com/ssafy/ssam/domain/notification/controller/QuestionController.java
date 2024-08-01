@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class QuestionController {
     private final QuestionService questionService;
 
-    @PostMapping("/{boardId}")
+    @PostMapping("/questions/{boardId}")
     public ResponseEntity<QuestionResponseDto> createQuestion(@PathVariable Integer boardId, @Valid @RequestBody QuestionRequestDto questionRequestDto) {
         log.info("controller - createQuestion");
         return ResponseEntity.ok(questionService.createQuestion(boardId, questionRequestDto));

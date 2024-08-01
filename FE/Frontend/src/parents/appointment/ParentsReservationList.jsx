@@ -25,16 +25,22 @@ const ParentsReservationList = ({ selectedDate }) => {
     return date;
   };
 
-  // 버튼 클릭 시 색상 변경 및 상태 업데이트
+  // 신청취소 클릭 시 색상 변경 및 상태 업데이트
   const handleClick = (index) => {
+    console.log(`Button at index ${index} clicked`);
+
     const updatedConsultations = consultations.map((consultation, i) => {
       if (i === index) {
-        return {
-          ...consultation,
-          text: consultation.text === "신청취소" ? "" : consultation.text,
-          available:
-            consultation.text === "신청취소" ? true : consultation.available,
-        };
+        console.log(`Updating consultation at index ${index}:`, consultation);
+
+        let newConsultation = { ...consultation };
+        if (consultation.text === "신청취소") {
+          newConsultation.text = "신청가능";
+          newConsultation.available = true;
+          console.log(`Changed to available and text to "신청가능"`);
+        }
+        console.log("변경사항 없음");
+        return newConsultation;
       }
       return consultation;
     });

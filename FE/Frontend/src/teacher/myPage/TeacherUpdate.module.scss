@@ -1,34 +1,38 @@
-.array {
+.Container {
   display: flex;
   align-items: center;
   flex-direction: column;
   width: 100vw;
   height: 90vh;
+  overflow: hidden;
+  padding: 2vh 5vw;
 }
 
-.menuArray {
-  display: flex;
-  margin-top: 0.9%;
-  width: 90vw;
-  height: 7.5vh;
-}
-
-.updateMenu,
-.changeMenu {
+.menuNavbar {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50%;
-  height: 100%;
-  border-radius: 25px 25px 0 0;
-  font-size: 1.5rem;
+  width: 100%;
+  background-color: #ffffff;
+}
 
-  &.updateMenu {
+.updateItem,
+.changeItem {
+  flex: 1;
+  text-align: center;
+  font-size: 1.5rem;
+  padding: 1vh 0;
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+  border-radius: 25px 25px 0 0;
+
+  &.updateItem {
     background-color: #5285ee;
     color: white;
   }
 
-  &.changeMenu {
+  &.changeItem {
     background-color: #e0e0e0;
     text-decoration: none;
     color: black;

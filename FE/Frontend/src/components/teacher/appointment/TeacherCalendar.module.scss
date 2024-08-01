@@ -1,0 +1,34 @@
+* {
+  box-sizing: border-box;
+}
+
+.calendarContainer {
+  width: 40%;
+  margin: 0% 2%;
+  padding: 1.5vh;
+  border: 0.2rem solid #ddd;
+  background-color: white;
+  box-shadow: 0 2vh 4vh rgba(0, 0, 0, 0.1);
+
+  .fc {
+    &-toolbar-title {
+      font-size: 1.5rem;
+    }
+
+    &-day-header {
+      padding: 1vh 0;
+      color: #dce7fc;
+      background-color: #f8f9fa;
+    }
+
+    &-daygrid-day-number {
+      font-size: 1rem;
+      padding: 0.5vh;
+    }
+
+    &-daygrid-event {
+      font-size: 1rem;
+      padding: 0.5vh 1vh;
+    }
+  }
+}

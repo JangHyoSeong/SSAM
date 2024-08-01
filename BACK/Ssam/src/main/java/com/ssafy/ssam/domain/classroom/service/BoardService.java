@@ -4,10 +4,13 @@ import com.ssafy.ssam.domain.AmazonS3.service.S3ImageService;
 import com.ssafy.ssam.domain.classroom.dto.request.BoardCreateRequestDTO;
 import com.ssafy.ssam.domain.classroom.dto.response.BoardGetByPinResponseDTO;
 import com.ssafy.ssam.domain.classroom.dto.response.BoardGetResponseDTO;
+import com.ssafy.ssam.domain.classroom.dto.response.SchoolResponseDTO;
 import com.ssafy.ssam.domain.classroom.entity.Board;
+import com.ssafy.ssam.domain.classroom.entity.School;
 import com.ssafy.ssam.domain.classroom.entity.UserBoardRelation;
 import com.ssafy.ssam.domain.classroom.entity.UserBoardRelationStatus;
 import com.ssafy.ssam.domain.classroom.repository.BoardRepository;
+import com.ssafy.ssam.domain.classroom.repository.SchoolRepository;
 import com.ssafy.ssam.domain.classroom.repository.UserBoardRelationRepository;
 import com.ssafy.ssam.domain.user.dto.response.StudentInfoListDTO;
 import com.ssafy.ssam.domain.user.entity.User;
@@ -36,6 +39,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final UserBoardRelationRepository userBoardRelationRepository;
+    private final SchoolRepository schoolRepository;
     private final S3ImageService s3ImageService;
 
     // 보드 생성

@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -131,6 +132,14 @@ public class BoardService {
                 .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
 
         User student = findUserByToken();
+        List<UserBoardRelationStatus> statuses = Arrays.asList(UserBoardRelationStatus.WAITING, UserBoardRelationStatus.ACCEPTED);
+
+        // 이미 등록된 상태인지 확인
+        userBoardRelationRepository.findByUserAndBoardAndStatusIn(student, board, statuses)
+                .ifPresent(relation -> {
+                    throw new CustomException(ErrorCode.AlreadyRegisteredException);
+                });
+
         UserBoardRelation relation = UserBoardRelation.builder()
                 .user(student)
                 .board(board)

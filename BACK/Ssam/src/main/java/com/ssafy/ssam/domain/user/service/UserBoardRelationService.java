@@ -1,5 +1,7 @@
 package com.ssafy.ssam.domain.user.service;
 
+import com.ssafy.ssam.domain.classroom.entity.Board;
+import com.ssafy.ssam.domain.classroom.repository.BoardRepository;
 import com.ssafy.ssam.domain.consult.dto.response.ConsultSummaryDTO;
 import com.ssafy.ssam.domain.consult.entity.Appointment;
 import com.ssafy.ssam.domain.consult.entity.Consult;
@@ -33,6 +35,7 @@ public class UserBoardRelationService {
     private final UserBoardRelationRepository userBoardRelationRepository;
     private final ConsultRepository consultRepository;
     private final AppointmentRepository appointmentRepository;
+    private final BoardRepository boardRepository;
 
     // 학급에 보낸 등록 요청을 반환하는 함수
     public List<StudentRegistInfoDTO> getRegistRequestList() {
@@ -77,13 +80,6 @@ public class UserBoardRelationService {
         return new CommonResponseDto("Rejected");
     }
 
-    // CustomUserDetail을 반환하는 함수
-    public CustomUserDetails findCustomUserDetails() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return (CustomUserDetails) authentication.getPrincipal();
-    }
-
-
     // 학생 상세 정보를 제공하는 로직
     public StudentInfoDetailDTO getStudentDetail(Integer studentId) {
         User student = userRepository.findByUserId(studentId)
@@ -100,6 +96,26 @@ public class UserBoardRelationService {
                 .studentImage(student.getImgUrl())
                 .consultList(consultSummaryListToDTO(consults))
                 .build();
+    }
+
+    // 학급에서 학생을 삭제하는 로직
+    public CommonResponseDto deleteStudentFromBoard(Integer studentId) {
+        CustomUserDetails userDetails = findCustomUserDetails();
+        Board board = boardRepository.findByBoardId(userDetails.getBoardId())
+                .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
+
+        UserBoardRelation relation = userBoardRelationRepository.findByUserUserIdAndBoardBoardIdAndStatus(studentId, board.getBoardId(), UserBoardRelationStatus.ACCEPTED)
+                .orElseThrow(() -> new CustomException(ErrorCode.NotFoundStudentInBoardException));
+
+        userBoardRelationRepository.delete(relation);
+
+        return new CommonResponseDto("Delete Completed");
+    }
+
+    // CustomUserDetail을 반환하는 함수
+    public CustomUserDetails findCustomUserDetails() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (CustomUserDetails) authentication.getPrincipal();
     }
 
     // consult를 consultSummaryDTO로 변환하는 로직

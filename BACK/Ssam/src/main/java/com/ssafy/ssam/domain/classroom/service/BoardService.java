@@ -2,9 +2,13 @@ package com.ssafy.ssam.domain.classroom.service;
 
 import com.ssafy.ssam.domain.AmazonS3.service.S3ImageService;
 import com.ssafy.ssam.domain.classroom.dto.request.BoardCreateRequestDTO;
+import com.ssafy.ssam.domain.classroom.dto.response.BoardGetByPinResponseDTO;
 import com.ssafy.ssam.domain.classroom.dto.response.BoardGetResponseDTO;
 import com.ssafy.ssam.domain.classroom.entity.Board;
+import com.ssafy.ssam.domain.classroom.entity.UserBoardRelation;
+import com.ssafy.ssam.domain.classroom.entity.UserBoardRelationStatus;
 import com.ssafy.ssam.domain.classroom.repository.BoardRepository;
+import com.ssafy.ssam.domain.classroom.repository.UserBoardRelationRepository;
 import com.ssafy.ssam.domain.user.entity.User;
 import com.ssafy.ssam.domain.user.repository.UserRepository;
 import com.ssafy.ssam.global.dto.CommonResponseDto;
@@ -18,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Random;
 
 @Slf4j
@@ -27,7 +33,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
-//    private final UserBoardRelationRepository userBoardRelationRepository;
+    private final UserBoardRelationRepository userBoardRelationRepository;
     private final S3ImageService s3ImageService;
 
     // 보드 생성
@@ -35,8 +41,16 @@ public class BoardService {
     public BoardGetResponseDTO createBoard(BoardCreateRequestDTO requestDTO) {
         User user = findUserByToken();
 
-        if(user == null) throw new IllegalArgumentException("user doesn't exist");
-        if(user.getBoard() != null) throw new CustomException(ErrorCode.BoardAlreadyExistsException);
+        if (user == null) throw new IllegalArgumentException("user doesn't exist");
+
+        // 기존에 생성한 학급이 있다면 예외처리
+        if (user.getBoards() != null && !user.getBoards().isEmpty()) {
+            for (UserBoardRelation relation : user.getBoards()) {
+                if (relation.getBoard().getIsDeprecated() == 0) {
+                    throw new CustomException(ErrorCode.BoardAlreadyExistsException);
+                }
+            }
+        }
 
         Integer grade = requestDTO.getGrade();
         Integer classroom = requestDTO.getClassroom();
@@ -48,10 +62,19 @@ public class BoardService {
                 .grade(requestDTO.getGrade())
                 .classroom(requestDTO.getClassroom())
                 .pin(generateUniquePin())
-                .user(user)
+                .isDeprecated(0)
                 .build();
 
         Board savedBoard = boardRepository.save(board);
+
+        UserBoardRelation relation = UserBoardRelation.builder()
+                .user(user)
+                .board(savedBoard)
+                .status(UserBoardRelationStatus.OWNER)
+                .followDate(LocalDateTime.now())
+                .build();
+
+        userBoardRelationRepository.save(relation);
 
         return convertToResponseDTO(savedBoard);
     }
@@ -64,56 +87,109 @@ public class BoardService {
         return convertToResponseDTO(board);
     }
 
+    // 학급 검색 - 학생
+    public BoardGetByPinResponseDTO getBoardByPin(String pin) {
+        Board board = boardRepository.findByPin(pin)
+                .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
+
+        UserBoardRelation relation = userBoardRelationRepository.findByBoardAndStatus(board, UserBoardRelationStatus.OWNER)
+                .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
+
+        User teacher = relation.getUser();
+
+        Integer boardId = board.getBoardId();
+        String schoolName = (teacher.getSchool() != null) ? teacher.getSchool().getName() : "학교가 등록되지 않았습니다";
+        Integer grade = board.getGrade();
+        Integer classroom = board.getClassroom();
+        String teacherName = teacher.getName();
+        String teacherImage = teacher.getImgUrl();
+
+        return BoardGetByPinResponseDTO.builder()
+                .boardId(boardId)
+                .schoolName(schoolName)
+                .grade(grade)
+                .classroom(classroom)
+                .teacherName(teacherName)
+                .teacherImage(teacherImage)
+                .build();
+    }
+
+    // 학급 등록 - 학생
+    public CommonResponseDto registClass(int boardId) {
+        Board board = boardRepository.findByBoardId(boardId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
+
+        User student = findUserByToken();
+        UserBoardRelation relation = UserBoardRelation.builder()
+                .user(student)
+                .board(board)
+                .status(UserBoardRelationStatus.WAITING)
+                .followDate(LocalDateTime.now())
+                .build();
+
+        userBoardRelationRepository.save(relation);
+        return new CommonResponseDto("regist completed");
+    }
+
     // 학급 공지사항 수정
-    public void updateNotice(int boardId, String notice) {
-        Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new RuntimeException("Board not found"));
+    public CommonResponseDto updateNotice(int boardId, String notice) {
+        Board board = boardRepository.findByBoardId(boardId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
 
         User user = findUserByToken();
-        if (user != board.getUser())
-            throw new CustomException(ErrorCode.BoardAccessDeniedException);
+        UserBoardRelation relation = userBoardRelationRepository.findByUserAndBoard(user, board)
+                .orElseThrow(() -> new CustomException(ErrorCode.BoardAccessDeniedException));
 
         board.setNotice(notice);
         boardRepository.save(board);
+
+        return new CommonResponseDto("Update Notice Completed");
     }
 
     // 학급 배너 수정
-    public void updateBanner(int boardId, String banner) {
+    public CommonResponseDto updateBanner(int boardId, String banner) {
         Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new RuntimeException("Board not found"));
+                .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
 
         User user = findUserByToken();
-        if (user != board.getUser())
-            throw new CustomException(ErrorCode.BoardAccessDeniedException);
+        UserBoardRelation relation = userBoardRelationRepository.findByUserAndBoard(user, board)
+                        .orElseThrow(() -> new CustomException(ErrorCode.BoardAccessDeniedException));
 
         board.setBanner(banner);
         boardRepository.save(board);
+
+        return new CommonResponseDto("Update Banner Completed");
     }
 
     // 학급 pin번호 재발급
-    public void refreshPin(int boardId) {
+    public CommonResponseDto refreshPin(int boardId) {
         Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new RuntimeException("Board not found"));
+                .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
 
         User user = findUserByToken();
-        if (user != board.getUser())
-            throw new CustomException(ErrorCode.BoardAccessDeniedException);
+        UserBoardRelation relation = userBoardRelationRepository.findByUserAndBoard(user, board)
+                .orElseThrow(() -> new CustomException(ErrorCode.BoardAccessDeniedException));
 
         board.setPin(generateUniquePin());
         boardRepository.save(board);
+
+        return new CommonResponseDto("Reissue PIN Completed");
     }
 
     // 학급 배너이미지 수정
-    public void updateBannerImage(int boardId, MultipartFile image) {
+    public CommonResponseDto updateBannerImage(int boardId, MultipartFile image) {
         Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new RuntimeException("Board not found"));
+                .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
         String imageUrl = s3ImageService.upload(image);
+
         User user = findUserByToken();
-        if (user != board.getUser())
-            throw new CustomException(ErrorCode.BoardAccessDeniedException);
+        UserBoardRelation relation = userBoardRelationRepository.findByUserAndBoard(user, board)
+                .orElseThrow(() -> new CustomException(ErrorCode.BoardAccessDeniedException));
 
         board.setBannerImg(imageUrl);
         boardRepository.save(board);
+
+        return new CommonResponseDto("Update Banner Image Completed");
     }
 
     // 학급 삭제
@@ -123,11 +199,12 @@ public class BoardService {
                 .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
 
         User user = findUserByToken();
-        if (user != board.getUser())
-            throw new CustomException(ErrorCode.BoardAccessDeniedException);
+        UserBoardRelation relation = userBoardRelationRepository.findByUserAndBoard(user, board)
+                .orElseThrow(() -> new CustomException(ErrorCode.BoardAccessDeniedException));
 
+        board.setIsDeprecated(1);
+        boardRepository.save(board);
 
-        boardRepository.delete(board);
         return new CommonResponseDto("OK");
     }
 

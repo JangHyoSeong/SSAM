@@ -1,7 +1,6 @@
 package com.ssafy.ssam.domain.classroom.entity;
 
 import com.ssafy.ssam.domain.notification.entity.Question;
-import com.ssafy.ssam.domain.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -15,6 +14,7 @@ import java.util.List;
 @Setter
 @Builder
 @Entity
+@Table(name = "board")
 public class Board {
 
     @Id
@@ -22,7 +22,6 @@ public class Board {
     @Column(name = "board_id")
     private Integer boardId;
 
-    @NotNull
     @Column(unique = true, nullable = false, length = 6)
     private String pin;
 
@@ -35,27 +34,22 @@ public class Board {
     @Column(columnDefinition = "TEXT")
     private String notice;
 
-    @NotNull
     @Column(columnDefinition = "TINYINT CHECK (grade BETWEEN 1 AND 6)", nullable = false)
     private Integer grade;
 
-    @NotNull
     @Column(columnDefinition = "TINYINT", nullable = false)
     private Integer classroom;
 
     @Column(name = "consult_url")
     private String consultUrl;
 
-    @OneToOne()
-    @JoinColumn(name = "user_id")
-    private User user;
-
-//    // Board와 User 관계 매핑
-//    // board가 어떤 user(teacher)와 연결되어있는지 나타냄
-//    @ManyToMany(mappedBy = "boards")
-//    private List<User> users = new ArrayList<>();
+    @Column(name = "is_deprecated", columnDefinition = "TINYINT(1)", nullable = false)
+    private Integer isDeprecated;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Question> questions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board")
+    private List<UserBoardRelation> userBoardRelations = new ArrayList<>();
 
 }

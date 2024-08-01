@@ -1,8 +1,8 @@
 package com.ssafy.ssam.domain.user.entity;
 
 import com.ssafy.ssam.domain.classroom.entity.Board;
-import com.ssafy.ssam.domain.classroom.entity.Manage;
 import com.ssafy.ssam.domain.classroom.entity.School;
+import com.ssafy.ssam.domain.classroom.entity.UserBoardRelation;
 import com.ssafy.ssam.domain.consult.entity.Appointment;
 import com.ssafy.ssam.domain.notification.entity.Alarm;
 import com.ssafy.ssam.domain.notification.entity.Question;
@@ -23,6 +23,7 @@ import java.util.List;
 @Setter
 @Builder
 @Entity
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,8 +46,6 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "school_id")
     private School school;
-
-    //boardId는 일부러 없앤건지 궁금하빈다
 
     @Column(name = "img_url")
     private String imgUrl;
@@ -79,22 +78,8 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    private Board board;
-
-//    @ManyToMany
-//    @JoinTable(
-//            name = "user_board_relation",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "board_id")
-//    )
-//    private List<Board> boards = new ArrayList<>();
-
-    @OneToMany(mappedBy = "student", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    private List<Manage> followings = new ArrayList<>();
-
-    @OneToMany(mappedBy = "teacher", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    private List<Manage> followers = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserBoardRelation> boards = new ArrayList<>();
 
     @OneToMany(mappedBy = "student")
     private List<Question> questions = new ArrayList<>();
@@ -107,6 +92,13 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Alarm> alarms = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "student", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+//    private List<Manage> followings = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+//    private List<Manage> followers = new ArrayList<>();
+
 
     public UserDto toUserDto(User userEntity) {
         return UserDto.builder()

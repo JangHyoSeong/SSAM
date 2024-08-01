@@ -122,13 +122,19 @@
 .imgArray {
   display: flex;
   justify-content: center;
-  width: 100%;
+
 }
 
-.Img {
-  margin-top: 15%;
+.teacherImg {
+  margin-top: 10%;
+  width: 21vw;
+  height: 37vh;
+}
+
+.parentsImg {
+  margin-top: 10%;
   width: 20vw;
-  height: 33vh;
+  height: 36vh;
 }
 
 .scroll {

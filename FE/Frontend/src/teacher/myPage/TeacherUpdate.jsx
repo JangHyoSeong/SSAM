@@ -4,7 +4,7 @@ import styles from './TeacherUpdate.module.scss';
 
 const TeacherUpdate = () => {
   return (
-    <div>
+    <div className={styles.array}>
       <div className={styles.menuArray}>
         <div className={styles.updateMenu}>
           회원정보 수정

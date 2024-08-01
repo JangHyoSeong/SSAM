@@ -20,7 +20,7 @@ const Select = () => {
             <h1>선생님</h1>
             <h3>선생님으로 시작하세요</h3>
             <div className={styles.imgArray}>
-              <img src={teacher} className={styles.Img} alt="teacher" />
+              <img src={teacher} className={styles.teacherImg} alt="teacher" />
             </div>
           </div>
         </NavLink>
@@ -32,7 +32,7 @@ const Select = () => {
             <h1>학생 / 학부모</h1>
             <h3>학생과 자녀가 있는 학부모</h3>
             <div className={styles.imgArray}>
-              <img src={parents} className={styles.Img} alt="parents" />
+              <img src={parents} className={styles.parentsImg} alt="parents" />
             </div>
           </div>
         </NavLink>

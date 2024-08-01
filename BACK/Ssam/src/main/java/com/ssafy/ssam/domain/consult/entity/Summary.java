@@ -11,6 +11,7 @@ import java.util.Date;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(name = "summary")
 public class Summary {
 
     @Id

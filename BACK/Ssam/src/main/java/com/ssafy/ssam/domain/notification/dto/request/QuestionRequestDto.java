@@ -1,20 +1,16 @@
 package com.ssafy.ssam.domain.notification.dto.request;
 
-import com.ssafy.ssam.domain.classroom.entity.Board;
-import com.ssafy.ssam.domain.notification.repository.QuestionRepository;
-import com.ssafy.ssam.domain.user.entity.User;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.time.LocalDateTime;
 
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Setter
 @Getter
 public class QuestionRequestDto {

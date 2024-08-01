@@ -15,6 +15,7 @@ import java.util.Optional;
 public interface UserBoardRelationRepository extends JpaRepository<UserBoardRelation, Integer> {
     Optional<UserBoardRelation> findByUserAndBoard(User user, Board board);
     Optional<UserBoardRelation> findByBoardAndStatus(Board board, UserBoardRelationStatus status);
+    List<UserBoardRelation> findByBoardBoardIdAndStatus(Integer boardId, UserBoardRelationStatus status);
     Optional<List<UserBoardRelation>> findUserBoardRelationsByUser(User user);
 
     @Query("SELECT u.user FROM UserBoardRelation u WHERE u.board = :board AND u.status = :status")

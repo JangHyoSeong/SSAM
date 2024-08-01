@@ -1,11 +1,11 @@
 package com.ssafy.ssam.domain.user.service;
 
-import com.ssafy.ssam.domain.classroom.entity.UserBoardRelation;
-import com.ssafy.ssam.domain.classroom.entity.UserBoardRelationStatus;
-import com.ssafy.ssam.domain.classroom.repository.UserBoardRelationRepository;
-import com.ssafy.ssam.domain.user.dto.CustomUserDetails;
 import com.ssafy.ssam.domain.user.dto.response.StudentRegistInfoDTO;
-import com.ssafy.ssam.domain.user.repository.UserRepository;
+import com.ssafy.ssam.domain.user.entity.UserBoardRelation;
+import com.ssafy.ssam.domain.user.entity.UserBoardRelationStatus;
+import com.ssafy.ssam.domain.user.repository.UserBoardRelationRepository;
+import com.ssafy.ssam.global.auth.dto.CustomUserDetails;
+import com.ssafy.ssam.global.auth.repository.UserRepository;
 import com.ssafy.ssam.global.dto.CommonResponseDto;
 import com.ssafy.ssam.global.error.CustomException;
 import com.ssafy.ssam.global.error.ErrorCode;

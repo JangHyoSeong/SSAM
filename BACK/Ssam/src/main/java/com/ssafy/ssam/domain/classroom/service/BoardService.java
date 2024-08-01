@@ -4,17 +4,12 @@ import com.ssafy.ssam.global.amazonS3.service.S3ImageService;
 import com.ssafy.ssam.domain.classroom.dto.request.BoardCreateRequestDTO;
 import com.ssafy.ssam.domain.classroom.dto.response.BoardGetByPinResponseDTO;
 import com.ssafy.ssam.domain.classroom.dto.response.BoardGetResponseDTO;
-import com.ssafy.ssam.domain.classroom.dto.response.SchoolResponseDTO;
 import com.ssafy.ssam.domain.classroom.entity.Board;
 import com.ssafy.ssam.domain.user.entity.UserBoardRelation;
 import com.ssafy.ssam.domain.user.entity.UserBoardRelationStatus;
-import com.ssafy.ssam.domain.classroom.entity.School;
-import com.ssafy.ssam.domain.classroom.entity.UserBoardRelation;
-import com.ssafy.ssam.domain.classroom.entity.UserBoardRelationStatus;
 import com.ssafy.ssam.domain.classroom.repository.BoardRepository;
 import com.ssafy.ssam.domain.user.repository.UserBoardRelationRepository;
 import com.ssafy.ssam.domain.classroom.repository.SchoolRepository;
-import com.ssafy.ssam.domain.classroom.repository.UserBoardRelationRepository;
 import com.ssafy.ssam.domain.user.dto.response.StudentInfoListDTO;
 import com.ssafy.ssam.global.auth.entity.User;
 import com.ssafy.ssam.global.auth.repository.UserRepository;
@@ -30,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -38,6 +34,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class BoardService {
 
     private final BoardRepository boardRepository;
@@ -47,7 +44,6 @@ public class BoardService {
     private final S3ImageService s3ImageService;
 
     // 보드 생성
-    @Transactional
     public CommonResponseDto createBoard(BoardCreateRequestDTO requestDTO) {
         User user = findUserByToken();
 
@@ -90,12 +86,13 @@ public class BoardService {
     }
 
     // id를 통해 board 찾기
-    @Transactional
+    @Transactional(readOnly = true)
     public BoardGetResponseDTO getBoardById(int classId) {
         Board board = boardRepository.findById(classId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
 
-        List<User> users = userBoardRelationRepository.findUsersByBoardAndStatus(board, UserBoardRelationStatus.ACCEPTED);
+        List<User> users = userBoardRelationRepository.findUsersByBoardAndStatus(board, UserBoardRelationStatus.ACCEPTED)
+                .orElse(new ArrayList<>());
 
         List<StudentInfoListDTO> userInfoList = users != null ? users.stream()
                 .map(user -> StudentInfoListDTO.builder()

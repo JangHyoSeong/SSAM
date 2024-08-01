@@ -1,0 +1,37 @@
+.navbarArray {
+  width: 82.5vw;
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  position: absolute;
+  top: 1.2%;
+  left: 5%;
+  width: 8vw;
+  height: 8vh;
+}
+
+.navtxt {
+  white-space: nowrap;
+}
+
+.navtxt:hover {
+  color: #5285ee;
+}
+
+.menuArray {
+  display: flex;
+  gap: 51%;
+}
+
+.menuArray a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.menuArray .active {
+  color: #5285ee;
+}

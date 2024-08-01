@@ -7,6 +7,11 @@ import com.ssafy.ssam.domain.classroom.dto.request.QuestionRequestDto;
 import com.ssafy.ssam.domain.classroom.dto.response.QuestionResponseDto;
 import com.ssafy.ssam.domain.classroom.entity.Question;
 import com.ssafy.ssam.domain.classroom.repository.QuestionRepository;
+import com.ssafy.ssam.domain.user.dto.request.AlarmCreateRequestDto;
+import com.ssafy.ssam.domain.user.entity.AlarmType;
+import com.ssafy.ssam.domain.user.entity.UserBoardRelationStatus;
+import com.ssafy.ssam.domain.user.repository.UserBoardRelationRepository;
+import com.ssafy.ssam.domain.user.service.AlarmService;
 import com.ssafy.ssam.global.auth.dto.CustomUserDetails;
 import com.ssafy.ssam.global.auth.entity.User;
 import com.ssafy.ssam.global.auth.entity.UserRole;
@@ -32,7 +37,8 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
-
+    private final UserBoardRelationRepository userBoardRelationRepository;
+    private final AlarmService alarmService;
 
     @Transactional(readOnly = true)
     public List<QuestionResponseDto> getQuestions(Integer boardId){
@@ -47,6 +53,7 @@ public class QuestionService {
         for(Question question : questions){
             list.add(Question.toQuestionResponseDto(question));
         }
+
         return list;
     }
     public QuestionResponseDto createQuestion(Integer boardId, QuestionRequestDto questionRequestDto) {
@@ -64,6 +71,17 @@ public class QuestionService {
                 .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
 
         Question question = Question.toQuestion(student, board, questionRequestDto);
+
+        User teacher = userBoardRelationRepository.findUsersByBoardAndStatus(board, UserBoardRelationStatus.OWNER)
+                .orElseThrow(()-> new CustomException(ErrorCode.UserNotFoundException)).get(0);
+
+        // 알람 생성
+        AlarmCreateRequestDto teacherAlarmCreateRequestDto
+                = AlarmCreateRequestDto.builder()
+                .userId(teacher.getUserId())
+                .alarmType(AlarmType.QUESTION)
+                .build();
+        alarmService.creatAlarm(teacherAlarmCreateRequestDto);
 
         return Question.toQuestionResponseDto(questionRepository.save(question));
     }
@@ -104,8 +122,17 @@ public class QuestionService {
             throw new CustomException(ErrorCode.IllegalArgument);
         question.setAnswer(answerRequestDto.getAnswer());
 
+        // 알람 생성
+        AlarmCreateRequestDto teacherAlarmCreateRequestDto
+                = AlarmCreateRequestDto.builder()
+                .userId(question.getStudent().getUserId())
+                .alarmType(AlarmType.ANSWER)
+                .build();
+
+        alarmService.creatAlarm(teacherAlarmCreateRequestDto);
         return Question.toAnswerResponseDto(question);
     }
+
 
 
 }

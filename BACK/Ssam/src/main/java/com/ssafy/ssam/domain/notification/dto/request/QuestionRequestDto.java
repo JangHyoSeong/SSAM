@@ -17,6 +17,8 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 public class QuestionRequestDto {
+    @NotNull
+    private Integer boardId;
     @Size(min = 1, max = 50, message = "1자이상 50자 이하로 입력해야합니다")
     private String content;
 }

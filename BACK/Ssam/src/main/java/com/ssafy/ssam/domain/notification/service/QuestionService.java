@@ -65,6 +65,7 @@ public class QuestionService {
 
         return Question.toQuestionResponseDto(questionRepository.save(question));
     }
+
     public CommonResponseDto deleteQuestion(Integer questionId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails details = (CustomUserDetails) authentication.getPrincipal();
@@ -78,4 +79,20 @@ public class QuestionService {
 
         return new CommonResponseDto("ok");
     }
+
+    public CommonResponseDto deleteQuestion(Integer questionId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails details = (CustomUserDetails) authentication.getPrincipal();
+
+        Question question = questionRepository.findByQuestionId(questionId)
+                .orElseThrow(() -> new CustomException(ErrorCode.QuestionNotFoundException));
+        if(!question.getBoard().getBoardId().equals(details.getBoardId()))
+            throw new CustomException(ErrorCode.IllegalArgument);
+
+        questionRepository.delete(question);
+
+        return new CommonResponseDto("ok");
+    }
+
+
 }

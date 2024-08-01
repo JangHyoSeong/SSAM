@@ -86,7 +86,7 @@ public class SecurityConfig {
                .httpBasic((auth) -> auth.disable())
                .authorizeHttpRequests((auth) -> auth
 //                 아무 허용 필요없는 접근 -> 회원가입, 첫 화면, 비밀번호 찾기
-                    .requestMatchers("/v1/auth/**").permitAll()
+                    .requestMatchers("/v1/auth/**", "v1/schools").permitAll()
                 // 선생이라는 권한이 필요한 url
                     .requestMatchers("/v1/classrooms/answers/**", "/v1/classrooms/teachers/**", "/v1/consults/teachers/**").permitAll()
 

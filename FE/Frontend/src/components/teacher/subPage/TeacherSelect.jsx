@@ -1,16 +1,10 @@
-import { useState } from 'react'; // Import useState for handling component state
+import { useState } from 'react';
 import { NavLink } from "react-router-dom";
-<<<<<<< HEAD:FE/Frontend/src/components/teacher/subPage/TeacherSelect.jsx
-import select from "./TeacherSelect.module.scss";
+import styles from "./TeacherSelect.module.scss";
 import classroom from "../../../assets/classroom.png";
 import question from "../../../assets/question.png";
 import appointment from "../../../assets/appointment.png";
-=======
-import styles from "./TeacherSelect.module.scss";
-import classroom from "../../assets/classroom.png";
-import question from "../../assets/question.png";
-import appointment from "../../assets/appointment.png";
-import ClassProduceModal from './ClassProduceModal'; // Import the modal component
+import ClassProduceModal from './ClassProduceModal';
 
 const TeacherSelect = () => {
   // State to control the visibility of the modal
@@ -20,7 +14,6 @@ const TeacherSelect = () => {
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
->>>>>>> KDH:FE/Frontend/src/teacher/subPage/TeacherSelect.jsx
 
   return (
     <div className={styles.menuArray}>

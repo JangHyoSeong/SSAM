@@ -87,9 +87,8 @@ public class BoardService {
         Board board = boardRepository.findById(classId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
 
-        List<User> users = userBoardRelationRepository.findUsersByBoardAndStatus(board, UserBoardRelationStatus.ACCEPTED)
-                .orElse(null);
-
+        List<User> users = userBoardRelationRepository.findUsersByBoardAndStatus(board, UserBoardRelationStatus.ACCEPTED);
+        log.info(users.toString());
         List<StudentInfoListDTO> userInfoList = users != null ? users.stream()
                 .map(user -> StudentInfoListDTO.builder()
                         .name(user.getName())

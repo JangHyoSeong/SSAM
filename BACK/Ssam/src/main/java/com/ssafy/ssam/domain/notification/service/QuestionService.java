@@ -26,7 +26,6 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
-    private final EntityManager em;
 
     public QuestionResponseDto createQuestion(Integer boardId, QuestionRequestDto questionRequestDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

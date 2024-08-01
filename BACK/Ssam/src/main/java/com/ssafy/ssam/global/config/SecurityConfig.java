@@ -1,10 +1,8 @@
 package com.ssafy.ssam.global.config;
 
-import com.ssafy.ssam.global.jwt.JwtFilter;
-import com.ssafy.ssam.global.jwt.JwtUtil;
-import com.ssafy.ssam.global.jwt.LoginFilter;
-import lombok.Builder;
-import lombok.RequiredArgsConstructor;
+import java.util.Arrays;
+import java.util.Collections;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +15,16 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import com.ssafy.ssam.global.jwt.JwtFilter;
+import com.ssafy.ssam.global.jwt.JwtUtil;
+import com.ssafy.ssam.global.jwt.LoginFilter;
+
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 
 @Builder
 @RequiredArgsConstructor
@@ -31,14 +39,14 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-    // 얘가 진짜 찐으로 무시할때 쓰는 코드
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return webSecurity -> {
-            webSecurity.ignoring()
-                    .requestMatchers("/v1/auth/students", "/v1/auth/teachers");
-        };
-    }
+//    // 얘가 진짜 찐으로 무시할때 쓰는 코드
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        return webSecurity -> {
+//            webSecurity.ignoring()
+//                    .requestMatchers("/v1/auth/students", "/v1/auth/teachers");
+//        };
+//    }
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -48,14 +56,37 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-       return http.csrf((auth) -> auth.disable())
-                .cors((auth) -> auth.disable())
-                .formLogin((auth) -> auth.disable())
-                .logout((auth) -> auth.disable())
-                .httpBasic((auth) -> auth.disable())
-                .authorizeHttpRequests((auth) -> auth
+       return http
+//               .cors((cors) -> cors
+//                       .configurationSource((new CorsConfigurationSource() {
+//                           @Override
+//                           public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+//                               CorsConfiguration config = new CorsConfiguration();
+//                               config.setAllowedOrigins(Collections.singletonList("*"));
+//                               //config.setAllowedOrigins(Collections.singletonList("https://i11e201.p.ssafy.io:3000"));
+//                               /*config.setAllowedOrigins(Arrays.asList(
+//                                       "https://i11e201.p.ssafy.io:3000",
+//                                       "http://localhost:3000",
+//                                       "http://127.0.0.1:3000"
+//                                   ));*/
+//
+//                               config.setAllowedMethods(Collections.singletonList("*"));
+//                               config.setAllowCredentials(true);
+//                               config.setAllowedHeaders(Collections.singletonList("*"));
+//                               config.setMaxAge(3600L);
+//
+//                               config.setExposedHeaders(Collections.singletonList("Authorization"));
+//                               return config;
+//                           }
+//                       })))
+               .csrf((auth) -> auth.disable())
+               //.cors((auth) -> auth.disable())
+               .formLogin((auth) -> auth.disable())
+               .logout((auth) -> auth.disable())
+               .httpBasic((auth) -> auth.disable())
+               .authorizeHttpRequests((auth) -> auth
 //                 아무 허용 필요없는 접근 -> 회원가입, 첫 화면, 비밀번호 찾기
-                    .requestMatchers("/v1/auth/**", "/login").permitAll()
+                    .requestMatchers("/v1/auth/**").permitAll()
                 // 선생이라는 권한이 필요한 url
                     .requestMatchers("/v1/classrooms/answers/**", "/v1/classrooms/teachers/**", "/v1/consults/teachers/**").permitAll()
 

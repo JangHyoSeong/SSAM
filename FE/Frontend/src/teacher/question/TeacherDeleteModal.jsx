@@ -10,8 +10,8 @@ const TeacherDeleteModal = ({ onConfirm, onCancel }) => {
         </div>
         <h2>질문을 삭제하시겠습니까?</h2>
         <div className={styles.teacherDeleteModalButtons}>
-          <button onClick={onConfirm}>확인</button>
-          <button onClick={onCancel}>취소</button>
+          <button onClick={onConfirm} className={styles.confirmButton}>확인</button>
+          <button onClick={onCancel} className={styles.cancelButton}>취소</button>
         </div>
       </div>
     </div>

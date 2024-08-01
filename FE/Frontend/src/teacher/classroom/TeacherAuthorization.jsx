@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import styles from "./TeacherAuthorization.module.scss";
 import TeacherApproveModal from "./TeacherApproveModal";
@@ -69,71 +69,71 @@ const TeacherAuthorization = () => {
   };
 
   return (
-      <div className={styles.authorizationContainer}>
-        <div className={styles.classNavbar}>
-          <NavLink
-            to="/teacherclassroom"
-            className={({ isActive }) =>
-              isActive ? `${styles.navItem} ${styles.active}` : styles.navItem
-            }
-          >
-            학급 관리
-          </NavLink>
-          <NavLink
-            to="/teacherauthorization"
-            className={({ isActive }) =>
-              isActive ? `${styles.navItem} ${styles.active}` : styles.navItem
-            }
-          >
-            승인 관리
-          </NavLink>
-        </div>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>신청한 사람</th>
-              <th>아이디</th>
-              <th>신청일</th>
-              <th>관리</th>
-            </tr>
-          </thead>
-          <tbody>
-            {requests.map((request, index) => (
-              <tr key={index}>
-                <td>{request.name}</td>
-                <td>{request.id}</td>
-                <td>{request.date}</td>
-                <td>
-                  <button
-                    className={styles.approveButton}
-                    onClick={() => handleApproveClick(request)}
-                  >
-                    승인
-                  </button>
-                  <button
-                    className={styles.rejectButton}
-                    onClick={() => handleRejectClick(request)}
-                  >
-                    거절
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {showApproveModal && (
-          <TeacherApproveModal
-            onClose={() => setShowApproveModal(false)}
-            onApprove={handleApprove}
-          />
-        )}
-        {showRejectModal && (
-          <TeacherRejectModal
-            onClose={() => setShowRejectModal(false)}
-            onReject={handleReject}
-          />
-        )}
+    <div className={styles.authorizationContainer}>
+      <div className={styles.classNavbar}>
+        <NavLink
+          to="/teacherclassroom"
+          className={({ isActive }) =>
+            isActive ? `${styles.navItem} ${styles.active}` : styles.navItem
+          }
+        >
+          학급 관리
+        </NavLink>
+        <NavLink
+          to="/teacherauthorization"
+          className={({ isActive }) =>
+            isActive ? `${styles.navItem} ${styles.active}` : styles.navItem
+          }
+        >
+          승인 관리
+        </NavLink>
       </div>
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            <th className={styles.nameColumn}>신청한 사람</th>
+            <th className={styles.idColumn}>아이디</th>
+            <th className={styles.dateColumn}>신청일</th>
+            <th className={styles.actionColumn}>관리</th>
+          </tr>
+        </thead>
+        <tbody>
+          {requests.map((request, index) => (
+            <tr key={index}>
+              <td className={styles.nameColumn}>{request.name}</td>
+              <td className={styles.idColumn}>{request.id}</td>
+              <td className={styles.dateColumn}>{request.date}</td>
+              <td className={styles.actionColumn}>
+                <button
+                  className={styles.approveButton}
+                  onClick={() => handleApproveClick(request)}
+                >
+                  승인
+                </button>
+                <button
+                  className={styles.rejectButton}
+                  onClick={() => handleRejectClick(request)}
+                >
+                  거절
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {showApproveModal && (
+        <TeacherApproveModal
+          onClose={() => setShowApproveModal(false)}
+          onApprove={handleApprove}
+        />
+      )}
+      {showRejectModal && (
+        <TeacherRejectModal
+          onClose={() => setShowRejectModal(false)}
+          onReject={handleReject}
+        />
+      )}
+    </div>
   );
 };
 

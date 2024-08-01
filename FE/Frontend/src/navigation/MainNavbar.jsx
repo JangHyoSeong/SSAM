@@ -15,7 +15,8 @@ const MainNavbar = () => {
           to="/teacherclassroom"
           className={
             location.pathname.startsWith("/teacherclassroom") ||
-            location.pathname.startsWith("/parentsclassroom")
+            location.pathname.startsWith("/parentsclassroom") ||
+            location.pathname.startsWith("/teacherauthorization")  // 승인관리 경로 추가
               ? `${styles.navtxt} ${styles.active}`
               : styles.navtxt
           }

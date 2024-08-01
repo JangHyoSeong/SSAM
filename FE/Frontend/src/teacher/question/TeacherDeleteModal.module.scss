@@ -60,6 +60,22 @@
   cursor: pointer;
 }
 
-.teacherDeleteModalButtons button:hover {
-  background-color: #ddd;
+.confirmButton {
+  background-color: #3597ff;
+  color: white;
+}
+
+.cancelButton {
+  background-color: #e8e8e8;
+  color: black;
+}
+
+.confirmButton:hover {
+  background-color: #1486ff;
+  color: white;
+}
+
+.cancelButton:hover {
+  background-color: #dbdbdb;
+  color: black;
 }

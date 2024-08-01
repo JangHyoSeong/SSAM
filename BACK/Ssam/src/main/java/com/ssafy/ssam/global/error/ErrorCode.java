@@ -31,6 +31,8 @@ public enum ErrorCode {
     InvalidClassroomData(HttpStatus.BAD_REQUEST, "학급 생성에 필요한 정보가 기입되지 않았습니다"),
     BoardAccessDeniedException(HttpStatus.FORBIDDEN, "학급에 접근 권한이 없습니다."),
     BoardAlreadyExistsException(HttpStatus.BAD_REQUEST, "이미 학급이 존재합니다"),
+    AlreadyRegisteredException(HttpStatus.BAD_REQUEST, "이미 요청을 보낸 학급입니다"),
+    NotFoundStudentInBoardException(HttpStatus.BAD_REQUEST, "학급에 존재하지 않는 학생입니다"),
 
     // questionException
     QuestionNotFoundException(HttpStatus.NOT_FOUND, "존재하지 않는 질문입니다.");

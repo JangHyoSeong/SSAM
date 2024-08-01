@@ -21,4 +21,6 @@ public interface UserBoardRelationRepository extends JpaRepository<UserBoardRela
 
     @Query("SELECT u.user FROM UserBoardRelation u WHERE u.board = :board AND u.status = :status")
     List<User> findUsersByBoardAndStatus(Board board, UserBoardRelationStatus status);
+
+    Optional<UserBoardRelation> findByUserAndBoardAndStatusIn(User user, Board board, List<UserBoardRelationStatus> statuses);
 }

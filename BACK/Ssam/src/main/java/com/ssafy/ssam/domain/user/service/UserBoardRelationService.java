@@ -1,10 +1,20 @@
 package com.ssafy.ssam.domain.user.service;
 
+import com.ssafy.ssam.domain.classroom.entity.Board;
+import com.ssafy.ssam.domain.classroom.repository.BoardRepository;
+import com.ssafy.ssam.domain.consult.dto.response.ConsultSummaryDTO;
+import com.ssafy.ssam.domain.consult.entity.Appointment;
+import com.ssafy.ssam.domain.consult.entity.Consult;
+import com.ssafy.ssam.domain.consult.repository.AppointmentRepository;
+import com.ssafy.ssam.domain.consult.repository.ConsultRepository;
+import com.ssafy.ssam.domain.user.dto.response.StudentInfoDetailDTO;
 import com.ssafy.ssam.domain.user.dto.response.StudentRegistInfoDTO;
+
 import com.ssafy.ssam.domain.user.entity.UserBoardRelation;
 import com.ssafy.ssam.domain.user.entity.UserBoardRelationStatus;
 import com.ssafy.ssam.domain.user.repository.UserBoardRelationRepository;
 import com.ssafy.ssam.global.auth.dto.CustomUserDetails;
+import com.ssafy.ssam.global.auth.entity.User;
 import com.ssafy.ssam.global.auth.repository.UserRepository;
 import com.ssafy.ssam.global.dto.CommonResponseDto;
 import com.ssafy.ssam.global.error.CustomException;
@@ -23,6 +33,9 @@ public class UserBoardRelationService {
 
     private final UserRepository userRepository;
     private final UserBoardRelationRepository userBoardRelationRepository;
+    private final ConsultRepository consultRepository;
+    private final AppointmentRepository appointmentRepository;
+    private final BoardRepository boardRepository;
 
     // 학급에 보낸 등록 요청을 반환하는 함수
     public List<StudentRegistInfoDTO> getRegistRequestList() {
@@ -67,9 +80,54 @@ public class UserBoardRelationService {
         return new CommonResponseDto("Rejected");
     }
 
+    // 학생 상세 정보를 제공하는 로직
+    public StudentInfoDetailDTO getStudentDetail(Integer studentId) {
+        User student = userRepository.findByUserId(studentId)
+                .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
+        CustomUserDetails userDetails = findCustomUserDetails();
+        Integer teacherId = userDetails.getUserId();
+
+        List<Appointment> appointments = appointmentRepository.findByStudent_UserIdAndTeacher_UserId(studentId, teacherId);
+        List<Consult> consults =  consultRepository.findByAppointmentIn(appointments);
+
+        return StudentInfoDetailDTO.builder()
+                .name(student.getName())
+                .birth(student.getBirth())
+                .studentImage(student.getImgUrl())
+                .consultList(consultSummaryListToDTO(consults))
+                .build();
+    }
+
+    // 학급에서 학생을 삭제하는 로직
+    public CommonResponseDto deleteStudentFromBoard(Integer studentId) {
+        CustomUserDetails userDetails = findCustomUserDetails();
+        Board board = boardRepository.findByBoardId(userDetails.getBoardId())
+                .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
+
+        UserBoardRelation relation = userBoardRelationRepository.findByUserUserIdAndBoardBoardIdAndStatus(studentId, board.getBoardId(), UserBoardRelationStatus.ACCEPTED)
+                .orElseThrow(() -> new CustomException(ErrorCode.NotFoundStudentInBoardException));
+
+        userBoardRelationRepository.delete(relation);
+
+        return new CommonResponseDto("Delete Completed");
+    }
+
     // CustomUserDetail을 반환하는 함수
     public CustomUserDetails findCustomUserDetails() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (CustomUserDetails) authentication.getPrincipal();
     }
+
+    // consult를 consultSummaryDTO로 변환하는 로직
+    private List<ConsultSummaryDTO> consultSummaryListToDTO (List<Consult> consults) {
+        return consults.stream()
+                .map(consult -> ConsultSummaryDTO.builder()
+                                .date(consult.getActualDate().toLocalDate())
+                                .runningTime(consult.getRunningTime())
+                                .consultType(consult.getTopic().toString())
+                                .build()
+                )
+                .collect(Collectors.toList());
+    }
+
 }

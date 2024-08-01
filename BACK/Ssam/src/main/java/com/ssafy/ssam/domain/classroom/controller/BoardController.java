@@ -12,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
-
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -25,7 +23,7 @@ public class BoardController {
     // Post(학급 생성)
     @PreAuthorize("hasRole('TEACHER')")
     @PostMapping("/teachers")
-    public ResponseEntity<BoardGetResponseDTO> createBoard(@Valid @RequestBody BoardCreateRequestDTO requestDTO) {
+    public ResponseEntity<CommonResponseDto> createBoard(@Valid @RequestBody BoardCreateRequestDTO requestDTO) {
         return ResponseEntity.ok(boardService.createBoard(requestDTO));
     }
 

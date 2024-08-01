@@ -43,9 +43,9 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.deleteQuestion(questionId));
     }
     @PutMapping("/answers/{questionId}")
-    public ResponseEntity<QuestionResponseDto> createAnswer(@PathVariable Integer questionId, @Valid @RequestBody AnswerRequestDto answerRequestDto) {
+    public ResponseEntity<QuestionResponseDto> putAnswer(@PathVariable Integer questionId, @Valid @RequestBody AnswerRequestDto answerRequestDto) {
         log.info("controller - createAnswer");
-        return ResponseEntity.ok(questionService.createAnswer(questionId, answerRequestDto));
+        return ResponseEntity.ok(questionService.putAnswer(questionId, answerRequestDto));
     }
 
 }

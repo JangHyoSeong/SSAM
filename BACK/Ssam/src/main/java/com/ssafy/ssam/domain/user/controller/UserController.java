@@ -2,6 +2,7 @@ package com.ssafy.ssam.domain.user.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,12 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
     private final UserService joinService;
 
+    @GetMapping("/gen")
+    public ResponseEntity<CommonResponseDto> userGenProcess(){
+        return ResponseEntity.ok(joinService.userGenProcess());
+    }
+    
+    
     @PostMapping("/students")
     public ResponseEntity<CommonResponseDto> studentJoinProcess(@Valid @RequestBody UserDto userDto){
         return ResponseEntity.ok(joinService.studentJoinProcess(userDto));

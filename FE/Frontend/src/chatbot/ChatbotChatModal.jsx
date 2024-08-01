@@ -12,8 +12,10 @@ const ChatbotStudyModal = ({ isVisible, closeModal }) => {
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         <img src={SSAM} className={styles.logo} />
         <hr />
-        <div className={styles.chatContent}>
-          <p>이곳은 대화방입니다</p>
+        <div className={styles.chatArray}>
+          <h4>SSAM 문의하기</h4>
+          <div className={styles.chatContent}></div>
+          <input form="text" className={styles.textInput} placeholder="채팅을 입력하세요"></input>
         </div>
         <div className={styles.chatMenu}>
           <div className={styles.imgBox} onClick={closeModal}>

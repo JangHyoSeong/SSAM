@@ -27,19 +27,18 @@ const TeacherReservationList = ({ selectedDate }) => {
         <FiCalendar className={styles.calendarIcon} />
       </div>
       <div className={styles.table}>
-        <div className={styles.row}>
+        <div className={styles.tableHeader}>
           <div className={styles.cellHeader}>상담 시간</div>
           <div className={styles.cellHeader}>상담 신청</div>
         </div>
         {consultations.map((consultation, index) => (
           <div className={styles.row} key={index}>
-            <div className={styles.cell}>{consultation.time}</div>
-            <div className={styles.cell}>
+            <div className={styles.consultationBox}>
+              <div className={styles.time}>{consultation.time}</div>
               <button
                 className={
                   consultation.available ? styles.available : styles.unavailable
                 }
-                // 버튼 클릭 시 신청 가능/불가능 상태 변경
                 onClick={() => toggleAvailability(index)}
               >
                 {consultation.available ? "신청가능" : "신청불가"}

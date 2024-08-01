@@ -3,39 +3,52 @@
 }
 
 .calendarContainer {
-  width: 40%; /* 두 요소가 나란히 배치되도록 너비를 40%로 설정 */
-  margin: 2% 0; /* 상하 여백 2%로 설정 */
-  padding: 1.5vh;
-  border: 0.2rem solid #ddd; /* 테두리 추가 */
-  background-color: white; /* 배경색 설정 */
-  box-shadow: 0 2vh 4vh rgba(0, 0, 0, 0.1); /* 그림자 추가 */
-  overflow: hidden; /* 불필요한 스크롤 제거 */
+  width: 43%;
+  margin: 0% 2%;
+  max-width: 900px;
+  margin: 0px 0px 40px 0px; /* 상우하좌*/
+  padding: 2vh;
+  background-color: white; 
+  border-radius: 8px; /* 둥근 모서리 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+  overflow: hidden;
 
   .fc {
     &-toolbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 1vh;
+      padding: 0 1vw; /* 좌우 여백 추가 */
     }
 
     &-toolbar-title {
-      font-size: 1.5rem; /* 제목 크기 조정 */
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #333; /* 제목 색상 */
     }
 
     &-day-header {
-      padding: 1vh 0; /* 요일 헤더 패딩 조정 */
-      color: #dce7fc; /* 요일 헤더 색상 설정 */
-      background-color: #f8f9fa; /* 요일 헤더 배경색 설정 */
+      padding: 1vh 0;
+      color: #666; /* 요일 헤더 색상 */
+      background-color: #f8f9fa;
+      font-weight: 500;
     }
 
     &-daygrid-day-number {
-      font-size: 1rem; /* 날짜 숫자 크기 조정 */
-      padding: 0.5vh; /* 날짜 숫자 패딩 추가 */
+      font-size: 1rem;
+      padding: 0.5vh;
+      color: #333; /* 날짜 숫자 색상 */
+      font-weight: 500;
     }
 
     &-daygrid-event {
-      font-size: 1rem; /* 이벤트 텍스트 크기 조정 */
-      padding: 0.5vh 1vh; /* 이벤트 텍스트 여백 조정 */
+      font-size: 1rem;
+      padding: 0.5vh 1vh;
+      background-color: #dce7fc; /* 이벤트 배경색 */
+      border-radius: 4px; /* 이벤트 둥근 모서리 */
+      color: #333; /* 이벤트 텍스트 색상 */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 이벤트 그림자 */
     }
   }
 }

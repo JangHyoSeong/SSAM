@@ -1,17 +1,17 @@
 package com.ssafy.ssam.domain.classroom.service;
 
-import com.ssafy.ssam.domain.AmazonS3.service.S3ImageService;
+import com.ssafy.ssam.global.amazonS3.service.S3ImageService;
 import com.ssafy.ssam.domain.classroom.dto.request.BoardCreateRequestDTO;
 import com.ssafy.ssam.domain.classroom.dto.response.BoardGetByPinResponseDTO;
 import com.ssafy.ssam.domain.classroom.dto.response.BoardGetResponseDTO;
 import com.ssafy.ssam.domain.classroom.entity.Board;
-import com.ssafy.ssam.domain.classroom.entity.UserBoardRelation;
-import com.ssafy.ssam.domain.classroom.entity.UserBoardRelationStatus;
+import com.ssafy.ssam.domain.user.entity.UserBoardRelation;
+import com.ssafy.ssam.domain.user.entity.UserBoardRelationStatus;
 import com.ssafy.ssam.domain.classroom.repository.BoardRepository;
-import com.ssafy.ssam.domain.classroom.repository.UserBoardRelationRepository;
+import com.ssafy.ssam.domain.user.repository.UserBoardRelationRepository;
 import com.ssafy.ssam.domain.user.dto.response.StudentInfoListDTO;
-import com.ssafy.ssam.domain.user.entity.User;
-import com.ssafy.ssam.domain.user.repository.UserRepository;
+import com.ssafy.ssam.global.auth.entity.User;
+import com.ssafy.ssam.global.auth.repository.UserRepository;
 import com.ssafy.ssam.global.dto.CommonResponseDto;
 import com.ssafy.ssam.global.error.CustomException;
 import com.ssafy.ssam.global.error.ErrorCode;

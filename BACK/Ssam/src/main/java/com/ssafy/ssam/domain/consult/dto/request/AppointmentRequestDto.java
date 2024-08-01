@@ -1,11 +1,5 @@
 package com.ssafy.ssam.domain.consult.dto.request;
 
-import com.ssafy.ssam.domain.classroom.entity.Board;
-import com.ssafy.ssam.domain.classroom.entity.School;
-import com.ssafy.ssam.domain.consult.entity.AppointmentStatus;
-import com.ssafy.ssam.domain.user.entity.User;
-import com.ssafy.ssam.domain.user.entity.UserRole;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -14,10 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.StringJoiner;
 
 @Getter
 @Setter

@@ -2,15 +2,13 @@ package com.ssafy.ssam.domain.consult.entity;
 
 import com.ssafy.ssam.domain.consult.dto.request.AppointmentRequestDto;
 import com.ssafy.ssam.domain.consult.dto.response.AppointmentResponseDto;
-import com.ssafy.ssam.domain.user.entity.User;
+import com.ssafy.ssam.global.auth.entity.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

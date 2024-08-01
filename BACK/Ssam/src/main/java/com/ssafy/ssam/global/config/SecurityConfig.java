@@ -1,8 +1,8 @@
 package com.ssafy.ssam.global.config;
 
-import com.ssafy.ssam.global.jwt.JwtFilter;
-import com.ssafy.ssam.global.jwt.JwtUtil;
-import com.ssafy.ssam.global.jwt.LoginFilter;
+import com.ssafy.ssam.global.auth.jwt.JwtFilter;
+import com.ssafy.ssam.global.auth.jwt.JwtUtil;
+import com.ssafy.ssam.global.auth.jwt.LoginFilter;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -11,22 +11,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-
-import com.ssafy.ssam.global.jwt.JwtFilter;
-import com.ssafy.ssam.global.jwt.JwtUtil;
-import com.ssafy.ssam.global.jwt.LoginFilter;
-
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.Builder;
-import lombok.RequiredArgsConstructor;
 
 @Builder
 @RequiredArgsConstructor

@@ -1,6 +1,5 @@
 package com.ssafy.ssam.global.error;
 
-import com.ssafy.ssam.domain.notification.entity.Question;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -7,9 +7,11 @@ import com.ssafy.ssam.domain.consult.entity.Appointment;
 import com.ssafy.ssam.domain.consult.entity.Consult;
 import com.ssafy.ssam.domain.consult.repository.AppointmentRepository;
 import com.ssafy.ssam.domain.consult.repository.ConsultRepository;
+import com.ssafy.ssam.domain.user.dto.request.AlarmCreateRequestDto;
 import com.ssafy.ssam.domain.user.dto.response.StudentInfoDetailDTO;
 import com.ssafy.ssam.domain.user.dto.response.StudentRegistInfoDTO;
 
+import com.ssafy.ssam.domain.user.entity.AlarmType;
 import com.ssafy.ssam.domain.user.entity.UserBoardRelation;
 import com.ssafy.ssam.domain.user.entity.UserBoardRelationStatus;
 import com.ssafy.ssam.domain.user.repository.UserBoardRelationRepository;
@@ -23,10 +25,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class UserBoardRelationService {
@@ -36,6 +41,7 @@ public class UserBoardRelationService {
     private final ConsultRepository consultRepository;
     private final AppointmentRepository appointmentRepository;
     private final BoardRepository boardRepository;
+    private final AlarmService alarmService;
 
     // 학급에 보낸 등록 요청을 반환하는 함수
     public List<StudentRegistInfoDTO> getRegistRequestList() {
@@ -61,6 +67,14 @@ public class UserBoardRelationService {
 
         UserBoardRelation relation = userBoardRelationRepository.findByUserUserIdAndBoardBoardIdAndStatus(studentId, boardId, UserBoardRelationStatus.WAITING)
                 .orElseThrow(() -> new CustomException(ErrorCode.NotFoundRegistration));
+
+        AlarmCreateRequestDto studentAlarmCreateRequestDto
+                = AlarmCreateRequestDto.builder()
+                .userId(relation.getUser().getUserId())
+                .alarmType(AlarmType.ACCEPT)
+                .build();
+
+        alarmService.creatAlarm(studentAlarmCreateRequestDto);
 
         relation.setStatus(UserBoardRelationStatus.ACCEPTED);
         userBoardRelationRepository.save(relation);

@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -88,7 +89,8 @@ public class BoardService {
         Board board = boardRepository.findById(classId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
 
-        List<User> users = userBoardRelationRepository.findUsersByBoardAndStatus(board, UserBoardRelationStatus.ACCEPTED);
+        List<User> users = userBoardRelationRepository.findUsersByBoardAndStatus(board, UserBoardRelationStatus.ACCEPTED)
+                .orElse(new ArrayList<>());
 
         List<StudentInfoListDTO> userInfoList = users != null ? users.stream()
                 .map(user -> StudentInfoListDTO.builder()

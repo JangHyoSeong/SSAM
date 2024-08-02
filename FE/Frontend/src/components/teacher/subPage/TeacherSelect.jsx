@@ -7,10 +7,8 @@ import appointment from "../../../assets/appointment.png";
 import ClassProduceModal from './ClassProduceModal';
 
 const TeacherSelect = () => {
-  // State to control the visibility of the modal
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Function to toggle modal visibility
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };

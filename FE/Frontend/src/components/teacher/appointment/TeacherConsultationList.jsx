@@ -1,11 +1,33 @@
-// import { useEffect } from 'react';
-import { NavLink } from "react-router-dom";
+import React from "react";
+import PropTypes from "prop-types";
+import { NavLink } from "react-router-dom";  // NavLink 컴포넌트를 import
 import styles from "./TeacherConsultationList.module.scss";
-import ConsultationItem from "./ConsultationItem";
-// import useConsultationStore from '../../store/consultationStore'
+
+const ConsultationItem = ({ date, time, studentName, subject, content }) => {
+  return (
+    <div className={styles.consultationRow}>
+      <div className={styles.cell}>{date}</div>
+      <div className={styles.cellSmall}>{time}</div>
+      <div className={styles.cellSmall}>{studentName}</div>
+      <div className={styles.cellMedium}>{subject}</div>
+      <div className={styles.cellLarge}>{content}</div>
+      <div className={styles.cellButtons}>
+        <button className={styles.approveButton}>승인</button>
+        <button className={styles.editButton}>거절</button>
+      </div>
+    </div>
+  );
+};
+
+ConsultationItem.propTypes = {
+  date: PropTypes.string.isRequired,
+  time: PropTypes.string.isRequired,
+  studentName: PropTypes.string.isRequired,
+  subject: PropTypes.string.isRequired,
+  content: PropTypes.string.isRequired,
+};
 
 const TeacherConsultationList = () => {
-  // 예제 데이터
   const consultations = [
     {
       date: "2024-07-15",
@@ -21,12 +43,6 @@ const TeacherConsultationList = () => {
       subject: "학교 생활",
       content: "우리 아이가 잘 지내고 있는지 궁금해요",
     },
-    // 백 연결할경우
-    // const { consultations, fetchConsultations } = useConsultationStore();
-
-    // useEffect(() => {
-    //   fetchConsultations(); // Fetch consultations when the component mounts
-    // }, [fetchConsultations]);
   ];
 
   return (
@@ -51,11 +67,12 @@ const TeacherConsultationList = () => {
       </nav>
       <section className={styles.consultationSection}>
         <header className={styles.headerRow}>
-          <h3>상담 날짜</h3>
-          <h3>상담 시간</h3>
-          <h3>학생 이름</h3>
-          <h3>주제</h3>
-          <h3>내용</h3>
+          <h3 className={styles.cellHeader}>날짜</h3>
+          <h3 className={styles.cellHeaderSmall}>시간</h3>
+          <h3 className={styles.cellHeaderSmall}>이름</h3>
+          <h3 className={styles.cellHeaderMedium}>주제</h3>
+          <h3 className={styles.cellHeaderLarge}>내용</h3>
+          <h3 className={styles.cellHeaderButtons}>관리</h3>
         </header>
         {consultations.map((consultation, index) => (
           <ConsultationItem

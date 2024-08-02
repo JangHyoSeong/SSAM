@@ -1,9 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { NavLink } from "react-router-dom";  // NavLink 컴포넌트를 import
+import { NavLink } from "react-router-dom";
 import styles from "./TeacherConsultationList.module.scss";
+import ConsultationApproveModal from "./ConsultationApproveModal";
+import ConsultationRejectModal from "./ConsultationRejectModal";
 
-const ConsultationItem = ({ date, time, studentName, subject, content }) => {
+const ConsultationItem = ({
+  date,
+  time,
+  studentName,
+  subject,
+  content,
+  onApprove,
+  onReject,
+  onToggleStatus,
+  status,
+}) => {
   return (
     <div className={styles.consultationRow}>
       <div className={styles.cell}>{date}</div>
@@ -12,8 +24,24 @@ const ConsultationItem = ({ date, time, studentName, subject, content }) => {
       <div className={styles.cellMedium}>{subject}</div>
       <div className={styles.cellLarge}>{content}</div>
       <div className={styles.cellButtons}>
-        <button className={styles.approveButton}>승인</button>
-        <button className={styles.editButton}>거절</button>
+        {status === "approved" ? (
+          <button className={styles.statusButton} onClick={onToggleStatus}>
+            상담 하기
+          </button>
+        ) : status === "completed" ? (
+          <button className={styles.statusButtonCompleted} onClick={onToggleStatus}>
+            상담 완료
+          </button>
+        ) : status === "cancelled" ? (
+          <button className={styles.statusButtonCancelled} onClick={onToggleStatus}>
+            상담 취소
+          </button>
+        ) : (
+          <>
+            <button className={styles.approveButton} onClick={onApprove}>승인</button>
+            <button className={styles.editButton} onClick={onReject}>거절</button>
+          </>
+        )}
       </div>
     </div>
   );
@@ -25,10 +53,14 @@ ConsultationItem.propTypes = {
   studentName: PropTypes.string.isRequired,
   subject: PropTypes.string.isRequired,
   content: PropTypes.string.isRequired,
+  onApprove: PropTypes.func.isRequired,
+  onReject: PropTypes.func.isRequired,
+  onToggleStatus: PropTypes.func.isRequired,
+  status: PropTypes.string.isRequired,
 };
 
 const TeacherConsultationList = () => {
-  const consultations = [
+  const initialConsultations = [
     {
       date: "2024-07-15",
       time: "15:00 ~ 15:20",
@@ -44,6 +76,62 @@ const TeacherConsultationList = () => {
       content: "우리 아이가 잘 지내고 있는지 궁금해요",
     },
   ];
+
+  const [consultations, setConsultations] = useState(initialConsultations);
+  const [isApproveModalOpen, setApproveModalOpen] = useState(false);
+  const [isRejectModalOpen, setRejectModalOpen] = useState(false);
+  const [selectedConsultationIndex, setSelectedConsultationIndex] = useState(null);
+  const [consultationStatus, setConsultationStatus] = useState(
+    initialConsultations.map(() => ({ status: "pending" }))
+  );
+
+  const handleApprove = (index) => {
+    setSelectedConsultationIndex(index);
+    setApproveModalOpen(true);
+  };
+
+  const handleReject = (index) => {
+    setSelectedConsultationIndex(index);
+    setRejectModalOpen(true);
+  };
+
+  const closeApproveModal = () => {
+    setApproveModalOpen(false);
+  };
+
+  const closeRejectModal = () => {
+    setRejectModalOpen(false);
+  };
+
+  const approveConsultation = () => {
+    setConsultationStatus((prevStatus) => {
+      const newStatus = [...prevStatus];
+      newStatus[selectedConsultationIndex].status = "approved";
+      return newStatus;
+    });
+    setApproveModalOpen(false);
+  };
+
+  const rejectConsultation = () => {
+    setConsultations((prevConsultations) => {
+      const newConsultations = prevConsultations.filter((_, index) => index !== selectedConsultationIndex);
+      return newConsultations;
+    });
+    setConsultationStatus((prevStatus) => {
+      const newStatus = [...prevStatus];
+      newStatus.splice(selectedConsultationIndex, 1);
+      return newStatus;
+    });
+    setRejectModalOpen(false);
+  };
+
+  const toggleStatus = (index) => {
+    setConsultationStatus((prevStatus) => {
+      const newStatus = [...prevStatus];
+      newStatus[index].status = newStatus[index].status === "approved" ? "completed" : "approved";
+      return newStatus;
+    });
+  };
 
   return (
     <div className={styles.consultationlistContainer}>
@@ -82,9 +170,25 @@ const TeacherConsultationList = () => {
             studentName={consultation.studentName}
             subject={consultation.subject}
             content={consultation.content}
+            onApprove={() => handleApprove(index)}
+            onReject={() => handleReject(index)}
+            onToggleStatus={() => toggleStatus(index)}
+            status={consultationStatus[index].status}
           />
         ))}
       </section>
+      {isApproveModalOpen && (
+        <ConsultationApproveModal
+          onClose={closeApproveModal}
+          onApprove={approveConsultation}
+        />
+      )}
+      {isRejectModalOpen && (
+        <ConsultationRejectModal
+          onClose={closeRejectModal}
+          onReject={rejectConsultation}
+        />
+      )}
     </div>
   );
 };

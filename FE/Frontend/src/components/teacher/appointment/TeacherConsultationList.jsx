@@ -1,12 +1,62 @@
-// import { useEffect } from 'react';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 import styles from "./TeacherConsultationList.module.scss";
-import ConsultationItem from "./ConsultationItem";
-// import useConsultationStore from '../../store/consultationStore'
+import ConsultationApproveModal from "./ConsultationApproveModal";
+import ConsultationRejectModal from "./ConsultationRejectModal";
+
+const ConsultationItem = ({
+  date,
+  time,
+  studentName,
+  subject,
+  content,
+  onApprove,
+  onReject,
+  onToggleStatus,
+  status,
+}) => {
+  const handleConsult = () => {
+    window.open("https://www.naver.com", "_blank");
+  };
+
+  return (
+    <div className={styles.consultationRow}>
+      <div className={styles.cell}>{date}</div>
+      <div className={styles.cellSmall}>{time}</div>
+      <div className={styles.cellSmall}>{studentName}</div>
+      <div className={styles.cellMedium}>{subject}</div>
+      <div className={styles.cellLarge}>{content}</div>
+      <div className={styles.cellButtons}>
+        {status === "approved" ? (
+          <button className={styles.statusButton} onClick={handleConsult}>
+            상담 하기
+          </button>
+        ) : (
+          <>
+            <button className={styles.approveButton} onClick={onApprove}>승인</button>
+            <button className={styles.editButton} onClick={onReject}>거절</button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+ConsultationItem.propTypes = {
+  date: PropTypes.string.isRequired,
+  time: PropTypes.string.isRequired,
+  studentName: PropTypes.string.isRequired,
+  subject: PropTypes.string.isRequired,
+  content: PropTypes.string.isRequired,
+  onApprove: PropTypes.func.isRequired,
+  onReject: PropTypes.func.isRequired,
+  onToggleStatus: PropTypes.func.isRequired,
+  status: PropTypes.string.isRequired,
+};
 
 const TeacherConsultationList = () => {
-  // 예제 데이터
-  const consultations = [
+  const initialConsultations = [
     {
       date: "2024-07-15",
       time: "15:00 ~ 15:20",
@@ -21,13 +71,63 @@ const TeacherConsultationList = () => {
       subject: "학교 생활",
       content: "우리 아이가 잘 지내고 있는지 궁금해요",
     },
-    // 백 연결할경우
-    // const { consultations, fetchConsultations } = useConsultationStore();
-
-    // useEffect(() => {
-    //   fetchConsultations(); // Fetch consultations when the component mounts
-    // }, [fetchConsultations]);
   ];
+
+  const [consultations, setConsultations] = useState(initialConsultations);
+  const [isApproveModalOpen, setApproveModalOpen] = useState(false);
+  const [isRejectModalOpen, setRejectModalOpen] = useState(false);
+  const [selectedConsultationIndex, setSelectedConsultationIndex] = useState(null);
+  const [consultationStatus, setConsultationStatus] = useState(
+    initialConsultations.map(() => ({ status: "pending" }))
+  );
+
+  const handleApprove = (index) => {
+    setSelectedConsultationIndex(index);
+    setApproveModalOpen(true);
+  };
+
+  const handleReject = (index) => {
+    setSelectedConsultationIndex(index);
+    setRejectModalOpen(true);
+  };
+
+  const closeApproveModal = () => {
+    setApproveModalOpen(false);
+  };
+
+  const closeRejectModal = () => {
+    setRejectModalOpen(false);
+  };
+
+  const approveConsultation = () => {
+    setConsultationStatus((prevStatus) => {
+      const newStatus = [...prevStatus];
+      newStatus[selectedConsultationIndex].status = "approved";
+      return newStatus;
+    });
+    setApproveModalOpen(false);
+  };
+
+  const rejectConsultation = () => {
+    setConsultations((prevConsultations) => {
+      const newConsultations = prevConsultations.filter((_, index) => index !== selectedConsultationIndex);
+      return newConsultations;
+    });
+    setConsultationStatus((prevStatus) => {
+      const newStatus = [...prevStatus];
+      newStatus.splice(selectedConsultationIndex, 1);
+      return newStatus;
+    });
+    setRejectModalOpen(false);
+  };
+
+  const toggleStatus = (index) => {
+    setConsultationStatus((prevStatus) => {
+      const newStatus = [...prevStatus];
+      newStatus[index].status = newStatus[index].status === "approved" ? "completed" : "approved";
+      return newStatus;
+    });
+  };
 
   return (
     <div className={styles.consultationlistContainer}>
@@ -51,11 +151,12 @@ const TeacherConsultationList = () => {
       </nav>
       <section className={styles.consultationSection}>
         <header className={styles.headerRow}>
-          <h3>상담 날짜</h3>
-          <h3>상담 시간</h3>
-          <h3>학생 이름</h3>
-          <h3>주제</h3>
-          <h3>내용</h3>
+          <h3 className={styles.cellHeader}>날짜</h3>
+          <h3 className={styles.cellHeaderSmall}>시간</h3>
+          <h3 className={styles.cellHeaderSmall}>이름</h3>
+          <h3 className={styles.cellHeaderMedium}>주제</h3>
+          <h3 className={styles.cellHeaderLarge}>내용</h3>
+          <h3 className={styles.cellHeaderButtons}>관리</h3>
         </header>
         {consultations.map((consultation, index) => (
           <ConsultationItem
@@ -65,9 +166,25 @@ const TeacherConsultationList = () => {
             studentName={consultation.studentName}
             subject={consultation.subject}
             content={consultation.content}
+            onApprove={() => handleApprove(index)}
+            onReject={() => handleReject(index)}
+            onToggleStatus={() => toggleStatus(index)}
+            status={consultationStatus[index].status}
           />
         ))}
       </section>
+      {isApproveModalOpen && (
+        <ConsultationApproveModal
+          onClose={closeApproveModal}
+          onApprove={approveConsultation}
+        />
+      )}
+      {isRejectModalOpen && (
+        <ConsultationRejectModal
+          onClose={closeRejectModal}
+          onReject={rejectConsultation}
+        />
+      )}
     </div>
   );
 };

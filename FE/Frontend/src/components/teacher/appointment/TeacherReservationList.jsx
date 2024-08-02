@@ -42,7 +42,7 @@ const TeacherReservationList = ({ selectedDate }) => {
                   }
                   onClick={() => toggleAvailability(index)}
                 >
-                  {consultation.available ? "신청가능" : "신청불가"}
+                  {consultation.available ? "신청 가능" : "신청 불가"}
                 </button>
               </div>
             </div>

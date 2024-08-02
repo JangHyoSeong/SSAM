@@ -54,7 +54,6 @@ const TeacherSelect = () => {
           </div>
         </NavLink>
       </div>
-      <p className={styles.scroll}>Scroll ▽</p>
       {isModalOpen && <ClassProduceModal />}
     </div>
   );

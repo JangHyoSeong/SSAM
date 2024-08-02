@@ -192,7 +192,7 @@ const TeacherJoin = () => {
 
   useEffect(() => {
     axios
-      .get("schools")
+      .get("/schools")
       .then((response) => {
         setSchools(response.data);
       })
@@ -212,11 +212,10 @@ const TeacherJoin = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("/teachers", formData)
+      .post("/auth/teachers", formData)
       .then((response) => {
         console.log("axios 성공", response);
-        alert("성공");
-        // window.location.replace('./teacherlogin');
+        window.location.replace('./teacherlogin');
       })
       .catch((error) => {
         console.error("axios 실패", error);
@@ -274,7 +273,6 @@ const TeacherJoin = () => {
                   name="schoolId"
                   value={formData.schoolId}
                   onChange={handleChange}
-                  required
                 >
                   <option value="">학교 목록</option>
                   {schools.map((school) => (

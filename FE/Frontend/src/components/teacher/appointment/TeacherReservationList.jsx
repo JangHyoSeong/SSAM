@@ -35,14 +35,16 @@ const TeacherReservationList = ({ selectedDate }) => {
           <div className={styles.row} key={index}>
             <div className={styles.consultationBox}>
               <div className={styles.time}>{consultation.time}</div>
-              <button
-                className={
-                  consultation.available ? styles.available : styles.unavailable
-                }
-                onClick={() => toggleAvailability(index)}
-              >
-                {consultation.available ? "신청가능" : "신청불가"}
-              </button>
+              <div className={styles.buttonContainer}>
+                <button
+                  className={
+                    consultation.available ? styles.available : styles.unavailable
+                  }
+                  onClick={() => toggleAvailability(index)}
+                >
+                  {consultation.available ? "신청가능" : "신청불가"}
+                </button>
+              </div>
             </div>
           </div>
         ))}

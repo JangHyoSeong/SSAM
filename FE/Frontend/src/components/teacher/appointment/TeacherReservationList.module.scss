@@ -10,15 +10,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 43%;
-  margin: 0% 2%;
-  height: 700px;
-  margin: 0px 0px 40px 0px; /* 상우하좌*/
-  max-width: 900px;
-  padding: 1.5vh;
+  width: 45%;
+  border: 0.2px solid rgb(220, 220, 220);
+  border-top: none;
+  border-left: none;
+  height: 760px;
+  margin: -18px 0% 100px 0%; /* 상우하좌*/
+  max-width: 750px;
+  padding: 2vh; /* 상우하좌 */
   background-color: #f7f7f7;
-  border-radius: 8px; /* 둥근 모서리 */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
 
   .header {
     display: flex;
@@ -57,7 +57,6 @@
       justify-content: space-between;
       background-color: #dce7fc; /* 헤더 배경색 */
       padding: 2vh;
-      // border: 3px solid #dce7fc; /* 테두리 추가 */
       border-radius: 10px;
       font-weight: bold;
       color: #000000; /* 헤더 텍스트 색상 */
@@ -84,49 +83,42 @@
     .consultationBox {
       display: flex;
       align-items: center;
+      justify-content: center; /* 중앙 정렬 */
       width: 100%;
       padding: 1vh;
     }
 
     .time {
-      // flex: 1;
       text-align: center;
-      width: 255px;
+      flex: 1; /* 공간을 동일하게 분배 */
+    }
+
+    .buttonContainer {
+      text-align: center;
+      flex: 1; /* 공간을 동일하게 분배 */
+      display: flex;
+      justify-content: center; /* 버튼 중앙 정렬 */
     }
 
     button {
-      // flex: 1;
-      text-align: center;
-      width: 80px;
-      margin-left: 98px; /* 자동 마진으로 오른쪽으로 밀기 */
-      // margin-right: auto; /* 자동 마진으로 중앙 정렬 */
+      padding: 0.5vh 1vh;
+      @include radius(1rem);
+      background-color: #dce7fc;
+      color: #333;
+      border: none; /* 테두리 제거 */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: background-color 0.3s ease; /* 부드러운 색상 전환 효과 */
     }
   }
 
   .available {
-    @include radius(1rem);
-    padding: 0.5vh 1vh;
     background-color: #dce7fc;
-    color: #333;
-    border: none; /* 테두리 제거 */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: background-color 0.3s ease; /* 부드러운 색상 전환 효과 */
-
-    &:hover {
-      background-color: #b9d0fc;
-    }
   }
 
   .unavailable {
-    @include radius(1rem);
-    padding: 0.5vh 1vh;
     background-color: #fff; /* 기본 하얀색 배경 */
-    color: #333;
-    border: none; /* 테두리 제거 */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: background-color 0.3s ease; /* 부드러운 색상 전환 효과 */
+    border: 1px solid #d9d9d9; /* 기본 하얀색 배경에 회색 테두리 */
 
     &:hover {
       background-color: #d9d9d9; /* hover 시 회색 배경 */

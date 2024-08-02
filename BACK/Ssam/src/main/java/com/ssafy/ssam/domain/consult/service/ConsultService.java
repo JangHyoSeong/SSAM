@@ -6,12 +6,12 @@ import com.ssafy.ssam.domain.consult.entity.Appointment;
 import com.ssafy.ssam.domain.consult.entity.AppointmentStatus;
 import com.ssafy.ssam.domain.consult.repository.AppointmentRepository;
 import com.ssafy.ssam.domain.consult.repository.ConsultRepository;
-import com.ssafy.ssam.domain.user.entity.User;
-import com.ssafy.ssam.domain.user.entity.UserRole;
-import com.ssafy.ssam.domain.user.repository.UserRepository;
+import com.ssafy.ssam.global.auth.dto.CustomUserDetails;
+import com.ssafy.ssam.global.auth.entity.User;
+import com.ssafy.ssam.global.auth.entity.UserRole;
+import com.ssafy.ssam.global.auth.repository.UserRepository;
 import com.ssafy.ssam.global.error.CustomException;
 import com.ssafy.ssam.global.error.ErrorCode;
-import jakarta.persistence.EntityManager;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Builder
@@ -31,18 +33,33 @@ public class ConsultService {
     private final AppointmentRepository appointmentRepository;
     private final ConsultRepository consultRepository;
     private final UserRepository userRepository;
-    private final EntityManager em;
 
+    @Transactional(readOnly = true)
+    public List<AppointmentResponseDto> getAppointments(Integer teacherId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        User user = userRepository.findByUserId(userDetails.getUserId())
+                .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
+        User teacher = userRepository.findByUserIdAndRole(teacherId, UserRole.TEACHER)
+                .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
+
+        List<Appointment> appointments = appointmentRepository.findByTeacher_UserId(teacherId)
+                .orElse(new ArrayList<>());
+
+        List<AppointmentResponseDto> appointmentResponseDtos = new ArrayList<>();
+        for(Appointment appointment : appointments) {
+            appointmentResponseDtos.add(Appointment.toAppointmentDto(appointment));
+        }
+
+        return appointmentResponseDtos;
+    }
     public AppointmentResponseDto createAppointment(Integer teacherId, AppointmentRequestDto appointmentRequestDto){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        User student = userRepository.findByUsername(authentication.getName()).orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
-
-        // 토큰이 가진 예약자랑 넘겨받은 예약자 값이 다르면 비정상적 접근
-        if(!student.getUserId().equals(appointmentRequestDto.getStudentId()))
-            throw new CustomException(ErrorCode.IllegalArgument);
-
-        // 선생이 없으면 사람 없다
+        User user = userRepository.findByUserId(userDetails.getUserId())
+                .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
         User teacher = userRepository.findByUserIdAndRole(teacherId, UserRole.TEACHER)
                 .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
 
@@ -54,31 +71,51 @@ public class ConsultService {
         if(appointmentRepository.existsByStatusAndTimeRange(appointmentRequestDto.getStartTime(), appointmentRequestDto.getEndTime()))
             throw new CustomException(ErrorCode.UnavailableDate);
 
-        Appointment appointment = Appointment.toAppointment(teacher, student, appointmentRequestDto);
+        Appointment appointment = Appointment.toAppointment(teacher, user, appointmentRequestDto);
 
         // 예약자가 선생님이다 -> 예약 거부 상태 / 아니다 예약 신청
-        if(teacher.getUserId().equals(student.getUserId())) appointment.setStatus(AppointmentStatus.REJECT);
+        if(teacher.getUserId().equals(user.getUserId()) && userDetails.getRole().equals(UserRole.TEACHER.toString()))
+            appointment.setStatus(AppointmentStatus.REJECT);
 
         return Appointment.toAppointmentDto(appointmentRepository.save(appointment));
     }
+
     public AppointmentResponseDto deleteAppointment(Integer appointmentId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        // 토큰이 가진 예약자가 없는 사람이면 에러
-        User user = userRepository.findByUsername(authentication.getName())
+        User user = userRepository.findByUserId(userDetails.getUserId())
                 .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
-        Appointment appointment = em.find(Appointment.class, appointmentId);
+        Appointment appointment = appointmentRepository.findByAppointmentId(appointmentId)
+                .orElseThrow(() -> new CustomException(ErrorCode.AppointmentNotFoundException));
 
-
-        if(user.getRole().equals(UserRole.STUDENT)){
+        // 학생은 자신이 한 예약들 취소 가능
+        if(userDetails.getRole().equals(UserRole.STUDENT.toString())){
             if(!appointment.getStudent().equals(user)) throw new CustomException(ErrorCode.Unauthorized);
             appointment.setStatus(AppointmentStatus.CANCEL);
         }
-        // 선생님일때는 자신 이름 앞으로 된 예약들 수정 가능함
-        else if(user.getRole().equals(UserRole.TEACHER)){
+        // 선생님일때는 자신 이름 앞으로 된 예약들 취소 가능함
+        else if(userDetails.getRole().equals(UserRole.TEACHER.toString())){
             if(!appointment.getTeacher().equals(user)) throw new CustomException(ErrorCode.Unauthorized);
             appointment.setStatus(AppointmentStatus.CANCEL);
         }
+        return Appointment.toAppointmentDto(appointment);
+    }
+
+    public AppointmentResponseDto doneAppointment(Integer appointmentId){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        User user = userRepository.findByUserIdAndRole(userDetails.getUserId(), UserRole.TEACHER)
+                .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
+        Appointment appointment = appointmentRepository.findByAppointmentId(appointmentId)
+                .orElseThrow(() -> new CustomException(ErrorCode.AppointmentNotFoundException));
+
+
+        if(!userDetails.getUserId().equals(appointment.getTeacher().getUserId()))
+            throw new CustomException(ErrorCode.Unauthorized);
+
+        appointment.setStatus(AppointmentStatus.DONE);
         return Appointment.toAppointmentDto(appointment);
     }
 }

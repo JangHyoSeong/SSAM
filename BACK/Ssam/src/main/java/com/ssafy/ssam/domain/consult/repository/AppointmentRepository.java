@@ -1,13 +1,12 @@
 package com.ssafy.ssam.domain.consult.repository;
 
 import com.ssafy.ssam.domain.consult.entity.Appointment;
-import com.ssafy.ssam.domain.user.entity.User;
-import com.ssafy.ssam.domain.user.entity.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Integer>{
@@ -21,6 +20,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     boolean existsByStatusAndTimeRange(@Param("startTime") LocalDateTime startTime,
                                        @Param("endTime") LocalDateTime endTime);
 
-    Optional<Appointment> findByAppointmentId(int id);
-
+    Optional<Appointment> findByAppointmentId(Integer id);
+    Optional<List<Appointment>> findByTeacher_UserId(Integer teacherId);
+    List<Appointment> findByStudent_UserIdAndTeacher_UserId(Integer studentId, Integer teacherId);
 }

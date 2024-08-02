@@ -1,7 +1,6 @@
 package com.ssafy.ssam.domain.consult.dto.response;
 
 import com.ssafy.ssam.domain.consult.entity.AppointmentStatus;
-import com.ssafy.ssam.domain.user.entity.User;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;

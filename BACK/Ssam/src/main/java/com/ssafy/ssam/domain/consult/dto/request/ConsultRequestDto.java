@@ -1,11 +1,9 @@
 package com.ssafy.ssam.domain.consult.dto.request;
 
-import com.ssafy.ssam.domain.classroom.entity.Board;
-import com.ssafy.ssam.domain.classroom.entity.School;
 import com.ssafy.ssam.domain.consult.entity.Appointment;
 import com.ssafy.ssam.domain.consult.entity.ConsultTopic;
-import com.ssafy.ssam.domain.user.entity.UserRole;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +12,6 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
@@ -23,8 +20,10 @@ import java.util.List;
 @AllArgsConstructor
 public class ConsultRequestDto {
     private Integer consultId;
+    @NotNull
     private Appointment appointment;
-    private Date actualDate;
+    @NotNull
+    private LocalDate actualDate;
     private String content;
     private String videoUrl;
     private ConsultTopic topic;

@@ -1,0 +1,67 @@
+/* src/teacher/classroom/TeacherStudentDetail.module.scss */
+
+.studentDetail {
+  margin: 4vh;
+  display: flex;
+  flex-direction: row; /* Ensure horizontal alignment */
+  gap: 2vw; /* Space between the elements */
+  width: 100%; /* Ensure it takes full width of the parent */
+  flex-wrap: wrap; /* Allow wrapping if necessary */
+}
+
+.studentDetailBox {
+  flex: 0.5; /* Half the space of the container */
+  padding: 20px;
+  border: 3px solid #ddd;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.historyBox, .summaryBox {
+  flex: 1; /* Equally share the remaining space */
+  padding: 2vw;
+  border: 3px solid #ddd;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.studentPhoto {
+  width: 150px; /* Adjust the size of the student photo container */
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden; /* Ensure the image stays within the circular frame */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #ddd; /* Optional: add a border around the circular image */
+}
+
+.studentPhoto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensure the image covers the entire container */
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center; /* Center the button horizontally */
+  width: 100%; /* Ensure it takes full width of the parent */
+}
+
+.backButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.backButton:hover {
+  background-color: #0056b3;
+}

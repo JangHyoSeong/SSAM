@@ -16,7 +16,7 @@
 
 /* Styles */
 .menuArray {
-  height: 100vh;
+  height: 90vh;
 }
 
 .inviteCodeBox {
@@ -117,12 +117,4 @@
 
 .appointmentImg {
   width: 11vw;
-}
-
-.scroll {
-  position: relative;
-  text-align: center;
-  font-size: 150%;
-  font-weight: bold;
-  animation: moveUpDown 5s infinite;
 }

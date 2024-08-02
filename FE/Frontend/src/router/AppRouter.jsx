@@ -29,6 +29,9 @@ import ParentsQuestion from "../components/parents/question/ParentsQuestion";
 import ParentsClassroom from "../components/parents/classroom/ParentsClassroom";
 import ParentsReservationPage from "../components/parents/appointment/ParentsReservationPage";
 
+// Webrtc components
+import WebrtcPage from "../webrtc/react-webrtc-component";
+
 const AppRouter = () => {
   const location = useLocation();
 
@@ -101,6 +104,8 @@ const AppRouter = () => {
             />
             {/* Video Route */}
             <Route path="/video" element={<Video />} />
+            {/* WebRTC Route */}
+            <Route path="/webrtc" element={<WebrtcPage />} />
           </Routes>
         </div>
         {/* Chatbot */}

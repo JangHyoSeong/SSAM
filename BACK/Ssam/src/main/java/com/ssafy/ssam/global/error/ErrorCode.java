@@ -35,8 +35,10 @@ public enum ErrorCode {
     NotFoundStudentInBoardException(HttpStatus.BAD_REQUEST, "학급에 존재하지 않는 학생입니다"),
 
     // questionException
-    QuestionNotFoundException(HttpStatus.NOT_FOUND, "존재하지 않는 질문입니다.");
+    QuestionNotFoundException(HttpStatus.NOT_FOUND, "존재하지 않는 질문입니다."),
 
+    // alarmException
+    AlarmNotFoundException(HttpStatus.NOT_FOUND, "존재하지 않는 알람입니다");
     private final HttpStatus httpStatus;
     private String errorMessage;
 }

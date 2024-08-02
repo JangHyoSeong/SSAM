@@ -1,5 +1,6 @@
 package com.ssafy.ssam.domain.user.entity;
 
+import com.ssafy.ssam.domain.user.dto.response.AlarmResponseDto;
 import com.ssafy.ssam.global.auth.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -41,4 +42,13 @@ public class Alarm {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "alarm_time", columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime alarmTime;
+
+    static public AlarmResponseDto toAlarmResponseDto (Alarm alarm){
+        return AlarmResponseDto.builder()
+                .alarmId(alarm.getAlarmId())
+                .alarmType(alarm.getAlarmType())
+                .state(alarm.getState())
+                .alarmTime(alarm.getAlarmTime())
+                .build();
+    }
 }

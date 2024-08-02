@@ -1,5 +1,7 @@
 package com.ssafy.ssam.global.config;
 
+import com.ssafy.ssam.global.error.CustomAccessDeniedHandler;
+import com.ssafy.ssam.global.error.CustomAuthenticationEntryPoint;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +35,8 @@ import java.util.Collections;
 public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public static AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -93,7 +97,17 @@ public class SecurityConfig {
                     .requestMatchers("/v1/classrooms/answers/**", "/v1/classrooms/teachers/**", "/v1/consults/teachers/**").permitAll()
 
                 // 위에 말한 url 제외 모든 url은 로그인만 되어있으면 접근이 가능하다
-                    .anyRequest().authenticated())
+                    .anyRequest().authenticated()
+               )
+//               // 예외 처리 핸들러
+               .exceptionHandling(exceptionHandling -> exceptionHandling
+                       .authenticationEntryPoint(customAuthenticationEntryPoint)
+                       .accessDeniedHandler(customAccessDeniedHandler)
+               )
+//               .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//               .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class)
+////               .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class)
+//               .build();
 
                // 필터 모아서 처리
                 .with(new Custom(

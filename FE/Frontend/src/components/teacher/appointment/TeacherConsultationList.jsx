@@ -16,6 +16,10 @@ const ConsultationItem = ({
   onToggleStatus,
   status,
 }) => {
+  const handleConsult = () => {
+    window.open("https://www.naver.com", "_blank");
+  };
+
   return (
     <div className={styles.consultationRow}>
       <div className={styles.cell}>{date}</div>
@@ -25,16 +29,8 @@ const ConsultationItem = ({
       <div className={styles.cellLarge}>{content}</div>
       <div className={styles.cellButtons}>
         {status === "approved" ? (
-          <button className={styles.statusButton} onClick={onToggleStatus}>
+          <button className={styles.statusButton} onClick={handleConsult}>
             상담 하기
-          </button>
-        ) : status === "completed" ? (
-          <button className={styles.statusButtonCompleted} onClick={onToggleStatus}>
-            상담 완료
-          </button>
-        ) : status === "cancelled" ? (
-          <button className={styles.statusButtonCancelled} onClick={onToggleStatus}>
-            상담 취소
           </button>
         ) : (
           <>

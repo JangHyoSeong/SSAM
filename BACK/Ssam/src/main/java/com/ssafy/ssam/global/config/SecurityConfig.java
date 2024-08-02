@@ -1,5 +1,6 @@
 package com.ssafy.ssam.global.config;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,6 +12,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 
 import com.ssafy.ssam.global.auth.jwt.JwtFilter;
@@ -19,6 +22,9 @@ import com.ssafy.ssam.global.auth.jwt.LoginFilter;
 
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 @Builder
 @RequiredArgsConstructor
@@ -51,28 +57,28 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
        return http
-//               .cors((cors) -> cors
-//                       .configurationSource((new CorsConfigurationSource() {
-//                           @Override
-//                           public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-//                               CorsConfiguration config = new CorsConfiguration();
-//                               config.setAllowedOrigins(Collections.singletonList("*"));
-//                               //config.setAllowedOrigins(Collections.singletonList("https://i11e201.p.ssafy.io:3000"));
-//                               /*config.setAllowedOrigins(Arrays.asList(
-//                                       "https://i11e201.p.ssafy.io:3000",
-//                                       "http://localhost:3000",
-//                                       "http://127.0.0.1:3000"
-//                                   ));*/
-//
-//                               config.setAllowedMethods(Collections.singletonList("*"));
-//                               config.setAllowCredentials(true);
-//                               config.setAllowedHeaders(Collections.singletonList("*"));
-//                               config.setMaxAge(3600L);
-//
-//                               config.setExposedHeaders(Collections.singletonList("Authorization"));
-//                               return config;
-//                           }
-//                       })))
+               .cors((cors) -> cors
+                       .configurationSource((new CorsConfigurationSource() {
+                           @Override
+                           public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                               CorsConfiguration config = new CorsConfiguration();
+                               config.setAllowedOrigins(Collections.singletonList("*"));
+                               config.setAllowedOrigins(Collections.singletonList("https://i11e201.p.ssafy.io:3000"));
+                               config.setAllowedOrigins(Arrays.asList(
+                                       "https://i11e201.p.ssafy.io:3000",
+                                       "http://localhost:3000",
+                                       "http://127.0.0.1:3000"
+                                   ));
+
+                               config.setAllowedMethods(Collections.singletonList("*"));
+                               config.setAllowCredentials(true);
+                               config.setAllowedHeaders(Collections.singletonList("*"));
+                               config.setMaxAge(3600L);
+
+                               config.setExposedHeaders(Collections.singletonList("Authorization"));
+                               return config;
+                           }
+                       })))
                .csrf((auth) -> auth.disable())
                //.cors((auth) -> auth.disable())
                .formLogin((auth) -> auth.disable())

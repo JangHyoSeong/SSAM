@@ -11,9 +11,6 @@ import google from "../../../assets/google.png";
 import naver from "../../../assets/naver.png";
 import kakao from "../../../assets/kakao.png";
 
-// const TeacherLogin = () => {
-//   const { username, password, handleChange } = useLoginStore();
-
 const TeacherLogin = () => {
   const { username, password, handleChange, setLoggedIn } = useLoginStore(
     (state) => ({
@@ -32,7 +29,7 @@ const TeacherLogin = () => {
       const response = await loginUser(username, password);
       console.log("axios 성공", response);
       setLoggedIn(true);
-      window.location.replace('/teachersubpage')
+      window.location.replace("/teachersubpage");
     } catch (error) {
       console.error("axios 실패", error);
       if (error.response && error.response.status === 401) {

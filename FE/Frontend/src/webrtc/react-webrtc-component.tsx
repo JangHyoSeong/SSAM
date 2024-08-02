@@ -28,7 +28,7 @@ const WebRTCChat = () => {
         }
 
         try {
-            const response = await fetch(`http://localhost:8081/v1/kurento/room`, {
+            const response = await fetch(`https://i11e201.p.ssafy.io/api/v1/kurento/room`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

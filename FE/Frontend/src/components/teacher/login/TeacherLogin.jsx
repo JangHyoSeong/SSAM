@@ -1,7 +1,16 @@
+<<<<<<< HEAD
 import axios from "axios";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import styles from "./TeacherLogin.module.scss";
+=======
+import { NavLink } from "react-router-dom";
+import styles from "./TeacherLogin.module.scss";
+import { loginUser } from "../../../apis/user";
+import { useLoginStore } from "../../../store/AuthStore";
+
+// 이미지
+>>>>>>> master
 import round1 from "../../../assets/round1.png";
 import round2 from "../../../assets/round2.png";
 import round3 from "../../../assets/round3.png";
@@ -10,6 +19,7 @@ import naver from "../../../assets/naver.png";
 import kakao from "../../../assets/kakao.png";
 
 const TeacherLogin = () => {
+<<<<<<< HEAD
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -40,6 +50,36 @@ const TeacherLogin = () => {
         console.error("axios 실패", error);
         alert("실패", error);
       });
+=======
+  const { username, password, handleChange, setLoggedIn } = useLoginStore(
+    (state) => ({
+      username: state.username,
+      password: state.password,
+      handleChange: state.handleChange,
+      setLoggedIn: state.setLoggedIn,
+    })
+  );
+
+  // 폼이 제출될 때 호출된다.
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      // loginUser 함수를 사용하여 로그인 요청을 보낸다.
+      const response = await loginUser(username, password);
+      console.log("axios 성공", response);
+      setLoggedIn(true);
+      window.location.replace("/teachersubpage");
+    } catch (error) {
+      console.error("axios 실패", error);
+      if (error.response && error.response.status === 401) {
+        alert("로그인 실패: 아이디 또는 비밀번호가 잘못되었습니다.");
+      } else {
+        alert(
+          "로그인 실패: " + (error.response?.data?.message || error.message)
+        );
+      }
+    }
+>>>>>>> master
   };
 
   return (

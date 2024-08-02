@@ -6,7 +6,7 @@ $animation-move-duration: 5s;
 $border-radius-large: 25px;
 
 .menuArray {
-  height: 100vh;
+  height: 90vh;
 }
 
 .inviteCodeBox {
@@ -111,21 +111,4 @@ $border-radius-large: 25px;
 
 .appointmentImg {
   width: 11vw;
-}
-
-.scroll {
-  position: relative;
-  text-align: center;
-  font-size: 150%;
-  font-weight: bold;
-  animation: moveUpDown $animation-move-duration infinite;
-}
-
-@keyframes moveUpDown {
-  0%, 100% {
-    top: 21%;
-  }
-  50% {
-    top: 23%;
-  }
 }

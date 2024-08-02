@@ -66,7 +66,6 @@ const Select = () => {
           </div>
         </NavLink>
       </div>
-      <p className={select.scroll}>Scroll ▽</p>
     </div>
   );
 };

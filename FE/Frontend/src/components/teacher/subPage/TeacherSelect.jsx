@@ -7,10 +7,15 @@ import appointment from "../../../assets/appointment.png";
 import ClassProduceModal from './ClassProduceModal';
 
 const TeacherSelect = () => {
+<<<<<<< HEAD
   // State to control the visibility of the modal
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Function to toggle modal visibility
+=======
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+>>>>>>> master
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
@@ -26,8 +31,11 @@ const TeacherSelect = () => {
         <button className={styles.classBtn} onClick={toggleModal}>
           학급 만들기
         </button>
+<<<<<<< HEAD
         {/* Render the modal based on the state */}
         {isModalOpen && <ClassProduceModal />}
+=======
+>>>>>>> master
       </div>
       <div className={styles.menuBoxArray}>
         <NavLink to="/teacherclassroom" className={`${styles.menuBox} ${styles.menuBox1}`}>
@@ -58,7 +66,11 @@ const TeacherSelect = () => {
           </div>
         </NavLink>
       </div>
+<<<<<<< HEAD
       <p className={styles.scroll}>Scroll ▽</p>
+=======
+      {isModalOpen && <ClassProduceModal />}
+>>>>>>> master
     </div>
   );
 };

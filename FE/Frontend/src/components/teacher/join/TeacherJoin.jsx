@@ -1,15 +1,27 @@
+<<<<<<< HEAD
 import { useState } from "react";
 import axios from "axios";
 import styles from "./TeacherJoin.module.scss";
 import round1 from "../../../assets/round1.png";
 import round2 from "../../../assets/round2.png";
 import round3 from "../../../assets/round3.png";
+=======
+import { useState, useEffect } from "react";
+import axios from "axios";
+import styles from "./TeacherJoin.module.scss";
+>>>>>>> master
 import human from "../../../assets/human.png";
 import lock from "../../../assets/lock.png";
 import mail from "../../../assets/mail.png";
 import search from "../../../assets/search.png";
 import calendar from "../../../assets/calendar.png";
 import phone from "../../../assets/phone.png";
+<<<<<<< HEAD
+=======
+import round1 from "../../../assets/round1.png";
+import round2 from "../../../assets/round2.png";
+import round3 from "../../../assets/round3.png";
+>>>>>>> master
 
 const TeacherJoin = () => {
   const [formData, setFormData] = useState({
@@ -21,6 +33,22 @@ const TeacherJoin = () => {
     birth: "",
     phone: "",
   });
+<<<<<<< HEAD
+=======
+
+  const [schools, setSchools] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("/schools")
+      .then((response) => {
+        setSchools(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+>>>>>>> master
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,12 +61,21 @@ const TeacherJoin = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
+<<<<<<< HEAD
       .post("http://localhost:8081/v1/auth/teachers", formData)
       .then(function (response) {
         console.log("axios 성공", response);
         alert("성공");
       })
       .catch(function (error) {
+=======
+      .post("/auth/teachers", formData)
+      .then((response) => {
+        console.log("axios 성공", response);
+        window.location.replace("./teacherlogin");
+      })
+      .catch((error) => {
+>>>>>>> master
         console.error("axios 실패", error);
         alert("실패", error);
       });
@@ -87,8 +124,10 @@ const TeacherJoin = () => {
                 />
               </div>
               <hr />
+
               <div>
                 <img src={search} className={styles.joinIcon} alt="search" />
+<<<<<<< HEAD
                 <input
                   type="text"
                   name="schoolId"
@@ -96,7 +135,22 @@ const TeacherJoin = () => {
                   onChange={handleChange}
                   placeholder="학교 검색"
                 />
+=======
+                <select
+                  name="schoolId"
+                  value={formData.schoolId}
+                  onChange={handleChange}
+                >
+                  <option value="">학교 목록</option>
+                  {schools.map((school) => (
+                    <option key={school.schoolId} value={school.schoolId}>
+                      {school.schoolName}
+                    </option>
+                  ))}
+                </select>
+>>>>>>> master
               </div>
+
               <hr />
               <div>
                 <img src={human} className={styles.joinIcon} alt="human" />

@@ -16,7 +16,7 @@
 
 /* Styles */
 .menuArray {
-  height: 100vh;
+  height: 90vh;
 }
 
 .inviteCodeBox {
@@ -42,6 +42,10 @@
   font-size: 120%;
   border-color: #5285ee;
   background-color: white;
+<<<<<<< HEAD
+=======
+  cursor: pointer;
+>>>>>>> master
 }
 
 .classBtn:hover {
@@ -117,6 +121,7 @@
 .appointmentImg {
   width: 11vw;
 }
+<<<<<<< HEAD
 
 .scroll {
   position: relative;
@@ -125,3 +130,5 @@
   font-weight: bold;
   animation: moveUpDown 5s infinite;
 }
+=======
+>>>>>>> master

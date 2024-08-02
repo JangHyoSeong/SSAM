@@ -8,11 +8,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  backdrop-filter: blur(10px); /* 배경 블러 추가 */
+  backdrop-filter: blur(10px);
 }
 
 .modalContent {
-  width: 300px; /* 너비를 좀 더 넓게 설정 */
+  width: 300px;
   background: white;
   padding: 2rem;
   border-radius: 8px; /* 더 부드러운 모서리 */

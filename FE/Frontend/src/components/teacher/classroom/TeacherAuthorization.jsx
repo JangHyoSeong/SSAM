@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import styles from "./TeacherAuthorization.module.scss";
 import TeacherApproveModal from "./TeacherApproveModal";
 import TeacherRejectModal from "./TeacherRejectModal";
-import students from "./students"; // students 모듈을 가져옴
+import students from "./students";
 
 const TeacherAuthorization = () => {
   const [showApproveModal, setShowApproveModal] = useState(false);

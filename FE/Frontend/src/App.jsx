@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   BrowserRouter as Router,
   Routes,
@@ -111,6 +112,16 @@ const App = () => {
         {showChatbot && <Chatbot />}
       </div>
     </QuestionProvider>
+=======
+import AppRouter from "./router/AppRouter";
+import "./App.scss";
+
+const App = () => {
+  return (
+    <>
+      <AppRouter />
+    </>
+>>>>>>> master
   );
 };
 

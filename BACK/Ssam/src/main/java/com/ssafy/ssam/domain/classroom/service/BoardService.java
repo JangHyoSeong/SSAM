@@ -1,17 +1,18 @@
 package com.ssafy.ssam.domain.classroom.service;
 
-import com.ssafy.ssam.domain.AmazonS3.service.S3ImageService;
+import com.ssafy.ssam.global.amazonS3.service.S3ImageService;
 import com.ssafy.ssam.domain.classroom.dto.request.BoardCreateRequestDTO;
 import com.ssafy.ssam.domain.classroom.dto.response.BoardGetByPinResponseDTO;
 import com.ssafy.ssam.domain.classroom.dto.response.BoardGetResponseDTO;
 import com.ssafy.ssam.domain.classroom.entity.Board;
-import com.ssafy.ssam.domain.classroom.entity.UserBoardRelation;
-import com.ssafy.ssam.domain.classroom.entity.UserBoardRelationStatus;
+import com.ssafy.ssam.domain.user.entity.UserBoardRelation;
+import com.ssafy.ssam.domain.user.entity.UserBoardRelationStatus;
 import com.ssafy.ssam.domain.classroom.repository.BoardRepository;
-import com.ssafy.ssam.domain.classroom.repository.UserBoardRelationRepository;
+import com.ssafy.ssam.domain.user.repository.UserBoardRelationRepository;
+import com.ssafy.ssam.domain.classroom.repository.SchoolRepository;
 import com.ssafy.ssam.domain.user.dto.response.StudentInfoListDTO;
-import com.ssafy.ssam.domain.user.entity.User;
-import com.ssafy.ssam.domain.user.repository.UserRepository;
+import com.ssafy.ssam.global.auth.entity.User;
+import com.ssafy.ssam.global.auth.repository.UserRepository;
 import com.ssafy.ssam.global.dto.CommonResponseDto;
 import com.ssafy.ssam.global.error.CustomException;
 import com.ssafy.ssam.global.error.ErrorCode;
@@ -24,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -31,15 +34,16 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class BoardService {
 
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final UserBoardRelationRepository userBoardRelationRepository;
+    private final SchoolRepository schoolRepository;
     private final S3ImageService s3ImageService;
 
     // 보드 생성
-    @Transactional
     public CommonResponseDto createBoard(BoardCreateRequestDTO requestDTO) {
         User user = findUserByToken();
 
@@ -82,13 +86,14 @@ public class BoardService {
     }
 
     // id를 통해 board 찾기
-    @Transactional
+    @Transactional(readOnly = true)
     public BoardGetResponseDTO getBoardById(int classId) {
         Board board = boardRepository.findById(classId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
 
-        List<User> users = userBoardRelationRepository.findUsersByBoardAndStatus(board, UserBoardRelationStatus.ACCEPTED);
-        log.info(users.toString());
+        List<User> users = userBoardRelationRepository.findUsersByBoardAndStatus(board, UserBoardRelationStatus.ACCEPTED)
+                .orElse(new ArrayList<>());
+
         List<StudentInfoListDTO> userInfoList = users != null ? users.stream()
                 .map(user -> StudentInfoListDTO.builder()
                         .name(user.getName())
@@ -131,6 +136,14 @@ public class BoardService {
                 .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
 
         User student = findUserByToken();
+        List<UserBoardRelationStatus> statuses = Arrays.asList(UserBoardRelationStatus.WAITING, UserBoardRelationStatus.ACCEPTED);
+
+        // 이미 등록된 상태인지 확인
+        userBoardRelationRepository.findByUserAndBoardAndStatusIn(student, board, statuses)
+                .ifPresent(relation -> {
+                    throw new CustomException(ErrorCode.AlreadyRegisteredException);
+                });
+
         UserBoardRelation relation = UserBoardRelation.builder()
                 .user(student)
                 .board(board)

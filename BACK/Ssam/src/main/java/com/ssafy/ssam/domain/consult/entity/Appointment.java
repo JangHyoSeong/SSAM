@@ -2,15 +2,13 @@ package com.ssafy.ssam.domain.consult.entity;
 
 import com.ssafy.ssam.domain.consult.dto.request.AppointmentRequestDto;
 import com.ssafy.ssam.domain.consult.dto.response.AppointmentResponseDto;
-import com.ssafy.ssam.domain.user.entity.User;
+import com.ssafy.ssam.global.auth.entity.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -50,10 +48,10 @@ public class Appointment {
     @ColumnDefault("'BEFORE'") // default 값 설정
     private AppointmentStatus status;
 
-    public static Appointment toAppointment(User student, User teacher, AppointmentRequestDto appointmentRequestDto){
+    public static Appointment toAppointment(User teacher, User user, AppointmentRequestDto appointmentRequestDto){
         return Appointment.builder()
                 .teacher(teacher)
-                .student(student)
+                .student(user)
                 .topic(appointmentRequestDto.getTopic())
                 .startTime(appointmentRequestDto.getStartTime())
                 .endTime(appointmentRequestDto.getEndTime())

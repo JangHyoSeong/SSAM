@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 import styles from "./TeacherConsultationList.module.scss";
@@ -13,13 +13,8 @@ const ConsultationItem = ({
   content,
   onApprove,
   onReject,
-  onToggleStatus,
   status,
 }) => {
-  const handleConsult = () => {
-    window.open("https://www.naver.com", "_blank");
-  };
-
   return (
     <div className={styles.consultationRow}>
       <div className={styles.cell}>{date}</div>
@@ -29,13 +24,17 @@ const ConsultationItem = ({
       <div className={styles.cellLarge}>{content}</div>
       <div className={styles.cellButtons}>
         {status === "approved" ? (
-          <button className={styles.statusButton} onClick={handleConsult}>
+          <NavLink to="/webrtc" className={styles.statusButton}>
             상담 하기
-          </button>
+          </NavLink>
         ) : (
           <>
-            <button className={styles.approveButton} onClick={onApprove}>승인</button>
-            <button className={styles.editButton} onClick={onReject}>거절</button>
+            <button className={styles.approveButton} onClick={onApprove}>
+              승인
+            </button>
+            <button className={styles.editButton} onClick={onReject}>
+              거절
+            </button>
           </>
         )}
       </div>
@@ -76,7 +75,8 @@ const TeacherConsultationList = () => {
   const [consultations, setConsultations] = useState(initialConsultations);
   const [isApproveModalOpen, setApproveModalOpen] = useState(false);
   const [isRejectModalOpen, setRejectModalOpen] = useState(false);
-  const [selectedConsultationIndex, setSelectedConsultationIndex] = useState(null);
+  const [selectedConsultationIndex, setSelectedConsultationIndex] =
+    useState(null);
   const [consultationStatus, setConsultationStatus] = useState(
     initialConsultations.map(() => ({ status: "pending" }))
   );
@@ -110,7 +110,9 @@ const TeacherConsultationList = () => {
 
   const rejectConsultation = () => {
     setConsultations((prevConsultations) => {
-      const newConsultations = prevConsultations.filter((_, index) => index !== selectedConsultationIndex);
+      const newConsultations = prevConsultations.filter(
+        (_, index) => index !== selectedConsultationIndex
+      );
       return newConsultations;
     });
     setConsultationStatus((prevStatus) => {
@@ -124,7 +126,8 @@ const TeacherConsultationList = () => {
   const toggleStatus = (index) => {
     setConsultationStatus((prevStatus) => {
       const newStatus = [...prevStatus];
-      newStatus[index].status = newStatus[index].status === "approved" ? "completed" : "approved";
+      newStatus[index].status =
+        newStatus[index].status === "approved" ? "completed" : "approved";
       return newStatus;
     });
   };

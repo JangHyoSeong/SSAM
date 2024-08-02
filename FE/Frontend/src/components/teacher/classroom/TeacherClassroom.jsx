@@ -3,7 +3,8 @@ import { NavLink } from "react-router-dom";
 import styles from "./TeacherClassroom.module.scss";
 import TeacherStudent from "./TeacherStudent";
 import TeacherStudentDetail from "./TeacherStudentDetail";
-import ClassImage from "../../../assets/background.png"; // 이미지 파일 경로를 정확히 설정하세요
+import ClassImage from "../../../assets/background.png"; 
+import whiteshare from '../../../assets/whiteshare.png';
 
 const TeacherClassroom = () => {
   const [selectedStudentId, setSelectedStudentId] = useState(null);
@@ -25,6 +26,10 @@ const TeacherClassroom = () => {
         </NavLink>
       </div>
       <div className={styles.imageContainer}>
+        <input type="file" id="file" className={styles.inputFileForm} />
+        <label htmlFor="file">
+          <img src={whiteshare}  className={styles.inputFile} />
+        </label>
         <img
           src={ClassImage}
           alt="Class Management"

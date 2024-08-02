@@ -19,7 +19,12 @@ const TeacherUpdate = () => {
               <td className={styles.imgTd}>
                 <div className={styles.profileImg}></div>
                 <div className={styles.btn}>
-                  <input type="file" className={styles.imgBtn} />
+                  <input
+                    type="file"
+                    id="file"
+                    className={styles.inputFileForm}
+                  />
+                  <label htmlFor="file" className={styles.imgBtn}>수정</label>
                   <button className={styles.imgBtn}>삭제</button>
                 </div>
               </td>

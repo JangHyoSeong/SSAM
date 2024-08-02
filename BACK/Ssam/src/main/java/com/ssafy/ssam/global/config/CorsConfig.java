@@ -17,9 +17,11 @@ public class CorsConfig {
 
         config.setAllowCredentials(true);
         config.addAllowedOriginPattern("*");
+        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin("https://i11e201.p.ssafy.io");
         //config.addAllowedOriginPattern("https://i11e201.p.ssafy.io/api/**");
         config.addAllowedHeader("*");
-        //config.addExposedHeader("*");
+        config.addExposedHeader("Authorization");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);

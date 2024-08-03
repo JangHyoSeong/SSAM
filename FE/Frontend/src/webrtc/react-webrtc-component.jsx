@@ -61,7 +61,7 @@ const WebRTCChat = () => {
 
     const connectWebSocket = () => {
         console.log('Attempting to connect WebSocket...');
-        const wsUrl = `ws://i11e201.p.ssafy.io/api/v1/kurento`;
+        const wsUrl = `wss://i11e201.p.ssafy.io/api/v1/kurento`;
 
         console.log(`Connecting to WebSocket URL: ${wsUrl}`);
         webSocketRef.current = new WebSocket(wsUrl);

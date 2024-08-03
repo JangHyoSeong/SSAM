@@ -14,11 +14,10 @@ const TeacherClassroom = () => {
   const [noticeContent, setNoticeContent] = useState(`그대 기억이 지난 사랑이
 내 안을 파고드는 가시가 되어
 제발 가라고 아주 가라고
-애써도 나를 괴롭히는데
-ㅁㄴㅇ 마지막줄`);
+애써도 나를 괴롭히는데`);
   
   const textareaRef = useRef(null);
-  const maxHeight = 100; // maximum height of the textarea in pixels (adjust as needed)
+  const maxHeight = 100;
 
   useEffect(() => {
     const handleInput = (e) => {

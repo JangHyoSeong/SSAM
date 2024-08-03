@@ -1,7 +1,7 @@
 .modalContent {
   position: fixed;
-  bottom: 1%;
-  right: 4%;
+  top: 16vw;
+  left: 163.8vh;
   width: 20vw;
   height: 60vh;
   background-color: white;
@@ -12,6 +12,14 @@
 
 .modalContent hr {
   border: 1px solid #aaaaaa;
+}
+
+.topArray {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10%;
+  margin-left: -35%;
 }
 
 .logo {
@@ -34,7 +42,8 @@
 
 .chatContent {
   width: 20vw;
-  height: 35vh;
+  height: 39.2vh;
+  overflow-y: auto;
 }
 
 .textInput {
@@ -43,12 +52,32 @@
   background-color: transparent;
   border: 2px solid #dddddd;
   border-radius: 25px;
+}
+
+.studyTextInput {
+  padding-left: 16%;
+}
+
+.chatTextInput {
   padding-left: 5%;
+}
+
+.inputFile {
+  display: none;
+}
+
+.uploadImg {
+  position: absolute;
+  top: 77%;
+  left: 12%;
+  width: 2vw;
+  height: 3.5vh;
+  cursor: pointer;
 }
 
 .chatMenu {
   width: 19.9vw;
-  height: 8.5vh;
+  height: 8.7vh;
   border-radius: 0px 0px 20px 20px;
   background-color: #f2f2f2;
   display: flex;
@@ -67,9 +96,16 @@
 .chatMenu p {
   font-size: 90%;
   width: 2vw;
-  margin: -20% 10%;
+  margin: -20% 9%;
 }
 
 .chatTxt {
   color: #5285ee;
+}
+
+.message {
+  background-color: #eeeeee;
+  padding: 5px 10px;
+  margin: 5px;
+  border-radius: 25px;
 }

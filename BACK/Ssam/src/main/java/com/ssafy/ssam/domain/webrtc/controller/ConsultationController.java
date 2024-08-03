@@ -88,6 +88,7 @@ public class ConsultationController extends TextWebSocketHandler implements WebS
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+    	System.out.println("handleTextMessage");
         String payload = message.getPayload();
         JsonObject jsonMessage = JsonParser.parseString(payload).getAsJsonObject();
 

@@ -32,7 +32,7 @@ const TeacherLogin = () => {
       localStorage.setItem("USER_TOKEN", token);
       console.log("axios 성공", response);
       setLoggedIn(true);
-      // window.location.replace("/teachersubpage");
+      window.location.replace("/teachersubpage");
     } catch (error) {
       console.error("axios 실패", error);
       if (error.response && error.response.status === 401) {

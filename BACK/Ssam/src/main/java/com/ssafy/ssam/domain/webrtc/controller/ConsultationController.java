@@ -57,6 +57,7 @@ public class ConsultationController extends TextWebSocketHandler implements WebS
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+    	System.out.println("PLEASE CONNECT.....");
         registry.addHandler(this, "/v1/kurento")
                 .setAllowedOrigins("http://localhost:5173", "https://i11e201.p.ssafy.io");
     }

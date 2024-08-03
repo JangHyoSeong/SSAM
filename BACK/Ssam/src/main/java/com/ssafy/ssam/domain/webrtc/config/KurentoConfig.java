@@ -8,7 +8,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class KurentoConfig {
 
-    @Value("wss://i11e201.p.ssafy.io/kurento")
+    @Value("ws://i11e201.p.ssafy.io:8888/kurento")
+    //@Value("ws://host.docker.internal:8888/kurento")
     private String kurentoUrl;
 
     @Bean

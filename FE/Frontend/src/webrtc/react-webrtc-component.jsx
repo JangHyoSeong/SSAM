@@ -69,6 +69,7 @@ const WebRTCChat = () => {
         webSocketRef.current.onopen = (event) => {
             console.log('WebSocket connection established', event);
             setIsConnected(true);
+            console.log('Sending join room message...');
             sendJoinRoomMessage();
         };
 
@@ -108,18 +109,47 @@ const WebRTCChat = () => {
     };
 
     const handleMessage = (message) => {
-        console.log('Received message:', message);
+        console.log('Processing received message:', message);
         if (message.error) {
             console.error('Received error:', message.error);
             return;
         }
-        if (message.id === 'connectionEstablished') {
-            console.log('WebSocket connection established successfully');
-        } else if (message.id === 'joinedRoom') {
-            console.log('Successfully joined room:', message.roomName);
-        } else if (message.jsonrpc === '2.0' && message.method === 'newChatMessage') {
-            const { room, user, message: chatMessage } = message.params;
-            setChatMessages((prev) => [...prev, { sender: user, text: chatMessage }]);
+
+        if (message.result) {
+            handleResultMessage(message.result);
+        } else if (message.method) {
+            handleMethodMessage(message);
+        } else {
+            console.log('Unhandled message format:', message);
+        }
+    };
+
+    const handleResultMessage = (result) => {
+        switch (result.id) {
+            case 'joinedRoom':
+                console.log('Successfully joined room:', result.roomName);
+                break;
+            case 'leftRoom':
+                console.log('Left room');
+                break;
+            case 'newChatMessage':
+                if (result.user && result.message) {
+                    setChatMessages((prev) => [...prev, { sender: result.user, text: result.message }]);
+                }
+                break;
+            default:
+                console.log('Unhandled result message:', result);
+        }
+    };
+
+    const handleMethodMessage = (message) => {
+        switch (message.method) {
+            case 'newChatMessage':
+                const { room, user, message: chatMessage } = message.params;
+                setChatMessages((prev) => [...prev, { sender: user, text: chatMessage }]);
+                break;
+            default:
+                console.log('Unhandled method message:', message);
         }
     };
 

@@ -25,7 +25,7 @@ const SubNavbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("USER_TOKEN");
     setIsLoggedIn(false);
-    navigate.push("/");
+    navigate("/");
   };
 
   // useEffect가 실행되는 시점은 컴포넌트가 렌더링된 이후이다.

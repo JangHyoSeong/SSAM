@@ -1,4 +1,4 @@
-package com.ssafy.ssam.global.webrtc.dto;
+package com.ssafy.ssam.domain.webrtc.dto;
 
 public class RoomRequest {
     private String roomName;

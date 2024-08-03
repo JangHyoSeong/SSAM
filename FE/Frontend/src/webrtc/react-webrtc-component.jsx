@@ -61,7 +61,7 @@ const WebRTCChat = () => {
 
     const connectWebSocket = () => {
         console.log('Attempting to connect WebSocket...');
-        const wsUrl = `wss://i11e201.p.ssafy.io/api/v1/kurento`;
+        const wsUrl = `wss://i11e201.p.ssafy.io/api/v1/kurento/`;
 
         console.log(`Connecting to WebSocket URL: ${wsUrl}`);
         webSocketRef.current = new WebSocket(wsUrl);
@@ -113,22 +113,13 @@ const WebRTCChat = () => {
             console.error('Received error:', message.error);
             return;
         }
-        if (message.result) {
-            switch (message.result.id) {
-                case 'joinedRoom':
-                    console.log('Successfully joined room:', message.result.roomName);
-                    break;
-                case 'leftRoom':
-                    console.log('Left room');
-                    break;
-                case 'newChatMessage':
-                    if (message.result.user && message.result.message) {
-                        setChatMessages((prev) => [...prev, { sender: message.result.user, text: message.result.message }]);
-                    }
-                    break;
-                default:
-                    console.log('Unhandled message:', message);
-            }
+        if (message.id === 'connectionEstablished') {
+            console.log('WebSocket connection established successfully');
+        } else if (message.id === 'joinedRoom') {
+            console.log('Successfully joined room:', message.roomName);
+        } else if (message.jsonrpc === '2.0' && message.method === 'newChatMessage') {
+            const { room, user, message: chatMessage } = message.params;
+            setChatMessages((prev) => [...prev, { sender: user, text: chatMessage }]);
         }
     };
 

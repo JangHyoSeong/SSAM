@@ -7,7 +7,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.kurento.client.KurentoClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,12 +24,12 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.ssafy.ssam.domain.webrtc.dto.RoomRequest;
 import com.ssafy.ssam.domain.webrtc.model.ConsultationRoom;
-import com.ssafy.ssam.global.webrtc.dto.RoomRequest;
 
 @CrossOrigin(origins = {"http://localhost:5173", "https://i11e201.p.ssafy.io"}, allowedHeaders = "*", allowCredentials = "true")
 @RestController
-@RequestMapping("v1/kurento")
+@RequestMapping("/v1/kurento")
 @EnableWebSocket
 public class ConsultationController extends TextWebSocketHandler implements WebSocketConfigurer {
 

@@ -1,10 +1,36 @@
-import React, { useState } from "react";
-import styles from "./TeacherQuestion.module.scss";
+import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { FaTrash, FaEdit, FaSave } from "react-icons/fa";
 import { useQuestions } from "../../../store/QuestionContext";
 import TeacherDeleteModal from "./TeacherDeleteModal";
+import styles from "./TeacherQuestion.module.scss";
+//
+import useQuestionStore from "../../../apis/stub/28-31 문의사항/question";
 
-const TeacherQuestion = () => {
+// bordId인자로 받음
+const TeacherQuestion = ({ boardId }) => {
+  const { question, init, fetchQuestionData } = useQuestionStore();
+  const [error, setError] = useState("");
+  console.log("TeacherQuestion inside ", boardId);
+
+  useEffect(() => {
+    init();
+    const fetchData = async () => {
+      console.log("boardId inside useEffect:", boardId);
+      try {
+        await fetchQuestionData(boardId);
+      } catch (err) {
+        setError("질문 데이터를 가져오는 데 실패했습니다.");
+      }
+    };
+    if (boardId) {
+      fetchData();
+    } else {
+      console.error("boardId is not defined");
+    }
+  }, [init, fetchQuestionData, boardId]);
+  //
+
   const { questions, updateQuestion, deleteQuestion } = useQuestions();
   const [editingAnswerId, setEditingAnswerId] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -46,6 +72,10 @@ const TeacherQuestion = () => {
 
   return (
     <div className={styles.teacherQuestionContainer}>
+      {/* 추가부분 */}
+      {error && <div className={styles.error}>{error}</div>}
+      <p className={styles.question}>{question.content}</p>
+      {/* 여기까지 */}
       {questions.map((item) => (
         <div key={item.id} className={styles.qaPair}>
           <div className={styles.boxContainer}>
@@ -103,6 +133,10 @@ const TeacherQuestion = () => {
       )}
     </div>
   );
+};
+
+TeacherQuestion.propTypes = {
+  boardId: PropTypes.string.isRequired,
 };
 
 export default TeacherQuestion;

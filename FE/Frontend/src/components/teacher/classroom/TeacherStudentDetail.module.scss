@@ -1,5 +1,3 @@
-/* src/teacher/classroom/TeacherStudentDetail.module.scss */
-
 .studentDetail {
   margin: 4vh;
   display: flex;
@@ -11,7 +9,7 @@
 
 .studentDetailBox {
   flex: 0.5; /* Half the space of the container */
-  padding: 20px;
+  padding: 30px;
   border: 3px solid #ddd;
   border-radius: 8px;
   display: flex;
@@ -64,4 +62,26 @@
 
 .backButton:hover {
   background-color: #0056b3;
+}
+
+/* Styles for historyBox */
+.historyBox h3 {
+  font-size: 1.5em; /* Increase the font size */
+  margin: 10px 0; /* Add some margin for spacing */
+}
+
+.historyBox p {
+  font-size: 1.2em; /* Increase the font size */
+  margin: 5px 0; /* Add some margin for spacing */
+}
+
+/* Styles for summaryBox */
+.summaryBox h3 {
+  font-size: 1.5em; /* Increase the font size */
+  margin: 10px 0; /* Add some margin for spacing */
+}
+
+.summaryBox p {
+  font-size: 1.2em; /* Increase the font size */
+  margin: 5px 0; /* Add some margin for spacing */
 }

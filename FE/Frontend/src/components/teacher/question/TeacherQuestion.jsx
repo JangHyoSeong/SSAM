@@ -46,6 +46,13 @@ const TeacherQuestion = () => {
 
   return (
     <div className={styles.teacherQuestionContainer}>
+      <div className={styles.header}>
+        <h2>
+          다른 사용자의 <span className={styles.highlight}>익명성</span>을
+          유지하기 위해 학부모의 실명은{" "}
+          <span className={styles.highlight}>교사</span>에게만 표시됩니다.
+        </h2>
+      </div>
       {questions.map((item) => (
         <div key={item.id} className={styles.qaPair}>
           <div className={styles.boxContainer}>

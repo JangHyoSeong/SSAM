@@ -1,5 +1,6 @@
 // 로그인은 qurystring으로 요청 보내야함.
 import axiosInstance from "../utils/axiosInstance";
+import axios from "axios";
 
 const loginUser = (username, password) => {
   const queryString = `username=${encodeURIComponent(

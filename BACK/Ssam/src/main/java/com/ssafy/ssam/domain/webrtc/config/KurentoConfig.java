@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class KurentoConfig {
 
-    @Value("ws://i11e201.p.ssafy.io:8888/kurento")
+    @Value("wss://i11e201.p.ssafy.io/kurento")
     private String kurentoUrl;
 
     @Bean

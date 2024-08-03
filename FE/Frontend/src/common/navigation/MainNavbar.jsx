@@ -33,8 +33,11 @@ const MainNavbar = () => {
         </NavLink>
         <NavLink
           to="/teacherreservationmanagement"
-          className={({ isActive }) =>
-            isActive ? `${styles.navtxt} ${styles.active}` : styles.navtxt
+          className={
+            location.pathname.startsWith("/teacherreservationmanagement") ||
+            location.pathname.startsWith("/teacherconsultationlist")
+              ? `${styles.navtxt} ${styles.active}`
+              : styles.navtxt
           }
         >
           <h2>상담예약</h2>

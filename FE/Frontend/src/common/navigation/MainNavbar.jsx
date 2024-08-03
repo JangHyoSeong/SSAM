@@ -6,6 +6,7 @@ const MainNavbar = () => {
   const location = useLocation();
 
   return (
+    // role이 teacher인지 parents인지에 따라서 `${role}path`로 라우팅되도록.
     <div className={styles.navbarArray}>
       <NavLink to="/">
         <img src={SSAM} className={styles.logo} alt="Logo" />

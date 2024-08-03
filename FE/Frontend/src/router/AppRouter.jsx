@@ -1,10 +1,11 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import MainPage from "../components/mainPage/MainPage";
 import Chatbot from "../common/chatbot/Chatbot.jsx";
 import SubNavbar from "../common/navigation/SubNavbar.jsx";
 import MainNavbar from "../common/navigation/MainNavbar.jsx";
 import Video from "../video/Video.jsx";
 import { QuestionProvider } from "../store/QuestionContext";
+import ProtectedRoute from "./ProtectedRoute";
 
 // Teacher components
 import TeacherJoin from "../components/teacher/join/TeacherJoin";
@@ -63,44 +64,70 @@ const AppRouter = () => {
             {/* Teacher Routes */}
             <Route path="/teacherlogin" element={<TeacherLogin />} />
             <Route path="/teacherjoin" element={<TeacherJoin />} />
-            <Route path="/teachersubpage" element={<TeacherSubpage />} />
-            <Route path="/teacherupdate" element={<TeacherUpdate />} />
+            <Route
+              path="/teachersubpage"
+              element={<ProtectedRoute element={TeacherSubpage} />}
+            />
+            <Route
+              path="/teacherupdate"
+              element={<ProtectedRoute element={TeacherUpdate} />}
+            />
             <Route
               path="/teacherpasswordchange"
-              element={<TeacherPasswordChange />}
+              element={<ProtectedRoute element={TeacherPasswordChange} />}
             />
-            <Route path="/teacherquestion" element={<TeacherQuestion />} />
-            <Route path="/teacherclassroom" element={<TeacherClassroom />} />
+            <Route
+              path="/teacherquestion"
+              element={<ProtectedRoute element={TeacherQuestion} />}
+            />
+            <Route
+              path="/teacherclassroom"
+              element={<ProtectedRoute element={TeacherClassroom} />}
+            />
             <Route
               path="/teacherauthorization"
-              element={<TeacherAuthorization />}
+              element={<ProtectedRoute element={TeacherAuthorization} />}
             />
             <Route
               path="/teacherreservationmanagement"
-              element={<TeacherReservationManagement />}
+              element={
+                <ProtectedRoute element={TeacherReservationManagement} />
+              }
             />
             <Route
               path="/teacherconsultationlist"
-              element={<TeacherConsultationList />}
+              element={<ProtectedRoute element={TeacherConsultationList} />}
             />
             <Route
               path="/teacherclassroom/student/:id"
-              element={<TeacherStudentDetail />}
+              element={<ProtectedRoute element={TeacherStudentDetail} />}
             />
             {/* Parents Routes */}
             <Route path="/parentslogin" element={<ParentsLogin />} />
             <Route path="/parentsjoin" element={<ParentsJoin />} />
-            <Route path="/parentssubpage" element={<ParentsSubpage />} />
-            <Route path="/parentsupdate" element={<ParentsUpdate />} />
+            <Route
+              path="/parentssubpage"
+              element={<ProtectedRoute element={ParentsSubpage} />}
+            />
+            <Route
+              path="/parentsupdate"
+              element={<ProtectedRoute element={ParentsUpdate} />}
+            />
             <Route
               path="/parentspasswordchange"
-              element={<ParentsPasswordChange />}
+              element={<ProtectedRoute element={ParentsPasswordChange} />}
             />
-            <Route path="/parentsquestion" element={<ParentsQuestion />} />
-            <Route path="/parentsclassroom" element={<ParentsClassroom />} />
+            <Route
+              path="/parentsquestion"
+              element={<ProtectedRoute element={ParentsQuestion} />}
+            />
+            <Route
+              path="/parentsclassroom"
+              element={<ProtectedRoute element={ParentsClassroom} />}
+            />
             <Route
               path="/parentsreservationpage"
-              element={<ParentsReservationPage />}
+              element={<ProtectedRoute element={ParentsReservationPage} />}
             />
             {/* Video Route */}
             <Route path="/video" element={<Video />} />

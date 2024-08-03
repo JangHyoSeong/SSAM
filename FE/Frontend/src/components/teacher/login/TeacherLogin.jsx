@@ -27,6 +27,9 @@ const TeacherLogin = () => {
     try {
       // loginUser 함수를 사용하여 로그인 요청을 보낸다.
       const response = await loginUser(username, password);
+      console.log(response);
+      const token = response.headers.authorization;
+      localStorage.setItem("USER_TOKEN", token);
       console.log("axios 성공", response);
       setLoggedIn(true);
       window.location.replace("/teachersubpage");

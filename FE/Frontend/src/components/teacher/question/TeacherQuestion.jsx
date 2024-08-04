@@ -1,10 +1,36 @@
-import React, { useState } from "react";
-import styles from "./TeacherQuestion.module.scss";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { FaTrash, FaEdit, FaSave } from "react-icons/fa";
 import { useQuestions } from "../../../store/QuestionContext";
 import TeacherDeleteModal from "./TeacherDeleteModal";
+import styles from "./TeacherQuestion.module.scss";
+import useQuestionStore from "../../../apis/stub/28-31 문의사항/question";
 
+// bordId인자로 받음
 const TeacherQuestion = () => {
+  const { boardId } = useParams(); // URL에서 boardId 추출
+  const { question, init, fetchQuestionData } = useQuestionStore();
+  const [error, setError] = useState("");
+  console.log("TeacherQuestion inside ", boardId);
+
+  useEffect(() => {
+    init();
+    const fetchData = async () => {
+      console.log("boardId inside useEffect:", boardId);
+      try {
+        await fetchQuestionData(boardId);
+      } catch (err) {
+        setError("질문 데이터를 가져오는 데 실패했습니다.");
+      }
+    };
+    if (boardId) {
+      fetchData();
+    } else {
+      console.error("boardId is not defined");
+    }
+  }, [init, fetchQuestionData, boardId]);
+  //
+
   const { questions, updateQuestion, deleteQuestion } = useQuestions();
   const [editingAnswerId, setEditingAnswerId] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -38,28 +64,27 @@ const TeacherQuestion = () => {
     setQuestionToDelete(null);
   };
 
-  const trimDate = (dateString) => {
-    const parts = dateString.split(".");
-    if (parts.length < 3) return dateString; // 날짜 형식이 맞지 않는 경우 원본 문자열 반환
-    return `${parts[0]}.${parts[1]}.${parts[2]}`;
-  };
+  // 이부분이 에러 유발해서 주석처리 했습니다.
+  // 다른기능 먼저 구현하고 마지막에 건드려주세요.
+  // const trimDate = (dateString) => {
+  //   const parts = dateString.split(".");
+  //   if (parts.length < 3) return dateString; // 날짜 형식이 맞지 않는 경우 원본 문자열 반환
+  //   return `${parts[0]}.${parts[1]}.${parts[2]}`;
+  // };
 
   return (
     <div className={styles.teacherQuestionContainer}>
-      <div className={styles.header}>
-        <h2>
-          다른 사용자의 <span className={styles.highlight}>익명성</span>을
-          유지하기 위해 학부모의 실명은{" "}
-          <span className={styles.highlight}>교사</span>에게만 표시됩니다.
-        </h2>
-      </div>
+      {/* 에러나면 브라우저에 텍스트 띄우는 코드 */}
+      {error && <div className={styles.error}>{error}</div>}
+      <p className={styles.question}>{question.content}</p>
+      {/* 안지워도 됨, 지우면 위에 코드 에러남 */}
       {questions.map((item) => (
         <div key={item.id} className={styles.qaPair}>
           <div className={styles.boxContainer}>
             <div className={styles.questionBox}>
               <div className={styles.authorAndDate}>
                 <p className={styles.author}>{item.author}</p>
-                <p className={styles.date}>{trimDate(item.date)}</p>
+                {/* <p className={styles.date}>{trimDate(item.date)}</p> */}
               </div>
               <p className={styles.question}>{item.question}</p>
               <FaTrash
@@ -80,7 +105,7 @@ const TeacherQuestion = () => {
                 <>
                   <div className={styles.authorAndDate}>
                     <p className={styles.author}>선생님</p>
-                    <p className={styles.date}>{trimDate(item.date)}</p>
+                    {/* <p className={styles.date}>{trimDate(item.date)}</p> */}
                   </div>
                   <p className={styles.answer}>
                     {item.answer ? item.answer : "A."}

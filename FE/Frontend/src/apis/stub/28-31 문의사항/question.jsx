@@ -8,7 +8,7 @@ import { create } from "zustand";
 import axios from "axios";
 
 const defaultQuestion = {
-  board_id: "1",
+  board_id: "",
   question_id: "",
   student_id: "",
   answer_date: "",
@@ -38,6 +38,7 @@ const useQuestionStore = create((set) => ({
         }
       );
       set({ question: response.data });
+      // response.data에 있는 내용 쓰시면 됩니다.
       console.log("question.jsx: ", response.data);
       return response.data;
     } catch (error) {
@@ -48,56 +49,3 @@ const useQuestionStore = create((set) => ({
 }));
 
 export default useQuestionStore;
-
-// import { create } from "zustand";
-// import axios from "axios";
-
-// const defaultQuestion = {
-//   board_id: "",
-//   qustion_id: "",
-//   student_id: "",
-//   answer_date: "",
-//   content_date: "",
-//   content: "",
-//   answer: "",
-// };
-
-// const useQuestionStore = create((set) => ({
-//   qustion: { ...defaultQuestion },
-
-//   init: () => {
-//     set({ qustion: { ...defaultQuestion } });
-//   },
-
-//   fetchQuestionData: async (board_id) => {
-//     try {
-//       const response = await axios.get(`/classrooms/questions/${board_id}`, {
-//         headers: { "Content-Type": "application/json" },
-//       });
-//       set({ question: response.data });
-//       return response.data;
-//     } catch (error) {
-//       console.error("Failed to fetch question data:", error);
-//       throw error;
-//     }
-//   },
-// updateProfile: async (qustioneData) => {
-//   try {
-//     const formData = new FormData();
-//     Object.keys(qustioneData).forEach((key) => {
-//       formData.append(key, qustioneData[key]);
-//     });
-
-//     const response = await axios.put(`/profile`, formData, {
-//       headers: { "Content-Type": "multipart/form-data" },
-//     });
-//     set({ qustion: response.data });
-//     return response.data;
-//   } catch (error) {
-//     console.error("Failed to update qustion:", error);
-//     throw error;
-//   }
-// },
-// }));
-
-// export default useQuestionStore;

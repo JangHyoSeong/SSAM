@@ -55,15 +55,12 @@ export const useApiTeachrClassroomsAnswers = create((set) => ({
     try {
       const token = localStorage.getItem("USER_TOKEN");
       console.log(token);
-      const response = await axios.put(
-        `http://localhost:8081/v1/classrooms/answers/${question_id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `${token}`,
-          },
-        }
-      );
+      const response = await axios.put(`classrooms/answers/${question_id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `${token}`,
+        },
+      });
       set({ question: response.data });
       // response.data에 있는 내용 쓰시면 됩니다.
       console.log("question.jsx: ", response.data);

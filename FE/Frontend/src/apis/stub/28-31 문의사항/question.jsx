@@ -26,13 +26,17 @@ const useQuestionStore = create((set) => ({
 
   fetchQuestionData: async (board_id) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get(`/questions/${board_id}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const token = localStorage.getItem("USER_TOKEN");
+      console.log(token);
+      const response = await axios.get(
+        `http://localhost:8081/v1/classrooms/questions/${board_id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `${token}`,
+          },
+        }
+      );
       set({ question: response.data });
       console.log("question.jsx: ", response.data);
       return response.data;

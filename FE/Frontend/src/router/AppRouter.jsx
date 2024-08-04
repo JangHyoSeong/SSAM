@@ -77,7 +77,7 @@ const AppRouter = () => {
               element={<ProtectedRoute element={TeacherPasswordChange} />}
             />
             <Route
-              path="/teacherquestion"
+              path="/teacherquestion/:boardId"
               element={<ProtectedRoute element={TeacherQuestion} />}
             />
             <Route
@@ -99,7 +99,7 @@ const AppRouter = () => {
               element={<ProtectedRoute element={TeacherConsultationList} />}
             />
             <Route
-              path="/teacherclassroom/student/:id"
+              path="/teacherclassroom/student"
               element={<ProtectedRoute element={TeacherStudentDetail} />}
             />
             {/* Parents Routes */}

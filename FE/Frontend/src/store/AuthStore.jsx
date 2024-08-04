@@ -17,4 +17,4 @@ const useLoginStore = create((set) => ({
   },
 }));
 
-export { useLoginStore };
+export default useLoginStore;

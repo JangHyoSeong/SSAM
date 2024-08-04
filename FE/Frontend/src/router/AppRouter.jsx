@@ -4,7 +4,7 @@ import Chatbot from "../common/chatbot/Chatbot.jsx";
 import SubNavbar from "../common/navigation/SubNavbar.jsx";
 import MainNavbar from "../common/navigation/MainNavbar.jsx";
 import Video from "../video/Video.jsx";
-import { QuestionProvider } from "../store/QuestionContext";
+import { QuestionProvider } from "../store/QuestionStore";
 
 // Teacher components
 import TeacherJoin from "../components/teacher/join/TeacherJoin";
@@ -126,7 +126,7 @@ export default AppRouter;
 // import SubNavbar from "../common/navigation/SubNavbar.jsx";
 // import MainNavbar from "../common/navigation/MainNavbar.jsx";
 // import Video from "../video/Video.jsx";
-// import { QuestionProvider } from "../store/QuestionContext";
+// import { QuestionProvider } from "../store/QuestionStore";
 // import ProtectedRoute from "./ProtectedRoute";
 
 // // Teacher components

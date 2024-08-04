@@ -1,41 +1,22 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { FaTrash, FaEdit, FaSave } from "react-icons/fa";
-import { useQuestions } from "../../../store/QuestionContext";
+import { useQuestions } from "../../../store/QuestionStore";
 import TeacherDeleteModal from "./TeacherDeleteModal";
 import styles from "./TeacherQuestion.module.scss";
-import useQuestionStore from "../../../apis/stub/28-31 문의사항/question";
+// import { useApiBothClassroomsQuestions } from "../../../apis/stub/28-31 문의사항/question";
 
 // bordId인자로 받음
 const TeacherQuestion = () => {
   const { boardId } = useParams(); // URL에서 boardId 추출
-  const { question, init, fetchQuestionData } = useQuestionStore();
-  const [error, setError] = useState("");
-  console.log("TeacherQuestion inside ", boardId);
-
-  useEffect(() => {
-    init();
-    const fetchData = async () => {
-      console.log("boardId inside useEffect:", boardId);
-      try {
-        await fetchQuestionData(boardId);
-      } catch (err) {
-        setError("질문 데이터를 가져오는 데 실패했습니다.");
-      }
-    };
-    if (boardId) {
-      fetchData();
-    } else {
-      console.error("boardId is not defined");
-    }
-  }, [init, fetchQuestionData, boardId]);
-  //
-
+  // const { question, init, fetchQuestionData } = useApiBothClassroomsQuestions();
   const { questions, updateQuestion, deleteQuestion } = useQuestions();
+  const [error, setError] = useState("");
   const [editingAnswerId, setEditingAnswerId] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [questionToDelete, setQuestionToDelete] = useState(null);
   const [newAnswer, setNewAnswer] = useState("");
+  console.log("TeacherQuestion inside ", boardId);
 
   const handleEditClick = (id, currentAnswer) => {
     setEditingAnswerId(id);
@@ -74,10 +55,7 @@ const TeacherQuestion = () => {
 
   return (
     <div className={styles.teacherQuestionContainer}>
-      {/* 에러나면 브라우저에 텍스트 띄우는 코드 */}
       {error && <div className={styles.error}>{error}</div>}
-      <p className={styles.question}>{question.content}</p>
-      {/* 안지워도 됨, 지우면 위에 코드 에러남 */}
       {questions.map((item) => (
         <div key={item.id} className={styles.qaPair}>
           <div className={styles.boxContainer}>

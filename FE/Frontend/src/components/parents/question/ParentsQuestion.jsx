@@ -3,7 +3,7 @@ import styles from "./ParentsQuestion.module.scss";
 import { FaTrash, FaPen } from "react-icons/fa";
 import QuestionModal from "./QuestionModal";
 import ParentsDeleteModal from "./ParentsDeleteModal";
-import { useQuestions } from "../../../store/QuestionContext";
+import { useQuestions } from "../../../store/QuestionStore";
 
 const ParentsQuestion = () => {
   const { questions, addQuestion, deleteQuestion } = useQuestions();

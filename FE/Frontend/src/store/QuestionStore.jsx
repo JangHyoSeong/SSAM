@@ -1,31 +1,14 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
-import useQuestionStore from "../apis/stub/28-31 문의사항/question";
+import { useApiBothClassroomsQuestions } from "../apis/stub/28-31 문의사항/question";
 
-const QuestionContext = createContext();
-export const useQuestions = () => useContext(QuestionContext);
+const QuestionStore = createContext();
+export const useQuestions = () => useContext(QuestionStore);
 
 export const QuestionProvider = ({ children }) => {
-  const { question, fetchQuestionData } = useQuestionStore();
-  // 추가된 코드
+  const { question, fetchQuestionData } = useApiBothClassroomsQuestions();
   const [questions, setQuestions] = useState([]);
-  // 더미 데이터였던 코드
-  // const [questions, setQuestions] = useState([
-  //   {
-  //     id: 1,
-  //     question: "점심 메뉴는 어디서 확인하나요?",
-  //     answer: "",
-  //     author: "학부모",
-  //     date: "24.07.17 10:16",
-  //   },
-  //   {
-  //     id: 2,
-  //     question: "교무실 전화번호는 무엇인가요?",
-  //     answer: "",
-  //     author: "학부모",
-  //     date: "24.07.17 10:16",
-  //   },
-  // ]);
+  // 더미 데이터 코드 지움
 
   // 추가된 코드
   // useEffect로 데이터를 fetch함. 이 코드로 axios요청을 받은 데이터를 가져와서 사용함.
@@ -67,11 +50,11 @@ export const QuestionProvider = ({ children }) => {
   };
 
   return (
-    <QuestionContext.Provider
+    <QuestionStore.Provider
       value={{ questions, addQuestion, updateQuestion, deleteQuestion }}
     >
       {children}
-    </QuestionContext.Provider>
+    </QuestionStore.Provider>
   );
 };
 
@@ -86,8 +69,8 @@ export default QuestionProvider;
 // import PropTypes from "prop-types";
 // import "../apis/stub/28-31 문의사항/question";
 
-// const QuestionContext = createContext();
-// export const useQuestions = () => useContext(QuestionContext);
+// const QuestionStore = createContext();
+// export const useQuestions = () => useContext(QuestionStore);
 
 // export const QuestionProvider = ({ children }) => {
 //   const [questions, setQuestions] = useState([
@@ -130,11 +113,11 @@ export default QuestionProvider;
 //   };
 
 //   return (
-//     <QuestionContext.Provider
+//     <QuestionStore.Provider
 //       value={{ questions, addQuestion, updateQuestion, deleteQuestion }}
 //     >
 //       {children}
-//     </QuestionContext.Provider>
+//     </QuestionStore.Provider>
 //   );
 // };
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "./ChatbotModal.module.scss";
-import SSAM from "../../assets/SSAM.png";
+// import SSAM from "../../assets/SSAM.png";
 import book from "../../assets/bookblue.png";
 import chat from "../../assets/chat.png";
 import upload from "../../assets/upload.png";
@@ -19,7 +19,7 @@ const ChatbotStudyModal = ({ openModal }) => {
   return (
     <div className={styles.modalContent}>
       <div className={styles.topArray}>
-        <img src={SSAM} className={styles.logo} alt="Logo" />
+        {/* <img src={SSAM} className={styles.logo} alt="Logo" /> */}
         <h4>SSAM 학습하기</h4>
       </div>
       <hr />

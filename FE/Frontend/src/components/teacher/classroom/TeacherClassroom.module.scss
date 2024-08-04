@@ -46,7 +46,7 @@
 
 .inputFile {
   position: absolute;
-  top: 18.5%;
+  top: 20%;
   left: 92%;
   width: 4vw;
   height: 7vh;
@@ -105,19 +105,20 @@
 
 .noticeBox p {
   position: absolute;
-  top: 7vh; /* 원하는 위치 조정 */
-  left: 1.5vw; /* 원하는 위치 조정 */
+  top: 9.3vh; /* 원하는 위치 조정 */
+  left: 2.3vw; /* 원하는 위치 조정 */
   width: calc(100% - 3vw); /* 여백을 고려하여 너비 설정 */
   white-space: pre-wrap;
 }
 
 .noticeBox .editBox {
-  margin-top: 6vh;
+  margin-top: 8vh;
   height: 100%;
   width: calc(100% - 0vw);
 }
 
 .noticeBox .editTextarea {
+  padding: 1%;
   width: 100%;
   height: 16vh;
   font-size: 100%;
@@ -159,7 +160,7 @@
 
 .inquiryBox .inquiryItem {
   position: relative;
-  top: 3vh; /* 적절한 위치 조정 */
+  top: 3vh;
 }
 
 .headerSeparator {
@@ -179,8 +180,8 @@
   justify-content: space-between;
   width: 100%;
   margin: 4px 0;
-  position: relative; /* 추가 */
-  top: 3vh; /* 적절한 위치 조정 */
+  position: relative;
+  top: 4vh;
 }
 
 .inquiryQuestion {

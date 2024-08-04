@@ -147,17 +147,25 @@ const WebRTCChat = () => {
         }
     };
 
-    const handleExistingParticipants = (message) => {
+    const handleExistingParticipants = async (message) => {
         const existingUsers = message.data.split(',');
         setParticipants(existingUsers);
-        existingUsers.forEach((userName) => {
-            createPeerConnection(userName);
-        });
+
+        // 자신의 PeerConnection 생성 및 SDP offer 생성
+        const sdpOffer = await createPeerConnection('me');
+
         sendWebSocketMessage({
             id: 'receiveVideoFrom',
             sender: 'me',
-            sdpOffer: 'YOUR_SDP_OFFER', // You need to create and set the actual SDP offer here
+            sdpOffer: sdpOffer,
         });
+
+        // 다른 참가자들의 PeerConnection 생성
+        for (const userName of existingUsers) {
+            if (userName !== 'me') {
+                createPeerConnection(userName);
+            }
+        }
     };
 
     const handleNewParticipant = (message) => {
@@ -199,7 +207,7 @@ const WebRTCChat = () => {
         setChatMessages((prev) => [...prev, { sender: message.user, text: message.message }]);
     };
 
-    const createPeerConnection = (userName) => {
+    const createPeerConnection = async (userName) => {
         const pc = new RTCPeerConnection({
             iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
         });
@@ -220,22 +228,18 @@ const WebRTCChat = () => {
             }
         };
 
+        // 로컬 스트림 추가
         localStreamRef.current.getTracks().forEach((track) => {
             pc.addTrack(track, localStreamRef.current);
         });
 
+        // SDP offer 생성
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+
         peerConnections.current[userName] = pc;
 
-        pc.createOffer()
-            .then((offer) => pc.setLocalDescription(offer))
-            .then(() => {
-                sendWebSocketMessage({
-                    id: 'receiveVideoFrom',
-                    sender: userName,
-                    sdpOffer: pc.localDescription.sdp,
-                });
-            })
-            .catch(console.error);
+        return offer.sdp; // SDP offer 반환
     };
 
     const sendChatMessage = () => {

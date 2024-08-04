@@ -131,15 +131,26 @@ public class ConsultationController extends TextWebSocketHandler implements WebS
         users.put(session.getId(), user);
     }
 
-    private void handleReceiveVideoFrom(UserSession user, JsonObject jsonMessage) throws IOException {
+    private void handleReceiveVideoFrom(UserSession user, JsonObject jsonMessage) throws IOException{
         String senderName = jsonMessage.get("sender").getAsString();
         String sdpOffer = jsonMessage.get("sdpOffer").getAsString();
+        
         try {
+            // SDP 오퍼 유효성 검사
+            if (!isValidSdpOffer(sdpOffer)) {
+                throw new IllegalArgumentException("Invalid SDP offer");
+            }
+            
             user.receiveVideoFrom(senderName, sdpOffer);
-        } catch (IOException e) {
-        	System.out.printf("Error processing receiveVideoFrom: {%s}", e.getMessage());
+        } catch (Exception e) {
+        	System.out.printf("Error processing receiveVideoFrom: {%s}\n", e.getMessage());
             handleError(user.getSession(), "Failed to process receiveVideoFrom: " + e.getMessage());
         }
+    }
+    private boolean isValidSdpOffer(String sdpOffer) {
+        // SDP 오퍼 유효성 검사 로직 구현
+        // 예: 필수 필드 존재 여부, 형식 검사 등
+        return sdpOffer != null && sdpOffer.contains("v=0") && sdpOffer.contains("m=");
     }
 
     private void leaveRoom(UserSession user) throws IOException {

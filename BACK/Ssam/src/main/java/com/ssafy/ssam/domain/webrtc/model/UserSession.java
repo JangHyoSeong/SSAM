@@ -58,7 +58,15 @@ public class UserSession implements Closeable {
 
     public void sendMessage(JsonObject message) throws IOException {
         synchronized (session) {
-            session.sendMessage(new TextMessage(message.toString()));
+            try {
+                if (session.isOpen()) {
+                    session.sendMessage(new TextMessage(message.toString()));
+                } else {
+                	System.out.println("Attempt to send message to closed WebSocket session");
+                }
+            } catch (IOException e) {
+            	System.out.println("Error sending WebSocket message");
+            }
         }
     }
 

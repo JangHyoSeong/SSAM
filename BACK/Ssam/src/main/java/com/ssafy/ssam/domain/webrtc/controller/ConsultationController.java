@@ -134,7 +134,12 @@ public class ConsultationController extends TextWebSocketHandler implements WebS
     private void handleReceiveVideoFrom(UserSession user, JsonObject jsonMessage) throws IOException {
         String senderName = jsonMessage.get("sender").getAsString();
         String sdpOffer = jsonMessage.get("sdpOffer").getAsString();
-        user.receiveVideoFrom(senderName, sdpOffer);
+        try {
+            user.receiveVideoFrom(senderName, sdpOffer);
+        } catch (IOException e) {
+        	System.out.printf("Error processing receiveVideoFrom: {%s}", e.getMessage());
+            handleError(user.getSession(), "Failed to process receiveVideoFrom: " + e.getMessage());
+        }
     }
 
     private void leaveRoom(UserSession user) throws IOException {

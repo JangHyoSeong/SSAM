@@ -77,7 +77,11 @@ public class ConsultationRoom implements Closeable {
     public void receiveVideoFrom(UserSession sender, String remoteUserName, String sdpOffer) throws IOException {
         UserSession remoteUser = participants.get(remoteUserName);
         if (remoteUser == null) {
-            throw new IOException("Remote user " + remoteUserName + " not found");
+            if ("me".equals(remoteUserName)) {
+                remoteUser = sender; // 'me'인 경우 sender를 사용
+            } else {
+                throw new IOException("Remote user " + remoteUserName + " not found");
+            }
         }
 
         WebRtcEndpoint remoteEndpoint = remoteUser.getWebRtcEndpoint();

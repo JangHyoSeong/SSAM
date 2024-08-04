@@ -5,19 +5,31 @@ const WebRTCChat = () => {
     const [message, setMessage] = useState('');
     const [chatMessages, setChatMessages] = useState([]);
     const [isConnected, setIsConnected] = useState(false);
+    const [participants, setParticipants] = useState([]);
     const webSocketRef = useRef(null);
     const localVideoRef = useRef(null);
-    const remoteVideoRef = useRef(null);
+    const remoteVideosRef = useRef({});
+    const peerConnections = useRef({});
+    const localStreamRef = useRef(null);
 
     useEffect(() => {
         return () => {
             closeWebSocketConnection();
+            closePeerConnections();
         };
     }, []);
 
     const closeWebSocketConnection = () => {
         if (webSocketRef.current && webSocketRef.current.readyState === WebSocket.OPEN) {
             webSocketRef.current.close();
+        }
+    };
+
+    const closePeerConnections = () => {
+        Object.values(peerConnections.current).forEach((pc) => pc.close());
+        peerConnections.current = {};
+        if (localStreamRef.current) {
+            localStreamRef.current.getTracks().forEach((track) => track.stop());
         }
     };
 
@@ -49,42 +61,50 @@ const WebRTCChat = () => {
         }
     };
 
-    const joinRoom = () => {
+    const joinRoom = async () => {
         if (!room) {
             alert('Please enter a room name');
             return;
         }
 
-        closeWebSocketConnection();
-        connectWebSocket();
+        try {
+            await setupLocalStream();
+            closeWebSocketConnection();
+            connectWebSocket();
+        } catch (error) {
+            console.error('Error joining room:', error);
+            alert(`Failed to join room: ${error.message}`);
+        }
+    };
+
+    const setupLocalStream = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            localStreamRef.current = stream;
+            if (localVideoRef.current) {
+                localVideoRef.current.srcObject = stream;
+            }
+        } catch (error) {
+            console.error('Error accessing media devices:', error);
+            throw error;
+        }
     };
 
     const connectWebSocket = () => {
-        console.log('Attempting to connect WebSocket...');
         const wsUrl = `wss://i11e201.p.ssafy.io/api/v1/kurento`;
-
-        console.log(`Connecting to WebSocket URL: ${wsUrl}`);
         webSocketRef.current = new WebSocket(wsUrl);
 
-        webSocketRef.current.onopen = (event) => {
-            console.log('WebSocket connection established', event);
+        webSocketRef.current.onopen = () => {
             setIsConnected(true);
-            console.log('Sending join room message...');
             sendJoinRoomMessage();
         };
 
         webSocketRef.current.onmessage = (event) => {
-            console.log('WebSocket message received:', event.data);
-            try {
-                const message = JSON.parse(event.data);
-                handleMessage(message);
-            } catch (error) {
-                console.error('Error parsing message:', error);
-            }
+            const message = JSON.parse(event.data);
+            handleMessage(message);
         };
 
-        webSocketRef.current.onclose = (event) => {
-            console.log('WebSocket connection closed', event);
+        webSocketRef.current.onclose = () => {
             setIsConnected(false);
         };
 
@@ -95,78 +115,137 @@ const WebRTCChat = () => {
     };
 
     const sendJoinRoomMessage = () => {
-        console.log('Sending join room message');
-        const joinMessage = {
-            jsonrpc: '2.0',
-            method: 'join',
-            params: {
-                room: room,
-                name: 'User_' + Math.floor(Math.random() * 1000),
-            },
-            id: Date.now(),
+        sendWebSocketMessage({
+            id: 'joinRoom',
+            room: room,
+            name: `User_${Math.floor(Math.random() * 1000)}`,
+        });
+    };
+
+    const handleMessage = async (message) => {
+        switch (message.id) {
+            case 'existingParticipants':
+                handleExistingParticipants(message);
+                break;
+            case 'newParticipantArrived':
+                handleNewParticipant(message);
+                break;
+            case 'participantLeft':
+                handleParticipantLeft(message);
+                break;
+            case 'receiveVideoAnswer':
+                handleReceiveVideoAnswer(message);
+                break;
+            case 'iceCandidate':
+                handleIceCandidate(message);
+                break;
+            case 'newChatMessage':
+                handleNewChatMessage(message);
+                break;
+            default:
+                console.log('Unhandled message:', message);
+        }
+    };
+
+    const handleExistingParticipants = (message) => {
+        const existingUsers = message.data.split(',');
+        setParticipants(existingUsers);
+        existingUsers.forEach((userName) => {
+            createPeerConnection(userName);
+        });
+        sendWebSocketMessage({
+            id: 'receiveVideoFrom',
+            sender: 'me',
+            sdpOffer: 'YOUR_SDP_OFFER', // You need to create and set the actual SDP offer here
+        });
+    };
+
+    const handleNewParticipant = (message) => {
+        setParticipants((prev) => [...prev, message.name]);
+        createPeerConnection(message.name);
+    };
+
+    const handleParticipantLeft = (message) => {
+        setParticipants((prev) => prev.filter((name) => name !== message.name));
+        if (peerConnections.current[message.name]) {
+            peerConnections.current[message.name].close();
+            delete peerConnections.current[message.name];
+        }
+        if (remoteVideosRef.current[message.name]) {
+            remoteVideosRef.current[message.name].srcObject = null;
+        }
+    };
+
+    const handleReceiveVideoAnswer = (message) => {
+        const pc = peerConnections.current[message.name];
+        if (pc) {
+            pc.setRemoteDescription(
+                new RTCSessionDescription({
+                    type: 'answer',
+                    sdp: message.sdpAnswer,
+                })
+            );
+        }
+    };
+
+    const handleIceCandidate = (message) => {
+        const pc = peerConnections.current[message.name];
+        if (pc) {
+            pc.addIceCandidate(new RTCIceCandidate(message.candidate));
+        }
+    };
+
+    const handleNewChatMessage = (message) => {
+        setChatMessages((prev) => [...prev, { sender: message.user, text: message.message }]);
+    };
+
+    const createPeerConnection = (userName) => {
+        const pc = new RTCPeerConnection({
+            iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+        });
+
+        pc.onicecandidate = (event) => {
+            if (event.candidate) {
+                sendWebSocketMessage({
+                    id: 'onIceCandidate',
+                    candidate: event.candidate,
+                    name: userName,
+                });
+            }
         };
-        sendWebSocketMessage(joinMessage);
-    };
 
-    const handleMessage = (message) => {
-        console.log('Processing received message:', message);
-        if (message.error) {
-            console.error('Received error:', message.error);
-            return;
-        }
+        pc.ontrack = (event) => {
+            if (remoteVideosRef.current[userName]) {
+                remoteVideosRef.current[userName].srcObject = event.streams[0];
+            }
+        };
 
-        if (message.result) {
-            handleResultMessage(message.result);
-        } else if (message.method) {
-            handleMethodMessage(message);
-        } else {
-            console.log('Unhandled message format:', message);
-        }
-    };
+        localStreamRef.current.getTracks().forEach((track) => {
+            pc.addTrack(track, localStreamRef.current);
+        });
 
-    const handleResultMessage = (result) => {
-        switch (result.id) {
-            case 'joinedRoom':
-                console.log('Successfully joined room:', result.roomName);
-                break;
-            case 'leftRoom':
-                console.log('Left room');
-                break;
-            case 'newChatMessage':
-                if (result.user && result.message) {
-                    setChatMessages((prev) => [...prev, { sender: result.user, text: result.message }]);
-                }
-                break;
-            default:
-                console.log('Unhandled result message:', result);
-        }
-    };
+        peerConnections.current[userName] = pc;
 
-    const handleMethodMessage = (message) => {
-        switch (message.method) {
-            case 'newChatMessage':
-                const { room, user, message: chatMessage } = message.params;
-                setChatMessages((prev) => [...prev, { sender: user, text: chatMessage }]);
-                break;
-            default:
-                console.log('Unhandled method message:', message);
-        }
+        pc.createOffer()
+            .then((offer) => pc.setLocalDescription(offer))
+            .then(() => {
+                sendWebSocketMessage({
+                    id: 'receiveVideoFrom',
+                    sender: userName,
+                    sdpOffer: pc.localDescription.sdp,
+                });
+            })
+            .catch(console.error);
     };
 
     const sendChatMessage = () => {
         if (message && isConnected) {
-            console.log('Sending chat message');
-            const chatMessage = {
-                jsonrpc: '2.0',
-                method: 'chatMessage',
-                params: {
-                    room: room,
-                    name: 'User_' + Math.floor(Math.random() * 1000),
-                    message: message,
-                },
-                id: Date.now(),
-            };
-            sendWebSocketMessage(chatMessage);
+            sendWebSocketMessage({
+                id: 'chatMessage',
+                room: room,
+                name: 'User_' + Math.floor(Math.random() * 1000),
+                message: message,
+            });
             setChatMessages((prev) => [...prev, { sender: 'You', text: message }]);
             setMessage('');
         } else if (!isConnected) {
@@ -176,7 +255,6 @@ const WebRTCChat = () => {
 
     const sendWebSocketMessage = (message) => {
         if (webSocketRef.current && webSocketRef.current.readyState === WebSocket.OPEN) {
-            console.log('Sending WebSocket message:', message);
             webSocketRef.current.send(JSON.stringify(message));
         } else {
             console.error('WebSocket is not connected. Current state:', webSocketRef.current?.readyState);
@@ -197,9 +275,11 @@ const WebRTCChat = () => {
                 </button>
             </div>
 
-            <div className="flex justify-between mb-4">
-                <video ref={localVideoRef} autoPlay playsInline className="w-1/2 border"></video>
-                <video ref={remoteVideoRef} autoPlay playsInline className="w-1/2 border"></video>
+            <div className="flex flex-wrap justify-between mb-4">
+                <video ref={localVideoRef} autoPlay playsInline muted className="w-1/3 border"></video>
+                {participants.map((userName) => (
+                    <video key={userName} ref={(el) => (remoteVideosRef.current[userName] = el)} autoPlay playsInline className="w-1/3 border"></video>
+                ))}
             </div>
 
             <div className="border p-4 h-64 overflow-y-auto mb-4">

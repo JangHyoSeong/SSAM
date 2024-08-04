@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.kurento.client.IceCandidate;
 import org.kurento.client.KurentoClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ssafy.ssam.domain.webrtc.dto.RoomRequest;
 import com.ssafy.ssam.domain.webrtc.model.ConsultationRoom;
+import com.ssafy.ssam.domain.webrtc.model.UserSession;
 
 @CrossOrigin(origins = {"http://localhost:5173", "https://i11e201.p.ssafy.io"}, allowedHeaders = "*", allowCredentials = "true")
 @RestController
@@ -37,29 +39,24 @@ public class ConsultationController extends TextWebSocketHandler implements WebS
     private KurentoClient kurentoClient;
 
     private final ConcurrentHashMap<String, ConsultationRoom> consultationRooms = new ConcurrentHashMap<>();
-    private final Map<String, Map<String, WebSocketSession>> rooms = new ConcurrentHashMap<>();
+    private final Map<String, UserSession> users = new ConcurrentHashMap<>();
 
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(this, "/v1/kurento")
+                .setAllowedOrigins("http://localhost:5173", "https://i11e201.p.ssafy.io");
+    }
+
+    // 기존의 PostMapping, DeleteMapping 메서드들은 그대로 유지
     @PostMapping("/room")
     public ResponseEntity<String> createRoom(@RequestBody RoomRequest roomRequest) {
-        System.out.println("createRoom Function Called");
         String roomName = roomRequest.getRoomName();
         if (consultationRooms.containsKey(roomName)) {
             return ResponseEntity.badRequest().body("Room already exists");
         }
-        try {
-            ConsultationRoom room = new ConsultationRoom(roomName, kurentoClient);
-            consultationRooms.put(roomName, room);
-            return ResponseEntity.ok("Room created: " + roomName);
-        } catch (IOException e) {
-            return ResponseEntity.internalServerError().body("Failed to create room: " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-    	System.out.println("PLEASE CONNECT.....");
-        registry.addHandler(this, "/v1/kurento")
-                .setAllowedOrigins("http://localhost:5173", "https://i11e201.p.ssafy.io");
+        ConsultationRoom room = new ConsultationRoom(roomName, kurentoClient);
+		consultationRooms.put(roomName, room);
+		return ResponseEntity.ok("Room created: " + roomName);
     }
 
     @DeleteMapping("/room/{roomName}")
@@ -69,53 +66,58 @@ public class ConsultationController extends TextWebSocketHandler implements WebS
             return ResponseEntity.notFound().build();
         }
         try {
-            room.closeRoom();
+            room.close();
             return ResponseEntity.ok("Room closed: " + roomName);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Failed to close room: " + e.getMessage());
         }
     }
-
+    
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        JsonObject response = new JsonObject();
-        response.addProperty("id", "connectionEstablished");
-        response.addProperty("message", "WebSocket connection established successfully");
-        sendMessage(session, response.toString());
-        
-        System.out.println("New WebSocket connection established: " + session.getId());
+        // WebSocket 연결 설정 후 처리
     }
 
     @Override
-    public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-    	System.out.println("handleTextMessage");
-        String payload = message.getPayload();
-        JsonObject jsonMessage = JsonParser.parseString(payload).getAsJsonObject();
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        JsonObject jsonMessage = JsonParser.parseString(message.getPayload()).getAsJsonObject();
+        UserSession user = users.get(session.getId());
 
-        String method = jsonMessage.has("method") ? jsonMessage.get("method").getAsString() : jsonMessage.get("id").getAsString();
-        JsonObject params = jsonMessage.has("params") ? jsonMessage.getAsJsonObject("params") : jsonMessage;
+        if (user != null) {
+            handleMessageFromRegisteredUser(user, jsonMessage);
+        } else {
+            handleMessageFromNewUser(session, jsonMessage);
+        }
+    }
 
-        switch (method) {
-            case "join":
-                joinRoom(params, session);
+    private void handleMessageFromRegisteredUser(UserSession user, JsonObject jsonMessage) throws IOException {
+        String messageType = jsonMessage.get("id").getAsString();
+        switch (messageType) {
+            case "receiveVideoFrom":
+                handleReceiveVideoFrom(user, jsonMessage);
                 break;
-            case "leave":
-                leaveRoom(params, session);
+            case "leaveRoom":
+                leaveRoom(user);
                 break;
             case "onIceCandidate":
-                handleIceCandidate(params, session);
-                break;
-            case "chatMessage":
-                handleChatMessage(params, session);
+                handleOnIceCandidate(user, jsonMessage);
                 break;
             default:
-                handleError(session, "Invalid message with id " + method);
+                handleError(user.getSession(), "Invalid message type: " + messageType);
                 break;
         }
     }
 
+    private void handleMessageFromNewUser(WebSocketSession session, JsonObject jsonMessage) throws IOException {
+        String messageType = jsonMessage.get("id").getAsString();
+        if ("joinRoom".equals(messageType)) {
+            joinRoom(jsonMessage, session);
+        } else {
+            handleError(session, "Invalid message type for a new user: " + messageType);
+        }
+    }
+
     private void joinRoom(JsonObject params, WebSocketSession session) throws IOException {
-        System.out.println("joinRoom Function Called");
         String roomName = params.get("room").getAsString();
         String userName = params.get("name").getAsString();
 
@@ -125,99 +127,43 @@ public class ConsultationController extends TextWebSocketHandler implements WebS
             return;
         }
 
-        if (room.join(userName, session)) {
-            rooms.putIfAbsent(roomName, new ConcurrentHashMap<>());
-            rooms.get(roomName).put(session.getId(), session);
-
-            JsonObject response = new JsonObject();
-            response.addProperty("id", "joinedRoom");
-            response.addProperty("roomName", roomName);
-            sendMessage(session, response.toString());
-        } else {
-            handleError(session, "Room " + roomName + " is full");
-        }
+        UserSession user = room.join(userName, session);
+        users.put(session.getId(), user);
     }
 
-    private void leaveRoom(JsonObject params, WebSocketSession session) throws IOException {
-        String roomName = params.get("room").getAsString();
-        String userName = params.get("name").getAsString();
-
-        ConsultationRoom room = consultationRooms.get(roomName);
-        if (room != null) {
-            room.leave(userName);
-            rooms.get(roomName).remove(session.getId());
-            JsonObject response = new JsonObject();
-            response.addProperty("id", "leftRoom");
-            sendMessage(session, response.toString());
-        } else {
-            handleError(session, "Room " + roomName + " does not exist");
-        }
+    private void handleReceiveVideoFrom(UserSession user, JsonObject jsonMessage) throws IOException {
+        String senderName = jsonMessage.get("sender").getAsString();
+        String sdpOffer = jsonMessage.get("sdpOffer").getAsString();
+        user.receiveVideoFrom(senderName, sdpOffer);
     }
 
-    private void handleIceCandidate(JsonObject params, WebSocketSession session) {
-        // ICE candidate 처리 로직
+    private void leaveRoom(UserSession user) throws IOException {
+        ConsultationRoom room = user.getRoom();
+        room.leave(user);
+        users.remove(user.getSession().getId());
     }
 
-    private void handleChatMessage(JsonObject params, WebSocketSession session) throws IOException {
-        String roomName = params.get("room").getAsString();
-        String userName = params.get("name").getAsString();
-        String chatMessage = params.get("message").getAsString();
-
-        System.out.println("Chat message received from " + userName + " in room " + roomName + ": " + chatMessage);
-
-        JsonObject response = new JsonObject();
-        response.addProperty("jsonrpc", "2.0");
-        response.addProperty("method", "newChatMessage");
-        
-        JsonObject responseParams = new JsonObject();
-        responseParams.addProperty("room", roomName);
-        responseParams.addProperty("user", userName);
-        responseParams.addProperty("message", chatMessage);
-        response.add("params", responseParams);
-
-        String responseMessage = response.toString();
-
-        Map<String, WebSocketSession> roomSessions = rooms.get(roomName);
-        if (roomSessions != null) {
-            for (WebSocketSession clientSession : roomSessions.values()) {
-                if (clientSession.isOpen()) {
-                    sendMessage(clientSession, responseMessage);
-                }
-            }
-        }
+    private void handleOnIceCandidate(UserSession user, JsonObject jsonMessage) {
+        JsonObject candidate = jsonMessage.get("candidate").getAsJsonObject();
+        IceCandidate iceCandidate = new IceCandidate(
+            candidate.get("candidate").getAsString(),
+            candidate.get("sdpMid").getAsString(),
+            candidate.get("sdpMLineIndex").getAsInt());
+        user.addCandidate(iceCandidate);
     }
 
     private void handleError(WebSocketSession session, String message) throws IOException {
         JsonObject response = new JsonObject();
-        System.out.println("Handle Error!!\n");
         response.addProperty("id", "error");
         response.addProperty("message", message);
-        sendMessage(session, response.toString());
-    }
-
-    private void sendMessage(WebSocketSession session, String message) throws IOException {
-        session.sendMessage(new TextMessage(message));
-    }
-
-    private void sendErrorResponse(WebSocketSession session, String errorMessage, String id) throws IOException {
-        JsonObject errorResponse = new JsonObject();
-        errorResponse.addProperty("jsonrpc", "2.0");
-        errorResponse.addProperty("id", id);
-        
-        JsonObject error = new JsonObject();
-        error.addProperty("code", -32600);
-        error.addProperty("message", errorMessage);
-        
-        errorResponse.add("error", error);
-        
-        sendMessage(session, errorResponse.toString());
+        session.sendMessage(new TextMessage(response.toString()));
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        for (Map<String, WebSocketSession> room : rooms.values()) {
-            room.remove(session.getId());
+        UserSession user = users.remove(session.getId());
+        if (user != null) {
+            leaveRoom(user);
         }
-        System.out.println("WebSocket connection closed: " + session.getId());
     }
 }

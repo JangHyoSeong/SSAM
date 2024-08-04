@@ -4,7 +4,6 @@ import java.io.Closeable;
 import java.io.IOException;
 
 import org.kurento.client.IceCandidate;
-import org.kurento.client.MediaPipeline;
 import org.kurento.client.WebRtcEndpoint;
 import org.kurento.jsonrpc.JsonUtils;
 import org.springframework.web.socket.TextMessage;
@@ -16,31 +15,13 @@ public class UserSession implements Closeable {
     private final String name;
     private final WebSocketSession session;
     
-    private final MediaPipeline pipeline;
-    private final WebRtcEndpoint outgoingMedia;
-    private final WebRtcEndpoint incomingMedia;
+    private final ConsultationRoom room;
+    private WebRtcEndpoint webRtcEndpoint;
 
-    public UserSession(String name, WebSocketSession session, MediaPipeline pipeline) {
+    public UserSession(String name, WebSocketSession session, ConsultationRoom room) {
         this.name = name;
         this.session = session;
-        this.pipeline = pipeline;
-        
-        this.outgoingMedia = new WebRtcEndpoint.Builder(pipeline).build();
-        this.incomingMedia = new WebRtcEndpoint.Builder(pipeline).build();
-
-        this.outgoingMedia.addIceCandidateFoundListener(event -> {
-            JsonObject response = new JsonObject();
-            response.addProperty("id", "iceCandidate");
-            response.addProperty("name", name);
-            response.add("candidate", JsonUtils.toJsonObject(event.getCandidate()));
-            try {
-                synchronized (session) {
-                    session.sendMessage(new TextMessage(response.toString()));
-                }
-            } catch (IOException e) {
-                System.err.println("Error sending ICE candidate: " + e.getMessage());
-            }
-        });
+        this.room = room;
     }
 
     public String getName() {
@@ -51,50 +32,66 @@ public class UserSession implements Closeable {
         return session;
     }
 
-    public WebRtcEndpoint getOutgoingWebRtcPeer() {
-        return outgoingMedia;
+    public ConsultationRoom getRoom() {
+        return room;
     }
 
-    public WebRtcEndpoint getIncomingWebRtcPeer() {
-        return incomingMedia;
+    public void setWebRtcEndpoint(WebRtcEndpoint webRtcEndpoint) {
+        this.webRtcEndpoint = webRtcEndpoint;
+
+        webRtcEndpoint.addIceCandidateFoundListener(event -> {
+            JsonObject response = new JsonObject();
+            response.addProperty("id", "iceCandidate");
+            response.addProperty("name", name);
+            response.add("candidate", JsonUtils.toJsonObject(event.getCandidate()));
+            try {
+                sendMessage(response);
+            } catch (IOException e) {
+                System.err.println("Error sending ICE candidate: " + e.getMessage());
+            }
+        });
     }
 
-    public void receiveVideoFrom(UserSession sender, String sdpOffer) throws IOException {
-        System.out.println("USER " + this.name + ": connecting with " + sender.getName());
+    public WebRtcEndpoint getWebRtcEndpoint() {
+        return webRtcEndpoint;
+    }
 
-        String ipSdpAnswer = this.getIncomingWebRtcPeer().processOffer(sdpOffer);
-        
-        JsonObject response = new JsonObject();
-        response.addProperty("id", "receiveVideoAnswer");
-        response.addProperty("name", sender.getName());
-        response.addProperty("sdpAnswer", ipSdpAnswer);
-
+    public void sendMessage(JsonObject message) throws IOException {
         synchronized (session) {
-            session.sendMessage(new TextMessage(response.toString()));
+            session.sendMessage(new TextMessage(message.toString()));
         }
-        
-        this.getIncomingWebRtcPeer().gatherCandidates();
-        sender.getOutgoingWebRtcPeer().connect(this.getIncomingWebRtcPeer());
     }
 
-    public void sendMessage(String message) throws IOException {
-        synchronized (session) {
-            session.sendMessage(new TextMessage(message));
-        }
+    public void addCandidate(IceCandidate candidate) {
+        webRtcEndpoint.addIceCandidate(candidate);
+    }
+
+    public void receiveVideoFrom(String senderName, String sdpOffer) throws IOException {
+        room.receiveVideoFrom(this, senderName, sdpOffer);
     }
 
     @Override
     public void close() throws IOException {
         System.out.println("PARTICIPANT " + name + ": Releasing resources");
-        if (this.outgoingMedia != null) {
-            this.outgoingMedia.release();
-        }
-        if (this.incomingMedia != null) {
-            this.incomingMedia.release();
+        if (this.webRtcEndpoint != null) {
+            this.webRtcEndpoint.release();
         }
     }
 
-    public void addCandidate(IceCandidate candidate) {
-        this.incomingMedia.addIceCandidate(candidate);
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof UserSession)) {
+            return false;
+        }
+        UserSession other = (UserSession) obj;
+        return name.equals(other.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 }

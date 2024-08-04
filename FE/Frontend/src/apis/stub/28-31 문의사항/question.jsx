@@ -45,23 +45,6 @@ const useQuestionStore = create((set) => ({
       throw error;
     }
   },
-  // updateProfile: async (qustioneData) => {
-  //   try {
-  //     const formData = new FormData();
-  //     Object.keys(qustioneData).forEach((key) => {
-  //       formData.append(key, qustioneData[key]);
-  //     });
-
-  //     const response = await axios.put(`/profile`, formData, {
-  //       headers: { "Content-Type": "multipart/form-data" },
-  //     });
-  //     set({ qustion: response.data });
-  //     return response.data;
-  //   } catch (error) {
-  //     console.error("Failed to update qustion:", error);
-  //     throw error;
-  //   }
-  // },
 }));
 
 export default useQuestionStore;
@@ -98,6 +81,23 @@ export default useQuestionStore;
 //       throw error;
 //     }
 //   },
+// updateProfile: async (qustioneData) => {
+//   try {
+//     const formData = new FormData();
+//     Object.keys(qustioneData).forEach((key) => {
+//       formData.append(key, qustioneData[key]);
+//     });
+
+//     const response = await axios.put(`/profile`, formData, {
+//       headers: { "Content-Type": "multipart/form-data" },
+//     });
+//     set({ qustion: response.data });
+//     return response.data;
+//   } catch (error) {
+//     console.error("Failed to update qustion:", error);
+//     throw error;
+//   }
+// },
 // }));
 
 // export default useQuestionStore;

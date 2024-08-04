@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import { FaTrash, FaEdit, FaSave } from "react-icons/fa";
 import { useQuestions } from "../../../store/QuestionContext";
 import TeacherDeleteModal from "./TeacherDeleteModal";
 import styles from "./TeacherQuestion.module.scss";
-//
 import useQuestionStore from "../../../apis/stub/28-31 문의사항/question";
 
 // bordId인자로 받음
@@ -135,10 +133,6 @@ const TeacherQuestion = () => {
       )}
     </div>
   );
-};
-
-TeacherQuestion.propTypes = {
-  boardId: PropTypes.string.isRequired,
 };
 
 export default TeacherQuestion;

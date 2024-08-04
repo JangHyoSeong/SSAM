@@ -21,7 +21,7 @@ const pinStore = create((set) => ({
     try {
       const token = localStorage.getItem("USER_TOKEN");
       console.log(token);
-      const response = await axios.post(
+      const response = await axios.get(
         `http://localhost:8081/v1/classrooms`,
         {
           pin: "123456",

@@ -14,6 +14,7 @@ const WebRTCChat = () => {
     const [remoteVideoKeys, setRemoteVideoKeys] = useState([]);
     const peerConnectionsRef = useRef({});
     const localStreamRef = useRef(null);
+    const [kurentoUtilsLoaded, setKurentoUtilsLoaded] = useState(false);
     const kurentoUtils = window.kurentoUtils;
 
     const configuration = {
@@ -22,16 +23,17 @@ const WebRTCChat = () => {
 
     useEffect(() => {
         const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/kurento-utils@6.16.0/js/kurento-utils.min.js';
+        script.src = 'https://cdn.jsdelivr.net/npm/kurento-js-utils@6.16.0/kurento-utils.min.js';
         script.async = true;
+        script.onload = () => setKurentoUtilsLoaded(true);
         document.body.appendChild(script);
+
         return () => {
             document.body.removeChild(script);
             closeWebSocketConnection();
             cleanupWebRTC();
         };
     }, []);
-
     const closeWebSocketConnection = () => {
         if (webSocketRef.current && webSocketRef.current.readyState === WebSocket.OPEN) {
             webSocketRef.current.close();
@@ -123,21 +125,33 @@ const WebRTCChat = () => {
 
     const handleExistingParticipants = (message) => {
         setParticipants(message.data);
+        if (!kurentoUtilsLoaded || !window.kurentoUtils) {
+            console.error('Kurento Utils not loaded');
+            setError('Kurento Utils not loaded. Please try again.');
+            return;
+        }
+
         const options = {
             localVideo: localVideoRef.current,
             mediaConstraints: { audio: true, video: true },
             onicecandidate: onIceCandidate
         };
-        kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options, function(error) {
+
+        window.kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options, function(error) {
             if (error) {
+                console.error('Error creating WebRtcPeer:', error);
                 setError(`Failed to create WebRtcPeer: ${error}`);
                 return;
             }
+
             this.generateOffer((error, offerSdp) => {
                 if (error) {
+                    console.error('Error generating offer:', error);
                     setError(`Failed to generate offer: ${error}`);
                     return;
                 }
+
+                console.log('Invoking SDP offer callback function');
                 sendWebSocketMessage({
                     id: 'receiveVideoFrom',
                     sender: username,
@@ -146,6 +160,7 @@ const WebRTCChat = () => {
             });
         });
     };
+
 
     const handleNewParticipant = (message) => {
         setParticipants(prev => [...prev, message.name]);
@@ -207,6 +222,7 @@ const WebRTCChat = () => {
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">WebRTC Chat and Video Call</h1>
+            {!kurentoUtilsLoaded && <p>Loading Kurento Utils...</p>}
             <h1>Deploy Ver.54</h1>
             <div className="mb-4">
                 <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Enter your username" className="border p-2 mr-2" />

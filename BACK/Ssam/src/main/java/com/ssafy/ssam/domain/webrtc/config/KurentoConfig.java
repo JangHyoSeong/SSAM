@@ -8,8 +8,9 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
-
 import com.ssafy.ssam.domain.webrtc.controller.ConsultationController;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Configuration
 @EnableWebSocket
@@ -32,13 +33,15 @@ public class KurentoConfig implements WebSocketConfigurer {
 
     @Bean
     public KurentoClient kurentoClient() {
-        String kurentoUrlWithIceServers = kurentoUrl + 
-                "?iceServers=[" +
-                "{\"urls\":\"" + stunServerUrl + "\"}," +
-                "{\"urls\":\"" + turnServerUrl + "\"," +
-                "\"username\":\"" + turnServerUsername + "\"," +
-                "\"credential\":\"" + turnServerCredential + "\"}" +
-                "]";
+        String encodedIceServers = URLEncoder.encode(
+            "[{\"urls\":\"" + stunServerUrl + "\"}," +
+            "{\"urls\":\"" + turnServerUrl + "\"," +
+            "\"username\":\"" + turnServerUsername + "\"," +
+            "\"credential\":\"" + turnServerCredential + "\"}]",
+            StandardCharsets.UTF_8
+        );
+        
+        String kurentoUrlWithIceServers = kurentoUrl + "?iceServers=" + encodedIceServers;
         return KurentoClient.create(kurentoUrlWithIceServers);
     }
 

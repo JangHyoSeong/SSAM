@@ -4,9 +4,7 @@ import com.ssafy.ssam.domain.classroom.dto.response.SchoolResponseDTO;
 import com.ssafy.ssam.domain.classroom.service.SchoolService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,5 +20,9 @@ public class SchoolController {
     public ResponseEntity<List<SchoolResponseDTO>> getSchool() {
         return ResponseEntity.ok(schoolService.getSchool());
     }
-    
+
+    @GetMapping("/schools/search")
+    public ResponseEntity<List<SchoolResponseDTO>> searchSchool(@RequestParam String query) {
+        return ResponseEntity.ok(schoolService.searchSchool(query));
+    }
 }

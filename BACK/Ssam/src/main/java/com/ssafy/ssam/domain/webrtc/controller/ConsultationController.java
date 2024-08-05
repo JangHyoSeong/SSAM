@@ -149,45 +149,53 @@ public class ConsultationController extends TextWebSocketHandler implements WebS
     
     private void receiveVideoFrom(JsonObject params, WebSocketSession session) throws IOException {
         String senderName = params.get("sender").getAsString();
+        String receiverName = params.get("receiver").getAsString();
         String sdpOffer = params.get("sdpOffer").getAsString();
 
-        UserSession receiver = getUserSession(session);
-        UserSession sender = receiver.getRoom().getParticipant(senderName);
-        String ipSdpAnswer = receiver.receiveVideoFrom(sender, sdpOffer);
+        ConsultationRoom room = getRoomForSession(session);
+        if (room != null) {
+            UserSession receiver = room.getParticipant(receiverName);
+            UserSession sender = room.getParticipant(senderName);
+            String ipSdpAnswer = receiver.receiveVideoFrom(sender, sdpOffer);
 
-        JsonObject response = new JsonObject();
-        response.addProperty("id", "receiveVideoAnswer");
-        response.addProperty("name", senderName);
-        response.addProperty("sdpAnswer", ipSdpAnswer);
-        sendMessage(session, response.toString());
+            JsonObject response = new JsonObject();
+            response.addProperty("id", "receiveVideoAnswer");
+            response.addProperty("name", senderName);
+            response.addProperty("sdpAnswer", ipSdpAnswer);
+            sendMessage(receiver.getSession(), response.toString());
+        }
     }
     
-    private void handleIceCandidate(JsonObject params, WebSocketSession session) {
-        UserSession user = getUserSession(session);
-        if (user != null) {
-            JsonObject candidate = params.get("candidate").getAsJsonObject();
-            IceCandidate iceCandidate = new IceCandidate(
-                candidate.get("candidate").getAsString(),
-                candidate.get("sdpMid").getAsString(),
-                candidate.get("sdpMLineIndex").getAsInt());
-            user.addCandidate(iceCandidate);
+    private void handleIceCandidate(JsonObject params, WebSocketSession session) throws IOException {
+        String userName = params.get("name").getAsString();
+        String to = params.get("to").getAsString();
+        JsonObject candidate = params.get("candidate").getAsJsonObject();
+
+        ConsultationRoom room = getRoomForSession(session);
+        if (room != null) {
+            UserSession user = room.getParticipant(to);
+            if (user != null) {
+                JsonObject response = new JsonObject();
+                response.addProperty("id", "iceCandidate");
+                response.addProperty("name", userName);
+                response.add("candidate", candidate);
+                sendMessage(user.getSession(), response.toString());
+            }
         }
     }
 
     private void leaveRoom(JsonObject params, WebSocketSession session) throws IOException {
-        String roomName = params.get("room").getAsString();
         String userName = params.get("name").getAsString();
-
-        ConsultationRoom room = consultationRooms.get(roomName);
+        ConsultationRoom room = getRoomForSession(session);
         if (room != null) {
             room.leave(userName);
-            rooms.get(roomName).remove(session.getId());
+            rooms.get(room.getRoomName()).remove(session.getId());
 
             // 참가자 퇴장 알림
             JsonObject participantLeftMsg = new JsonObject();
             participantLeftMsg.addProperty("id", "participantLeft");
             participantLeftMsg.addProperty("name", userName);
-            broadcastToRoom(roomName, participantLeftMsg.toString(), null);
+            broadcastToRoom(room.getRoomName(), participantLeftMsg.toString(), null);
         }
     }
 
@@ -200,7 +208,7 @@ public class ConsultationController extends TextWebSocketHandler implements WebS
 
         JsonObject response = new JsonObject();
         response.addProperty("jsonrpc", "2.0");
-        response.addProperty("method", "newChatMessage");
+        response.addProperty("id", "newChatMessage");
         
         JsonObject responseParams = new JsonObject();
         responseParams.addProperty("room", roomName);
@@ -257,15 +265,15 @@ public class ConsultationController extends TextWebSocketHandler implements WebS
         }
     }
     
-    private UserSession getUserSession(WebSocketSession session) {
+    private ConsultationRoom getRoomForSession(WebSocketSession session) {
         for (ConsultationRoom room : consultationRooms.values()) {
-            UserSession userSession = room.getParticipantBySession(session);
-            if (userSession != null) {
-                return userSession;
+            if (room.getParticipantBySession(session) != null) {
+                return room;
             }
         }
         return null;
     }
+
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         for (Map<String, WebSocketSession> room : rooms.values()) {

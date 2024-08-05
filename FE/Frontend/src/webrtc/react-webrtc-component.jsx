@@ -9,8 +9,8 @@ const WebRTCChat = () => {
     const [participants, setParticipants] = useState([]);
     const webSocketRef = useRef(null);
     const localVideoRef = useRef(null);
-    const remoteVideoRef = useRef(null);
-    const peerConnectionRef = useRef(null);
+    const remoteVideosRef = useRef({});
+    const peerConnectionsRef = useRef({});
     const localStreamRef = useRef(null);
 
     const configuration = {
@@ -34,9 +34,7 @@ const WebRTCChat = () => {
         if (localStreamRef.current) {
             localStreamRef.current.getTracks().forEach(track => track.stop());
         }
-        if (peerConnectionRef.current) {
-            peerConnectionRef.current.close();
-        }
+        Object.values(peerConnectionsRef.current).forEach(pc => pc.close());
     };
 
     const createRoom = async () => {
@@ -150,41 +148,73 @@ const WebRTCChat = () => {
             case 'iceCandidate':
                 handleRemoteIceCandidate(message);
                 break;
+            case 'newChatMessage':
+                handleNewChatMessage(message);
+                break;
             default:
                 console.log('Unhandled message:', message);
         }
-    };
+    };    
 
     const handleExistingParticipants = async (message) => {
         console.log('Existing participants:', message.data);
         setParticipants(message.data);
         
-        peerConnectionRef.current = new RTCPeerConnection(configuration);
+        for (const participantName of message.data) {
+            if (participantName !== username) {
+                await createPeerConnection(participantName);
+            }
+        }
+    };
+
+    const handleNewParticipant = async (message) => {
+        console.log('New participant arrived:', message.name);
+        setParticipants(prev => [...prev, message.name]);
+        await createPeerConnection(message.name);
+    };
+
+    // 새로운 함수 추가
+    const handleNewChatMessage = (message) => {
+        const { user, message: chatMessage } = message.params;
+        setChatMessages(prevMessages => [...prevMessages, { sender: user, text: chatMessage }]);
+    };
+
+    const createPeerConnection = async (participantName) => {
+        const peerConnection = new RTCPeerConnection(configuration);
+        peerConnectionsRef.current[participantName] = peerConnection;
 
         localStreamRef.current.getTracks().forEach(track => {
-            peerConnectionRef.current.addTrack(track, localStreamRef.current);
+            peerConnection.addTrack(track, localStreamRef.current);
         });
 
-        peerConnectionRef.current.onicecandidate = (event) => {
+        peerConnection.onicecandidate = (event) => {
             if (event.candidate) {
                 sendWebSocketMessage({
                     id: 'onIceCandidate',
                     candidate: event.candidate,
-                    name: username
+                    name: username,
+                    to: participantName
                 });
             }
         };
 
-        peerConnectionRef.current.ontrack = (event) => {
-            remoteVideoRef.current.srcObject = event.streams[0];
+        peerConnection.ontrack = (event) => {
+            if (!remoteVideosRef.current[participantName]) {
+                remoteVideosRef.current[participantName] = document.createElement('video');
+                remoteVideosRef.current[participantName].autoplay = true;
+                remoteVideosRef.current[participantName].playsInline = true;
+                document.getElementById('remoteVideos').appendChild(remoteVideosRef.current[participantName]);
+            }
+            remoteVideosRef.current[participantName].srcObject = event.streams[0];
         };
 
         try {
-            const offer = await peerConnectionRef.current.createOffer();
-            await peerConnectionRef.current.setLocalDescription(offer);
+            const offer = await peerConnection.createOffer();
+            await peerConnection.setLocalDescription(offer);
             sendWebSocketMessage({
                 id: 'receiveVideoFrom',
                 sender: username,
+                receiver: participantName,
                 sdpOffer: offer.sdp
             });
         } catch (error) {
@@ -192,33 +222,42 @@ const WebRTCChat = () => {
         }
     };
 
-    const handleNewParticipant = (message) => {
-        console.log('New participant arrived:', message.name);
-        setParticipants(prev => [...prev, message.name]);
-    };
-
     const handleParticipantLeft = (message) => {
         console.log('Participant left:', message.name);
         setParticipants(prev => prev.filter(name => name !== message.name));
+        if (peerConnectionsRef.current[message.name]) {
+            peerConnectionsRef.current[message.name].close();
+            delete peerConnectionsRef.current[message.name];
+        }
+        if (remoteVideosRef.current[message.name]) {
+            remoteVideosRef.current[message.name].remove();
+            delete remoteVideosRef.current[message.name];
+        }
     };
 
     const handleReceiveVideoAnswer = async (message) => {
         console.log('Received video answer from:', message.name);
-        try {
-            await peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription({
-                type: 'answer',
-                sdp: message.sdpAnswer
-            }));
-        } catch (error) {
-            console.error('Error setting remote description:', error);
+        const peerConnection = peerConnectionsRef.current[message.name];
+        if (peerConnection) {
+            try {
+                await peerConnection.setRemoteDescription(new RTCSessionDescription({
+                    type: 'answer',
+                    sdp: message.sdpAnswer
+                }));
+            } catch (error) {
+                console.error('Error setting remote description:', error);
+            }
         }
     };
 
     const handleRemoteIceCandidate = async (message) => {
-        try {
-            await peerConnectionRef.current.addIceCandidate(new RTCIceCandidate(message.candidate));
-        } catch (error) {
-            console.error('Error adding received ice candidate:', error);
+        const peerConnection = peerConnectionsRef.current[message.name];
+        if (peerConnection) {
+            try {
+                await peerConnection.addIceCandidate(new RTCIceCandidate(message.candidate));
+            } catch (error) {
+                console.error('Error adding received ice candidate:', error);
+            }
         }
     };
 
@@ -251,7 +290,7 @@ const WebRTCChat = () => {
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">WebRTC Chat and Video Call</h1>
-            <h1>Build ver.47</h1>
+            <h1>Build ver.48</h1>
             <div className="mb-4">
                 <input 
                     type="text" 
@@ -281,8 +320,8 @@ const WebRTCChat = () => {
                     <video ref={localVideoRef} autoPlay playsInline muted className="w-full border"></video>
                 </div>
                 <div className="w-1/2 ml-2">
-                    <h2 className="text-lg font-semibold mb-2">Remote Video</h2>
-                    <video ref={remoteVideoRef} autoPlay playsInline className="w-full border"></video>
+                    <h2 className="text-lg font-semibold mb-2">Remote Videos</h2>
+                    <div id="remoteVideos" className="flex flex-wrap"></div>
                 </div>
             </div>
 

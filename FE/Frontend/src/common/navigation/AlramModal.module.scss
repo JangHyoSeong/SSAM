@@ -1,7 +1,7 @@
 .alramArray {
   position: absolute;
-  top: 10%;
-  left: 81.5%;
+  top: 5.45vw;
+  left: 176vh;
   width: 18vw;
   height: 55vh;
   background-color: #eeeeee;
@@ -15,7 +15,6 @@
 }
 
 .triangle {
-  display: none; // 세모 모양 안 보이게 함
   position: absolute;
   top: -4%;
   left: 11.2%;
@@ -28,9 +27,30 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 17.8vw;
+  width: 17.7vw;
   height: 6vh;
   background-color: white;
   border-radius: 15px 15px 0px 0px;
   font-size: 150%;
+}
+
+.contentArray {
+  width: 17.7vw;
+  height: 48vh;
+  border-radius: 0px 0px 15px 15px;
+  padding: 0px 10px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 10vh;
+  margin-top: 5%;
+  border-radius: 25px;
+  background-color: white;
+  white-space: normal;
 }

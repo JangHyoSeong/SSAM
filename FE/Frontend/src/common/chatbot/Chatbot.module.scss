@@ -1,107 +1,11 @@
 .FieldArray {
   position: fixed;
-  bottom: -1%;
-  right: 0%;
+  top: 42.5vw;
+  left: 207.5vh;
 }
 
 .ChatbotImg {
   width: 4vw;
   height: 7.5vh;
   cursor: pointer;
-}
-
-.FieldArray {
-  position: fixed;
-  bottom: -1%;
-  right: 0%;
-}
-
-.ChatbotImg {
-  width: 4vw;
-  height: 7.5vh;
-  cursor: pointer;
-}
-
-.formBox {
-  position: fixed;
-  bottom: 1%;
-  right: 4%;
-  width: 20vw;
-  height: 60vh;
-  background-color: white;
-  border: 1px solid #aaaaaa;
-  border-radius: 20px;
-  margin-bottom: 2%;
-}
-
-.formBox hr {
-  border: 1px solid #aaaaaa;
-}
-
-.logo {
-  width: 3vw;
-  height: 3.5vh;
-  margin: 2.5% 0% 1.5% 5%;
-}
-
-.chatArray {
-  width: 20vw;
-  height: 45vh;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-}
-
-.chatArray h4 {
-  margin: 1% 0%;
-}
-
-.chatContent {
-  width: 20vw;
-  height: 35vh;
-}
-
-.textInput {
-  width: 17vw;
-  height: 5vh;
-  background-color: transparent;
-  border: 2px solid #dddddd;
-  border-radius: 25px;
-  padding-left: 16%;
-}
-
-.uploadImg {
-  position: absolute;
-  top: 77%;
-  left: 12%;
-  width: 2vw;
-  height: 3.5vh;
-}
-
-.chatMenu {
-  width: 19.9vw;
-  height: 8.5vh;
-  border-radius: 0px 0px 20px 20px;
-  background-color: #f2f2f2;
-  display: flex;
-  justify-content: space-evenly;
-}
-
-.imgBox {
-  cursor: pointer;
-}
-
-.img {
-  width: 2vw;
-  margin-top: 20%;
-}
-
-.chatMenu p {
-  font-size: 90%;
-  width: 2vw;
-  margin: -20% 9%;
-}
-
-.studyTxt {
-  color: #5285ee;
 }

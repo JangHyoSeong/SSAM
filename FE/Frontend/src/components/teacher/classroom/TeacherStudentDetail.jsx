@@ -14,7 +14,6 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
               <img src={StudentImage} alt="Student" />
             </div>
             <h3>이름: {student.name}</h3>
-            <p>번호: {student.number}</p>
             <p>생일: {student.birth}</p>
           </div>
           <div className={styles.historyBox}>
@@ -23,8 +22,8 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
             <p>2. 2024.06.01 - 학교 생활</p>
           </div>
           <div className={styles.summaryBox}>
-            <h3>상담 요약표</h3>
-            <p>상담 요약 내용이 여기에 표시됩니다.</p>
+            <h3>상담 요약 보고서</h3>
+            <p>상담 요약 보고서가 여기에 표시됩니다.</p>
           </div>
           <div className={styles.buttonContainer}>
             <button className={styles.backButton} onClick={onBack}>

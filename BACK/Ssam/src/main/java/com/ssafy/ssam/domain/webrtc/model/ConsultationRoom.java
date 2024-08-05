@@ -1,142 +1,133 @@
 package com.ssafy.ssam.domain.webrtc.model;
 
+import java.io.Closeable;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 
-import org.kurento.client.KurentoClient;
-import org.kurento.client.MediaPipeline;
-import org.kurento.client.RecorderEndpoint;
+import org.kurento.client.*;
 import org.springframework.web.socket.WebSocketSession;
 
-//import com.google.cloud.speech.v1.*;
-//import io.grpc.stub.StreamObserver;
+import com.google.gson.JsonObject;
 
-public class ConsultationRoom {
+public class ConsultationRoom implements Closeable {
     private final String roomName;
     private final MediaPipeline pipeline;
-    private final ConcurrentHashMap<String, UserSession> participants = new ConcurrentHashMap<>();
-    private RecorderEndpoint recorder;
-    //private final SpeechClient speechClient;
-    private final List<String> profanityList; // 욕설 목록
+    private final ConcurrentMap<String, UserSession> participants = new ConcurrentHashMap<>();
 
-    public ConsultationRoom(String roomName, KurentoClient kurentoClient) throws IOException {
+    public ConsultationRoom(String roomName, KurentoClient kurento) {
         this.roomName = roomName;
-        this.pipeline = kurentoClient.createMediaPipeline();
-        //this.speechClient = SpeechClient.create();
-        this.profanityList = loadProfanityList(); // 욕설 목록 로드
+        this.pipeline = kurento.createMediaPipeline();
     }
 
-    public synchronized boolean join(String userName, WebSocketSession session) throws IOException {
-        if (participants.size() >= 2) {
-            return false; // 이미 2명이 참여 중이면 거부
-        }
-
-        UserSession participant = new UserSession(userName, session, this.pipeline);
-        participants.put(userName, participant);
-
-        if (participants.size() == 2) {
-            startRecordingAndSTT();
-        }
-
-        return true;
+    public String getRoomName() {
+        return roomName;
     }
 
-    private void startRecordingAndSTT() throws IOException {
-        // 녹화 시작
-        String recordingPath = "file:///path/to/recordings/" + roomName + ".webm";
-        recorder = new RecorderEndpoint.Builder(pipeline, recordingPath).build();
-        
+    public UserSession join(String userName, WebSocketSession session) throws IOException {
+        UserSession participant = new UserSession(userName, session, this);
+        joinRoom(participant);
+        participants.put(participant.getName(), participant);
+        return participant;
+    }
+
+    public void leave(UserSession user) throws IOException {
+        this.removeParticipant(user.getName());
+        user.close();
+    }
+
+    private void joinRoom(UserSession newParticipant) throws IOException {
+        WebRtcEndpoint endpoint = new WebRtcEndpoint.Builder(pipeline).build();
+
+        newParticipant.setWebRtcEndpoint(endpoint);
+
         for (UserSession participant : participants.values()) {
-            participant.getOutgoingWebRtcPeer().connect(recorder);
-        }
-        recorder.record();
-
-        
-        /*
-        // STT 시작
-        StreamObserver<StreamingRecognizeResponse> responseObserver = new StreamObserver<StreamingRecognizeResponse>() {
-            @Override
-            public void onNext(StreamingRecognizeResponse response) {
-                StreamingRecognitionResult result = response.getResultsList().get(0);
-                String transcript = result.getAlternativesList().get(0).getTranscript();
-                checkForProfanity(transcript);
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                System.err.println("Error in STT: " + t.getMessage());
-            }
-
-            @Override
-            public void onCompleted() {
-                System.out.println("STT completed");
-            }
-        };
-
-        StreamingRecognitionConfig config = StreamingRecognitionConfig.newBuilder()
-                .setConfig(RecognitionConfig.newBuilder()
-                        .setEncoding(RecognitionConfig.AudioEncoding.LINEAR16)
-                        .setLanguageCode("ko-KR")
-                        .setSampleRateHertz(16000)
-                        .build())
-                .setInterimResults(true)
-                .build();
-
-        StreamObserver<StreamingRecognizeRequest> requestObserver = speechClient.streamingRecognizeCallable().bidiStreamingCall(responseObserver);
-
-        // Audio 스트림을 STT 서비스로 전송하는 로직 구현 필요
-        // 이 부분은 Kurento의 AudioPort를 사용하여 구현할 수 있습니다.
-        */
-    }
-
-    private void checkForProfanity(String transcript) {
-        String[] words = transcript.split("\\s+");
-        for (String word : words) {
-            if (profanityList.contains(word.toLowerCase())) {
-                sendWarningMessage("욕설이 감지되었습니다: " + word);
-                break;
+            if (!participant.equals(newParticipant)) {
+                connectParticipants(newParticipant, participant);
             }
         }
+
+        JsonObject existingParticipantsMsg = new JsonObject();
+        existingParticipantsMsg.addProperty("id", "existingParticipants");
+        existingParticipantsMsg.addProperty("data", participants.values().stream()
+                .map(UserSession::getName)
+                .collect(Collectors.joining(",")));
+        newParticipant.sendMessage(existingParticipantsMsg);
     }
 
-    private void sendWarningMessage(String message) {
+    private void connectParticipants(UserSession newParticipant, UserSession existingParticipant) {
+        WebRtcEndpoint newEndpoint = newParticipant.getWebRtcEndpoint();
+        WebRtcEndpoint existingEndpoint = existingParticipant.getWebRtcEndpoint();
+
+        newEndpoint.connect(existingEndpoint);
+        existingEndpoint.connect(newEndpoint);
+
+        JsonObject newParticipantMsg = new JsonObject();
+        newParticipantMsg.addProperty("id", "newParticipantArrived");
+        newParticipantMsg.addProperty("name", newParticipant.getName());
+        try {
+			existingParticipant.sendMessage(newParticipantMsg);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+
+    public void receiveVideoFrom(UserSession sender, String remoteUserName, String sdpOffer) throws IOException {
+        UserSession remoteUser = participants.get(remoteUserName);
+        if (remoteUser == null) {
+            throw new IOException("Remote user " + remoteUserName + " not found");
+        }
+
+        WebRtcEndpoint remoteEndpoint = remoteUser.getWebRtcEndpoint();
+        String ipSdpAnswer = remoteEndpoint.processOffer(sdpOffer);
+
+        JsonObject receiveVideoAnswer = new JsonObject();
+        receiveVideoAnswer.addProperty("id", "receiveVideoAnswer");
+        receiveVideoAnswer.addProperty("name", remoteUserName);
+        receiveVideoAnswer.addProperty("sdpAnswer", ipSdpAnswer);
+        sender.sendMessage(receiveVideoAnswer);
+
+        remoteEndpoint.gatherCandidates();
+    }
+
+    public void addCandidate(UserSession user, IceCandidate candidate) {
+        WebRtcEndpoint endpoint = user.getWebRtcEndpoint();
+        endpoint.addIceCandidate(candidate);
+    }
+
+    public void removeParticipant(String name) {
+        participants.remove(name);
+
+        JsonObject participantLeftMsg = new JsonObject();
+        participantLeftMsg.addProperty("id", "participantLeft");
+        participantLeftMsg.addProperty("name", name);
+
         for (UserSession participant : participants.values()) {
             try {
-                participant.sendMessage(message);
+				participant.sendMessage(participantLeftMsg);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+    }
+
+    @Override
+    public void close() {
+        for (UserSession user : participants.values()) {
+            try {
+                user.close();
             } catch (IOException e) {
-                System.err.println("Failed to send warning message: " + e.getMessage());
+                // 로그 처리
             }
         }
-    }
 
-    public synchronized void leave(String userName) throws IOException {
-        UserSession leavingParticipant = participants.remove(userName);
-        if (leavingParticipant != null) {
-            leavingParticipant.close();
+        participants.clear();
+
+        if (pipeline != null) {
+            pipeline.release();
         }
-
-        if (participants.isEmpty()) {
-            closeRoom();
-        }
-    }
-
-    public void closeRoom() {
-        if (recorder != null) {
-            recorder.stop();
-            recorder.release();
-        }
-        pipeline.release();
-        //speechClient.close();
-    }
-
-    private List<String> loadProfanityList() {
-        // 실제 구현에서는 파일이나 데이터베이스에서 욕설 목록을 로드합니다.
-        List<String> profanity = new ArrayList<>();
-        profanity.add("바보");
-        profanity.add("멍청이");
-        // ... 더 많은 욕설 추가
-        return profanity;
     }
 }

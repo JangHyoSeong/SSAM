@@ -199,13 +199,11 @@ const WebRTCChat = () => {
         };
 
         peerConnection.ontrack = (event) => {
-            if (!remoteVideosRef.current[participantName]) {
-                remoteVideosRef.current[participantName] = document.createElement('video');
-                remoteVideosRef.current[participantName].autoplay = true;
-                remoteVideosRef.current[participantName].playsInline = true;
-                document.getElementById('remoteVideos').appendChild(remoteVideosRef.current[participantName]);
-            }
-            remoteVideosRef.current[participantName].srcObject = event.streams[0];
+            console.log('Received remote track from', participantName);
+            setRemoteVideos(prev => ({
+                ...prev,
+                [participantName]: event.streams[0]
+            }));
         };
 
         try {
@@ -229,10 +227,11 @@ const WebRTCChat = () => {
             peerConnectionsRef.current[message.name].close();
             delete peerConnectionsRef.current[message.name];
         }
-        if (remoteVideosRef.current[message.name]) {
-            remoteVideosRef.current[message.name].remove();
-            delete remoteVideosRef.current[message.name];
-        }
+        setRemoteVideos(prev => {
+            const newRemoteVideos = {...prev};
+            delete newRemoteVideos[message.name];
+            return newRemoteVideos;
+        });
     };
 
     const handleReceiveVideoAnswer = async (message) => {
@@ -321,7 +320,21 @@ const WebRTCChat = () => {
                 </div>
                 <div className="w-1/2 ml-2">
                     <h2 className="text-lg font-semibold mb-2">Remote Videos</h2>
-                    <div id="remoteVideos" className="flex flex-wrap"></div>
+                    <div className="flex flex-wrap">
+                        {Object.entries(remoteVideos).map(([participantName, stream]) => (
+                            <div key={participantName} className="w-1/2 p-1">
+                                <video
+                                    autoPlay
+                                    playsInline
+                                    className="w-full border"
+                                    ref={el => {
+                                        if (el) el.srcObject = stream;
+                                    }}
+                                />
+                                <p className="text-center">{participantName}</p>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
 

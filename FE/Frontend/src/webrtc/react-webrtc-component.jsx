@@ -10,8 +10,12 @@ const WebRTCChat = () => {
     const webSocketRef = useRef(null);
     const localVideoRef = useRef(null);
     const remoteVideoRef = useRef(null);
-    const webRtcPeerRef = useRef(null);
+    const peerConnectionRef = useRef(null);
     const localStreamRef = useRef(null);
+
+    const configuration = {
+        iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+    };
 
     useEffect(() => {
         return () => {
@@ -30,8 +34,8 @@ const WebRTCChat = () => {
         if (localStreamRef.current) {
             localStreamRef.current.getTracks().forEach(track => track.stop());
         }
-        if (webRtcPeerRef.current) {
-            webRtcPeerRef.current.dispose();
+        if (peerConnectionRef.current) {
+            peerConnectionRef.current.close();
         }
     };
 
@@ -144,88 +148,78 @@ const WebRTCChat = () => {
                 handleReceiveVideoAnswer(message);
                 break;
             case 'iceCandidate':
-                handleIceCandidate(message);
-                break;
-            case 'chatMessage':
-                handleChatMessage(message);
+                handleRemoteIceCandidate(message);
                 break;
             default:
                 console.log('Unhandled message:', message);
         }
     };
 
-    const handleExistingParticipants = (message) => {
+    const handleExistingParticipants = async (message) => {
         console.log('Existing participants:', message.data);
         setParticipants(message.data);
         
-        const options = {
-            localVideo: localVideoRef.current,
-            remoteVideo: remoteVideoRef.current,
-            onicecandidate: onIceCandidate,
+        peerConnectionRef.current = new RTCPeerConnection(configuration);
+
+        localStreamRef.current.getTracks().forEach(track => {
+            peerConnectionRef.current.addTrack(track, localStreamRef.current);
+        });
+
+        peerConnectionRef.current.onicecandidate = (event) => {
+            if (event.candidate) {
+                sendWebSocketMessage({
+                    id: 'onIceCandidate',
+                    candidate: event.candidate,
+                    name: username
+                });
+            }
         };
 
-        webRtcPeerRef.current = new RTCPeerConnection(options);
+        peerConnectionRef.current.ontrack = (event) => {
+            remoteVideoRef.current.srcObject = event.streams[0];
+        };
 
-        webRtcPeerRef.current.generateOffer((error, offerSdp) => {
-            if (error) {
-                console.error('Error generating offer:', error);
-                return;
-            }
-
-            console.log('Generated offer');
-            const message = {
+        try {
+            const offer = await peerConnectionRef.current.createOffer();
+            await peerConnectionRef.current.setLocalDescription(offer);
+            sendWebSocketMessage({
                 id: 'receiveVideoFrom',
                 sender: username,
-                sdpOffer: offerSdp
-            };
-            sendWebSocketMessage(message);
-        });
+                sdpOffer: offer.sdp
+            });
+        } catch (error) {
+            console.error('Error creating offer:', error);
+        }
     };
 
     const handleNewParticipant = (message) => {
         console.log('New participant arrived:', message.name);
-        setParticipants(prevParticipants => [...prevParticipants, message.name]);
+        setParticipants(prev => [...prev, message.name]);
     };
 
     const handleParticipantLeft = (message) => {
         console.log('Participant left:', message.name);
-        setParticipants(prevParticipants => prevParticipants.filter(name => name !== message.name));
+        setParticipants(prev => prev.filter(name => name !== message.name));
     };
 
-    const handleReceiveVideoAnswer = (message) => {
+    const handleReceiveVideoAnswer = async (message) => {
         console.log('Received video answer from:', message.name);
-        webRtcPeerRef.current.processAnswer(message.sdpAnswer, (error) => {
-            if (error) {
-                console.error('Error processing answer:', error);
-                return;
-            }
-            console.log('Processed answer successfully');
-        });
+        try {
+            await peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription({
+                type: 'answer',
+                sdp: message.sdpAnswer
+            }));
+        } catch (error) {
+            console.error('Error setting remote description:', error);
+        }
     };
 
-    const handleIceCandidate = (message) => {
-        webRtcPeerRef.current.addIceCandidate(message.candidate, (error) => {
-            if (error) {
-                console.error('Error adding ICE candidate:', error);
-                return;
-            }
-            console.log('ICE candidate added successfully');
-        });
-    };
-
-    const onIceCandidate = (candidate) => {
-        console.log('Local candidate:', candidate);
-        const message = {
-            id: 'onIceCandidate',
-            candidate: candidate,
-            name: username
-        };
-        sendWebSocketMessage(message);
-    };
-
-    const handleChatMessage = (message) => {
-        console.log('Received chat message:', message);
-        setChatMessages(prevMessages => [...prevMessages, { sender: message.name, text: message.message }]);
+    const handleRemoteIceCandidate = async (message) => {
+        try {
+            await peerConnectionRef.current.addIceCandidate(new RTCIceCandidate(message.candidate));
+        } catch (error) {
+            console.error('Error adding received ice candidate:', error);
+        }
     };
 
     const sendChatMessage = () => {
@@ -257,7 +251,7 @@ const WebRTCChat = () => {
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">WebRTC Chat and Video Call</h1>
-            <h1>테스트</h1>
+            <h1>Build ver.47</h1>
             <div className="mb-4">
                 <input 
                     type="text" 

@@ -219,11 +219,16 @@ const WebRTCChat = () => {
         };
 
         peerConnection.ontrack = (event) => {
+            console.log('Received remote track kind:', event.track.kind);
+            console.log('Track readyState:', event.track.readyState);
+            console.log('Remote stream tracks kind:', event.streams[0].getTracks().map(t => t.kind));
             console.log('Received remote track from', participantName, event.streams[0]);
             console.log('Remote stream tracks:', event.streams[0].getTracks());
-            remoteVideosRef.current[participantName] = event.streams[0];
-            setRemoteVideoKeys(Object.keys(remoteVideosRef.current));
-        };
+            const stream = remoteVideosRef.current[participantName] || new MediaStream();
+            stream.addTrack(event.track);
+            remoteVideosRef.current[participantName] = stream;
+            setRemoteVideoKeys(prev => Array.from(new Set([...prev, participantName])));
+          };
 
         try {
             console.log('Creating offer for:', participantName);
@@ -250,7 +255,9 @@ const WebRTCChat = () => {
             delete peerConnectionsRef.current[message.name];
         }
         delete remoteVideosRef.current[message.name];
+        console.log('Before setRemoteVideoKeys:', Object.keys(remoteVideosRef.current));
         setRemoteVideoKeys(Object.keys(remoteVideosRef.current));
+        console.log('After setRemoteVideoKeys called');
     };
 
     const handleReceiveVideoAnswer = async (message) => {
@@ -375,7 +382,7 @@ const WebRTCChat = () => {
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">WebRTC Chat and Video Call</h1>
-            <h1>Build ver.57</h1>
+            <h1>Build ver.58</h1>
             <div className="mb-4">
                 <input 
                     type="text" 

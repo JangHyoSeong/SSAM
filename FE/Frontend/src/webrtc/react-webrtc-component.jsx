@@ -77,9 +77,12 @@ const WebRTCChat = () => {
 
     const setupLocalStream = async () => {
         try {
+            console.log('Attempting to access local media devices');
             const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            console.log('Local stream obtained:', stream);
             localStreamRef.current = stream;
             localVideoRef.current.srcObject = stream;
+            console.log('Local video source set');
         } catch (error) {
             console.error('Error accessing media devices:', error);
             alert('Failed to access camera and microphone. Please check your permissions.');
@@ -180,15 +183,18 @@ const WebRTCChat = () => {
     };
 
     const createPeerConnection = async (participantName) => {
+        console.log('Creating peer connection for:', participantName);
         const peerConnection = new RTCPeerConnection(configuration);
         peerConnectionsRef.current[participantName] = peerConnection;
 
+        console.log('Adding local tracks to peer connection');
         localStreamRef.current.getTracks().forEach(track => {
             peerConnection.addTrack(track, localStreamRef.current);
         });
 
         peerConnection.onicecandidate = (event) => {
             if (event.candidate) {
+                console.log('New ICE candidate:', event.candidate);
                 sendWebSocketMessage({
                     id: 'onIceCandidate',
                     candidate: event.candidate,
@@ -199,7 +205,7 @@ const WebRTCChat = () => {
         };
 
         peerConnection.ontrack = (event) => {
-            console.log('Received remote track from', participantName);
+            console.log('Received remote track from', participantName, event.streams[0]);
             setRemoteVideos(prev => ({
                 ...prev,
                 [participantName]: event.streams[0]
@@ -207,8 +213,11 @@ const WebRTCChat = () => {
         };
 
         try {
+            console.log('Creating offer for:', participantName);
             const offer = await peerConnection.createOffer();
+            console.log('Offer created:', offer);
             await peerConnection.setLocalDescription(offer);
+            console.log('Local description set');
             sendWebSocketMessage({
                 id: 'receiveVideoFrom',
                 sender: username,
@@ -239,24 +248,32 @@ const WebRTCChat = () => {
         const peerConnection = peerConnectionsRef.current[message.name];
         if (peerConnection) {
             try {
+                console.log('Setting remote description');
                 await peerConnection.setRemoteDescription(new RTCSessionDescription({
                     type: 'answer',
                     sdp: message.sdpAnswer
                 }));
+                console.log('Remote description set successfully');
             } catch (error) {
                 console.error('Error setting remote description:', error);
             }
+        } else {
+            console.error('No peer connection found for:', message.name);
         }
     };
 
     const handleRemoteIceCandidate = async (message) => {
+        console.log('Handling remote ICE candidate from:', message.name);
         const peerConnection = peerConnectionsRef.current[message.name];
         if (peerConnection) {
             try {
                 await peerConnection.addIceCandidate(new RTCIceCandidate(message.candidate));
+                console.log('ICE candidate added successfully');
             } catch (error) {
                 console.error('Error adding received ice candidate:', error);
             }
+        } else {
+            console.error('No peer connection found for:', message.name);
         }
     };
 
@@ -289,7 +306,7 @@ const WebRTCChat = () => {
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">WebRTC Chat and Video Call</h1>
-            <h1>Build ver.50</h1>
+            <h1>Build ver.51</h1>
             <div className="mb-4">
                 <input 
                     type="text" 

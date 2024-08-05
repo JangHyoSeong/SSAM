@@ -18,9 +18,21 @@ public class KurentoConfig implements WebSocketConfigurer {
     @Value("${kurento.client.url:wss://i11e201.p.ssafy.io/kurento}")
     private String kurentoUrl;
 
+    @Value("${turn.server.url:i11e201.p.ssafy.io:3478}")
+    private String turnServerUrl;
+
+    @Value("${turn.server.username:admin}")
+    private String turnServerUsername;
+
+    @Value("${turn.server.credential:JddU_RuEn5Iqc}")
+    private String turnServerCredential;
+
     @Bean
     public KurentoClient kurentoClient() {
-        return KurentoClient.create(kurentoUrl);
+        String kurentoUrlWithTurn = kurentoUrl + "?turnURL=" + turnServerUrl +
+                "&turnUsername=" + turnServerUsername +
+                "&turnPassword=" + turnServerCredential;
+        return KurentoClient.create(kurentoUrlWithTurn);
     }
 
     @Bean

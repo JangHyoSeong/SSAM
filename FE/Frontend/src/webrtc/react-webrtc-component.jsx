@@ -9,7 +9,7 @@ const WebRTCChat = () => {
     const [participants, setParticipants] = useState([]);
     const webSocketRef = useRef(null);
     const localVideoRef = useRef(null);
-    const remoteVideosRef = useRef({});
+    const [remoteVideos, setRemoteVideos] = useState({});
     const peerConnectionsRef = useRef({});
     const localStreamRef = useRef(null);
 
@@ -289,7 +289,7 @@ const WebRTCChat = () => {
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">WebRTC Chat and Video Call</h1>
-            <h1>Build ver.48</h1>
+            <h1>Build ver.50</h1>
             <div className="mb-4">
                 <input 
                     type="text" 

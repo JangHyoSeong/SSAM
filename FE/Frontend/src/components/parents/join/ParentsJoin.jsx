@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import axios from "../../../utils/axiosInstance";
+import { axiosInstance } from "../../../apis/user";
 import join from "./ParentsJoin.module.scss";
 import round1 from "../../../assets/round1.png";
 import round2 from "../../../assets/round2.png";
@@ -36,7 +36,7 @@ const ParentsJoin = () => {
     e.preventDefault();
     try {
       // 백엔드 API에 회원가입 요청을 보냄
-      const response = await axios.post("/signup", formData);
+      const response = await axiosInstance.post("/signup", formData);
       // 응답 데이터를 활용하여 추가 작업 수행
       console.log(response.data);
       alert("회원가입이 완료되었습니다.");

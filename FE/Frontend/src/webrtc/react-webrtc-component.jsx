@@ -2,22 +2,36 @@ import React, { useState, useEffect, useRef } from 'react';
 
 const WebRTCChat = () => {
     const [room, setRoom] = useState('');
+    const [username, setUsername] = useState('');
     const [message, setMessage] = useState('');
     const [chatMessages, setChatMessages] = useState([]);
     const [isConnected, setIsConnected] = useState(false);
+    const [participants, setParticipants] = useState([]);
     const webSocketRef = useRef(null);
     const localVideoRef = useRef(null);
     const remoteVideoRef = useRef(null);
+    const webRtcPeerRef = useRef(null);
+    const localStreamRef = useRef(null);
 
     useEffect(() => {
         return () => {
             closeWebSocketConnection();
+            cleanupWebRTC();
         };
     }, []);
 
     const closeWebSocketConnection = () => {
         if (webSocketRef.current && webSocketRef.current.readyState === WebSocket.OPEN) {
             webSocketRef.current.close();
+        }
+    };
+
+    const cleanupWebRTC = () => {
+        if (localStreamRef.current) {
+            localStreamRef.current.getTracks().forEach(track => track.stop());
+        }
+        if (webRtcPeerRef.current) {
+            webRtcPeerRef.current.dispose();
         }
     };
 
@@ -49,27 +63,36 @@ const WebRTCChat = () => {
         }
     };
 
-    const joinRoom = () => {
-        if (!room) {
-            alert('Please enter a room name');
+    const joinRoom = async () => {
+        if (!room || !username) {
+            alert('Please enter both room name and username');
             return;
         }
 
-        closeWebSocketConnection();
+        await setupLocalStream();
         connectWebSocket();
+    };
+
+    const setupLocalStream = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            localStreamRef.current = stream;
+            localVideoRef.current.srcObject = stream;
+        } catch (error) {
+            console.error('Error accessing media devices:', error);
+            alert('Failed to access camera and microphone. Please check your permissions.');
+        }
     };
 
     const connectWebSocket = () => {
         console.log('Attempting to connect WebSocket...');
         const wsUrl = `wss://i11e201.p.ssafy.io/api/v1/kurento`;
 
-        console.log(`Connecting to WebSocket URL: ${wsUrl}`);
         webSocketRef.current = new WebSocket(wsUrl);
 
-        webSocketRef.current.onopen = (event) => {
-            console.log('WebSocket connection established', event);
+        webSocketRef.current.onopen = () => {
+            console.log('WebSocket connection established');
             setIsConnected(true);
-            console.log('Sending join room message...');
             sendJoinRoomMessage();
         };
 
@@ -83,91 +106,139 @@ const WebRTCChat = () => {
             }
         };
 
-        webSocketRef.current.onclose = (event) => {
-            console.log('WebSocket connection closed', event);
+        webSocketRef.current.onclose = () => {
+            console.log('WebSocket connection closed');
             setIsConnected(false);
         };
 
         webSocketRef.current.onerror = (error) => {
             console.error('WebSocket error:', error);
             setIsConnected(false);
+            alert('WebSocket connection error. Please try again.');
         };
     };
 
     const sendJoinRoomMessage = () => {
         console.log('Sending join room message');
         const joinMessage = {
-            jsonrpc: '2.0',
-            method: 'join',
-            params: {
-                room: room,
-                name: 'User_' + Math.floor(Math.random() * 1000),
-            },
-            id: Date.now(),
+            id: 'joinRoom',
+            room: room,
+            name: username,
         };
         sendWebSocketMessage(joinMessage);
     };
 
     const handleMessage = (message) => {
         console.log('Processing received message:', message);
-        if (message.error) {
-            console.error('Received error:', message.error);
-            return;
-        }
-
-        if (message.result) {
-            handleResultMessage(message.result);
-        } else if (message.method) {
-            handleMethodMessage(message);
-        } else {
-            console.log('Unhandled message format:', message);
+        switch (message.id) {
+            case 'existingParticipants':
+                handleExistingParticipants(message);
+                break;
+            case 'newParticipantArrived':
+                handleNewParticipant(message);
+                break;
+            case 'participantLeft':
+                handleParticipantLeft(message);
+                break;
+            case 'receiveVideoAnswer':
+                handleReceiveVideoAnswer(message);
+                break;
+            case 'iceCandidate':
+                handleIceCandidate(message);
+                break;
+            case 'chatMessage':
+                handleChatMessage(message);
+                break;
+            default:
+                console.log('Unhandled message:', message);
         }
     };
 
-    const handleResultMessage = (result) => {
-        switch (result.id) {
-            case 'joinedRoom':
-                console.log('Successfully joined room:', result.roomName);
-                break;
-            case 'leftRoom':
-                console.log('Left room');
-                break;
-            case 'newChatMessage':
-                if (result.user && result.message) {
-                    setChatMessages((prev) => [...prev, { sender: result.user, text: result.message }]);
-                }
-                break;
-            default:
-                console.log('Unhandled result message:', result);
-        }
+    const handleExistingParticipants = (message) => {
+        console.log('Existing participants:', message.data);
+        setParticipants(message.data);
+        
+        const options = {
+            localVideo: localVideoRef.current,
+            remoteVideo: remoteVideoRef.current,
+            onicecandidate: onIceCandidate,
+        };
+
+        webRtcPeerRef.current = new RTCPeerConnection(options);
+
+        webRtcPeerRef.current.generateOffer((error, offerSdp) => {
+            if (error) {
+                console.error('Error generating offer:', error);
+                return;
+            }
+
+            console.log('Generated offer');
+            const message = {
+                id: 'receiveVideoFrom',
+                sender: username,
+                sdpOffer: offerSdp
+            };
+            sendWebSocketMessage(message);
+        });
     };
 
-    const handleMethodMessage = (message) => {
-        switch (message.method) {
-            case 'newChatMessage':
-                const { room, user, message: chatMessage } = message.params;
-                setChatMessages((prev) => [...prev, { sender: user, text: chatMessage }]);
-                break;
-            default:
-                console.log('Unhandled method message:', message);
-        }
+    const handleNewParticipant = (message) => {
+        console.log('New participant arrived:', message.name);
+        setParticipants(prevParticipants => [...prevParticipants, message.name]);
+    };
+
+    const handleParticipantLeft = (message) => {
+        console.log('Participant left:', message.name);
+        setParticipants(prevParticipants => prevParticipants.filter(name => name !== message.name));
+    };
+
+    const handleReceiveVideoAnswer = (message) => {
+        console.log('Received video answer from:', message.name);
+        webRtcPeerRef.current.processAnswer(message.sdpAnswer, (error) => {
+            if (error) {
+                console.error('Error processing answer:', error);
+                return;
+            }
+            console.log('Processed answer successfully');
+        });
+    };
+
+    const handleIceCandidate = (message) => {
+        webRtcPeerRef.current.addIceCandidate(message.candidate, (error) => {
+            if (error) {
+                console.error('Error adding ICE candidate:', error);
+                return;
+            }
+            console.log('ICE candidate added successfully');
+        });
+    };
+
+    const onIceCandidate = (candidate) => {
+        console.log('Local candidate:', candidate);
+        const message = {
+            id: 'onIceCandidate',
+            candidate: candidate,
+            name: username
+        };
+        sendWebSocketMessage(message);
+    };
+
+    const handleChatMessage = (message) => {
+        console.log('Received chat message:', message);
+        setChatMessages(prevMessages => [...prevMessages, { sender: message.name, text: message.message }]);
     };
 
     const sendChatMessage = () => {
         if (message && isConnected) {
             console.log('Sending chat message');
             const chatMessage = {
-                jsonrpc: '2.0',
-                method: 'chatMessage',
-                params: {
-                    room: room,
-                    name: 'User_' + Math.floor(Math.random() * 1000),
-                    message: message,
-                },
-                id: Date.now(),
+                id: 'chatMessage',
+                room: room,
+                name: username,
+                message: message,
             };
             sendWebSocketMessage(chatMessage);
-            setChatMessages((prev) => [...prev, { sender: 'You', text: message }]);
+            setChatMessages(prevMessages => [...prevMessages, { sender: 'You', text: message }]);
             setMessage('');
         } else if (!isConnected) {
             alert('Not connected to a room. Please join a room first.');
@@ -188,7 +259,20 @@ const WebRTCChat = () => {
             <h1 className="text-2xl font-bold mb-4">WebRTC Chat and Video Call</h1>
 
             <div className="mb-4">
-                <input type="text" value={room} onChange={(e) => setRoom(e.target.value)} placeholder="Enter room name" className="border p-2 mr-2" />
+                <input 
+                    type="text" 
+                    value={username} 
+                    onChange={(e) => setUsername(e.target.value)} 
+                    placeholder="Enter your username" 
+                    className="border p-2 mr-2" 
+                />
+                <input 
+                    type="text" 
+                    value={room} 
+                    onChange={(e) => setRoom(e.target.value)} 
+                    placeholder="Enter room name" 
+                    className="border p-2 mr-2" 
+                />
                 <button onClick={createRoom} className="bg-blue-500 text-white p-2 rounded mr-2">
                     Create Room
                 </button>
@@ -198,8 +282,23 @@ const WebRTCChat = () => {
             </div>
 
             <div className="flex justify-between mb-4">
-                <video ref={localVideoRef} autoPlay playsInline className="w-1/2 border"></video>
-                <video ref={remoteVideoRef} autoPlay playsInline className="w-1/2 border"></video>
+                <div className="w-1/2 mr-2">
+                    <h2 className="text-lg font-semibold mb-2">Your Video</h2>
+                    <video ref={localVideoRef} autoPlay playsInline muted className="w-full border"></video>
+                </div>
+                <div className="w-1/2 ml-2">
+                    <h2 className="text-lg font-semibold mb-2">Remote Video</h2>
+                    <video ref={remoteVideoRef} autoPlay playsInline className="w-full border"></video>
+                </div>
+            </div>
+
+            <div className="mb-4">
+                <h2 className="text-lg font-semibold mb-2">Participants</h2>
+                <ul>
+                    {participants.map((participant, index) => (
+                        <li key={index}>{participant}</li>
+                    ))}
+                </ul>
             </div>
 
             <div className="border p-4 h-64 overflow-y-auto mb-4">

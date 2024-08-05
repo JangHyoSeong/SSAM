@@ -10,30 +10,28 @@ import org.kurento.client.MediaPipeline;
 import org.kurento.client.RecorderEndpoint;
 import org.springframework.web.socket.WebSocketSession;
 
-//import com.google.cloud.speech.v1.*;
-//import io.grpc.stub.StreamObserver;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 public class ConsultationRoom {
     private final String roomName;
     private final MediaPipeline pipeline;
     private final ConcurrentHashMap<String, UserSession> participants = new ConcurrentHashMap<>();
     private RecorderEndpoint recorder;
-    //private final SpeechClient speechClient;
-    private final List<String> profanityList; // 욕설 목록
+    private final List<String> profanityList;
 
     public ConsultationRoom(String roomName, KurentoClient kurentoClient) throws IOException {
         this.roomName = roomName;
         this.pipeline = kurentoClient.createMediaPipeline();
-        //this.speechClient = SpeechClient.create();
-        this.profanityList = loadProfanityList(); // 욕설 목록 로드
+        this.profanityList = loadProfanityList();
     }
 
     public synchronized boolean join(String userName, WebSocketSession session) throws IOException {
         if (participants.size() >= 2) {
-            return false; // 이미 2명이 참여 중이면 거부
+            return false;
         }
 
-        UserSession participant = new UserSession(userName, session, this.pipeline);
+        UserSession participant = new UserSession(userName, session, this.pipeline, this);
         participants.put(userName, participant);
 
         if (participants.size() == 2) {
@@ -42,9 +40,48 @@ public class ConsultationRoom {
 
         return true;
     }
+    
+    public synchronized void leave(String userName) throws IOException {
+        UserSession leavingParticipant = participants.remove(userName);
+        if (leavingParticipant != null) {
+            leavingParticipant.close();
+        }
+
+        if (participants.isEmpty()) {
+            closeRoom();
+        }
+    }
+
+    public void closeRoom() {
+        if (recorder != null) {
+            recorder.stop();
+            recorder.release();
+        }
+        pipeline.release();
+    }
+
+    public UserSession getParticipant(String userName) {
+        return participants.get(userName);
+    }
+
+    public JsonArray getParticipantsAsJsonArray() {
+        JsonArray participantArray = new JsonArray();
+        for (String userName : participants.keySet()) {
+            participantArray.add(userName);
+        }
+        return participantArray;
+    }
+
+    public UserSession getParticipantBySession(WebSocketSession session) {
+        for (UserSession userSession : participants.values()) {
+            if (userSession.getSession().equals(session)) {
+                return userSession;
+            }
+        }
+        return null;
+    }
 
     private void startRecordingAndSTT() throws IOException {
-        // 녹화 시작
         String recordingPath = "file:///path/to/recordings/" + roomName + ".webm";
         recorder = new RecorderEndpoint.Builder(pipeline, recordingPath).build();
         
@@ -53,7 +90,6 @@ public class ConsultationRoom {
         }
         recorder.record();
 
-        
         /*
         // STT 시작
         StreamObserver<StreamingRecognizeResponse> responseObserver = new StreamObserver<StreamingRecognizeResponse>() {
@@ -111,32 +147,19 @@ public class ConsultationRoom {
         }
     }
 
-    public synchronized void leave(String userName) throws IOException {
-        UserSession leavingParticipant = participants.remove(userName);
-        if (leavingParticipant != null) {
-            leavingParticipant.close();
-        }
-
-        if (participants.isEmpty()) {
-            closeRoom();
-        }
-    }
-
-    public void closeRoom() {
-        if (recorder != null) {
-            recorder.stop();
-            recorder.release();
-        }
-        pipeline.release();
-        //speechClient.close();
-    }
-
     private List<String> loadProfanityList() {
-        // 실제 구현에서는 파일이나 데이터베이스에서 욕설 목록을 로드합니다.
         List<String> profanity = new ArrayList<>();
         profanity.add("바보");
         profanity.add("멍청이");
-        // ... 더 많은 욕설 추가
+        // 더 많은 욕설 추가 가능
         return profanity;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public MediaPipeline getPipeline() {
+        return pipeline;
     }
 }

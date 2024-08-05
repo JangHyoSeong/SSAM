@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faSave } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios'; // Ensure Axios is imported
 import styles from "./TeacherClassroom.module.scss";
 import TeacherStudent from "./TeacherStudent";
 import TeacherStudentDetail from "./TeacherStudentDetail";
@@ -11,10 +12,7 @@ import whiteshare from '../../../assets/whiteshare.png';
 const TeacherClassroom = () => {
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [noticeContent, setNoticeContent] = useState(`그대 기억이 지난 사랑이
-내 안을 파고드는 가시가 되어
-제발 가라고 아주 가라고
-애써도 나를 괴롭히는데`);
+  const [noticeContent, setNoticeContent] = useState('');
   
   const textareaRef = useRef(null);
   const maxHeight = 100;
@@ -42,8 +40,20 @@ const TeacherClassroom = () => {
     setIsEditing(true);
   };
 
-  const handleSaveClick = () => {
-    setIsEditing(false);
+  const handleSaveClick = async () => {
+    try {
+      const token = localStorage.getItem("USER_TOKEN");
+      await axios.put('http://localhost:8081/v1/classrooms/teachers/notice/1', {
+        notice: noticeContent,
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `${token}`,
+        }
+      });
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Failed to save banner content:", error);
+    }
   };
 
   const handleContentChange = (e) => {
@@ -69,7 +79,7 @@ const TeacherClassroom = () => {
       <div className={styles.imageContainer}>
         <input type="file" id="file" className={styles.inputFileForm} />
         <label htmlFor="file">
-          <img src={whiteshare}  className={styles.inputFile} />
+          <img src={whiteshare} className={styles.inputFile} />
         </label>
         <img
           src={ClassImage}

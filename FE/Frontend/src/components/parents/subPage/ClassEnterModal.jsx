@@ -9,31 +9,36 @@ const ClassEnterModal = () => {
   const inputRefs = useRef([]);
   const pin = pins.join("");
 
-  useEffect(() => {
-    if (pin.length === 6) {
-      const token = localStorage.getItem("USER_TOKEN");
-      axios
-        .get("http://localhost:8081/v1/classrooms/1", {
-          params: { pin },
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-          },
-        })
-        .then((response) => {
-          if (response.data && response.data.pin === pin) {
-            setClassroom(response.data);
-          } else {
-            console.error("No matching classroom found with the provided PIN");
+  useEffect(
+    () => {
+      if (pin.length === 6) {
+        const token = localStorage.getItem("USER_TOKEN");
+        axios
+          .get(`http://localhost:8081/v1/classrooms/1`, {
+            params: { pin },
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token}`,
+            },
+          })
+          .then((response) => {
+            if (response.data && response.data.pin === pin) {
+              setClassroom(response.data);
+            } else {
+              console.error(
+                "No matching classroom found with the provided PIN"
+              );
+              setClassroom(null);
+            }
+          })
+          .catch((error) => {
+            console.error(console.log(error));
             setClassroom(null);
-          }
-        })
-        .catch((error) => {
-          console.error(console.log(error));
-          setClassroom(null);
-        });
-    }
-  }, [pin]);
+          });
+      }
+    },
+    [pin]
+  );
 
   const PinChange = (index) => (e) => {
     const newPins = [...pins];

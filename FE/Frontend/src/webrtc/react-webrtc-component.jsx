@@ -257,7 +257,7 @@ const WebRTCChat = () => {
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">WebRTC Chat and Video Call</h1>
-
+            <h1>테스트</h1>
             <div className="mb-4">
                 <input 
                     type="text" 

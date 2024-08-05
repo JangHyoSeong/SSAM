@@ -14,7 +14,7 @@ const ClassProduceModal = () => {
     try {
       const token = localStorage.getItem("USER_TOKEN");
       const response = await axios.post(
-        "/classrooms/teachers",
+        "http://localhost:8081/v1/classrooms/teachers",
         {
           grade,
           classroom,

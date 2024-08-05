@@ -15,7 +15,7 @@ const InviteCode = () => {
   const handleDelete = async (board_id) => {
     try {
       const token = localStorage.getItem("USER_TOKEN");
-      await axios.delete(`/classrooms/teachers/${board_id}`, {
+      await axios.delete(`http://localhost:8081/v1/classrooms/teachers/${board_id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `${token}`,

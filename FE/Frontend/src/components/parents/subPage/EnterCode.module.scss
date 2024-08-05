@@ -1,0 +1,41 @@
+@keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+
+.EnterArray {
+    margin-top: 3%;
+    position: relative;
+    top: 5%;
+    left: 25%;
+    text-align: center;
+    width: 50vw;
+    height: 20vh;
+    background-color: #dae9ff;
+    border-radius: 25px;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0;
+    animation: fadeIn 1s ease-in forwards;
+}
+
+.EnterTxtBox {
+    padding: 1.5%;
+}
+
+.classBtn {
+    padding: 1% 4%;
+    border-radius: 25px;
+    color: #5285ee;
+    font-size: 120%;
+    border-color: #5285ee;
+    background-color: white;
+    cursor: pointer;
+  }
+  
+  .classBtn:hover {
+    border: none;
+    background-color: #5285ee;
+    color: white;
+  }

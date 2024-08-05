@@ -1,0 +1,64 @@
+.modalArray {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.enterArray {
+    width: 30vw;
+    height: 60vh;
+    background-color: white;
+    border: 10px solid #D0E0FE;
+    border-radius: 25px;
+}
+
+.headerArray {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 29vw;
+    height: 7.5vh;
+    background-color: #D0E0FE;
+}
+
+.outBtn {
+    position: relative;
+    left: 24%;
+    font-size: 120%;
+    cursor: pointer;
+}
+
+.outBtn:hover {
+    color: red;
+}
+
+.inputBox {
+    width: 3.5vw;
+    height: 7vh;
+    margin: 5% 1%;
+    font-size: 200%;
+    text-align: center;
+}
+
+.classInfo {
+    width: 28.7vw;
+    height: 30vh;
+}
+
+.registComplete {
+    width: 28.7vw;
+    height: 6.5vh;
+    border-radius: 0 0 15px 15px;
+    border-style: none;
+    font-size: 120%;
+}
+
+.registComplete:hover {
+    background-color: red;
+}

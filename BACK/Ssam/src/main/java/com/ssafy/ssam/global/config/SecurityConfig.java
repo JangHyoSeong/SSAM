@@ -1,5 +1,7 @@
 package com.ssafy.ssam.global.config;
 
+import com.ssafy.ssam.global.error.CustomAccessDeniedHandler;
+import com.ssafy.ssam.global.error.CustomAuthenticationEntryPoint;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Builder
 @RequiredArgsConstructor
@@ -33,6 +36,8 @@ import java.util.Collections;
 public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public static AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -62,17 +67,15 @@ public class SecurityConfig {
                            @Override
                            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                                CorsConfiguration config = new CorsConfiguration();
-                               config.setAllowedOrigins(Collections.singletonList("*"));
-                               config.setAllowedOrigins(Collections.singletonList("https://i11e201.p.ssafy.io:3000"));
+                               config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
                                config.setAllowedOrigins(Arrays.asList(
                                        "https://i11e201.p.ssafy.io:3000",
                                        "http://localhost:3000",
                                        "http://127.0.0.1:3000"
                                    ));
-
-                               config.setAllowedMethods(Collections.singletonList("*"));
-                               config.setAllowCredentials(true);
                                config.setAllowedHeaders(Collections.singletonList("*"));
+                               config.setExposedHeaders(List.of("*"));
+                               config.setAllowCredentials(true);
                                config.setMaxAge(3600L);
 
                                config.setExposedHeaders(Collections.singletonList("Authorization"));
@@ -86,14 +89,25 @@ public class SecurityConfig {
                .httpBasic((auth) -> auth.disable())
                .authorizeHttpRequests((auth) -> auth
 //                 아무 허용 필요없는 접근 -> 회원가입, 첫 화면, 비밀번호 찾기
-            		   .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                    .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
             		.requestMatchers("/v1/kurento/**", "/v1/kurento").permitAll()
                     .requestMatchers("/v1/auth/**", "v1/schools").permitAll()
                 // 선생이라는 권한이 필요한 url
                     .requestMatchers("/v1/classrooms/answers/**", "/v1/classrooms/teachers/**", "/v1/consults/teachers/**").permitAll()
+                    .requestMatchers("/v1/**").authenticated()
 
                 // 위에 말한 url 제외 모든 url은 로그인만 되어있으면 접근이 가능하다
-                    .anyRequest().authenticated())
+                    .anyRequest().permitAll()
+               )
+//               // 예외 처리 핸들러
+               .exceptionHandling(exceptionHandling -> exceptionHandling
+                       .authenticationEntryPoint(customAuthenticationEntryPoint)
+                       .accessDeniedHandler(customAccessDeniedHandler)
+               )
+               .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+               .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class)
+               .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class)
+
 
                // 필터 모아서 처리
                 .with(new Custom(
@@ -104,6 +118,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
+
     @RequiredArgsConstructor
     public static class Custom extends AbstractHttpConfigurer<Custom, HttpSecurity> {
         private final AuthenticationConfiguration authenticationConfiguration;

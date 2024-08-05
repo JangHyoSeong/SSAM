@@ -27,7 +27,7 @@ const ClassProduceModal = () => {
         }
       );
       console.log(response.data);
-      alert("성공");
+      alert("학급이 생성되었습니다");
       setShowModal(false);
     } catch (error) {
       console.error("Error posting data", error);

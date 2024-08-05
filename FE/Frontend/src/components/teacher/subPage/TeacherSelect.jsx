@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { NavLink } from "react-router-dom";
+import axios from 'axios';
 import styles from "./TeacherSelect.module.scss";
 import classroom from "../../../assets/classroom.png";
 import question from "../../../assets/question.png";
@@ -9,8 +10,25 @@ import ClassProduceModal from './ClassProduceModal';
 const TeacherSelect = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
+  };
+
+  const handleDelete = async (board_id) => {
+    try {
+      const token = localStorage.getItem("USER_TOKEN");
+      await axios.delete(`/classrooms/teachers/${board_id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      });
+      alert("학급이 삭제되었습니다");
+    } catch (error) {
+      console.error("Error deleting classroom", error);
+      alert("실패");
+    }
   };
 
   return (
@@ -24,7 +42,9 @@ const TeacherSelect = () => {
         <button className={styles.classBtn} onClick={toggleModal}>
           학급 만들기
         </button>
-        <button className={styles.deleteBtn}>학급 삭제</button>
+        <button className={styles.deleteBtn} onClick={handleDelete}>
+          학급 삭제
+        </button>
       </div>
       <div className={styles.menuBoxArray}>
         <NavLink to="/teacherclassroom" className={`${styles.menuBox} ${styles.menuBox1}`}>

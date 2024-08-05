@@ -6,6 +6,7 @@ const MainNavbar = () => {
   const location = useLocation();
 
   return (
+    // role이 teacher인지 parents인지에 따라서 `${role}path`로 라우팅되도록.
     <div className={styles.navbarArray}>
       <NavLink to="/">
         <img src={SSAM} className={styles.logo} alt="Logo" />
@@ -33,8 +34,11 @@ const MainNavbar = () => {
         </NavLink>
         <NavLink
           to="/teacherreservationmanagement"
-          className={({ isActive }) =>
-            isActive ? `${styles.navtxt} ${styles.active}` : styles.navtxt
+          className={
+            location.pathname.startsWith("/teacherreservationmanagement") ||
+            location.pathname.startsWith("/teacherconsultationlist")
+              ? `${styles.navtxt} ${styles.active}`
+              : styles.navtxt
           }
         >
           <h2>상담예약</h2>

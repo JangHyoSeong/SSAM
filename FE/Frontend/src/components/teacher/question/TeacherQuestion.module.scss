@@ -92,3 +92,26 @@
   text-align: left; /* 왼쪽 정렬 */
   margin-left: 2rem; /* 작성자와의 간격을 주기 위해 왼쪽 여백 추가 */
 }
+
+.header {
+  display: flex;
+  justify-content: center; /* 가로 중앙 정렬 */
+  align-items: center; /* 세로 중앙 정렬 */
+  background-color: #fff;
+  padding: 1vh;
+  border-radius: 8px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1vh; /* 아래 여백 추가 */
+  width: 1000px; /* 부모의 너비를 전체로 설정 */
+}
+
+.header h2 {
+  font-size: 20px;
+  text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+.header .highlight {
+  color: blue;
+  font-size: 24px;
+  font-weight: bold;
+}

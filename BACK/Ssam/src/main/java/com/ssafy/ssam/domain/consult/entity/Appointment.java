@@ -59,6 +59,7 @@ public class Appointment {
     }
     public static AppointmentResponseDto toAppointmentDto(Appointment appointment){
         return AppointmentResponseDto.builder()
+                .appointmentId(appointment.getAppointmentId())
                 .studentId(appointment.getStudent().getUserId())
                 .teacherId(appointment.getTeacher().getUserId())
                 .startTime(appointment.getStartTime())

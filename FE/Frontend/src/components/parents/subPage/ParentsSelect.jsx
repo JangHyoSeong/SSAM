@@ -4,10 +4,10 @@ import select from "./ParentsSelect.module.scss";
 import classroom from "../../../assets/classroom.png";
 import question from "../../../assets/question.png";
 import appointment from "../../../assets/appointment.png";
-import pinStore from "../../../apis/stub/35-43 학급/apiStubPin";
+import PinStore from "../../../apis/stub/35-43 학급/apiStubPin";
 
 const Select = () => {
-  const { pin, fetchPinData } = pinStore();
+  const { pin, fetchPinData } = PinStore();
 
   const handleButtonClick = async () => {
     try {

@@ -2,21 +2,21 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import TeacherCalendar from "./TeacherCalendar";
 import TeacherReservationList from "./TeacherReservationList";
-import { useApiStubReservationInfo } from "../../../apis/stub/54-57 상담/apiStubReservation";
+// import { useApiStubReservationInfo } from "../../../apis/stub/54-57 상담/apiStubReservation";
 import styles from "./TeacherReservationManagement.module.scss";
 
 const TeacherReservationManagement = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [availableCount, setAvailableCount] = useState(0);
-  const { userData, error } = useApiStubReservationInfo();
+  // const { userData, error } = useApiStubReservationInfo();
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+  // if (error) {
+  //   return <div>Error: {error.message}</div>;
+  // }
 
-  if (!userData) {
-    return <div>Loading...</div>;
-  }
+  // if (!userData) {
+  //   return <div>Loading...</div>;
+  // }
 
   // 선택된 날짜를 설정하는 함수
   const handleDateSelect = (date) => {
@@ -58,7 +58,6 @@ const TeacherReservationManagement = () => {
           onAvailableCountChange={handleAvailableCountChange}
         />
       </section>
-      <p>{userData.userId}</p>
     </div>
   );
 };

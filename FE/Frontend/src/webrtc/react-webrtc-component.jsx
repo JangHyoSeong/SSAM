@@ -19,13 +19,14 @@ const WebRTCChat = () => {
 
     const configuration = {
         iceServers: [
-            { urls: 'stun:i11e201.p.ssafy.io:3478' },
+            { urls: 'stun:stun.l.google.com:19302' },
             {
                 urls: 'turn:i11e201.p.ssafy.io:3478',
                 username: 'admin',
                 credential: 'JddU_RuEn5Iqc',
             },
         ],
+        iceTransportPolicy: 'all',
     };
 
     useEffect(() => {
@@ -193,9 +194,16 @@ const WebRTCChat = () => {
         console.log('Existing participants:', message.data);
         setParticipants(message.data);
 
+        const localStream = await navigator.mediaDevices.getUserMedia({
+            audio: true,
+            video: true,
+        });
+        localStreamRef.current = localStream;
+        localVideoRef.current.srcObject = localStream;
+
         for (const participantName of message.data) {
             if (participantName !== username) {
-                await createPeerConnection(participantName);
+                await createPeerConnection(participantName, localStream);
             }
         }
     };
@@ -212,16 +220,13 @@ const WebRTCChat = () => {
         setChatMessages((prevMessages) => [...prevMessages, { sender: user, text: chatMessage }]);
     };
 
-    const createPeerConnection = async (participantName) => {
+    const createPeerConnection = async (participantName, localStream) => {
         console.log('Creating peer connection for:', participantName);
         const peerConnection = new RTCPeerConnection(configuration);
         peerConnectionsRef.current[participantName] = peerConnection;
 
-        monitorWebRTCConnection(peerConnection);
-
-        console.log('Adding local tracks to peer connection');
-        localStreamRef.current.getTracks().forEach((track) => {
-            peerConnection.addTrack(track, localStreamRef.current);
+        localStream.getTracks().forEach((track) => {
+            peerConnection.addTrack(track, localStream);
         });
 
         peerConnection.onicecandidate = (event) => {
@@ -237,28 +242,14 @@ const WebRTCChat = () => {
         };
 
         peerConnection.ontrack = (event) => {
-            console.log('Received remote track kind:', event.track.kind);
-            console.log('Track readyState:', event.track.readyState);
-            console.log(
-                'Remote stream tracks kind:',
-                event.streams[0].getTracks().map((t) => t.kind)
-            );
             console.log('Received remote track from', participantName, event.streams[0]);
-            console.log('Remote stream tracks:', event.streams[0].getTracks());
-            const stream = remoteVideosRef.current[participantName] || new MediaStream();
-            stream.addTrack(event.track);
-            remoteVideosRef.current[participantName] = stream;
-            console.log('Before setRemoteVideoKeys:', Object.keys(remoteVideosRef.current));
+            remoteVideosRef.current[participantName] = event.streams[0];
             setRemoteVideoKeys((prev) => Array.from(new Set([...prev, participantName])));
-            console.log('After setRemoteVideoKeys called');
         };
 
         try {
-            console.log('Creating offer for:', participantName);
             const offer = await peerConnection.createOffer();
-            console.log('Offer created:', offer);
             await peerConnection.setLocalDescription(offer);
-            console.log('Local description set');
             sendWebSocketMessage({
                 id: 'receiveVideoFrom',
                 sender: username,
@@ -288,7 +279,6 @@ const WebRTCChat = () => {
         const peerConnection = peerConnectionsRef.current[message.name];
         if (peerConnection) {
             try {
-                console.log('Setting remote description');
                 await peerConnection.setRemoteDescription(
                     new RTCSessionDescription({
                         type: 'answer',
@@ -299,8 +289,6 @@ const WebRTCChat = () => {
             } catch (error) {
                 console.error('Error setting remote description:', error);
             }
-        } else {
-            console.error('No peer connection found for:', message.name);
         }
     };
 
@@ -406,7 +394,7 @@ const WebRTCChat = () => {
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">WebRTC Chat and Video Call</h1>
-            <h1>Build ver.58</h1>
+            <h1>Build ver.63</h1>
             <div className="mb-4">
                 <input
                     type="text"
@@ -434,7 +422,15 @@ const WebRTCChat = () => {
                     <div className="flex flex-wrap">
                         {remoteVideoKeys.map((participantName) => (
                             <div key={participantName} className="w-1/2 p-1">
-                                <video id={`video-${participantName}`} autoPlay playsInline className="w-full border" />
+                                <video
+                                    key={participantName}
+                                    autoPlay
+                                    playsInline
+                                    className="w-full border"
+                                    ref={(el) => {
+                                        if (el) el.srcObject = remoteVideosRef.current[participantName];
+                                    }}
+                                />
                                 <p className="text-center">{participantName}</p>
                             </div>
                         ))}

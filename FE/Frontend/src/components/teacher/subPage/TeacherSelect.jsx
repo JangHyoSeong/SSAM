@@ -24,6 +24,7 @@ const TeacherSelect = () => {
         <button className={styles.classBtn} onClick={toggleModal}>
           학급 만들기
         </button>
+        <button className={styles.deleteBtn}>학급 삭제</button>
       </div>
       <div className={styles.menuBoxArray}>
         <NavLink to="/teacherclassroom" className={`${styles.menuBox} ${styles.menuBox1}`}>

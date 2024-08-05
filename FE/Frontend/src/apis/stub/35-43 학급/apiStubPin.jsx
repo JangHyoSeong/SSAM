@@ -10,7 +10,7 @@ const defaultPin = {
   teacherImage: "",
 };
 
-const pinStore = create((set) => ({
+const PinStore = create((set) => ({
   pin: { ...defaultPin },
 
   init: () => {
@@ -44,4 +44,4 @@ const pinStore = create((set) => ({
   },
 }));
 
-export default pinStore;
+export default PinStore;

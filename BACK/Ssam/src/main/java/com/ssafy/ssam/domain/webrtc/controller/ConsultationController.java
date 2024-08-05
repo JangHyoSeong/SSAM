@@ -29,7 +29,7 @@ import com.ssafy.ssam.domain.webrtc.dto.RoomRequest;
 import com.ssafy.ssam.domain.webrtc.model.ConsultationRoom;
 import com.ssafy.ssam.domain.webrtc.model.UserSession;
 
-@CrossOrigin(origins = {"http://localhost:5173", "https://i11e201.p.ssafy.io"}, allowedHeaders = "*", allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000", "https://i11e201.p.ssafy.io"}, allowedHeaders = "*", allowCredentials = "true")
 @RestController
 @RequestMapping("/v1/kurento")
 @EnableWebSocket

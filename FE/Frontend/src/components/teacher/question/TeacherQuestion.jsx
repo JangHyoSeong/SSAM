@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { FaTrash, FaEdit, FaSave } from "react-icons/fa";
 import { useQuestions } from "../../../store/QuestionStore";
 import TeacherDeleteModal from "./TeacherDeleteModal";
 import styles from "./TeacherQuestion.module.scss";
-// import { useApiBothClassroomsQuestions } from "../../../apis/stub/28-31 문의사항/question";
 
 // bordId인자로 받음
 const TeacherQuestion = () => {
@@ -17,6 +16,15 @@ const TeacherQuestion = () => {
   const [questionToDelete, setQuestionToDelete] = useState(null);
   const [newAnswer, setNewAnswer] = useState("");
   console.log("TeacherQuestion inside ", boardId);
+
+  // 토큰 확인
+  useEffect(() => {
+    const token = localStorage.getItem("USER_TOKEN");
+    if (!token) {
+      console.error("컴포넌트 : No token found, redirecting to login...");
+      return;
+    }
+  }, []);
 
   const handleEditClick = (id, currentAnswer) => {
     setEditingAnswerId(id);

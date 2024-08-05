@@ -1,31 +1,36 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
-import { useApiBothClassroomsQuestions } from "../apis/stub/28-31 문의사항/question";
+import { useApiBothClassroomsQuestions } from "../apis/stub/28-31 문의사항/apiStubQuestion";
 
 const QuestionStore = createContext();
+
 export const useQuestions = () => useContext(QuestionStore);
 
 export const QuestionProvider = ({ children }) => {
   const { question, fetchQuestionData } = useApiBothClassroomsQuestions();
   const [questions, setQuestions] = useState([]);
+  // 토큰 상태 관리
+  const [token, setToken] = useState(localStorage.getItem("USER_TOKEN") || "");
   // 더미 데이터 코드 지움
 
-  // 추가된 코드
   // useEffect로 데이터를 fetch함. 이 코드로 axios요청을 받은 데이터를 가져와서 사용함.
   useEffect(() => {
+    if (!token) {
+      console.error("스토어 : No token found");
+      return;
+    }
     // Initial data fetch
     const fetchData = async () => {
       try {
-        const data = await fetchQuestionData(1); // Replace with the appropriate board ID
-        setQuestions([data]); // Assuming the response is a single question, wrap it in an array
+        const data = await fetchQuestionData(1); // 적절한 board ID로 변경
+        setQuestions([data]); // 응답이 단일 질문인 경우 배열로 감쌉니다.
       } catch (error) {
         console.error("Failed to fetch initial question data:", error);
       }
     };
 
     fetchData();
-  }, [fetchQuestionData]);
-  // 여기까지
+  }, [fetchQuestionData, token]); // token을 종속성 배열에 추가
 
   const addQuestion = (newQuestion) => {
     setQuestions([...questions, newQuestion]);

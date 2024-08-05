@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import AlramModal from "./AlramModal";
+import AlarmModal from "./AlarmModal";
 
 // style, image
 import styles from "./SubNavbar.module.scss";
-import alram from "../../assets/alram.png";
+import alarm from "../../assets/alarm.png";
 
 const SubNavbar = () => {
   // 상태관리
@@ -43,7 +43,7 @@ const SubNavbar = () => {
 
   return (
     <div className={styles.navArray}>
-      <img src={alram} className={styles.alram} onClick={toggleModal} />
+      <img src={alarm} className={styles.alarm} onClick={toggleModal} />
       <NavLink to="/teacherupdate" className={styles.nav}>
         회원정보
       </NavLink>
@@ -51,7 +51,7 @@ const SubNavbar = () => {
       <p onClick={handleLogout} style={{ cursor: "pointer" }}>
         로그아웃
       </p>
-      {isModalOpen && <AlramModal />}
+      {isModalOpen && <AlarmModal />}
     </div>
   );
 };

@@ -26,7 +26,7 @@ const TeacherJoin = () => {
 
   useEffect(() => {
     axios
-      .get("/schools")
+      .get("http://localhost:8081/v1/schools")
       .then((response) => {
         setSchools(response.data);
       })
@@ -46,7 +46,7 @@ const TeacherJoin = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("/auth/teachers", formData)
+      .post("http://localhost:8081/v1/auth/teachers", formData)
       .then((response) => {
         console.log("axios 성공", response);
         window.location.replace("./teacherlogin");

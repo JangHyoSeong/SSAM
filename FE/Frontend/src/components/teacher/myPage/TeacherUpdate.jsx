@@ -43,7 +43,7 @@ const TeacherUpdate = () => {
     try {
       await updateProfile(formData);
       alert("Profile updated successfully!");
-      setError(""); // Clear any previous errors
+      setError("");
     } catch (error) {
       setError("Failed to update profile. Please try again.");
     }

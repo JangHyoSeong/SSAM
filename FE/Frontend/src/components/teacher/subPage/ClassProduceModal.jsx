@@ -6,11 +6,11 @@ const ClassProduceModal = () => {
   const [showModal, setShowModal] = useState(true);
   const [grade, setGrade] = useState("");
   const [classroom, setClassroom] = useState("");
-  const handleClose = () => {
+  const classClose = () => {
     setShowModal(false);
   };
 
-  const handleCreate = async () => {
+  const classCreate = async () => {
     try {
       const token = localStorage.getItem("USER_TOKEN");
       const response = await axios.post(
@@ -58,13 +58,13 @@ const ClassProduceModal = () => {
         </div>
         <div className={styles.buttonContainer}>
           <button
-            onClick={handleCreate}
+            onClick={classCreate}
             className={`${styles.button} ${styles.approveButton}`}
           >
             생성
           </button>
           <button
-            onClick={handleClose}
+            onClick={classClose}
             className={`${styles.button} ${styles.cancelButton}`}
           >
             취소

@@ -2,6 +2,7 @@ package com.ssafy.ssam.domain.user.controller;
 
 import com.ssafy.ssam.domain.user.dto.request.UserInfoModificationRequestDTO;
 import com.ssafy.ssam.domain.user.dto.response.UserInfoResponseDTO;
+import com.ssafy.ssam.domain.user.dto.response.UserInitialInfoResponseDTO;
 import com.ssafy.ssam.domain.user.service.UserInfoService;
 import com.ssafy.ssam.global.dto.CommonResponseDto;
 import jakarta.validation.Valid;
@@ -25,6 +26,11 @@ public class UserInfoController {
     @PutMapping
     public ResponseEntity<CommonResponseDto> modificateUserInfo (@Valid UserInfoModificationRequestDTO requestDTO) {
         return ResponseEntity.ok(userInfoService.modificateUserInfo(requestDTO));
+    }
+
+    @GetMapping("/initial")
+    public ResponseEntity<UserInitialInfoResponseDTO> getUserInitialInfo () {
+        return ResponseEntity.ok(userInfoService.getInitialInfo());
     }
 
 }

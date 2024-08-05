@@ -1,5 +1,6 @@
 package com.ssafy.ssam.domain.user.service;
 
+import com.ssafy.ssam.domain.user.dto.response.UserInitialInfoResponseDTO;
 import com.ssafy.ssam.domain.classroom.repository.SchoolRepository;
 import com.ssafy.ssam.domain.user.dto.request.UserInfoModificationRequestDTO;
 import com.ssafy.ssam.domain.user.dto.response.UserInfoResponseDTO;
@@ -72,6 +73,23 @@ public class UserInfoService {
         userRepository.save(user);
 
         return new CommonResponseDto("Modificated");
+    }
+
+    public UserInitialInfoResponseDTO getInitialInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        User user = userRepository.findByUserId(userDetails.getUserId())
+                .orElseThrow(() -> new CustomException(ErrorCode.Unauthorized));
+
+        return UserInitialInfoResponseDTO.builder()
+                .userId(user.getUserId())
+                .username(user.getUsername())
+                .name(user.getName())
+                .boardId(userDetails.getBoardId())
+                .role(String.valueOf(user.getRole()))
+                .school(Optional.ofNullable(user.getSchool()).map(School::getName).orElse(null))
+                .build();
     }
 
 }

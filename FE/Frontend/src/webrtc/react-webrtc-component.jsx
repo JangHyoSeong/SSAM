@@ -22,10 +22,16 @@ const WebRTCChat = () => {
     };
 
     useEffect(() => {
+        console.log('useEffect triggered. remoteVideoKeys:', remoteVideoKeys);
         remoteVideoKeys.forEach(key => {
             const videoElement = document.getElementById(`video-${key}`);
-            if (videoElement) {
+            console.log(`Processing video element for key: ${key}`, videoElement);
+            if (videoElement && remoteVideosRef.current[key]) {
+                console.log(`Setting srcObject for key: ${key}`, remoteVideosRef.current[key]);
                 videoElement.srcObject = remoteVideosRef.current[key];
+                videoElement.play().catch(error => console.log('Autoplay prevented:', error));
+            } else {
+                console.log(`Video element or remote video not found for key: ${key}`);
             }
         });
     }, [remoteVideoKeys]);
@@ -193,6 +199,8 @@ const WebRTCChat = () => {
         const peerConnection = new RTCPeerConnection(configuration);
         peerConnectionsRef.current[participantName] = peerConnection;
 
+        monitorWebRTCConnection(peerConnection);
+
         console.log('Adding local tracks to peer connection');
         localStreamRef.current.getTracks().forEach(track => {
             peerConnection.addTrack(track, localStreamRef.current);
@@ -212,6 +220,7 @@ const WebRTCChat = () => {
 
         peerConnection.ontrack = (event) => {
             console.log('Received remote track from', participantName, event.streams[0]);
+            console.log('Remote stream tracks:', event.streams[0].getTracks());
             remoteVideosRef.current[participantName] = event.streams[0];
             setRemoteVideoKeys(Object.keys(remoteVideosRef.current));
         };
@@ -278,6 +287,65 @@ const WebRTCChat = () => {
         }
     };
 
+
+    const monitorWebRTCConnection = (peerConnection) => {
+        peerConnection.addEventListener('iceconnectionstatechange', () => {
+          console.log('ICE connection state changed:', peerConnection.iceConnectionState);
+        });
+      
+        peerConnection.addEventListener('connectionstatechange', () => {
+          console.log('Connection state changed:', peerConnection.connectionState);
+        });
+      
+        peerConnection.addEventListener('icegatheringstatechange', () => {
+          console.log('ICE gathering state changed:', peerConnection.iceGatheringState);
+        });
+      
+        peerConnection.addEventListener('signalingstatechange', () => {
+          console.log('Signaling state changed:', peerConnection.signalingState);
+        });
+      
+        // Monitor ICE candidate gathering
+        let iceCandidatesGathered = 0;
+        peerConnection.addEventListener('icecandidate', (event) => {
+          if (event.candidate) {
+            iceCandidatesGathered++;
+            console.log('New ICE candidate gathered:', event.candidate.candidate);
+            console.log('Total ICE candidates gathered:', iceCandidatesGathered);
+          } else {
+            console.log('ICE gathering completed. Total candidates:', iceCandidatesGathered);
+          }
+        });
+      
+        // Monitor data channel state
+        peerConnection.addEventListener('datachannel', (event) => {
+          const dataChannel = event.channel;
+          console.log('Data channel created:', dataChannel.label);
+          
+          dataChannel.addEventListener('open', () => {
+            console.log('Data channel opened:', dataChannel.label);
+          });
+      
+          dataChannel.addEventListener('close', () => {
+            console.log('Data channel closed:', dataChannel.label);
+          });
+        });
+      
+        // Monitor stats
+        const getStats = () => {
+          peerConnection.getStats(null).then((stats) => {
+            stats.forEach((report) => {
+              if (report.type === 'candidate-pair' && report.state === 'succeeded') {
+                console.log('Active ICE candidate pair:', report);
+              }
+            });
+          });
+        };
+      
+        // Get stats every 5 seconds
+        setInterval(getStats, 5000);
+    };
+
     const sendChatMessage = () => {
         if (message && isConnected) {
             console.log('Sending chat message');
@@ -307,7 +375,7 @@ const WebRTCChat = () => {
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">WebRTC Chat and Video Call</h1>
-            <h1>Build ver.55</h1>
+            <h1>Build ver.57</h1>
             <div className="mb-4">
                 <input 
                     type="text" 

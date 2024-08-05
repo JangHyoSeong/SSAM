@@ -15,7 +15,7 @@ import com.ssafy.ssam.domain.webrtc.controller.ConsultationController;
 @EnableWebSocket
 public class KurentoConfig implements WebSocketConfigurer {
 
-    @Value("${kurento.client.url:ws://i11e201.p.ssafy.io:8888/kurento}")
+    @Value("${kurento.client.url:wss://i11e201.p.ssafy.io/kurento}")
     private String kurentoUrl;
 
     @Bean

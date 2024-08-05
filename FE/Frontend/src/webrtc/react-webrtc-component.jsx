@@ -227,7 +227,9 @@ const WebRTCChat = () => {
             const stream = remoteVideosRef.current[participantName] || new MediaStream();
             stream.addTrack(event.track);
             remoteVideosRef.current[participantName] = stream;
+            console.log('Before setRemoteVideoKeys:', Object.keys(remoteVideosRef.current));
             setRemoteVideoKeys(prev => Array.from(new Set([...prev, participantName])));
+            console.log('After setRemoteVideoKeys called');
           };
 
         try {

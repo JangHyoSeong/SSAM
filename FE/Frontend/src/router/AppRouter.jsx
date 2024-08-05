@@ -4,7 +4,10 @@ import Chatbot from "../common/chatbot/Chatbot.jsx";
 import SubNavbar from "../common/navigation/SubNavbar.jsx";
 import MainNavbar from "../common/navigation/MainNavbar.jsx";
 import Video from "../video/Video.jsx";
-import { QuestionProvider } from "../store/QuestionContext";
+// import { QuestionProvider } from "../store/QuestionStore";
+
+// Layout component
+import QuestionProviderLayout from "./layouts/QuestionProviderLayout.jsx";
 
 // Teacher components
 import TeacherJoin from "../components/teacher/join/TeacherJoin";
@@ -49,72 +52,84 @@ const AppRouter = () => {
   const showNavbar = !hideNavbarOnRoutes.includes(location.pathname);
 
   return (
-    <QuestionProvider>
+    <div>
+      {showNavbar && (
+        <div className="navbarArray">
+          <MainNavbar />
+          <SubNavbar />
+        </div>
+      )}
       <div>
-        {showNavbar && (
-          <div className="navbarArray">
-            <MainNavbar />
-            <SubNavbar />
-          </div>
-        )}
-        <div>
-          <Routes>
-            <Route path="/" element={<MainPage />} />
-            {/* Teacher Routes */}
-            <Route path="/teacherlogin" element={<TeacherLogin />} />
-            <Route path="/teacherjoin" element={<TeacherJoin />} />
-            <Route path="/teachersubpage" element={<TeacherSubpage />} />
-            <Route path="/teacherupdate" element={<TeacherUpdate />} />
-            <Route
-              path="/teacherpasswordchange"
-              element={<TeacherPasswordChange />}
-            />
+        <Routes>
+          <Route path="/" element={<MainPage />} />
+
+          {/* Teacher Routes */}
+          <Route path="/teacherlogin" element={<TeacherLogin />} />
+          <Route path="/teacherjoin" element={<TeacherJoin />} />
+          <Route path="/teachersubpage" element={<TeacherSubpage />} />
+          <Route path="/teacherupdate" element={<TeacherUpdate />} />
+          <Route
+            path="/teacherpasswordchange"
+            element={<TeacherPasswordChange />}
+          />
+          {/* layouts */}
+          <Route element={<QuestionProviderLayout />}>
             <Route
               path="/teacherquestion/:boardId"
               element={<TeacherQuestion />}
             />
             <Route path="/teacherclassroom" element={<TeacherClassroom />} />
-            <Route
-              path="/teacherauthorization"
-              element={<TeacherAuthorization />}
-            />
-            <Route
-              path="/teacherreservationmanagement"
-              element={<TeacherReservationManagement />}
-            />
-            <Route
-              path="/teacherconsultationlist"
-              element={<TeacherConsultationList />}
-            />
-            <Route
-              path="/teacherclassroom/student"
-              element={<TeacherStudentDetail />}
-            />
-            {/* Parents Routes */}
-            <Route path="/parentslogin" element={<ParentsLogin />} />
-            <Route path="/parentsjoin" element={<ParentsJoin />} />
-            <Route path="/parentssubpage" element={<ParentsSubpage />} />
-            <Route path="/parentsupdate" element={<ParentsUpdate />} />
-            <Route
-              path="/parentspasswordchange"
-              element={<ParentsPasswordChange />}
-            />
+          </Route>
+          <Route
+            path="/teacherauthorization"
+            element={<TeacherAuthorization />}
+          />
+          <Route
+            path="/teacherreservationmanagement"
+            element={<TeacherReservationManagement />}
+          />
+          <Route
+            path="/teacherconsultationlist"
+            element={<TeacherConsultationList />}
+          />
+          <Route
+            path="/teacherclassroom/student"
+            element={<TeacherStudentDetail />}
+          />
+
+          {/* Parents Routes */}
+          <Route path="/parentslogin" element={<ParentsLogin />} />
+          <Route path="/parentsjoin" element={<ParentsJoin />} />
+          <Route path="/parentssubpage" element={<ParentsSubpage />} />
+          <Route path="/parentsupdate" element={<ParentsUpdate />} />
+          <Route
+            path="/parentspasswordchange"
+            element={<ParentsPasswordChange />}
+          />
+          {/* layouts */}
+          <Route element={<QuestionProviderLayout />}>
             <Route path="/parentsquestion" element={<ParentsQuestion />} />
             <Route path="/parentsclassroom" element={<ParentsClassroom />} />
-            <Route
-              path="/parentsreservationpage"
-              element={<ParentsReservationPage />}
-            />
-            {/* Video Route */}
-            <Route path="/video" element={<Video />} />
-            {/* WebRTC Route */}
-            <Route path="/webrtc" element={<WebrtcPage />} />
-          </Routes>
-        </div>
-        {/* Chatbot */}
-        {showChatbot && <Chatbot />}
+          </Route>
+          {/* <Route path="/parentsquestion" element={<ParentsQuestion />} />
+          <Route path="/parentsclassroom" element={<ParentsClassroom />} /> */}
+          <Route
+            path="/parentsreservationpage"
+            element={<ParentsReservationPage />}
+          />
+
+          {/* Video Route */}
+          <Route path="/video" element={<Video />} />
+
+          {/* WebRTC Route */}
+          <Route path="/webrtc" element={<WebrtcPage />} />
+        </Routes>
       </div>
-    </QuestionProvider>
+
+      {/* Chatbot */}
+      {showChatbot && <Chatbot />}
+    </div>
+    // </QuestionProvider>
   );
 };
 
@@ -126,7 +141,7 @@ export default AppRouter;
 // import SubNavbar from "../common/navigation/SubNavbar.jsx";
 // import MainNavbar from "../common/navigation/MainNavbar.jsx";
 // import Video from "../video/Video.jsx";
-// import { QuestionProvider } from "../store/QuestionContext";
+// import { QuestionProvider } from "../store/QuestionStore";
 // import ProtectedRoute from "./ProtectedRoute";
 
 // // Teacher components

@@ -1,7 +1,7 @@
 // // 선생님 정보 수정 페이지 컴포넌트
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import useProfileStore from "../../../apis/stub/20-22 사용자정보/profile";
+import useProfileStore from "../../../apis/stub/20-22 사용자정보/apiStubProfile";
 import styles from "./TeacherUpdate.module.scss";
 
 const TeacherUpdate = () => {

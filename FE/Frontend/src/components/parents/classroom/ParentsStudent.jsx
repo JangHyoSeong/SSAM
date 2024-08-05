@@ -9,7 +9,7 @@ const ParentsStudent = () => {
           <div className={styles.studentPhoto}>
             {/* 학생 사진이 배경으로 설정됨 */}
           </div>
-          <div className={styles.studentName}>{student.id}. {student.name}</div>
+          <div className={styles.studentName}>{student.name}</div>
         </div>
       ))}
     </div>

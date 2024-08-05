@@ -9,6 +9,7 @@ const WebRTCChat = () => {
     const [participants, setParticipants] = useState([]);
     const webSocketRef = useRef(null);
     const localVideoRef = useRef(null);
+    const iceCandidatesBuffer = useRef({});
     const [remoteVideos, setRemoteVideos] = useState({});
 
     const remoteVideosRef = useRef({});
@@ -99,24 +100,20 @@ const WebRTCChat = () => {
         try {
             console.log('Attempting to access local media devices');
             const stream = await navigator.mediaDevices.getUserMedia({
-                video: {
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 },
-                    frameRate: { ideal: 30 },
-                },
-                audio: {
-                    echoCancellation: true,
-                    noiseSuppression: true,
-                    autoGainControl: true,
-                },
+                video: { width: 1280, height: 720 },
+                audio: true,
             });
             console.log('Local stream obtained:', stream);
             localStreamRef.current = stream;
-            localVideoRef.current.srcObject = stream;
+            if (localVideoRef.current) {
+                localVideoRef.current.srcObject = stream;
+            }
             console.log('Local video source set');
+            return stream;
         } catch (error) {
             console.error('Error accessing media devices:', error);
             alert('Failed to access camera and microphone. Please check your permissions.');
+            throw error;
         }
     };
 
@@ -194,12 +191,7 @@ const WebRTCChat = () => {
         console.log('Existing participants:', message.data);
         setParticipants(message.data);
 
-        const localStream = await navigator.mediaDevices.getUserMedia({
-            audio: true,
-            video: true,
-        });
-        localStreamRef.current = localStream;
-        localVideoRef.current.srcObject = localStream;
+        const localStream = await setupLocalStream();
 
         for (const participantName of message.data) {
             if (participantName !== username) {
@@ -250,6 +242,7 @@ const WebRTCChat = () => {
         try {
             const offer = await peerConnection.createOffer();
             await peerConnection.setLocalDescription(offer);
+            console.log('Local description set');
             sendWebSocketMessage({
                 id: 'receiveVideoFrom',
                 sender: username,
@@ -259,8 +252,15 @@ const WebRTCChat = () => {
         } catch (error) {
             console.error('Error creating offer:', error);
         }
-    };
 
+        // 버퍼링된 ICE 후보 처리
+        if (iceCandidatesBuffer.current[participantName]) {
+            iceCandidatesBuffer.current[participantName].forEach((candidate) => {
+                peerConnection.addIceCandidate(new RTCIceCandidate(candidate)).catch((e) => console.error('Error adding buffered ice candidate:', e));
+            });
+            delete iceCandidatesBuffer.current[participantName];
+        }
+    };
     const handleParticipantLeft = (message) => {
         console.log('Participant left:', message.name);
         setParticipants((prev) => prev.filter((name) => name !== message.name));
@@ -296,11 +296,20 @@ const WebRTCChat = () => {
         console.log('Handling remote ICE candidate from:', message.name);
         const peerConnection = peerConnectionsRef.current[message.name];
         if (peerConnection) {
-            try {
-                await peerConnection.addIceCandidate(new RTCIceCandidate(message.candidate));
-                console.log('ICE candidate added successfully');
-            } catch (error) {
-                console.error('Error adding received ice candidate:', error);
+            if (peerConnection.remoteDescription) {
+                try {
+                    await peerConnection.addIceCandidate(new RTCIceCandidate(message.candidate));
+                    console.log('ICE candidate added successfully');
+                } catch (error) {
+                    console.error('Error adding received ice candidate:', error);
+                }
+            } else {
+                // 원격 설명이 아직 설정되지 않았다면 후보를 버퍼링
+                if (!iceCandidatesBuffer.current[message.name]) {
+                    iceCandidatesBuffer.current[message.name] = [];
+                }
+                iceCandidatesBuffer.current[message.name].push(message.candidate);
+                console.log('ICE candidate buffered');
             }
         } else {
             console.error('No peer connection found for:', message.name);

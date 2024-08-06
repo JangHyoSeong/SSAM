@@ -24,6 +24,7 @@ const SubNavbar = () => {
   // 백에서 role 속성을 추가해준다면 role에 따라 선생 or 학생 로그인 페이지로 렌더링 하면 됨
   const handleLogout = () => {
     localStorage.removeItem("USER_TOKEN");
+    localStorage.removeItem("USER_NAME");
     setIsLoggedIn(false);
     navigate("/");
   };

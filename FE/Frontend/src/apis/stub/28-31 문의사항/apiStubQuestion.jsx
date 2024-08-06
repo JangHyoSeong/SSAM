@@ -28,7 +28,7 @@ export const useApiBothClassroomsQuestions = create((set) => ({
         {
           headers: {
             "Content-Type": "application/json",
-            authorization: `${token}`,
+            authorization: token,
           },
         }
       );

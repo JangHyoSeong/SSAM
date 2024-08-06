@@ -223,7 +223,7 @@ public class SessionController {
 		boolean hasVideo = (boolean) params.get("hasVideo");
 
 		RecordingProperties properties = new RecordingProperties.Builder().outputMode(outputMode).hasAudio(hasAudio)
-				.hasVideo(hasVideo).build();
+				.name("namename").hasVideo(hasVideo).build();
 
 		System.out.println("Starting recording for session " + sessionId + " with properties {outputMode=" + outputMode
 				+ ", hasAudio=" + hasAudio + ", hasVideo=" + hasVideo + "}");

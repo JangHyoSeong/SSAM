@@ -57,7 +57,6 @@ const ParentsSelect = () => {
           </div>
         </NavLink>
       </div>
-
     </div>
   );
 };

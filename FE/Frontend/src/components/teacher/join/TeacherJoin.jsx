@@ -43,7 +43,7 @@ const TeacherJoin = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const joinSubmit = (e) => {
     e.preventDefault();
     axios
       .post("http://localhost:8081/v1/auth/teachers", formData)
@@ -63,7 +63,7 @@ const TeacherJoin = () => {
       <div className={styles.joinFormArray}>
         <div className={styles.joinBtnFormArray}>
           <div className={styles.joinBackground}>
-            <form onSubmit={handleSubmit} className={styles.joinForm}>
+            <form onSubmit={joinSubmit} className={styles.joinForm}>
               <div>
                 <img src={human} className={styles.joinIcon} alt="human" />
                 <input

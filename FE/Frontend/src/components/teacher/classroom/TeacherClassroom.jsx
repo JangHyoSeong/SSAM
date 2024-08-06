@@ -1,49 +1,58 @@
-import { useState, useRef, useEffect } from "react";
+import axios from "axios";
 import { NavLink } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faSave } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
 import styles from "./TeacherClassroom.module.scss";
-import TeacherStudent from "./TeacherStudent";
-import TeacherStudentDetail from "./TeacherStudentDetail";
 import ClassImage from "../../../assets/background.png";
 import whiteshare from "../../../assets/whiteshare.png";
+import TeacherStudent from "./TeacherStudent";
+import TeacherStudentDetail from "./TeacherStudentDetail";
+import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
 
 const TeacherClassroom = () => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [noticeContent, setNoticeContent] = useState("");
-  const [classInfo, setClassInfo] = useState("");
-  const [isEditingInfo, setIsEditingInfo] = useState(false);
-  const [selectedStudentId, setSelectedStudentId] = useState(null);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState(ClassImage);
-  const textareaRef = useRef(null);
-  const infoTextareaRef = useRef(null);
-  const maxHeight = 100;
+  const [banner, setBanner] = useState(""); // 학급 배너
+  const [notice, setNotice] = useState(""); // 알림 사항
+  const [isEditing, setIsEditing] = useState(false); // 공지사항 편집
+  const [noticeContent, setNoticeContent] = useState(""); // 공지사항 내용
+  const [classInfo, setClassInfo] = useState(""); // 배너 정보 내용
+  const [isEditingInfo, setIsEditingInfo] = useState(false); // 배너 정보 편집 상태
+  const [selectedStudentId, setSelectedStudentId] = useState(null); // 선택된 학생 ID
+  const [uploadedImageUrl, setUploadedImageUrl] = useState(ClassImage); // 업로드된 이미지 URL
+  const noticeTextRef = useRef(null); // 공지사항 텍스트 영역 참조
+  const bannerTextRef = useRef(null); // 배너 정보 텍스트 영역 참조
 
+  // 학급 전체 데이터 불러오기
   useEffect(() => {
-    const handleInput = (e) => {
-      if (textareaRef.current && textareaRef.current.scrollHeight > maxHeight) {
-        e.preventDefault();
-        textareaRef.current.value = textareaRef.current.value.slice(0, -1);
+    const classInfoData = async () => {
+      try {
+        const token = localStorage.getItem("USER_TOKEN");
+        const { boardId } = await fetchApiUserInitial();
+        const response = await axios.get(
+          `http://localhost:8081/v1/classrooms/${boardId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token}`,
+            },
+          }
+        );
+        setBanner(response.data.banner); // 학급 배너 상태 업데이트
+        setNotice(response.data.notice); // 알림 사항 상태 업데이트
+      } catch (error) {
+        console.error("데이터 불러오기 실패", error);
       }
     };
+    classInfoData();
+  }, []);
 
-    if (textareaRef.current) {
-      textareaRef.current.addEventListener("input", handleInput);
-    }
-
-    return () => {
-      if (textareaRef.current) {
-        textareaRef.current.removeEventListener("input", handleInput);
-      }
-    };
-  }, [isEditing]);
-
+  // 공지사항 업데이트 처리 함수
   const noticeUpdate = async () => {
     try {
       const token = localStorage.getItem("USER_TOKEN");
-      const response = await axios.put(
-        "http://localhost:8081/v1/classrooms/teachers/notice/1",
+      const { boardId } = await fetchApiUserInitial();
+      await axios.put(
+        `http://localhost:8081/v1/classrooms/teachers/notice/${boardId}`,
         { notice: noticeContent },
         {
           headers: {
@@ -52,18 +61,20 @@ const TeacherClassroom = () => {
           },
         }
       );
-      console.log("성공", response);
-      setIsEditing(false);
+      setIsEditing(false); // 편집 상태 해제
+      location.reload(); // 페이지 새로고침
     } catch (error) {
       console.error("Failed to save banner content:", error);
     }
   };
 
+  // 배너 정보 업데이트 처리 함수
   const bannerUpdate = async () => {
     try {
       const token = localStorage.getItem("USER_TOKEN");
-      const response = await axios.put(
-        "http://localhost:8081/v1/classrooms/teachers/banner/1",
+      const { boardId } = await fetchApiUserInitial();
+      await axios.put(
+        `http://localhost:8081/v1/classrooms/teachers/banner/${boardId}`,
         { banner: classInfo },
         {
           headers: {
@@ -72,26 +83,30 @@ const TeacherClassroom = () => {
           },
         }
       );
-      console.log("성공", response);
-      setIsEditingInfo(false);
+      setIsEditingInfo(false); // 편집 상태 해제
+      location.reload(); // 페이지 새로고침
     } catch (error) {
       console.error("Failed to save class info:", error);
     }
   };
 
-  const handleEditUpdate = () => {
+  // 알림 버튼 클릭 핸들러
+  const noticeEditClick = () => {
     setIsEditing(true);
   };
 
-  const handleContentChange = (e) => {
+  // 알림 변경 핸들러
+  const noticeContentChange = (e) => {
     setNoticeContent(e.target.value);
   };
 
-  const handleEditInfoUpdate = () => {
+  // 배너 편집 클릭 핸들러
+  const bannerEditInfoClick = () => {
     setIsEditingInfo(true);
   };
 
-  const handleInfoChange = (e) => {
+  // 배너 변경 핸들러
+  const bannerInfoChange = (e) => {
     setClassInfo(e.target.value);
   };
 
@@ -103,7 +118,7 @@ const TeacherClassroom = () => {
           className={`${styles.navItem} ${
             selectedStudentId === null ? styles.active : styles.altActive
           }`}
-          onUpdate={() => setSelectedStudentId(null)}
+          onClick={() => setSelectedStudentId(null)}
         >
           학급 관리
         </NavLink>
@@ -128,56 +143,56 @@ const TeacherClassroom = () => {
           {isEditing ? (
             <FontAwesomeIcon
               icon={faSave}
-              onUpdate={noticeUpdate}
+              onClick={noticeUpdate}
               className={styles.editIcon}
             />
           ) : (
             <FontAwesomeIcon
               icon={faEdit}
-              onUpdate={handleEditUpdate}
+              onClick={noticeEditClick}
               className={styles.editIcon}
             />
           )}
           {isEditing ? (
             <div className={styles.editBox}>
               <textarea
-                ref={textareaRef}
+                ref={noticeTextRef}
                 value={noticeContent}
-                onChange={handleContentChange}
+                onChange={noticeContentChange}
                 className={styles.editTextarea}
               />
             </div>
           ) : (
-            <p>{noticeContent}</p>
+            <p>{notice}</p>
           )}
         </div>
 
         <div className={styles.classInfoBox}>
-          <h2>클래스 정보</h2>
+          <h2>배너 정보</h2>
           {isEditingInfo ? (
             <FontAwesomeIcon
               icon={faSave}
-              onUpdate={bannerUpdate}
+              onClick={bannerUpdate}
               className={styles.editIcon}
             />
           ) : (
             <FontAwesomeIcon
               icon={faEdit}
-              onUpdate={handleEditInfoUpdate}
+              onClick={bannerEditInfoClick}
               className={styles.editIcon}
             />
           )}
           {isEditingInfo ? (
             <div className={styles.editBox}>
               <textarea
-                ref={infoTextareaRef}
+                ref={bannerTextRef}
                 value={classInfo}
-                onChange={handleInfoChange}
+                onChange={bannerInfoChange}
                 className={styles.editTextarea}
               />
             </div>
           ) : (
-            <p>{classInfo}</p>
+            <p>{banner}</p>
           )}
         </div>
 

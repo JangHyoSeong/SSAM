@@ -6,41 +6,44 @@ const ClassEnterModal = () => {
   const [pins, setPins] = useState(Array(6).fill(""));
   const [classroom, setClassroom] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(true);
-  const inputRefs = useRef([]);
+  const inputRefs = useRef(new Array(6));
   const pin = pins.join("");
 
-  useEffect(
-    () => {
+  useEffect(() => {
+    const fetchClassroom = async () => {
       if (pin.length === 6) {
         const token = localStorage.getItem("USER_TOKEN");
-        axios
-          .get(`http://localhost:8081/v1/classrooms/1`, {
-            params: { pin },
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `${token}`,
-            },
-          })
-          .then((response) => {
-            if (response.data && response.data.pin === pin) {
-              setClassroom(response.data);
-            } else {
-              console.error(
-                "No matching classroom found with the provided PIN"
-              );
-              setClassroom(null);
-            }
-          })
-          .catch((error) => {
-            console.error(console.log(error));
-            setClassroom(null);
-          });
-      }
-    },
-    [pin]
-  );
+        console.log("Using token: ", token);
 
-  const PinChange = (index) => (e) => {
+        try {
+          const response = await axios.get(
+            "http://localhost:8081/v1/classrooms",
+            {
+              pin: pin,
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `${token}`,
+              },
+            }
+          );
+          if (response.data && response.data.pin === pin) {
+            setClassroom(response.data);
+          } else {
+            console.error("No matching classroom found with the provided PIN");
+            setClassroom(null);
+          }
+        } catch (error) {
+          console.error("Axios error: ", error.response || error); // Detailed error
+          setClassroom(null);
+        }
+      }
+    };
+    fetchClassroom();
+  }, [pin]);
+
+  const pinChange = (index) => (e) => {
     const newPins = [...pins];
     newPins[index] = e.target.value.slice(0, 1);
     setPins(newPins);
@@ -49,7 +52,7 @@ const ClassEnterModal = () => {
     }
   };
 
-  const CloseModal = () => {
+  const closeModal = () => {
     setIsModalVisible(false);
   };
 
@@ -59,7 +62,7 @@ const ClassEnterModal = () => {
         <div className={styles.enterArray}>
           <div className={styles.headerArray}>
             <p>초대코드로 학급 검색하기</p>
-            <p className={styles.outBtn} onClick={CloseModal}>
+            <p className={styles.outBtn} onClick={closeModal}>
               X
             </p>
           </div>
@@ -70,7 +73,7 @@ const ClassEnterModal = () => {
                 type="text"
                 maxLength="1"
                 value={pins[index]}
-                onChange={PinChange(index)}
+                onChange={pinChange(index)}
                 className={styles.inputBox}
                 ref={(el) => (inputRefs.current[index] = el)}
                 autoFocus={index === 0}
@@ -80,7 +83,7 @@ const ClassEnterModal = () => {
           <div className={styles.classInfo}>
             {classroom && (
               <div className={styles.classroomDetails}>
-                <p>schoolName: {classroom.schoolName}</p>
+                <p>School Name: {classroom.schoolName}</p>
                 <p>Grade: {classroom.grade}</p>
                 <p>Classroom: {classroom.classroom}</p>
                 <p>Teacher: {classroom.teacherName}</p>

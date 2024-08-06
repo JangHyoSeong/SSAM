@@ -32,7 +32,7 @@ const ParentsLogin = () => {
       localStorage.setItem("USER_NAME", username);
       console.log("axios 성공", response);
       setLoggedIn(true);
-      // window.location.replace("/teachersubpage");
+      window.location.replace("/parentssubpage");
     } catch (error) {
       console.error("axios 실패", error);
       if (error.response && error.response.status === 401) {

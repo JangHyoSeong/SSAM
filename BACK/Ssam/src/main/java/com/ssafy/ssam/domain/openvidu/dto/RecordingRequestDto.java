@@ -14,6 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RecordingRequestDto {
+	private String userId;
     private String sessionId;
     private String recordingId;
     private Recording.OutputMode outputMode;

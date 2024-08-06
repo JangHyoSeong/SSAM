@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.ssam.domain.openvidu.dto.OpenViduSessionDto;
@@ -213,22 +215,51 @@ public class SessionController {
 	/** Recording API **/
 	/*******************/
 
+    @RequestMapping(value = "/recording/start", method = RequestMethod.POST)
+	public ResponseEntity<?> startRecording(@RequestBody Map<String, Object> params) {
+		String sessionId = (String) params.get("session");
+		Recording.OutputMode outputMode = Recording.OutputMode.valueOf((String) params.get("outputMode"));
+		boolean hasAudio = (boolean) params.get("hasAudio");
+		boolean hasVideo = (boolean) params.get("hasVideo");
+
+		RecordingProperties properties = new RecordingProperties.Builder().outputMode(outputMode).hasAudio(hasAudio)
+				.hasVideo(hasVideo).build();
+
+		System.out.println("Starting recording for session " + sessionId + " with properties {outputMode=" + outputMode
+				+ ", hasAudio=" + hasAudio + ", hasVideo=" + hasVideo + "}");
+
+		//return ResponseEntity.ok(new CommonResponseDto("Stream forcefully unpublished"));
+		try {
+			Recording recording = this.openVidu.startRecording(sessionId, properties);
+			System.out.println("나 통과했음");
+			this.sessionRecordings.put(sessionId, true);
+			return new ResponseEntity<>(recording, HttpStatus.OK);
+			//return ResponseEntity.ok(new CommonResponseDto("Stream forcefully unpublished"));
+		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
+
+    /*
     @PostMapping("/recording/start")
     public ResponseEntity<RecordingDto> startRecording(@RequestBody RecordingRequestDto requestDto) {
         try {
+        	System.out.println("들어왔음!!");
             RecordingProperties properties = new RecordingProperties.Builder()
                 .outputMode(requestDto.getOutputMode())
+                .name("321")
                 .hasAudio(requestDto.isHasAudio())
                 .hasVideo(requestDto.isHasVideo())
                 .build();
 
             Recording recording = this.openVidu.startRecording(requestDto.getSessionId(), properties);
+            
             this.sessionRecordings.put(requestDto.getSessionId(), true);
             return ResponseEntity.ok(convertRecordingToDto(recording));
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
             throw new RuntimeException("Error starting recording", e);
         }
-    }
+    }*/
 
     @PostMapping("/recording/stop")
     public ResponseEntity<RecordingDto> stopRecording(@RequestBody RecordingRequestDto requestDto) {

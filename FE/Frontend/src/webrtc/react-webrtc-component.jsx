@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
+import './VideoChatComponent.css'; // 새로운 CSS 파일을 import 합니다
 
-//const API_BASE_URL = 'http://localhost:8081/v1/video'; // Spring 백엔드 API 기본 URL
-const API_BASE_URL = 'https://i11e201.p.ssafy.io/api/v1/video';
+const API_BASE_URL = 'http://localhost:8081/v1/video'; // Spring 백엔드 API 기본 URL
+//const API_BASE_URL = 'https://i11e201.p.ssafy.io/api/v1/video';
 
 const VideoChatComponent = () => {
     const [mySessionId, setMySessionId] = useState('SessionA');
@@ -15,6 +16,8 @@ const VideoChatComponent = () => {
     const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
     const [chatMessages, setChatMessages] = useState([]);
     const [chatInput, setChatInput] = useState('');
+    const [isRecording, setIsRecording] = useState(false);
+    const [recordingId, setRecordingId] = useState(null);
     const OV = useRef(new OpenVidu());
 
     useEffect(() => {
@@ -58,6 +61,9 @@ const VideoChatComponent = () => {
         try {
             const token = await getToken();
             await mySession.connect(token, { clientData: myUserName });
+
+            // 세션 연결 후 세션 정보 로깅
+            setMySessionId(mySession.sessionId);
 
             let publisher = await OV.current.initPublisherAsync(undefined, {
                 audioSource: undefined,
@@ -126,6 +132,33 @@ const VideoChatComponent = () => {
             }
         } catch (e) {
             console.error(e);
+        }
+    };
+
+    const toggleRecording = async () => {
+        if (!isRecording) {
+            try {
+                const response = await axios.post(`${API_BASE_URL}/recording/start`, {
+                    session: mySessionId,
+                    outputMode: 'COMPOSED',
+                    hasAudio: true,
+                    hasVideo: true,
+                });
+                setRecordingId(response.data.id);
+                setIsRecording(true);
+            } catch (error) {
+                console.error('Error starting recording:', error);
+            }
+        } else {
+            try {
+                await axios.post(`${API_BASE_URL}/recording/stop`, {
+                    recordingId: recordingId,
+                });
+                setIsRecording(false);
+                setRecordingId(null);
+            } catch (error) {
+                console.error('Error stopping recording:', error);
+            }
         }
     };
 
@@ -201,60 +234,53 @@ const VideoChatComponent = () => {
                 </div>
             ) : (
                 <div className="session-container">
-                    <div className="row g-0 vh-100">
-                        <div className="col-md-9 d-flex flex-column">
-                            <div className="session-header bg-dark text-white p-3 d-flex justify-content-between align-items-center">
-                                <h3 className="m-0">Session: {mySessionId}</h3>
-                                <div>
-                                    <button className="btn btn-outline-light me-2" onClick={switchCamera}>
-                                        Switch Camera
-                                    </button>
-                                    <button className="btn btn-danger" onClick={leaveSession}>
-                                        Leave Session
-                                    </button>
-                                </div>
-                            </div>
-                            <div className="video-container flex-grow-1 d-flex flex-wrap justify-content-center align-items-center bg-secondary p-3">
-                                {mainStreamManager !== null && (
-                                    <div className="main-video-container m-2">
-                                        <UserVideoComponent streamManager={mainStreamManager} />
-                                    </div>
-                                )}
-                                {subscribers.map((sub) => (
-                                    <div key={sub.stream.connection.connectionId} className="subscriber-video-container m-2">
-                                        <UserVideoComponent streamManager={sub} />
-                                    </div>
-                                ))}
-                            </div>
+                    <div className="session-header bg-dark text-white p-3 d-flex justify-content-between align-items-center">
+                        <h3 className="m-0">Session: {mySessionId}</h3>
+                        <div>
+                            <button className="btn btn-outline-light me-2" onClick={switchCamera}>
+                                Switch Camera
+                            </button>
+                            <button className="btn btn-outline-light me-2" onClick={toggleRecording}>
+                                {isRecording ? 'Stop Recording' : 'Start Recording'}
+                            </button>
+                            <button className="btn btn-danger" onClick={leaveSession}>
+                                Leave Session
+                            </button>
                         </div>
-                        <div className="col-md-3 chat-container d-flex flex-column bg-light">
-                            <div className="chat-messages flex-grow-1 p-3 overflow-auto">
+                    </div>
+                    <div className="main-container">
+                        <div className="video-container">
+                            {mainStreamManager !== null && (
+                                <div className="video-item">
+                                    <UserVideoComponent streamManager={mainStreamManager} />
+                                </div>
+                            )}
+                            {subscribers.map((sub) => (
+                                <div key={sub.stream.connection.connectionId} className="video-item">
+                                    <UserVideoComponent streamManager={sub} />
+                                </div>
+                            ))}
+                        </div>
+                        <div className="chat-container">
+                            <div className="chat-messages">
                                 {chatMessages.map((msg, index) => (
                                     <div
                                         key={index}
-                                        className={`chat-message p-2 mb-2 rounded ${
-                                            msg.connectionId === session.connection.connectionId
-                                                ? 'bg-primary text-white align-self-end'
-                                                : 'bg-secondary text-white'
-                                        }`}
+                                        className={`chat-message ${msg.connectionId === session.connection.connectionId ? 'own-message' : 'other-message'}`}
                                     >
                                         <strong>{msg.from}:</strong> {msg.message}
                                     </div>
                                 ))}
                             </div>
-                            <div className="chat-input-container p-3 border-top">
-                                <div className="input-group">
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        value={chatInput}
-                                        onChange={(e) => setChatInput(e.target.value)}
-                                        placeholder="Type a message..."
-                                    />
-                                    <button className="btn btn-primary" onClick={sendChatMessage}>
-                                        Send
-                                    </button>
-                                </div>
+                            <div className="chat-input">
+                                <input
+                                    type="text"
+                                    value={chatInput}
+                                    onChange={(e) => setChatInput(e.target.value)}
+                                    onKeyPress={(e) => e.key === 'Enter' && sendChatMessage()}
+                                    placeholder="Type a message..."
+                                />
+                                <button onClick={sendChatMessage}>Send</button>
                             </div>
                         </div>
                     </div>

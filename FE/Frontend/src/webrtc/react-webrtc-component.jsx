@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import adapter from 'webrtc-adapter';
 
 const WebRTCChat = () => {
     const [room, setRoom] = useState('');
@@ -9,14 +10,10 @@ const WebRTCChat = () => {
     const [participants, setParticipants] = useState([]);
     const webSocketRef = useRef(null);
     const localVideoRef = useRef(null);
-    const iceCandidatesBuffer = useRef({});
-    const [remoteVideos, setRemoteVideos] = useState({});
-
-    const remoteVideosRef = useRef({});
-    const [remoteVideoKeys, setRemoteVideoKeys] = useState([]);
-
     const peerConnectionsRef = useRef({});
     const localStreamRef = useRef(null);
+    const iceCandidatesBuffer = useRef({});
+    const [remoteVideos, setRemoteVideos] = useState({});
 
     const configuration = {
         iceServers: [
@@ -181,54 +178,10 @@ const WebRTCChat = () => {
         }
     };
 
-    const handleExistingParticipants = async (message) => {
-        console.log('Existing participants:', message.data);
-        setParticipants(message.data);
-
-        for (const participantName of message.data) {
-            if (participantName !== username) {
-                const peerConnection = await createPeerConnection(participantName);
-                try {
-                    const offer = await peerConnection.createOffer();
-                    await peerConnection.setLocalDescription(offer);
-                    console.log('Local description set');
-                    sendWebSocketMessage({
-                        id: 'receiveVideoFrom',
-                        sender: username,
-                        receiver: participantName,
-                        sdpOffer: offer.sdp,
-                    });
-                } catch (error) {
-                    console.error('Error creating offer:', error);
-                }
-            }
-        }
-    };
-
-    const handleNewParticipant = async (message) => {
-        console.log('New participant arrived:', message.name);
-        setParticipants(prev => [...prev, message.name]);
-        await createPeerConnection(message.name);
-    };
-
-    // 새로운 함수 추가
-    const handleNewChatMessage = (message) => {
-        const { user, message: chatMessage } = message.params;
-        setChatMessages((prevMessages) => [...prevMessages, { sender: user, text: chatMessage }]);
-    };
-
     const createPeerConnection = async (participantName) => {
         console.log('Creating peer connection for:', participantName);
         const peerConnection = new RTCPeerConnection(configuration);
         peerConnectionsRef.current[participantName] = peerConnection;
-
-        if (!localStreamRef.current) {
-            await setupLocalStream();
-        }
-
-        localStreamRef.current.getTracks().forEach((track) => {
-            peerConnection.addTrack(track, localStreamRef.current);
-        });
 
         peerConnection.onicecandidate = (event) => {
             if (event.candidate) {
@@ -250,20 +203,117 @@ const WebRTCChat = () => {
             }));
         };
 
-        peerConnection.oniceconnectionstatechange = (event) => {
+        peerConnection.oniceconnectionstatechange = () => {
             console.log(`ICE connection state for ${participantName}:`, peerConnection.iceConnectionState);
         };
 
-        // Handle buffered ICE candidates
-        if (iceCandidatesBuffer.current[participantName]) {
-            iceCandidatesBuffer.current[participantName].forEach((candidate) => {
-                peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
-                    .catch(e => console.error('Error adding buffered ice candidate:', e));
-            });
-            delete iceCandidatesBuffer.current[participantName];
+        peerConnection.onsignalingstatechange = () => {
+            console.log(`Signaling state for ${participantName}:`, peerConnection.signalingState);
+        };
+
+        if (!localStreamRef.current) {
+            await setupLocalStream();
         }
 
+        localStreamRef.current.getTracks().forEach((track) => {
+            peerConnection.addTrack(track, localStreamRef.current);
+        });
+
         return peerConnection;
+    };
+
+    const handleExistingParticipants = async (message) => {
+        console.log('Existing participants:', message.data);
+        setParticipants(message.data);
+
+        for (const participantName of message.data) {
+            if (participantName !== username) {
+                await initiatePeerConnection(participantName);
+            }
+        }
+    };
+
+    const initiatePeerConnection = async (participantName) => {
+        const peerConnection = await createPeerConnection(participantName);
+        try {
+            const offer = await peerConnection.createOffer();
+            await peerConnection.setLocalDescription(offer);
+            console.log('Local description set for', participantName);
+
+            sendWebSocketMessage({
+                id: 'receiveVideoFrom',
+                sender: username,
+                receiver: participantName,
+                sdpOffer: offer.sdp,
+            });
+        } catch (error) {
+            console.error('Error creating offer:', error);
+        }
+    };
+
+    const handleNewParticipant = async (message) => {
+        console.log('New participant arrived:', message.name);
+        setParticipants(prev => [...prev, message.name]);
+        await createPeerConnection(message.name);
+    };
+
+    const handleReceiveVideoAnswer = async (message) => {
+        console.log('Received video answer from:', message.name);
+        const peerConnection = peerConnectionsRef.current[message.name];
+        if (peerConnection) {
+            try {
+                const signalingState = peerConnection.signalingState;
+                console.log(`Current signaling state for ${message.name}:`, signalingState);
+    
+                if (signalingState === 'have-local-offer') {
+                    const remoteDesc = new RTCSessionDescription({
+                        type: 'answer',
+                        sdp: message.sdpAnswer,
+                    });
+                    await peerConnection.setRemoteDescription(remoteDesc);
+                    console.log('Remote description set successfully for', message.name);
+    
+                    // 처리되지 않은 ICE 후보 추가
+                    if (iceCandidatesBuffer.current[message.name]) {
+                        const candidates = iceCandidatesBuffer.current[message.name];
+                        for (const candidate of candidates) {
+                            await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+                        }
+                        delete iceCandidatesBuffer.current[message.name];
+                        console.log('Buffered ICE candidates added for', message.name);
+                    }
+                } else if (signalingState === 'stable') {
+                    console.warn(`Ignoring answer for ${message.name} as connection is already stable`);
+                } else {
+                    console.warn(`Unexpected signaling state for ${message.name}:`, signalingState);
+                }
+            } catch (error) {
+                console.error('Error setting remote description:', error);
+                // 오류 복구 시도
+                await setRemoteDescriptionOnFailure(peerConnection, message);
+            }
+        } else {
+            console.error('PeerConnection not found for', message.name);
+        }
+    };
+
+    const handleRemoteIceCandidate = async (message) => {
+        console.log('Handling remote ICE candidate from:', message.name);
+        const peerConnection = peerConnectionsRef.current[message.name];
+        if (peerConnection && peerConnection.remoteDescription) {
+            try {
+                await peerConnection.addIceCandidate(new RTCIceCandidate(message.candidate));
+                console.log('ICE candidate added successfully for', message.name);
+            } catch (error) {
+                console.error('Error adding received ice candidate:', error);
+            }
+        } else {
+            if (!iceCandidatesBuffer.current[message.name]) {
+                iceCandidatesBuffer.current[message.name] = [];
+            }
+            iceCandidatesBuffer.current[message.name].push(message.candidate);
+            console.log('ICE candidate buffered for', message.name);
+        }
     };
 
     const handleParticipantLeft = (message) => {
@@ -273,103 +323,41 @@ const WebRTCChat = () => {
             peerConnectionsRef.current[message.name].close();
             delete peerConnectionsRef.current[message.name];
         }
-        delete remoteVideosRef.current[message.name];
-        console.log('Before setRemoteVideoKeys:', Object.keys(remoteVideosRef.current));
-        setRemoteVideoKeys(Object.keys(remoteVideosRef.current));
-        console.log('After setRemoteVideoKeys called');
+        setRemoteVideos(prevVideos => {
+            const newVideos = {...prevVideos};
+            delete newVideos[message.name];
+            return newVideos;
+        });
     };
 
-    const handleReceiveVideoAnswer = async (message) => {
-        console.log('Received video answer from:', message.name);
-        const peerConnection = peerConnectionsRef.current[message.name];
-        if (peerConnection) {
-            try {
+    const setRemoteDescriptionOnFailure = async (peerConnection, message) => {
+        try {
+            // 현재 연결 상태 확인
+            console.log('Attempting to recover from setRemoteDescription failure');
+            console.log('Current signaling state:', peerConnection.signalingState);
+            console.log('Current connection state:', peerConnection.connectionState);
+            console.log('Current ICE connection state:', peerConnection.iceConnectionState);
+    
+            // 연결 재설정
+            if (peerConnection.signalingState !== 'closed') {
+                await peerConnection.setLocalDescription(await peerConnection.createOffer());
                 const remoteDesc = new RTCSessionDescription({
                     type: 'answer',
                     sdp: message.sdpAnswer,
                 });
                 await peerConnection.setRemoteDescription(remoteDesc);
-                console.log('Remote description set successfully');
-            } catch (error) {
-                console.error('Error setting remote description:', error);
-            }
-        }
-    };
-
-    const handleRemoteIceCandidate = async (message) => {
-        console.log('Handling remote ICE candidate from:', message.name);
-        const peerConnection = peerConnectionsRef.current[message.name];
-        if (peerConnection) {
-            try {
-                await peerConnection.addIceCandidate(new RTCIceCandidate(message.candidate));
-                console.log('ICE candidate added successfully');
-            } catch (error) {
-                console.error('Error adding received ice candidate:', error);
-            }
-        } else {
-            if (!iceCandidatesBuffer.current[message.name]) {
-                iceCandidatesBuffer.current[message.name] = [];
-            }
-            iceCandidatesBuffer.current[message.name].push(message.candidate);
-            console.log('ICE candidate buffered');
-        }
-    };
-    const monitorWebRTCConnection = (peerConnection) => {
-        peerConnection.addEventListener('iceconnectionstatechange', () => {
-            console.log('ICE connection state changed:', peerConnection.iceConnectionState);
-        });
-
-        peerConnection.addEventListener('connectionstatechange', () => {
-            console.log('Connection state changed:', peerConnection.connectionState);
-        });
-
-        peerConnection.addEventListener('icegatheringstatechange', () => {
-            console.log('ICE gathering state changed:', peerConnection.iceGatheringState);
-        });
-
-        peerConnection.addEventListener('signalingstatechange', () => {
-            console.log('Signaling state changed:', peerConnection.signalingState);
-        });
-
-        // Monitor ICE candidate gathering
-        let iceCandidatesGathered = 0;
-        peerConnection.addEventListener('icecandidate', (event) => {
-            if (event.candidate) {
-                iceCandidatesGathered++;
-                console.log('New ICE candidate gathered:', event.candidate.candidate);
-                console.log('Total ICE candidates gathered:', iceCandidatesGathered);
+                console.log('Connection recovered for', message.name);
             } else {
-                console.log('ICE gathering completed. Total candidates:', iceCandidatesGathered);
+                console.log('Connection is closed, cannot recover');
             }
-        });
+        } catch (error) {
+            console.error('Failed to recover connection:', error);
+        }
+    };
 
-        // Monitor data channel state
-        peerConnection.addEventListener('datachannel', (event) => {
-            const dataChannel = event.channel;
-            console.log('Data channel created:', dataChannel.label);
-
-            dataChannel.addEventListener('open', () => {
-                console.log('Data channel opened:', dataChannel.label);
-            });
-
-            dataChannel.addEventListener('close', () => {
-                console.log('Data channel closed:', dataChannel.label);
-            });
-        });
-
-        // Monitor stats
-        const getStats = () => {
-            peerConnection.getStats(null).then((stats) => {
-                stats.forEach((report) => {
-                    if (report.type === 'candidate-pair' && report.state === 'succeeded') {
-                        console.log('Active ICE candidate pair:', report);
-                    }
-                });
-            });
-        };
-
-        // Get stats every 5 seconds
-        setInterval(getStats, 5000);
+    const handleNewChatMessage = (message) => {
+        const { user, message: chatMessage } = message.params;
+        setChatMessages((prevMessages) => [...prevMessages, { sender: user, text: chatMessage }]);
     };
 
     const sendChatMessage = () => {
@@ -401,7 +389,7 @@ const WebRTCChat = () => {
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">WebRTC Chat and Video Call</h1>
-            <h1>Build ver.67</h1>
+            <h1>Build ver.67 (with adapter.js)</h1>
             <div className="mb-4">
                 <input
                     type="text"
@@ -410,7 +398,13 @@ const WebRTCChat = () => {
                     placeholder="Enter your username"
                     className="border p-2 mr-2"
                 />
-                <input type="text" value={room} onChange={(e) => setRoom(e.target.value)} placeholder="Enter room name" className="border p-2 mr-2" />
+                <input 
+                    type="text" 
+                    value={room} 
+                    onChange={(e) => setRoom(e.target.value)} 
+                    placeholder="Enter room name" 
+                    className="border p-2 mr-2" 
+                />
                 <button onClick={createRoom} className="bg-blue-500 text-white p-2 rounded mr-2">
                     Create Room
                 </button>
@@ -437,7 +431,7 @@ const WebRTCChat = () => {
                                         if (el) el.srcObject = stream;
                                     }}
                                 />
-                                <p className="text-center">{participantName}</p>
+<p className="text-center">{participantName}</p>
                             </div>
                         ))}
                     </div>

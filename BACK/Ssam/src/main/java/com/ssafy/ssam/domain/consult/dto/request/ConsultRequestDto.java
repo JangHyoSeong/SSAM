@@ -1,7 +1,7 @@
 package com.ssafy.ssam.domain.consult.dto.request;
 
 import com.ssafy.ssam.domain.consult.entity.Appointment;
-import com.ssafy.ssam.domain.consult.entity.ConsultTopic;
+import com.ssafy.ssam.domain.consult.entity.SummaryTopic;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -26,7 +25,7 @@ public class ConsultRequestDto {
     private LocalDate actualDate;
     private String content;
     private String videoUrl;
-    private ConsultTopic topic;
+    private SummaryTopic topic;
     private String webrtcSessionId;
     private String accessCode;
 }

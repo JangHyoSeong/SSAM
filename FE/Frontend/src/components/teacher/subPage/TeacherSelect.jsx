@@ -41,7 +41,7 @@ const TeacherSelect = () => {
           </div>
         </NavLink>
         <NavLink
-          to="/teacherappointment"
+          to="/teacherreservationmanagement"
           className={`${styles.menuBox} ${styles.menuBox3}`}
         >
           <div className={styles.menuTxt}>

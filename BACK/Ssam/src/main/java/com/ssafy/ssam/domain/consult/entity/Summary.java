@@ -31,6 +31,8 @@ public class Summary {
     @Column(name = "profanity_count", nullable = false)
     private int profanityCount;
 
+    @Enumerated(EnumType.STRING)
+    private SummaryTopic topic;
 
     @Column(name = "profanity_level", nullable = false, length = 10)
     private String profanityLevel;

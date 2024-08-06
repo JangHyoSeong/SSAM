@@ -53,6 +53,7 @@ public class UserBoardRelationService {
 
         return relations != null ? relations.stream()
                 .map(relation -> StudentRegistInfoDTO.builder()
+                        .studentId(relation.getUser().getUserId())
                         .name(relation.getUser().getName())
                         .username(relation.getUser().getUsername())
                         .followDate(relation.getFollowDate().toLocalDate())
@@ -138,7 +139,6 @@ public class UserBoardRelationService {
                 .map(consult -> ConsultSummaryDTO.builder()
                                 .date(consult.getActualDate().toLocalDate())
                                 .runningTime(consult.getRunningTime())
-                                .consultType(consult.getTopic().toString())
                                 .build()
                 )
                 .collect(Collectors.toList());

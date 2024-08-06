@@ -34,7 +34,12 @@ public class Appointment {
     private User teacher;
 
     @Column(length = 50)
-    private String topic;
+    private String description;
+
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'OTHER'")
+    @Column(nullable = false)
+    private AppointmentTopic topic;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_time", columnDefinition = "TIMESTAMP", nullable = false)
@@ -52,7 +57,8 @@ public class Appointment {
         return Appointment.builder()
                 .teacher(teacher)
                 .student(user)
-                .topic(appointmentRequestDto.getTopic())
+                .description(appointmentRequestDto.getDescription())
+                .topic(AppointmentTopic.valueOf(appointmentRequestDto.getTopic().toUpperCase()))
                 .startTime(appointmentRequestDto.getStartTime())
                 .endTime(appointmentRequestDto.getEndTime())
                 .build();
@@ -64,7 +70,8 @@ public class Appointment {
                 .teacherId(appointment.getTeacher().getUserId())
                 .startTime(appointment.getStartTime())
                 .endTime(appointment.getEndTime())
-                .topic(appointment.getTopic())
+                .description(appointment.getDescription())
+                .topic(appointment.getTopic().toString())
                 .status(appointment.getStatus())
                 .build();
     }

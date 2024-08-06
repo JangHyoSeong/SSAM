@@ -31,7 +31,6 @@ public class Summary {
     @Column(name = "profanity_count", nullable = false)
     private int profanityCount;
 
-
     @Column(name = "profanity_level", nullable = false, length = 10)
     private String profanityLevel;
 

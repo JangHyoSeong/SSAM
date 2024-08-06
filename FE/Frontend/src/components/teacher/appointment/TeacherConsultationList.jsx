@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
-//
+//api
 import { fetchApiReservationList } from "../../../apis/stub/54-57 상담/apiStubReservation";
+import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
+// store
 import useConsultationStore from "../../../store/ConsultationStore";
+import useUserInitialStore from "../../../store/UserInitialStore";
 //
 import ConsultationApproveModal from "./ConsultationApproveModal";
 import ConsultationRejectModal from "./ConsultationRejectModal";
@@ -58,38 +61,57 @@ ConsultationItem.propTypes = {
   status: PropTypes.string.isRequired,
 };
 
+// 여기부터 추가한 코드입니다.
 const TeacherConsultationList = () => {
-  //
+  // 상담 목록 정보
   const { reservationData, setReservationData } = useConsultationStore(
     (state) => ({
       reservationData: state.reservationData,
       setReservationData: state.setReservationData,
     })
   );
+  // 사용자 초기 정보
+  const { userInitialData, setUserInitialData } = useUserInitialStore(
+    (state) => ({
+      userInitialData: state.userInitialData,
+      setUserInitialData: state.setUserInitialData,
+    })
+  );
 
+  // 데이터 사용
   useEffect(() => {
     const getData = async () => {
       try {
-        const data = await fetchApiReservationList();
-        console.log("Fetched data:", data); // 데이터 확인
-        setReservationData(data);
+        const [reservationList, userInitial] = await Promise.all([
+          fetchApiReservationList(),
+          fetchApiUserInitial(),
+        ]);
+        // 데이터 잘 받는지 확인
+        console.log("Fetched reservation data:", reservationList);
+        console.log("Fetched user initial data:", userInitial);
+        setReservationData(reservationList);
+        setUserInitialData(userInitial);
       } catch (error) {
-        console.error("Failed to fetch user data:", error);
+        console.error("Failed to fetch data:", error);
       }
     };
 
     getData();
-  }, [setReservationData]);
+  }, [setReservationData, setUserInitialData]);
 
-  console.log("Current reservation data:", reservationData); // 상태 확인
-
-  if (!reservationData) {
-    return <div>Loading...</div>;
+  if (!userInitialData) {
+    return <div>Loading user initial data...</div>;
   }
+
+  if (!reservationData || reservationData.length === 0) {
+    return <div>Loading reservations or no reservations available...</div>;
+  }
+
   // 밑에 주석 풀려면 이 return문을 아래의 return문과 합치면됨
   return (
     <div>
       <h1>상담 목록</h1>
+      {/* 상담 목록은 배열이라서 map을 사용한다. */}
       {reservationData.map((item) => (
         <div key={item.appointmentId}>
           <h2>Topic: {item.topic}</h2>
@@ -101,6 +123,16 @@ const TeacherConsultationList = () => {
           <p>Teacher ID: {item.teacherId}</p>
         </div>
       ))}
+
+      <h1>유저목록</h1>
+      {/* 유저 목록은 객체라서 map사용하면 안된다. */}
+      <pre>{JSON.stringify(userInitialData, null, 2)}</pre>
+      {/* <p>User ID: {userInitialData.userId}</p>
+      <p>Username: {userInitialData.username}</p>
+      <p>Name: {userInitialData.name}</p>
+      <p>School: {userInitialData.school}</p>
+      <p>Board ID: {userInitialData.boardId}</p>
+      <p>Role: {userInitialData.role}</p> */}
     </div>
   );
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
 //api
-import { fetchApiReservationList } from "../../../apis/stub/54-57 상담/apiStubReservation";
+import { fetchApiReservationList } from "../../../apis/stub/55-59 상담/apiStubReservation";
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
 // store
 import useConsultationStore from "../../../store/ConsultationStore";

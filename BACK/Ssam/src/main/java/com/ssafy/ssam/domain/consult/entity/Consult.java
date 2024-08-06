@@ -1,16 +1,16 @@
 package com.ssafy.ssam.domain.consult.entity;
 
+import com.ssafy.ssam.domain.consult.dto.request.ConsultRequestDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+@Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -41,9 +41,6 @@ public class Consult {
     @Column(name = "video_url")
     private String videoUrl;
 
-    @Enumerated(EnumType.STRING)
-    private ConsultTopic topic;
-
     @Column(name = "webrtc_session_id", length = 100)
     private String webrtcSessionId;
 
@@ -58,5 +55,17 @@ public class Consult {
 
     @Column(name = "att_classroom", columnDefinition = "TINYINT")
     private Integer attClassroom;
+
+    public static Consult toConsult(ConsultRequestDto requestDto) {
+        return Consult.builder()
+                .appointment(requestDto.getAppointment())
+                .runningTime((int) Duration.between(LocalDateTime.now(), requestDto.getActualDate()).toMinutes())
+                .actualDate(requestDto.getActualDate())
+                .accessCode(requestDto.getAccessCode())
+                .webrtcSessionId(requestDto.getWebrtcSessionId())
+                .content(requestDto.getContent())
+                .videoUrl(requestDto.getVideoUrl())
+                .build();
+    }
 
 }

@@ -1,20 +1,23 @@
 import { useState, useRef, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faSave } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios'; // Ensure Axios is imported
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faSave } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 import styles from "./TeacherClassroom.module.scss";
 import TeacherStudent from "./TeacherStudent";
 import TeacherStudentDetail from "./TeacherStudentDetail";
-import ClassImage from "../../../assets/background.png"; 
-import whiteshare from '../../../assets/whiteshare.png';
+import ClassImage from "../../../assets/background.png";
+import whiteshare from "../../../assets/whiteshare.png";
 
 const TeacherClassroom = () => {
-  const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [noticeContent, setNoticeContent] = useState('');
-  
+  const [noticeContent, setNoticeContent] = useState("");
+  const [classInfo, setClassInfo] = useState("");
+  const [isEditingInfo, setIsEditingInfo] = useState(false);
+  const [selectedStudentId, setSelectedStudentId] = useState(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState(ClassImage);
   const textareaRef = useRef(null);
+  const infoTextareaRef = useRef(null);
   const maxHeight = 100;
 
   useEffect(() => {
@@ -26,38 +29,70 @@ const TeacherClassroom = () => {
     };
 
     if (textareaRef.current) {
-      textareaRef.current.addEventListener('input', handleInput);
+      textareaRef.current.addEventListener("input", handleInput);
     }
-    
+
     return () => {
       if (textareaRef.current) {
-        textareaRef.current.removeEventListener('input', handleInput);
+        textareaRef.current.removeEventListener("input", handleInput);
       }
     };
   }, [isEditing]);
 
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
-
-  const handleSaveClick = async () => {
+  const noticeUpdate = async () => {
     try {
       const token = localStorage.getItem("USER_TOKEN");
-      await axios.put('http://localhost:8081/v1/classrooms/teachers/notice/1', {
-        notice: noticeContent,
+      const response = await axios.put(
+        "http://localhost:8081/v1/classrooms/teachers/notice/1",
+        { notice: noticeContent },
+        {
           headers: {
             "Content-Type": "application/json",
             authorization: `${token}`,
+          },
         }
-      });
+      );
+      console.log("성공", response);
       setIsEditing(false);
     } catch (error) {
       console.error("Failed to save banner content:", error);
     }
   };
 
+  const bannerUpdate = async () => {
+    try {
+      const token = localStorage.getItem("USER_TOKEN");
+      const response = await axios.put(
+        "http://localhost:8081/v1/classrooms/teachers/banner/1",
+        { banner: classInfo },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `${token}`,
+          },
+        }
+      );
+      console.log("성공", response);
+      setIsEditingInfo(false);
+    } catch (error) {
+      console.error("Failed to save class info:", error);
+    }
+  };
+
+  const handleEditUpdate = () => {
+    setIsEditing(true);
+  };
+
   const handleContentChange = (e) => {
     setNoticeContent(e.target.value);
+  };
+
+  const handleEditInfoUpdate = () => {
+    setIsEditingInfo(true);
+  };
+
+  const handleInfoChange = (e) => {
+    setClassInfo(e.target.value);
   };
 
   return (
@@ -68,7 +103,7 @@ const TeacherClassroom = () => {
           className={`${styles.navItem} ${
             selectedStudentId === null ? styles.active : styles.altActive
           }`}
-          onClick={() => setSelectedStudentId(null)}
+          onUpdate={() => setSelectedStudentId(null)}
         >
           학급 관리
         </NavLink>
@@ -82,7 +117,7 @@ const TeacherClassroom = () => {
           <img src={whiteshare} className={styles.inputFile} />
         </label>
         <img
-          src={ClassImage}
+          src={uploadedImageUrl}
           alt="Class Management"
           className={styles.classImage}
         />
@@ -91,9 +126,17 @@ const TeacherClassroom = () => {
         <div className={styles.noticeBox}>
           <h2>알림 사항</h2>
           {isEditing ? (
-            <FontAwesomeIcon icon={faSave} onClick={handleSaveClick} className={styles.editIcon} />
+            <FontAwesomeIcon
+              icon={faSave}
+              onUpdate={noticeUpdate}
+              className={styles.editIcon}
+            />
           ) : (
-            <FontAwesomeIcon icon={faEdit} onClick={handleEditClick} className={styles.editIcon} />
+            <FontAwesomeIcon
+              icon={faEdit}
+              onUpdate={handleEditUpdate}
+              className={styles.editIcon}
+            />
           )}
           {isEditing ? (
             <div className={styles.editBox}>
@@ -108,17 +151,45 @@ const TeacherClassroom = () => {
             <p>{noticeContent}</p>
           )}
         </div>
+
         <div className={styles.classInfoBox}>
-          <h2>자라나는 새싹, 돋아나는 희망</h2>
-          <p>삼성초등학교 1학년 2반</p>
+          <h2>클래스 정보</h2>
+          {isEditingInfo ? (
+            <FontAwesomeIcon
+              icon={faSave}
+              onUpdate={bannerUpdate}
+              className={styles.editIcon}
+            />
+          ) : (
+            <FontAwesomeIcon
+              icon={faEdit}
+              onUpdate={handleEditInfoUpdate}
+              className={styles.editIcon}
+            />
+          )}
+          {isEditingInfo ? (
+            <div className={styles.editBox}>
+              <textarea
+                ref={infoTextareaRef}
+                value={classInfo}
+                onChange={handleInfoChange}
+                className={styles.editTextarea}
+              />
+            </div>
+          ) : (
+            <p>{classInfo}</p>
+          )}
         </div>
+
         <div className={styles.inquiryBox}>
           <h2>문의사항</h2>
           <div className={styles.inquiryItem}>
             <div className={styles.inquiryQuestion}>점심메뉴가 뭔가요</div>
           </div>
           <div className={styles.inquiryItem}>
-            <div className={styles.inquiryQuestion}>교무실 전화번호가 뭔가요</div>
+            <div className={styles.inquiryQuestion}>
+              교무실 전화번호가 뭔가요
+            </div>
           </div>
           <div className={styles.inquiryItem}>
             <div className={styles.inquiryQuestion}>소풍 날짜 언제죠</div>

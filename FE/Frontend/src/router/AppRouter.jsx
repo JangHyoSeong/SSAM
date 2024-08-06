@@ -75,7 +75,7 @@ const AppRouter = () => {
           {/* layouts */}
           <Route element={<QuestionProviderLayout />}>
             <Route
-              path="/teacherquestion/:boardId"
+              path="/teacherquestion"
               element={<TeacherQuestion />}
             />
             <Route path="/teacherclassroom" element={<TeacherClassroom />} />

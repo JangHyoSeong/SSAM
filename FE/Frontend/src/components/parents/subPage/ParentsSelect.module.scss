@@ -1,46 +1,21 @@
-$menu-primary-color: #5285ee;
-$bg-color-invite-box: #dae9ff;
-$text-size-large: 120%;
-$animation-fadein-duration: 1s;
-$animation-move-duration: 5s;
-$border-radius-large: 25px;
-
-.menuArray {
-  height: 90vh;
-}
-
-.inviteCodeBox {
-  position: relative;
-  top: 5%;
-  left: 25%;
-  align-items: center;
-  width: 50vw;
-  height: 20vh;
-  background-color: $bg-color-invite-box;
-  border-radius: $border-radius-large;
-  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.4);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  opacity: 0;
-  animation: fadeIn $animation-fadein-duration ease-in forwards;
-  text-align: center;
-
-  &:hover {
-    transform: translateY(-10px);
-    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
+@keyframes fadeIn {
+  to {
+    opacity: 1;
   }
 }
 
-.inviteTxtBox {
-  padding: 1.5%;
+@keyframes moveUpDown {
+  0%,
+  100% {
+    top: 21%;
+  }
+  50% {
+    top: 23%;
+  }
 }
 
-.inviteCodeBox button {
-  padding: 1% 4%;
-  border-radius: $border-radius-large;
-  color: $menu-primary-color;
-  font-size: $text-size-large;
-  border-color: $menu-primary-color;
-  background-color: white;
+.menuArray {
+  height: 60vh;
 }
 
 .menuBoxArray {
@@ -52,45 +27,39 @@ $border-radius-large: 25px;
 
 .menuBox {
   width: 24vw;
-  background-color: $menu-primary-color;
-  border-radius: $border-radius-large;
+  background-color: #5285ee;
+  border-radius: 25px;
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.4);
   text-decoration: none;
-  color: white;
+  color: #ffffff;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-  &:hover {
-    transform: translateY(-10px);
-    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
-  }
+.menuBox:hover {
+  transform: translateY(-10px);
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
 }
 
 .menuBox1 {
   opacity: 0;
-  animation: fadeIn $animation-fadein-duration ease-in forwards;
+  animation: fadeIn 1s ease-in forwards;
 }
 
 .menuBox2 {
   opacity: 0;
-  animation: fadeIn $animation-fadein-duration ease-in 0.05s forwards;
+  animation: fadeIn 1s ease-in 0.05s forwards;
 }
 
 .menuBox3 {
   opacity: 0;
-  animation: fadeIn $animation-fadein-duration ease-in 0.1s forwards;
-}
-
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
+  animation: fadeIn 1s ease-in 0.1s forwards;
 }
 
 .menuTxt {
   position: relative;
   top: 5%;
   text-align: center;
-  font-size: $text-size-large;
+  font-size: 120%;
 }
 
 .imgArray {
@@ -98,7 +67,7 @@ $border-radius-large: 25px;
   justify-content: center;
   width: 100%;
   height: 100%;
-  margin: 10% 0;
+  margin: 10% 0%;
 }
 
 .classroomImg {

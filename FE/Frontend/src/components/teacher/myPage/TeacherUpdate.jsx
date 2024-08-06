@@ -1,54 +1,54 @@
 // // 선생님 정보 수정 페이지 컴포넌트
-import { useEffect, useState } from "react";
+import axios from "axios";
 import { NavLink } from "react-router-dom";
-import useProfileStore from "../../../apis/stub/20-22 사용자정보/apiStubProfile";
+import { useState, useEffect } from "react";
 import styles from "./TeacherUpdate.module.scss";
 
-const TeacherUpdate = () => {
-  const { profile, init, fetchProfileData, updateProfile } = useProfileStore();
-  const [formData, setFormData] = useState({ ...profile });
-  const [error, setError] = useState("");
+export const useProfile = () => {
+  const [profileData, setProfileData] = useState({
+    profileImage: "",
+    name: "",
+    birth: "",
+    school: "",
+    username: "",
+    email: "",
+    selfPhone: "",
+    otherPhone: "",
+  });
 
   useEffect(() => {
-    init();
     const fetchData = async () => {
+      const token = localStorage.getItem("USER_TOKEN");
       try {
-        const data = await fetchProfileData("some-user-id");
-        setFormData(data);
-      } catch (err) {
-        setError("Failed to fetch profile data.");
+        const response = await axios.get("http://localhost:8081/v1/users", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+        });
+        setProfileData({
+          profileImage: response.data.profileImage,
+          name: response.data.name,
+          birth: response.data.birth,
+          school: response.data.school,
+          username: response.data.username,
+          email: response.data.email,
+          selfPhone: response.data.selfPhone,
+          otherPhone: response.data.otherPhone,
+        });
+      } catch (error) {
+        console.error("Failed to fetch profile data:", error);
       }
     };
+
     fetchData();
-  }, [init, fetchProfileData]);
+  }, []);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  return profileData;
+};
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setFormData({
-      ...formData,
-      imgUrl: file,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await updateProfile(formData);
-      alert("Profile updated successfully!");
-      setError(""); // Clear any previous errors
-    } catch (error) {
-      setError("Failed to update profile. Please try again.");
-    }
-  };
-
+const TeacherUpdate = () => {
+  const profile = useProfile();
   return (
     <div className={styles.Container}>
       <div className={styles.menuNavbar}>
@@ -58,31 +58,16 @@ const TeacherUpdate = () => {
         </NavLink>
       </div>
       <div className={styles.infoArray}>
-        <form className={styles.infoForm} onSubmit={handleSubmit}>
+        <form className={styles.infoForm}>
           <table className={styles.tableArray}>
             <tbody>
               <tr>
                 <th>사진</th>
                 <td className={styles.imgTd}>
-                  <div className={styles.profileImg}>
-                    {formData.imgUrl && (
-                      <img
-                        src={URL.createObjectURL(formData.imgUrl)}
-                        alt="Profile"
-                      />
-                    )}
-                  </div>
+                  <div className={styles.profileImg} />
                   <div className={styles.btn}>
-                    <input
-                      type="file"
-                      className={styles.imgBtn}
-                      onChange={handleFileChange}
-                    />
-                    <button
-                      type="button"
-                      className={styles.imgBtn}
-                      onClick={() => setFormData({ ...formData, imgUrl: "" })}
-                    >
+                    <input type="file" className={styles.imgBtn} />
+                    <button type="button" className={styles.imgBtn}>
                       삭제
                     </button>
                   </div>
@@ -91,67 +76,37 @@ const TeacherUpdate = () => {
               <tr>
                 <th>이름</th>
                 <td>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                  />
+                  <input type="text" name="name" value={profile.name} />
                 </td>
               </tr>
               <tr>
                 <th>생년월일</th>
                 <td>
-                  <input
-                    type="date"
-                    name="birth"
-                    value={formData.birth}
-                    onChange={handleChange}
-                  />
+                  <input type="date" name="birth" value={profile.birth} />
                 </td>
               </tr>
               <tr>
                 <th>학교</th>
                 <td>
-                  <input
-                    type="text"
-                    name="schoolId"
-                    value={formData.schoolId}
-                    onChange={handleChange}
-                  />
+                  <input type="text" name="school" value={profile.school} />
                 </td>
               </tr>
               <tr>
                 <th>아이디</th>
                 <td>
-                  <input
-                    type="text"
-                    name="userId"
-                    value={formData.userId}
-                    onChange={handleChange}
-                  />
+                  <input type="text" name="username" value={profile.username} />
                 </td>
               </tr>
               <tr>
                 <th>이메일</th>
                 <td>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                  />
+                  <input type="email" name="email" value={profile.email} />
                 </td>
               </tr>
               <tr>
                 <th>휴대전화</th>
                 <td>
-                  <input
-                    type="text"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                  />
+                  <input type="text" name="phone" value={profile.selfPhone} />
                 </td>
               </tr>
             </tbody>
@@ -160,7 +115,7 @@ const TeacherUpdate = () => {
             <button type="submit" className={styles.formBtn}>
               저장
             </button>
-            <button type="button" className={styles.formBtn} onClick={init}>
+            <button type="button" className={styles.formBtn}>
               취소
             </button>
           </div>
@@ -173,12 +128,12 @@ const TeacherUpdate = () => {
 export default TeacherUpdate;
 // import React from "react";
 // import { NavLink } from "react-router-dom";
-// import useProfileStore from "../../../apis/stub/20-22 사용자정보/profile";
+// import useProfile from "../../../apis/stub/20-22 사용자정보/profile";
 // import styles from "./TeacherUpdate.module.scss";
 
 // const TeacherUpdate = () => {
 //   const UserProfile = () => {
-//     const { init } = useProfileStore();
+//     const { init } = useProfile();
 
 //     // Example usage of the store functions
 //     React.useEffect(() => {

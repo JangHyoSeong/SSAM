@@ -148,9 +148,7 @@ const VideoChatComponent = () => {
       session.on('signal:chat', (event) => {
         const data = JSON.parse(event.data);
         //console.warn(session.connection.connectionId);
-        console.warn(myUserName);
-        console.warn(data.from);
-        if(data.from != session.connection.connectionId){
+        if(data.from != myUserName){
             setChatMessages((prevMessages) => [...prevMessages, data]);
         }
       });

@@ -9,7 +9,7 @@ const ParentsUpdate = () => {
         <div className={update.updateMenu}>
           <h2>회원정보 수정</h2>
         </div>
-        <NavLink to="/parentspasswordchange" className={update.changeMenu}>
+        <NavLink to="/studentpasswordchange" className={update.changeMenu}>
           <h2>비밀번호 변경</h2>
         </NavLink>
       </div>

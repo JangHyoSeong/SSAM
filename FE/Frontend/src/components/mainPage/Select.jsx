@@ -25,14 +25,14 @@ const Select = () => {
           </div>
         </NavLink>
         <NavLink
-          to="/parentslogin"
+          to="/studentlogin"
           className={`${styles.menuBox} ${styles.menuBox2}`}
         >
           <div className={styles.menuTxt}>
             <h1>학생 / 학부모</h1>
             <h3>학생과 자녀가 있는 학부모</h3>
             <div className={styles.imgArray}>
-              <img src={parents} className={styles.parentsImg} alt="parents" />
+              <img src={parents} className={styles.parentsImg} alt="student" />
             </div>
           </div>
         </NavLink>

@@ -129,7 +129,7 @@ const ParentsJoin = () => {
             </form>
           </div>
           <div className={join.joinBtnArray}>
-            <NavLink to="/parentslogin" type="submit" className={join.joinBtn}>
+            <NavLink to="/studentlogin" type="submit" className={join.joinBtn}>
               가입
             </NavLink>
             <button type="button" className={join.joinBtn}>

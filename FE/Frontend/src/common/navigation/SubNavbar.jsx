@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import useUserInitialStore from "../../store/UserInitialStore";
 import AlarmModal from "./AlarmModal";
 
 // style, image
@@ -8,10 +9,15 @@ import alarm from "../../assets/alarm.png";
 
 const SubNavbar = () => {
   // 상태관리
+  const { userInitialData } = useUserInitialStore((state) => ({
+    userInitialData: state.userInitialData,
+  }));
+  const rolePath = userInitialData?.role === "TEACHER" ? "teacher" : "student";
+
+  // 로컬 저장소에 저장된 "USER_TOKEN"키 값이 있는지 확인하고
+  // 그 결과를 boolean으로 변환한다.
   const [isModalOpen, setModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(
-    // 로컬 저장소에 저장된 "USER_TOKEN"키 값이 있는지 확인하고
-    // 그 결과를 boolean으로 변환한다.
     !!localStorage.getItem("USER_TOKEN")
   );
   const navigate = useNavigate();
@@ -21,7 +27,6 @@ const SubNavbar = () => {
   };
 
   // 로그아웃되면 hom으로 redirection
-  // 백에서 role 속성을 추가해준다면 role에 따라 선생 or 학생 로그인 페이지로 렌더링 하면 됨
   const handleLogout = () => {
     localStorage.removeItem("USER_TOKEN");
     localStorage.removeItem("USER_NAME");
@@ -45,7 +50,7 @@ const SubNavbar = () => {
   return (
     <div className={styles.navArray}>
       <img src={alarm} className={styles.alarm} onClick={toggleModal} />
-      <NavLink to="/teacherupdate" className={styles.nav}>
+      <NavLink to={`/${rolePath}update`} className={styles.nav}>
         회원정보
       </NavLink>
       |

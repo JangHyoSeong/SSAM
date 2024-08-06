@@ -1,7 +1,7 @@
 package com.ssafy.ssam.domain.consult.dto.response;
 
 import com.ssafy.ssam.domain.consult.entity.Appointment;
-import com.ssafy.ssam.domain.consult.entity.ConsultTopic;
+import com.ssafy.ssam.domain.consult.entity.SummaryTopic;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +18,6 @@ public class ConsultResponseDto {
     private Integer runningTime;
     private String content;
     private String videoUrl;
-    private ConsultTopic topic;
     private String webrtcSessionId;
     private String accessCode;
     private Integer attSchool;

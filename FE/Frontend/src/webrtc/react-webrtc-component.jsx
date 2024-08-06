@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 
-const API_BASE_URL = 'http://localhost:8081/v1/video'; // Spring 백엔드 API 기본 URL
+//const API_BASE_URL = 'http://localhost:8081/v1/video'; // Spring 백엔드 API 기본 URL
+const API_BASE_URL = 'https://i11e201.p.ssafy.io/api/v1/video';
 
 const VideoChatComponent = () => {
     const [mySessionId, setMySessionId] = useState('SessionA');

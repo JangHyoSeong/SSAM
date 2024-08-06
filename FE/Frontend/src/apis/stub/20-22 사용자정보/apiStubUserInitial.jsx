@@ -13,9 +13,9 @@ export const fetchApiUserInitial = async () => {
   return {
     userId: response.data.userId,
     username: response.data.username,
-    name: response.data.name, 
+    name: response.data.name,
     school: response.data.school,
     boardId: response.data.boardId,
-    role: response.data.role
+    role: response.data.role,
   };
 };

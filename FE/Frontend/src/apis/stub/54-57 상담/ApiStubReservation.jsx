@@ -1,52 +1,28 @@
-import { useEffect, useState } from "react";
+// 데이터 요청
 import axios from "axios";
 
-const ApiStubReservation = () => {
-  const [userData, setUserData] = useState(null);
-
-  useEffect(() => {
-    const token = localStorage.getItem("USER_TOKEN");
-    axios
-      .get("http://localhost:8081/v1/users/initial", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${token}`,
-        },
-      })
-      .then((response) => {
-        setUserData(response.data);
-      })
-      .catch((error) => {
-        console.error("API 요청 중 에러 발생:", error);
-      });
-  }, []);
-
-  return (
-    <div>
-      {userData && (
-        <div>
-          <p>
-            <strong>ID:</strong> {userData.userId}
-          </p>
-          <p>
-            <strong>Username:</strong> {userData.username}
-          </p>
-          <p>
-            <strong>Name:</strong> {userData.name}
-          </p>
-          <p>
-            <strong>School:</strong> {userData.school}
-          </p>
-          <p>
-            <strong>Board ID:</strong> {userData.boardId}
-          </p>
-          <p>
-            <strong>Role:</strong> {userData.role}
-          </p>
-        </div>
-      )}
-    </div>
-  );
+// 상담확인
+export const fetchApiReservationList = async () => {
+  const token = localStorage.getItem("USER_TOKEN");
+  // ${teacherId} = 3
+  const response = await axios.get("http://localhost:8081/v1/consults/3", {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `${token}`,
+    },
+  });
+  return response.data; // 응답 데이터 반환
 };
 
-export default ApiStubReservation;
+// 상담신청
+export const fetchApiRequestReservation = async () => {
+  const token = localStorage.getItem("USER_TOKEN");
+  // ${teacherId} = 3
+  const response = await axios.post("http://localhost:8081/v1/consults/3", {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `${token}`,
+    },
+  });
+  return response.data; // 응답 데이터 반환
+};

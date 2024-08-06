@@ -1,15 +1,30 @@
-import React, { useState } from "react";
-import styles from "./TeacherQuestion.module.scss";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { FaTrash, FaEdit, FaSave } from "react-icons/fa";
-import { useQuestions } from "../../../store/QuestionContext";
+import { useQuestions } from "../../../store/QuestionStore";
 import TeacherDeleteModal from "./TeacherDeleteModal";
+import styles from "./TeacherQuestion.module.scss";
 
+// bordId인자로 받음
 const TeacherQuestion = () => {
+  const { boardId } = useParams(); // URL에서 boardId 추출
+  // const { question, init, fetchQuestionData } = useApiBothClassroomsQuestions();
   const { questions, updateQuestion, deleteQuestion } = useQuestions();
+  const [error, setError] = useState("");
   const [editingAnswerId, setEditingAnswerId] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [questionToDelete, setQuestionToDelete] = useState(null);
   const [newAnswer, setNewAnswer] = useState("");
+  console.log("TeacherQuestion inside ", boardId);
+
+  // 토큰 확인
+  useEffect(() => {
+    const token = localStorage.getItem("USER_TOKEN");
+    if (!token) {
+      console.error("컴포넌트 : No token found, redirecting to login...");
+      return;
+    }
+  }, []);
 
   const handleEditClick = (id, currentAnswer) => {
     setEditingAnswerId(id);
@@ -38,21 +53,24 @@ const TeacherQuestion = () => {
     setQuestionToDelete(null);
   };
 
-  const trimDate = (dateString) => {
-    const parts = dateString.split(".");
-    if (parts.length < 3) return dateString; // 날짜 형식이 맞지 않는 경우 원본 문자열 반환
-    return `${parts[0]}.${parts[1]}.${parts[2]}`;
-  };
+  // 이부분이 에러 유발해서 주석처리 했습니다.
+  // 다른기능 먼저 구현하고 마지막에 건드려주세요.
+  // const trimDate = (dateString) => {
+  //   const parts = dateString.split(".");
+  //   if (parts.length < 3) return dateString; // 날짜 형식이 맞지 않는 경우 원본 문자열 반환
+  //   return `${parts[0]}.${parts[1]}.${parts[2]}`;
+  // };
 
   return (
     <div className={styles.teacherQuestionContainer}>
+      {error && <div className={styles.error}>{error}</div>}
       {questions.map((item) => (
         <div key={item.id} className={styles.qaPair}>
           <div className={styles.boxContainer}>
             <div className={styles.questionBox}>
               <div className={styles.authorAndDate}>
                 <p className={styles.author}>{item.author}</p>
-                <p className={styles.date}>{trimDate(item.date)}</p>
+                {/* <p className={styles.date}>{trimDate(item.date)}</p> */}
               </div>
               <p className={styles.question}>{item.question}</p>
               <FaTrash
@@ -73,7 +91,7 @@ const TeacherQuestion = () => {
                 <>
                   <div className={styles.authorAndDate}>
                     <p className={styles.author}>선생님</p>
-                    <p className={styles.date}>{trimDate(item.date)}</p>
+                    {/* <p className={styles.date}>{trimDate(item.date)}</p> */}
                   </div>
                   <p className={styles.answer}>
                     {item.answer ? item.answer : "A."}

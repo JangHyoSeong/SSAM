@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import styles from "./TeacherLogin.module.scss";
 import { loginUser } from "../../../apis/user";
-import { useLoginStore } from "../../../store/AuthStore";
+import useLoginStore from "../../../store/AuthStore";
 
 // 이미지
 import round1 from "../../../assets/round1.png";
@@ -27,9 +27,13 @@ const TeacherLogin = () => {
     try {
       // loginUser 함수를 사용하여 로그인 요청을 보낸다.
       const response = await loginUser(username, password);
+      console.log(response);
+      const token = response.headers.authorization;
+      localStorage.setItem("USER_TOKEN", token);
+      localStorage.setItem("USER_NAME", username);
       console.log("axios 성공", response);
       setLoggedIn(true);
-      window.location.replace("/teachersubpage");
+      // window.location.replace("/teachersubpage");
     } catch (error) {
       console.error("axios 실패", error);
       if (error.response && error.response.status === 401) {

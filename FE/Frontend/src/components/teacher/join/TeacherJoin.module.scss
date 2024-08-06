@@ -69,10 +69,26 @@
     color: black;
     cursor: pointer;
   }
+
+  .joinBtn:hover {
+    background-color: #5285ee;
+    color: white;
+    border-style: none;
+  }
 }
 
-// Animations for rounds
-.round1, .round2, .round3 {
+.schoolsSelect {
+  margin: 2% 3.5%;
+  padding: 1% 0% 1% 1%;
+  font-size: 120%;
+  color: #757575;
+  max-height: 10vh;
+  overflow-y: auto;
+}
+
+.round1,
+.round2,
+.round3 {
   position: absolute;
   width: 15%;
   padding: 20px;

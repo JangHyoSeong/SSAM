@@ -41,9 +41,6 @@ public class Consult {
     @Column(name = "video_url")
     private String videoUrl;
 
-    @Enumerated(EnumType.STRING)
-    private ConsultTopic topic;
-
     @Column(name = "webrtc_session_id", length = 100)
     private String webrtcSessionId;
 

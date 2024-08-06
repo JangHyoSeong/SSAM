@@ -138,7 +138,6 @@ public class UserBoardRelationService {
                 .map(consult -> ConsultSummaryDTO.builder()
                                 .date(consult.getActualDate().toLocalDate())
                                 .runningTime(consult.getRunningTime())
-                                .consultType(consult.getTopic().toString())
                                 .build()
                 )
                 .collect(Collectors.toList());

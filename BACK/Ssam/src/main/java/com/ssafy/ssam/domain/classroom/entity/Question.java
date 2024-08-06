@@ -60,6 +60,7 @@ public class Question {
     }
     public static QuestionResponseDto toQuestionResponseDto(Question question) {
         return QuestionResponseDto.builder()
+                .questionId(question.getQuestionId())
                 .boardId(question.getBoard().getBoardId())
                 .studentId(question.getStudent().getUserId())
                 .content(question.getContent())

@@ -107,6 +107,7 @@ const TeacherJoin = () => {
                   name="schoolId"
                   value={formData.schoolId}
                   onChange={handleChange}
+                  className={styles.schoolsSelect}
                 >
                   <option value="">학교 목록</option>
                   {schools.map((school) => (

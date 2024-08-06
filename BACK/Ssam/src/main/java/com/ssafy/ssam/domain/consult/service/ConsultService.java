@@ -1,9 +1,11 @@
 package com.ssafy.ssam.domain.consult.service;
 
 import com.ssafy.ssam.domain.consult.dto.request.AppointmentRequestDto;
+import com.ssafy.ssam.domain.consult.dto.request.ConsultRequestDto;
 import com.ssafy.ssam.domain.consult.dto.response.AppointmentResponseDto;
 import com.ssafy.ssam.domain.consult.entity.Appointment;
 import com.ssafy.ssam.domain.consult.entity.AppointmentStatus;
+import com.ssafy.ssam.domain.consult.entity.Consult;
 import com.ssafy.ssam.domain.consult.repository.AppointmentRepository;
 import com.ssafy.ssam.domain.consult.repository.ConsultRepository;
 import com.ssafy.ssam.global.auth.dto.CustomUserDetails;
@@ -117,5 +119,18 @@ public class ConsultService {
 
         appointment.setStatus(AppointmentStatus.DONE);
         return Appointment.toAppointmentDto(appointment);
+    }
+
+    // 상담 종료시 상담 entity 생성
+    public void createConsultEntity(Appointment appointment) {
+        ConsultRequestDto requestDto = ConsultRequestDto.builder()
+                .appointment(appointment)
+                .actualDate(LocalDateTime.now())
+                .content(appointment.getTopic())
+                .videoUrl("sample.com")
+                .webrtcSessionId("123456")
+                .accessCode("123456")
+                .build();
+        Consult consult = Consult.toConsult(requestDto);
     }
 }

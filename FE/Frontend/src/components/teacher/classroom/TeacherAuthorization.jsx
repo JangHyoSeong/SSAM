@@ -4,7 +4,10 @@ import styles from "./TeacherAuthorization.module.scss";
 import TeacherApproveModal from "./TeacherApproveModal";
 import TeacherRejectModal from "./TeacherRejectModal";
 import { useStudentsStore } from "../../../store/StudentsStore"; // 경로 및 named export 확인
-import { fetchApiStudentsList } from "../../../apis/stub/51-53 학생관리/apiStudents";
+import {
+  fetchApiStudentsList,
+  approveStudentApi,
+} from "../../../apis/stub/51-53 학생관리/apiStudents";
 
 const TeacherAuthorization = () => {
   const { students, setStudents } = useStudentsStore((state) => ({
@@ -31,13 +34,35 @@ const TeacherAuthorization = () => {
   }, [setStudents]);
 
   const handleApproveClick = (request) => {
+    console.log("Selected Request:", request);
     setSelectedRequest(request);
     setShowApproveModal(true);
   };
 
   const handleRejectClick = (request) => {
+    console.log("Selected Request:", request);
     setSelectedRequest(request);
     setShowRejectModal(true);
+  };
+
+  const handleApproveStudent = async () => {
+    if (selectedRequest && selectedRequest.studentId) {
+      try {
+        await approveStudentApi(selectedRequest.studentId); // studentId를 올바르게 전달
+        setStudents((prevStudents) =>
+          prevStudents.map((student) =>
+            student.studentId === selectedRequest.studentId
+              ? { ...student, approved: true }
+              : student
+          )
+        );
+        setShowApproveModal(false);
+      } catch (error) {
+        console.error("Failed to approve student:", error);
+      }
+    } else {
+      console.error("Student ID is missing.");
+    }
   };
 
   if (!students.length) {
@@ -101,10 +126,7 @@ const TeacherAuthorization = () => {
         <TeacherApproveModal
           request={selectedRequest}
           onClose={() => setShowApproveModal(false)}
-          onApprove={() => {
-            setShowApproveModal(false);
-            // 추가 승인 로직
-          }}
+          onApprove={handleApproveStudent}
         />
       )}
       {showRejectModal && (

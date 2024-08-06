@@ -8,10 +8,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  backdrop-filter: blur(10px);
 }
 
 .modalContent {
+  font-size: 18px;
   width: 300px;
   background: white;
   padding: 2rem;

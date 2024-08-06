@@ -1,133 +1,203 @@
-import { useState, useRef, useEffect } from "react";
-import { NavLink } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faSave } from '@fortawesome/free-solid-svg-icons';
-import styles from "./TeacherClassroom.module.scss";
-import TeacherStudent from "./TeacherStudent";
-import TeacherStudentDetail from "./TeacherStudentDetail";
-import ClassImage from "../../../assets/background.png"; 
-import whiteshare from '../../../assets/whiteshare.png';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import axios from 'axios';
+import { OpenVidu } from 'openvidu-browser';
+const API_BASE_URL = 'http://localhost:8081/v1/video';
 
-const TeacherClassroom = () => {
-  const [selectedStudentId, setSelectedStudentId] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [noticeContent, setNoticeContent] = useState(`그대 기억이 지난 사랑이
-내 안을 파고드는 가시가 되어
-제발 가라고 아주 가라고
-애써도 나를 괴롭히는데`);
-  
-  const textareaRef = useRef(null);
-  const maxHeight = 100;
+const VideoChatComponent = () => {
+  const [mySessionId, setMySessionId] = useState('SessionA');
+  const [myUserName, setMyUserName] = useState(`Participant${Math.floor(Math.random() * 100)}`);
+  const [session, setSession] = useState(null);
+  const [publisher, setPublisher] = useState(null);
+  const [subscribers, setSubscribers] = useState([]);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatInput, setChatInput] = useState('');
+  const [myConnectionId, setMyConnectionId] = useState(null);
+  const [sessionInfo, setSessionInfo] = useState({ before: null, after: null });
+
+  const OV = useRef(new OpenVidu());
+
+  const joinSession = useCallback(async () => {
+    const mySession = OV.current.initSession();
+
+    mySession.on('streamCreated', (event) => {
+      const subscriber = mySession.subscribe(event.stream, undefined);
+      setSubscribers(prevSubscribers => {
+        if (prevSubscribers.some(sub => sub.stream.connection.connectionId === subscriber.stream.connection.connectionId)) {
+          return prevSubscribers;
+        }
+        return [...prevSubscribers, subscriber];
+      });
+    });
+
+    mySession.on('streamDestroyed', (event) => {
+      setSubscribers(prevSubscribers => 
+        prevSubscribers.filter(sub => sub.stream.connection.connectionId !== event.stream.connection.connectionId)
+      );
+    });
+
+    try {
+      const token = await getToken();
+      
+      console.log('Before connect:', mySession);
+      setSessionInfo(prev => ({ ...prev, before: JSON.stringify(mySession, null, 2) }));
+
+      await mySession.connect(token, { clientData: myUserName });
+      
+      console.log('After connect:', mySession);
+      setSessionInfo(prev => ({ ...prev, after: JSON.stringify(mySession, null, 2) }));
+
+      setMyConnectionId(mySession.connection.connectionId);
+      console.log('New connection ID:', mySession.connection.connectionId);
+
+      const publisher = await OV.current.initPublisherAsync(undefined, {
+        audioSource: undefined,
+        videoSource: undefined,
+        publishAudio: true,
+        publishVideo: true,
+        resolution: '640x480',
+        frameRate: 30,
+        insertMode: 'APPEND',
+        mirror: false,
+      });
+
+      mySession.publish(publisher);
+      setSession(mySession);
+      setPublisher(publisher);
+    } catch (error) {
+      console.error('Error joining session:', error);
+    }
+  }, [mySessionId, myUserName]);
+
+  const sendChatMessage = useCallback(() => {
+    if (chatInput.trim() && session) {
+      const messageData = { message: chatInput, from: myUserName, connectionId: myConnectionId };
+      session.signal({ data: JSON.stringify(messageData), type: 'chat' });
+      setChatMessages(prev => [...prev, messageData]);
+      setChatInput('');
+    }
+  }, [chatInput, myUserName, session, myConnectionId]);
 
   useEffect(() => {
-    const handleInput = (e) => {
-      if (textareaRef.current && textareaRef.current.scrollHeight > maxHeight) {
-        e.preventDefault();
-        textareaRef.current.value = textareaRef.current.value.slice(0, -1);
-      }
-    };
+    if (session) {
+      const handleSignal = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.connectionId !== myConnectionId) {
+          setChatMessages(prev => [...prev, data]);
+        }
+      };
 
-    if (textareaRef.current) {
-      textareaRef.current.addEventListener('input', handleInput);
+      session.on('signal:chat', handleSignal);
+      return () => {
+        session.off('signal:chat', handleSignal);
+      };
     }
-    
-    return () => {
-      if (textareaRef.current) {
-        textareaRef.current.removeEventListener('input', handleInput);
-      }
-    };
-  }, [isEditing]);
-
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
-
-  const handleSaveClick = () => {
-    setIsEditing(false);
-  };
-
-  const handleContentChange = (e) => {
-    setNoticeContent(e.target.value);
-  };
+  }, [session, myConnectionId]);
 
   return (
-    <div className={styles.classInfoContainer}>
-      <div className={styles.classNavbar}>
-        <NavLink
-          to="/teacherclassroom"
-          className={`${styles.navItem} ${
-            selectedStudentId === null ? styles.active : styles.altActive
-          }`}
-          onClick={() => setSelectedStudentId(null)}
-        >
-          학급 관리
-        </NavLink>
-        <NavLink to="/teacherauthorization" className={styles.navItem}>
-          승인 관리
-        </NavLink>
-      </div>
-      <div className={styles.imageContainer}>
-        <input type="file" id="file" className={styles.inputFileForm} />
-        <label htmlFor="file">
-          <img src={whiteshare}  className={styles.inputFile} />
-        </label>
-        <img
-          src={ClassImage}
-          alt="Class Management"
-          className={styles.classImage}
-        />
-      </div>
-      <div className={styles.infoBoxes}>
-        <div className={styles.noticeBox}>
-          <h2>알림 사항</h2>
-          {isEditing ? (
-            <FontAwesomeIcon icon={faSave} onClick={handleSaveClick} className={styles.editIcon} />
-          ) : (
-            <FontAwesomeIcon icon={faEdit} onClick={handleEditClick} className={styles.editIcon} />
-          )}
-          {isEditing ? (
-            <div className={styles.editBox}>
-              <textarea
-                ref={textareaRef}
-                value={noticeContent}
-                onChange={handleContentChange}
-                className={styles.editTextarea}
-              />
-            </div>
-          ) : (
-            <p>{noticeContent}</p>
-          )}
-        </div>
-        <div className={styles.classInfoBox}>
-          <h2>자라나는 새싹, 돋아나는 희망</h2>
-          <p>삼성초등학교 1학년 2반</p>
-        </div>
-        <div className={styles.inquiryBox}>
-          <h2>문의사항</h2>
-          <div className={styles.inquiryItem}>
-            <div className={styles.inquiryQuestion}>점심메뉴가 뭔가요</div>
-          </div>
-          <div className={styles.inquiryItem}>
-            <div className={styles.inquiryQuestion}>교무실 전화번호가 뭔가요</div>
-          </div>
-          <div className={styles.inquiryItem}>
-            <div className={styles.inquiryQuestion}>소풍 날짜 언제죠</div>
-          </div>
-          <div className={styles.inquiryItem}>
-            <div className={styles.inquiryQuestion}>소풍 장소가 어디죠</div>
+    <div className="container">
+      {session === null ? (
+        <div id="join">
+          <div id="join-dialog" className="jumbotron vertical-center">
+            <h1>Join a video session</h1>
+            <form className="form-group" onSubmit={(e) => { e.preventDefault(); joinSession(); }}>
+              <p>
+                <label>Participant: </label>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="userName"
+                  value={myUserName}
+                  onChange={(e) => setMyUserName(e.target.value)}
+                  required
+                />
+              </p>
+              <p>
+                <label> Session: </label>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="sessionId"
+                  value={mySessionId}
+                  onChange={(e) => setMySessionId(e.target.value)}
+                  required
+                />
+              </p>
+              <p className="text-center">
+                <input className="btn btn-lg btn-success" name="commit" type="submit" value="JOIN" />
+              </p>
+            </form>
           </div>
         </div>
-      </div>
-      {selectedStudentId === null ? (
-        <TeacherStudent onSelectStudent={setSelectedStudentId} />
       ) : (
-        <TeacherStudentDetail
-          studentId={selectedStudentId}
-          onBack={() => setSelectedStudentId(null)}
-        />
+        <div id="session">
+          <div id="session-header">
+            <h1 id="session-title">{mySessionId}</h1>
+            <p>My Connection ID: {myConnectionId}</p>
+            <input
+              className="btn btn-large btn-danger"
+              type="button"
+              id="buttonLeaveSession"
+              onClick={leaveSession}
+              value="Leave session"
+            />
+            <input
+              className="btn btn-large btn-success"
+              type="button"
+              id="buttonSwitchCamera"
+              onClick={switchCamera}
+              value="Switch Camera"
+            />
+          </div>
+          <div id="main-container" className="row">
+            <div id="video-container" className="col-md-9">
+              <div id="main-video" className="col-md-12">
+                {publisher && (
+                  <UserVideoComponent streamManager={publisher} />
+                )}
+              </div>
+              <div id="video-grid" className="row">
+                {subscribers.map((sub) => (
+                  <div key={sub.stream.connection.connectionId} className="col-md-4 stream-container">
+                    <UserVideoComponent streamManager={sub} />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div id="chat-container" className="col-md-3">
+              <div id="chat-messages">
+                {chatMessages.map((msg, index) => (
+                  <div key={`${msg.connectionId}-${index}`} className="chat-message">
+                    <strong>{msg.from}:</strong> {msg.message}
+                  </div>
+                ))}
+              </div>
+              <div id="chat-input-container">
+                <input
+                  type="text"
+                  id="chat-input"
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  placeholder="Type a message..."
+                />
+                <button onClick={sendChatMessage}>Send</button>
+              </div>
+            </div>
+          </div>
+          <div id="session-info">
+            <h3>Session Info:</h3>
+            <div>
+              <h4>Before Connect:</h4>
+              <pre>{sessionInfo.before}</pre>
+            </div>
+            <div>
+              <h4>After Connect:</h4>
+              <pre>{sessionInfo.after}</pre>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
 };
 
-export default TeacherClassroom;
+export default VideoChatComponent;

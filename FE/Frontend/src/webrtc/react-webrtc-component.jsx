@@ -1,510 +1,286 @@
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+import { OpenVidu } from 'openvidu-browser';
 
-const WebRTCChat = () => {
-    const [room, setRoom] = useState('');
-    const [username, setUsername] = useState('');
-    const [message, setMessage] = useState('');
-    const [chatMessages, setChatMessages] = useState([]);
-    const [isConnected, setIsConnected] = useState(false);
-    const [participants, setParticipants] = useState([]);
-    const webSocketRef = useRef(null);
-    const localVideoRef = useRef(null);
-    const iceCandidatesBuffer = useRef({});
-    const [remoteVideos, setRemoteVideos] = useState({});
+const API_BASE_URL = 'http://localhost:8081/v1/video'; // Spring 백엔드 API 기본 URL
 
-    const remoteVideosRef = useRef({});
-    const [remoteVideoKeys, setRemoteVideoKeys] = useState([]);
+const VideoChatComponent = () => {
+  const [mySessionId, setMySessionId] = useState('SessionA');
+  const [myUserName, setMyUserName] = useState(`Participant${Math.floor(Math.random() * 100)}`);
+  const [session, setSession] = useState(null);
+  const [mainStreamManager, setMainStreamManager] = useState(null);
+  const [publisher, setPublisher] = useState(null);
+  const [subscribers, setSubscribers] = useState([]);
+  const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatInput, setChatInput] = useState('');
+  const OV = useRef(new OpenVidu());
 
-    const peerConnectionsRef = useRef({});
-    const localStreamRef = useRef(null);
-
-    const configuration = {
-        iceServers: [
-            { urls: 'stun:stun.l.google.com:19302' },
-            {
-                urls: 'turn:i11e201.p.ssafy.io:3478',
-                username: 'admin',
-                credential: 'JddU_RuEn5Iqc',
-            },
-        ],
-        iceTransportPolicy: 'all',
+  useEffect(() => {
+    window.addEventListener('beforeunload', onBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', onBeforeUnload);
     };
+  }, []);
 
-    useEffect(() => {
-        return () => {
-            closeWebSocketConnection();
-            cleanupWebRTC();
-        };
-    }, []);
+  const onBeforeUnload = () => {
+    leaveSession();
+  };
 
-    const closeWebSocketConnection = () => {
-        if (webSocketRef.current && webSocketRef.current.readyState === WebSocket.OPEN) {
-            webSocketRef.current.close();
-        }
-    };
+  const handleChangeSessionId = (e) => {
+    setMySessionId(e.target.value);
+  };
 
-    const cleanupWebRTC = () => {
-        if (localStreamRef.current) {
-            localStreamRef.current.getTracks().forEach((track) => track.stop());
-        }
-        Object.values(peerConnectionsRef.current).forEach((pc) => pc.close());
-    };
+  const handleChangeUserName = (e) => {
+    setMyUserName(e.target.value);
+  };
 
-    const createRoom = async () => {
-        if (!room) {
-            alert('Please enter a room name');
-            return;
-        }
+  const joinSession = async () => {
+    const mySession = OV.current.initSession();
+    mySession.on('streamCreated', (event) => {
+      const subscriber = mySession.subscribe(event.stream, undefined);
+      setSubscribers((subscribers) => [...subscribers, subscriber]);
+    });
 
-        try {
-            const response = await fetch(`https://i11e201.p.ssafy.io/api/v1/kurento/room`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ roomName: room }),
-            });
+    mySession.on('streamDestroyed', (event) => {
+      setSubscribers((subscribers) =>
+        subscribers.filter((sub) => sub !== event.stream.streamManager)
+      );
+    });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+    mySession.on('exception', (exception) => {
+      console.warn(exception);
+    });
 
-            const result = await response.text();
-            console.log(result);
-            alert(`Room "${room}" created successfully. You can now join it.`);
-        } catch (error) {
-            console.error('Error creating room:', error);
-            alert(`Failed to create room: ${error.message}`);
-        }
-    };
+    try {
+      const token = await getToken();
+      await mySession.connect(token, { clientData: myUserName });
 
-    const joinRoom = async () => {
-        if (!room || !username) {
-            alert('Please enter both room name and username');
-            return;
-        }
+      let publisher = await OV.current.initPublisherAsync(undefined, {
+        audioSource: undefined,
+        videoSource: undefined,
+        publishAudio: true,
+        publishVideo: true,
+        resolution: '640x480',
+        frameRate: 30,
+        insertMode: 'APPEND',
+        mirror: false,
+      });
 
-        await setupLocalStream();
-        connectWebSocket();
-    };
+      mySession.publish(publisher);
 
-    const setupLocalStream = async () => {
-        if (localStreamRef.current) return localStreamRef.current;
+      const devices = await OV.current.getDevices();
+      const videoDevices = devices.filter(device => device.kind === 'videoinput');
+      const currentVideoDeviceId = publisher.stream.getMediaStream().getVideoTracks()[0].getSettings().deviceId;
+      const currentVideoDevice = videoDevices.find(device => device.deviceId === currentVideoDeviceId);
+      //console.warn(session.connection.connectionId);
+      setSession(mySession);
+      setMainStreamManager(publisher);
+      setPublisher(publisher);
+      setCurrentVideoDevice(currentVideoDevice);
+    } catch (error) {
+      console.log('There was an error connecting to the session:', error.code, error.message);
+    }
+  };
 
-        try {
-            console.log('Attempting to access local media devices');
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: { width: 1280, height: 720 },
-                audio: true,
-            });
-            console.log('Local stream obtained:', stream);
-            localStreamRef.current = stream;
-            if (localVideoRef.current) {
-                localVideoRef.current.srcObject = stream;
-            }
-            console.log('Local video source set');
-            return stream;
-        } catch (error) {
-            console.error('Error accessing media devices:', error);
-            alert('Failed to access camera and microphone. Please check your permissions.');
-            throw error;
-        }
-    };
-
-    const connectWebSocket = () => {
-        console.log('Attempting to connect WebSocket...');
-        const wsUrl = `wss://i11e201.p.ssafy.io/api/v1/kurento`;
-
-        webSocketRef.current = new WebSocket(wsUrl);
-
-        webSocketRef.current.onopen = () => {
-            console.log('WebSocket connection established');
-            setIsConnected(true);
-            sendJoinRoomMessage();
-        };
-
-        webSocketRef.current.onmessage = (event) => {
-            console.log('WebSocket message received:', event.data);
-            try {
-                const message = JSON.parse(event.data);
-                handleMessage(message);
-            } catch (error) {
-                console.error('Error parsing message:', error);
-            }
-        };
-
-        webSocketRef.current.onclose = () => {
-            console.log('WebSocket connection closed');
-            setIsConnected(false);
-        };
-
-        webSocketRef.current.onerror = (error) => {
-            console.error('WebSocket error:', error);
-            setIsConnected(false);
-            alert('WebSocket connection error. Please try again.');
-        };
-    };
-
-    const sendJoinRoomMessage = () => {
-        console.log('Sending join room message');
-        const joinMessage = {
-            id: 'joinRoom',
-            room: room,
-            name: username,
-        };
-        sendWebSocketMessage(joinMessage);
-    };
-
-
-
-    
-    const handleMessage = (message) => {
-        console.log('Processing received message:', message);
-        switch (message.id) {
-            case 'existingParticipants':
-                handleExistingParticipants(message);
-                break;
-            case 'newParticipantArrived':
-                handleNewParticipant(message);
-                break;
-            case 'participantLeft':
-                handleParticipantLeft(message);
-                break;
-            case 'receiveVideoAnswer':
-                handleReceiveVideoAnswer(message);
-                break;
-            case 'iceCandidate':
-                handleRemoteIceCandidate(message);
-                break;
-            case 'newChatMessage':
-                handleNewChatMessage(message);
-                break;
-            default:
-                console.log('Unhandled message:', message);
-        }
-    };
-
-    const handleExistingParticipants = async (message) => {
-        console.log('Existing participants:', message.data);
-        setParticipants(message.data);
-    
-        for (const participantName of message.data) {
-            if (participantName !== username) {
-                const peerConnection = await createPeerConnection(participantName);
-                peerConnectionsRef.current[participantName] = peerConnection;
-    
-                try {
-                    const offer = await peerConnection.createOffer();
-                    await peerConnection.setLocalDescription(offer);
-                    console.log('Local description set for', participantName);
-    
-                    // 오퍼를 전송하고 응답을 기다립니다.
-                    sendWebSocketMessage({
-                        id: 'receiveVideoFrom',
-                        sender: username,
-                        receiver: participantName,
-                        sdpOffer: offer.sdp,
-                    });
-    
-                    // 여기서 응답을 기다리지 않고 다음 참가자로 넘어갑니다.
-                    // handleReceiveVideoAnswer 함수에서 원격 설명을 설정할 것입니다.
-                } catch (error) {
-                    console.error('Error creating offer:', error);
-                }
-            }
-        }
-    };
-    
-
-    const handleNewParticipant = async (message) => {
-        console.log('New participant arrived:', message.name);
-        setParticipants(prev => [...prev, message.name]);
-        
-        const peerConnection = await createPeerConnection(message.name);
-        peerConnectionsRef.current[message.name] = peerConnection;
-    
-        // 새 참가자에 대한 오퍼 생성은 서버의 요청에 따라 수행됩니다.
-        // 서버가 'receiveVideoFrom' 메시지를 보내면 그때 오퍼를 생성하고 전송합니다.
-    };
-
-    // 새로운 함수 추가
-    const handleNewChatMessage = (message) => {
-        const { user, message: chatMessage } = message.params;
-        setChatMessages((prevMessages) => [...prevMessages, { sender: user, text: chatMessage }]);
-    };
-
-    const createPeerConnection = async (participantName) => {
-        console.log('Creating peer connection for:', participantName);
-        const peerConnection = new RTCPeerConnection(configuration);
-        peerConnectionsRef.current[participantName] = peerConnection;
-
-        if (!localStreamRef.current) {
-            await setupLocalStream();
-        }
-
-        localStreamRef.current.getTracks().forEach((track) => {
-            peerConnection.addTrack(track, localStreamRef.current);
+  const leaveSession = async () => {
+    if (session) {
+      try {
+        await axios.delete(`${API_BASE_URL}/token`, {
+          data: { sessionId: mySessionId, userId: myUserName, token: session.token }
         });
+      } catch (error) {
+        console.error("Error deleting token:", error);
+      }
+      session.disconnect();
+    }
+    setSession(null);
+    setSubscribers([]);
+    setMainStreamManager(null);
+    setPublisher(null);
+  };
 
-        peerConnection.onicecandidate = (event) => {
-            if (event.candidate) {
-                console.log('New ICE candidate:', event.candidate);
-                sendWebSocketMessage({
-                    id: 'onIceCandidate',
-                    candidate: event.candidate,
-                    name: username,
-                    to: participantName,
-                });
-            }
-        };
+  const switchCamera = async () => {
+    try {
+      const devices = await OV.current.getDevices();
+      const videoDevices = devices.filter(device => device.kind === 'videoinput');
 
-        peerConnection.ontrack = (event) => {
-            console.log('Received remote track from', participantName, event.streams[0]);
-            setRemoteVideos(prevVideos => ({
-                ...prevVideos,
-                [participantName]: event.streams[0]
-            }));
-        };
+      if (videoDevices && videoDevices.length > 1) {
+        const newVideoDevice = videoDevices.filter(device => device.deviceId !== currentVideoDevice.deviceId);
 
-        peerConnection.oniceconnectionstatechange = (event) => {
-            console.log(`ICE connection state for ${participantName}:`, peerConnection.iceConnectionState);
-        };
+        if (newVideoDevice.length > 0) {
+          const newPublisher = OV.current.initPublisher(undefined, {
+            videoSource: newVideoDevice[0].deviceId,
+            publishAudio: true,
+            publishVideo: true,
+            mirror: false
+          });
 
-        // Handle buffered ICE candidates
-        if (iceCandidatesBuffer.current[participantName]) {
-            iceCandidatesBuffer.current[participantName].forEach((candidate) => {
-                peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
-                    .catch(e => console.error('Error adding buffered ice candidate:', e));
-            });
-            delete iceCandidatesBuffer.current[participantName];
+          await session.unpublish(mainStreamManager);
+          await session.publish(newPublisher);
+          setCurrentVideoDevice(newVideoDevice[0]);
+          setMainStreamManager(newPublisher);
+          setPublisher(newPublisher);
         }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
-        return peerConnection;
-    };
+  const sendChatMessage = () => {
+    if (chatInput.trim() !== '' && session) {
+      const messageData = {
+        message: chatInput,
+        from: myUserName,
+      };
+      session.signal({
+        data: JSON.stringify(messageData),
+        type: 'chat',
+      });
+      setChatMessages((prevMessages) => [...prevMessages, messageData]);
+      setChatInput('');
+    }
+  };
 
-    const handleParticipantLeft = (message) => {
-        console.log('Participant left:', message.name);
-        setParticipants((prev) => prev.filter((name) => name !== message.name));
-        if (peerConnectionsRef.current[message.name]) {
-            peerConnectionsRef.current[message.name].close();
-            delete peerConnectionsRef.current[message.name];
+  useEffect(() => {
+    if (session) {
+      session.on('signal:chat', (event) => {
+        const data = JSON.parse(event.data);
+        //console.warn(session.connection.connectionId);
+        console.warn(myUserName);
+        console.warn(data.from);
+        if(data.from != session.connection.connectionId){
+            setChatMessages((prevMessages) => [...prevMessages, data]);
         }
-        delete remoteVideosRef.current[message.name];
-        console.log('Before setRemoteVideoKeys:', Object.keys(remoteVideosRef.current));
-        setRemoteVideoKeys(Object.keys(remoteVideosRef.current));
-        console.log('After setRemoteVideoKeys called');
-    };
+      });
+    }
+  }, [session]);
 
-    const handleReceiveVideoAnswer = async (message) => {
-        console.log('Received video answer from:', message.name);
-        const peerConnection = peerConnectionsRef.current[message.name];
-        if (peerConnection) {
-            try {
-                const remoteDesc = new RTCSessionDescription({
-                    type: 'answer',
-                    sdp: message.sdpAnswer,
-                });
-                await peerConnection.setRemoteDescription(remoteDesc);
-                console.log('Remote description set successfully for', message.name);
-    
-                // 원격 설명이 설정된 후 버퍼링된 ICE 후보를 처리합니다.
-                if (iceCandidatesBuffer.current[message.name]) {
-                    const candidates = iceCandidatesBuffer.current[message.name];
-                    for (const candidate of candidates) {
-                        await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-                    }
-                    delete iceCandidatesBuffer.current[message.name];
-                    console.log('Buffered ICE candidates added for', message.name);
-                }
-            } catch (error) {
-                console.error('Error setting remote description:', error);
-            }
-        } else {
-            console.error('PeerConnection not found for', message.name);
-        }
-    };
+  const getToken = async () => {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/token`, {
+        sessionId: mySessionId,
+        userId: myUserName
+      });
+      return response.data.token;
+    } catch (error) {
+      console.error("Error getting token:", error);
+      throw error;
+    }
+  };
 
-    const handleRemoteIceCandidate = async (message) => {
-        console.log('Handling remote ICE candidate from:', message.name);
-        const peerConnection = peerConnectionsRef.current[message.name];
-        if (peerConnection && peerConnection.remoteDescription) {
-            try {
-                await peerConnection.addIceCandidate(new RTCIceCandidate(message.candidate));
-                console.log('ICE candidate added successfully for', message.name);
-            } catch (error) {
-                console.error('Error adding received ice candidate:', error);
-            }
-        } else {
-            // 원격 설명이 아직 설정되지 않았다면 후보를 버퍼링합니다.
-            if (!iceCandidatesBuffer.current[message.name]) {
-                iceCandidatesBuffer.current[message.name] = [];
-            }
-            iceCandidatesBuffer.current[message.name].push(message.candidate);
-            console.log('ICE candidate buffered for', message.name);
-        }
-    };
-    
-    const monitorWebRTCConnection = (peerConnection) => {
-        peerConnection.addEventListener('iceconnectionstatechange', () => {
-            console.log('ICE connection state changed:', peerConnection.iceConnectionState);
-        });
-
-        peerConnection.addEventListener('connectionstatechange', () => {
-            console.log('Connection state changed:', peerConnection.connectionState);
-        });
-
-        peerConnection.addEventListener('icegatheringstatechange', () => {
-            console.log('ICE gathering state changed:', peerConnection.iceGatheringState);
-        });
-
-        peerConnection.addEventListener('signalingstatechange', () => {
-            console.log('Signaling state changed:', peerConnection.signalingState);
-        });
-
-        // Monitor ICE candidate gathering
-        let iceCandidatesGathered = 0;
-        peerConnection.addEventListener('icecandidate', (event) => {
-            if (event.candidate) {
-                iceCandidatesGathered++;
-                console.log('New ICE candidate gathered:', event.candidate.candidate);
-                console.log('Total ICE candidates gathered:', iceCandidatesGathered);
-            } else {
-                console.log('ICE gathering completed. Total candidates:', iceCandidatesGathered);
-            }
-        });
-
-        // Monitor data channel state
-        peerConnection.addEventListener('datachannel', (event) => {
-            const dataChannel = event.channel;
-            console.log('Data channel created:', dataChannel.label);
-
-            dataChannel.addEventListener('open', () => {
-                console.log('Data channel opened:', dataChannel.label);
-            });
-
-            dataChannel.addEventListener('close', () => {
-                console.log('Data channel closed:', dataChannel.label);
-            });
-        });
-
-        // Monitor stats
-        const getStats = () => {
-            peerConnection.getStats(null).then((stats) => {
-                stats.forEach((report) => {
-                    if (report.type === 'candidate-pair' && report.state === 'succeeded') {
-                        console.log('Active ICE candidate pair:', report);
-                    }
-                });
-            });
-        };
-
-        // Get stats every 5 seconds
-        setInterval(getStats, 5000);
-    };
-
-    const sendChatMessage = () => {
-        if (message && isConnected) {
-            console.log('Sending chat message');
-            const chatMessage = {
-                id: 'chatMessage',
-                room: room,
-                name: username,
-                message: message,
-            };
-            sendWebSocketMessage(chatMessage);
-            setChatMessages((prevMessages) => [...prevMessages, { sender: 'You', text: message }]);
-            setMessage('');
-        } else if (!isConnected) {
-            alert('Not connected to a room. Please join a room first.');
-        }
-    };
-
-    const sendWebSocketMessage = (message) => {
-        if (webSocketRef.current && webSocketRef.current.readyState === WebSocket.OPEN) {
-            console.log('Sending WebSocket message:', message);
-            webSocketRef.current.send(JSON.stringify(message));
-        } else {
-            console.error('WebSocket is not connected. Current state:', webSocketRef.current?.readyState);
-        }
-    };
-
-    return (
-        <div className="p-4">
-            <h1 className="text-2xl font-bold mb-4">WebRTC Chat and Video Call</h1>
-            <h1>Build ver.67</h1>
-            <div className="mb-4">
+  return (
+    <div className="container">
+      {session === null ? (
+        <div id="join">
+          <div id="join-dialog" className="jumbotron vertical-center">
+            <h1>Join a video session</h1>
+            <form className="form-group" onSubmit={(e) => { e.preventDefault(); joinSession(); }}>
+              <p>
+                <label>Participant: </label>
                 <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Enter your username"
-                    className="border p-2 mr-2"
+                  className="form-control"
+                  type="text"
+                  id="userName"
+                  value={myUserName}
+                  onChange={handleChangeUserName}
+                  required
                 />
-                <input type="text" value={room} onChange={(e) => setRoom(e.target.value)} placeholder="Enter room name" className="border p-2 mr-2" />
-                <button onClick={createRoom} className="bg-blue-500 text-white p-2 rounded mr-2">
-                    Create Room
-                </button>
-                <button onClick={joinRoom} className="bg-green-500 text-white p-2 rounded">
-                    Join Room
-                </button>
-            </div>
-
-            <div className="flex justify-between mb-4">
-                <div className="w-1/2 mr-2">
-                    <h2 className="text-lg font-semibold mb-2">Your Video</h2>
-                    <video ref={localVideoRef} autoPlay playsInline muted className="w-full border"></video>
-                </div>
-                <div className="w-1/2 ml-2">
-                    <h2 className="text-lg font-semibold mb-2">Remote Videos</h2>
-                    <div className="flex flex-wrap">
-                        {Object.entries(remoteVideos).map(([participantName, stream]) => (
-                            <div key={participantName} className="w-1/2 p-1">
-                                <video
-                                    autoPlay
-                                    playsInline
-                                    className="w-full border"
-                                    ref={(el) => {
-                                        if (el) el.srcObject = stream;
-                                    }}
-                                />
-                                <p className="text-center">{participantName}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
-
-            <div className="mb-4">
-                <h2 className="text-lg font-semibold mb-2">Participants</h2>
-                <ul>
-                    {participants.map((participant, index) => (
-                        <li key={index}>{participant}</li>
-                    ))}
-                </ul>
-            </div>
-
-            <div className="border p-4 h-64 overflow-y-auto mb-4">
-                {chatMessages.map((msg, index) => (
-                    <p key={index}>
-                        <strong>{msg.sender}:</strong> {msg.text}
-                    </p>
-                ))}
-            </div>
-
-            <div className="flex">
+              </p>
+              <p>
+                <label> Session: </label>
                 <input
-                    type="text"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Type your message"
-                    className="border p-2 flex-grow mr-2"
+                  className="form-control"
+                  type="text"
+                  id="sessionId"
+                  value={mySessionId}
+                  onChange={handleChangeSessionId}
+                  required
                 />
-                <button onClick={sendChatMessage} className="bg-green-500 text-white p-2 rounded">
-                    Send
-                </button>
-            </div>
+              </p>
+              <p className="text-center">
+                <input className="btn btn-lg btn-success" name="commit" type="submit" value="JOIN" />
+              </p>
+            </form>
+          </div>
         </div>
-    );
+      ) : null}
+
+      {session !== null ? (
+        <div id="session">
+          <div id="session-header">
+            <h1 id="session-title">{mySessionId}</h1>
+            <input
+              className="btn btn-large btn-danger"
+              type="button"
+              id="buttonLeaveSession"
+              onClick={leaveSession}
+              value="Leave session"
+            />
+            <input
+              className="btn btn-large btn-success"
+              type="button"
+              id="buttonSwitchCamera"
+              onClick={switchCamera}
+              value="Switch Camera"
+            />
+          </div>
+
+          {mainStreamManager !== null ? (
+            <div id="main-video" className="col-md-6">
+              <UserVideoComponent streamManager={mainStreamManager} />
+            </div>
+          ) : null}
+          <div id="video-container" className="col-md-6">
+            {publisher !== null ? (
+              <div className="stream-container col-md-6 col-xs-6">
+                <UserVideoComponent streamManager={publisher} />
+              </div>
+            ) : null}
+            {subscribers.map((sub, i) => (
+              <div key={sub.id} className="stream-container col-md-6 col-xs-6">
+                <UserVideoComponent streamManager={sub} />
+              </div>
+            ))}
+          </div>
+          <div id="chat-container" className="col-md-3">
+            <div id="chat-messages">
+              {chatMessages.map((msg, index) => (
+                <div key={index} className="chat-message">
+                  <strong>{msg.from}:</strong> {msg.message}
+                </div>
+              ))}
+            </div>
+            <input
+              type="text"
+              id="chat-input"
+              value={chatInput}
+              onChange={(e) => setChatInput(e.target.value)}
+              placeholder="Type a message..."
+            />
+            <button onClick={sendChatMessage}>Send</button>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
 };
 
-export default WebRTCChat;
+const UserVideoComponent = ({ streamManager }) => {
+  const videoRef = useRef();
+
+  useEffect(() => {
+    if (streamManager && videoRef.current) {
+      streamManager.addVideoElement(videoRef.current);
+    }
+  }, [streamManager]);
+
+  return (
+    <div>
+      <video autoPlay={true} ref={videoRef} />
+    </div>
+  );
+};
+
+export default VideoChatComponent;

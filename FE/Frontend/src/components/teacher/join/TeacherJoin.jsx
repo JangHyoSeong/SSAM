@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
 import axios from "axios";
+import { useState, useEffect } from "react";
 import styles from "./TeacherJoin.module.scss";
 import human from "../../../assets/human.png";
 import lock from "../../../assets/lock.png";
@@ -24,6 +24,7 @@ const TeacherJoin = () => {
 
   const [schools, setSchools] = useState([]);
 
+  // 학교 리스트 GET
   useEffect(() => {
     axios
       .get("http://localhost:8081/v1/schools")
@@ -43,12 +44,14 @@ const TeacherJoin = () => {
     }));
   };
 
+  // 회원가입 POST
   const joinSubmit = (e) => {
     e.preventDefault();
     axios
       .post("http://localhost:8081/v1/auth/teachers", formData)
       .then((response) => {
         console.log("axios 성공", response);
+        alert("성공");
         window.location.replace("./teacherlogin");
       })
       .catch((error) => {

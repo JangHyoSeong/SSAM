@@ -14,16 +14,16 @@ const ClassEnterModal = () => {
   useEffect(() => {
     const fetchClassroom = async () => {
       if (pin.length === 6) {
-        const token = localStorage.getItem("USER_TOKEN"); // 로컬 스토리지에서 토큰을 가져옴
-        console.log("Using token: ", token);
         try {
+          const token = localStorage.getItem("USER_TOKEN"); // 로컬 스토리지에서 토큰을 가져옴
+          console.log("Using token: ", token);
           const response = await axios.get(
             "http://localhost:8081/v1/classrooms",
             {
               params: { pin: pin },
               headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
+                Authorization: `${token}`,
               },
             }
           );

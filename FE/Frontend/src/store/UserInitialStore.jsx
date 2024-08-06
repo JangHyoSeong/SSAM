@@ -6,8 +6,4 @@ const useUserInitialStore = create((set) => ({
   setUserInitialData: (data) => set({ userInitialData: data }),
 }));
 
-<<<<<<< HEAD
 export default useUserInitialStore;
-=======
-export default useUserInitialStore;
->>>>>>> front

@@ -71,7 +71,7 @@ const ParentsLogin = () => {
               로그인
             </button>
             <div className={login.loginRoute}>
-              <NavLink to="/parentsjoin" className={login.joinNavLink}>
+              <NavLink to="/studentjoin" className={login.joinNavLink}>
                 <p>회원가입</p>
               </NavLink>
               <p>아이디 / 비밀번호 찾기</p>

@@ -9,7 +9,7 @@ const ParentsSelect = () => {
     <div className={styles.menuArray}>
       <div className={styles.menuBoxArray}>
         <NavLink
-          to="/parentsclassroom"
+          to="/studentclassroom"
           className={`${styles.menuBox} ${styles.menuBox1}`}
         >
           <div className={styles.menuTxt}>
@@ -25,7 +25,7 @@ const ParentsSelect = () => {
           </div>
         </NavLink>
         <NavLink
-          to="/parentsquestion"
+          to="/studentquestion"
           className={`${styles.menuBox} ${styles.menuBox2}`}
         >
           <div className={styles.menuTxt}>
@@ -41,7 +41,7 @@ const ParentsSelect = () => {
           </div>
         </NavLink>
         <NavLink
-          to="/parentsappointment"
+          to="/studentappointment"
           className={`${styles.menuBox} ${styles.menuBox3}`}
         >
           <div className={styles.menuTxt}>

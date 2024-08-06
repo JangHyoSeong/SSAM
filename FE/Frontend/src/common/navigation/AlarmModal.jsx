@@ -58,7 +58,7 @@ const AlarmModal = () => {
               </a>
             )}
             {post.alarmType === "ANSWER" && (
-              <a href="http://localhost:3000/parentsquestion">
+              <a href="http://localhost:3000/studentquestion">
                 <p>문의사항을 확인해주세요</p>
               </a>
             )}
@@ -68,7 +68,7 @@ const AlarmModal = () => {
               </a>
             )}
             {post.alarmType === "REGISTRATION" && (
-              <a href="http://localhost:3000/parentssubpage">
+              <a href="http://localhost:3000/studentsubpage">
                 <p>승인 요청이 수락되었습니다</p>
               </a>
             )}

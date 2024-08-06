@@ -34,19 +34,20 @@ const TeacherAuthorization = () => {
   }, [setStudents]);
 
   const handleApproveClick = (request) => {
-    console.log("Selected Request:", request);
+    console.log("Selected Request on Approve Click:", request);
     setSelectedRequest(request);
     setShowApproveModal(true);
   };
 
   const handleRejectClick = (request) => {
-    console.log("Selected Request:", request);
+    console.log("Selected Request on Reject Click:", request);
     setSelectedRequest(request);
     setShowRejectModal(true);
   };
 
   const handleApproveStudent = async () => {
     if (selectedRequest && selectedRequest.studentId) {
+      console.log("Approving Student ID:", selectedRequest.studentId);
       try {
         await approveStudentApi(selectedRequest.studentId); // studentId를 올바르게 전달
         setStudents((prevStudents) =>

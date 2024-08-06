@@ -1,5 +1,6 @@
 // apis/stub/51-53 학생관리/apiStudents.jsx
 import axios from "axios";
+import { fetchApiUserInitial } from "../20-22 사용자정보/apiStubUserInitial";
 
 // 학생 리스트
 export const fetchApiStudentsList = async () => {
@@ -20,17 +21,27 @@ export const fetchApiStudentsList = async () => {
 // 학생 승인 API 호출 함수
 export const approveStudentApi = async (studentId) => {
   const token = localStorage.getItem("USER_TOKEN");
-  await axios.put(
-    `http://localhost:8081/classrooms/teachers/students/${studentId}/approve`,
-    null,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${token}`,
-      },
-    }
-  );
-  console.log("API 응답:", response.data); // 응답 데이터 콘솔에 출력
+  if (!token) {
+    throw new Error("No authentication token found.");
+  }
+
+  try {
+    const response = await axios.put(
+      `http://localhost:8081/classrooms/teachers/students/${studentId}/approve`,
+      null,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      }
+    );
+    console.log("API 응답:", response.data); // 응답 데이터 콘솔에 출력
+    return response.data;
+  } catch (error) {
+    console.error("Failed to approve student:", error);
+    throw error; // 오류를 다시 던져서 호출한 쪽에서 처리할 수 있게 함
+  }
 };
 
 // // 학생 거절 API 호출 함수

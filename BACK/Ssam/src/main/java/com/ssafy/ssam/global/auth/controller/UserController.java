@@ -1,6 +1,7 @@
 package com.ssafy.ssam.global.auth.controller;
 
 import com.ssafy.ssam.global.auth.dto.request.JoinRequestDto;
+import com.ssafy.ssam.global.dto.CommonResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ssafy.ssam.global.auth.service.UserService;
-import com.ssafy.ssam.global.dto.CommonResponseDto;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @ResponseBody
 @RequestMapping("/v1/auth")
-public class UserController {
+public class  UserController {
     private final UserService joinService;
 
     @GetMapping("/gen")

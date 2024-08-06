@@ -12,7 +12,7 @@ import java.util.Date;
 @Builder
 public class ConsultResponseDto {
     private Integer consultId;
-    private Appointment appointment;
+    private Integer appointmentId;
     private Date actualDate;
     private Integer runningTime;
     private String content;

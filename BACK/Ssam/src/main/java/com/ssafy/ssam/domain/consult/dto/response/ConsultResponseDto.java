@@ -1,7 +1,6 @@
 package com.ssafy.ssam.domain.consult.dto.response;
 
 import com.ssafy.ssam.domain.consult.entity.Appointment;
-import com.ssafy.ssam.domain.consult.entity.SummaryTopic;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

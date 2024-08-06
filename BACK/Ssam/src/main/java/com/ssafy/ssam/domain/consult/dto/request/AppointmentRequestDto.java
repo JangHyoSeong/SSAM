@@ -17,14 +17,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class AppointmentRequestDto {
     @Size(max = 50, message = "50자 이상은 입력받을 수 없습니다")
-    private String topic;
+    private String description;
     @NotNull(message = "시작시간은 Null 일 수 없습니다!")
     private LocalDateTime startTime;
     @NotNull(message = "종료시간은 Null 일 수 없습니다!")
     private LocalDateTime endTime;
 
+    @NotNull(message = "카테고리를 정해주세요")
+    private String topic;
+
     @Override
     public String toString() {
-        return this.topic+" "+this.startTime+" "+this.endTime;
+        return this.description+" "+this.startTime+" "+this.endTime;
     }
 }

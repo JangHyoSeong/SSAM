@@ -8,6 +8,7 @@ import ClassImage from "../../../assets/background.png";
 import whiteshare from "../../../assets/whiteshare.png";
 import TeacherStudent from "./TeacherStudent";
 import TeacherStudentDetail from "./TeacherStudentDetail";
+import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
 
 const TeacherClassroom = () => {
   const [banner, setBanner] = useState(""); // 학급 배너
@@ -26,7 +27,7 @@ const TeacherClassroom = () => {
     const classInfoData = async () => {
       try {
         const token = localStorage.getItem("USER_TOKEN");
-        const boardId = 1;
+        const { boardId } = await fetchApiUserInitial();
         const response = await axios.get(
           `http://localhost:8081/v1/classrooms/${boardId}`,
           {
@@ -49,7 +50,7 @@ const TeacherClassroom = () => {
   const noticeUpdate = async () => {
     try {
       const token = localStorage.getItem("USER_TOKEN");
-      const boardId = 1;
+      const { boardId } = await fetchApiUserInitial();
       await axios.put(
         `http://localhost:8081/v1/classrooms/teachers/notice/${boardId}`,
         { notice: noticeContent },
@@ -71,7 +72,7 @@ const TeacherClassroom = () => {
   const bannerUpdate = async () => {
     try {
       const token = localStorage.getItem("USER_TOKEN");
-      const boardId = 1;
+      const { boardId } = await fetchApiUserInitial();
       await axios.put(
         `http://localhost:8081/v1/classrooms/teachers/banner/${boardId}`,
         { banner: classInfo },

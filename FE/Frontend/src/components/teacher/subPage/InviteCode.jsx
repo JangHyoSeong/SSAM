@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import styles from "./InviteCode.module.scss";
 import ClassProduceModal from "./ClassProduceModal";
+import { fetchApiUserInitial } from '../../../apis/stub/20-22 사용자정보/apiStubUserInitial';
 
 const InviteCode = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -10,10 +11,11 @@ const InviteCode = () => {
     setIsModalOpen(!isModalOpen);
   };
 
+  // 학급 삭제하기
   const classDelete = async () => {
     try {
       const token = localStorage.getItem("USER_TOKEN");
-      const boardId = 1;
+      const { boardId } = await fetchApiUserInitial();
       await axios.delete(
         `http://localhost:8081/v1/classrooms/teachers/${boardId}`,
         {
@@ -30,10 +32,11 @@ const InviteCode = () => {
     }
   };
 
+  // PIN 번호 재발급
   const rePin = async () => {
     try {
       const token = localStorage.getItem("USER_TOKEN");
-      const boardId = 1;
+      const { boardId } = await fetchApiUserInitial();
       await axios.put(
         `http://localhost:8081/v1/classrooms/teachers/pin/${boardId}`,
         {},

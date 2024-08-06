@@ -5,6 +5,7 @@ import styles from "./AlarmModal.module.scss";
 const AlarmModal = () => {
   const [alarms, setAlarms] = useState([]);
 
+  // 알람 목록
   useEffect(() => {
     const token = localStorage.getItem("USER_TOKEN");
     axios
@@ -18,6 +19,7 @@ const AlarmModal = () => {
       .catch((error) => console.error(error));
   }, []);
 
+  // 알람 삭제
   const alarmDelete = (alarmId) => {
     const token = localStorage.getItem("USER_TOKEN");
     axios

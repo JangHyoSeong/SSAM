@@ -31,7 +31,6 @@ const ClassProduceModal = () => {
       setShowModal(false);
     } catch (error) {
       console.error("Error posting data", error);
-      alert("실패");
     }
   };
 

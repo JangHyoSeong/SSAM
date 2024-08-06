@@ -10,12 +10,11 @@ const InviteCode = () => {
     setIsModalOpen(!isModalOpen);
   };
 
-  // board_id 값을 임의로 변경해야 작동하는 중...
-  // board_id 값을 자동으로 설정되게 해야함
-  const handleDelete = async (board_id) => {
+  const classDelete = async () => {
     try {
       const token = localStorage.getItem("USER_TOKEN");
-      await axios.delete(`http://localhost:8081/v1/classrooms/teachers/${board_id}`, {
+      const boardId = 1;
+      await axios.delete(`http://localhost:8081/v1/classrooms/teachers/${boardId}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `${token}`,
@@ -28,6 +27,27 @@ const InviteCode = () => {
     }
   };
 
+  const rePin = async () => {
+    try {
+      const token = localStorage.getItem("USER_TOKEN");
+      const boardId = 1;
+      await axios.put(
+        `http://localhost:8081/v1/classrooms/teachers/pin/${boardId}`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        }
+      );
+      alert("PIN이 재발급되었습니다");
+    } catch (error) {
+      console.error("Error regenerating PIN", error);
+      alert("PIN 재발급 실패");
+    }
+  };
+
   return (
     <div className={styles.inviteCodeBox}>
       <div className={styles.inviteTxtBox}>
@@ -37,8 +57,11 @@ const InviteCode = () => {
       <button className={styles.classBtn} onClick={toggleModal}>
         학급 만들기
       </button>
-      <button className={styles.deleteBtn} onClick={handleDelete}>
+      <button className={styles.deleteBtn} onClick={classDelete}>
         학급 삭제
+      </button>
+      <button className={styles.pinArray} onClick={rePin}>
+        PIN 재발급
       </button>
       {isModalOpen && <ClassProduceModal />}
     </div>

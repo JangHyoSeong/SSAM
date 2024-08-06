@@ -18,7 +18,6 @@ import java.util.Date;
 public class SummaryRequestDto {
     private Integer summaryId;
     private Consult consult;
-    private String topic;
     private String keyPoint;
     private int profanityCount;
     private String profanityLevel;

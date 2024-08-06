@@ -126,7 +126,6 @@ public class ConsultService {
         ConsultRequestDto requestDto = ConsultRequestDto.builder()
                 .appointment(appointment)
                 .actualDate(LocalDateTime.now())
-                .content(appointment.getTopic())
                 .videoUrl("sample.com")
                 .webrtcSessionId("123456")
                 .accessCode("123456")

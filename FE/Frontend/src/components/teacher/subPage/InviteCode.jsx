@@ -14,12 +14,15 @@ const InviteCode = () => {
     try {
       const token = localStorage.getItem("USER_TOKEN");
       const boardId = 1;
-      await axios.delete(`http://localhost:8081/v1/classrooms/teachers/${boardId}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${token}`,
-        },
-      });
+      await axios.delete(
+        `http://localhost:8081/v1/classrooms/teachers/${boardId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        }
+      );
       alert("학급이 삭제되었습니다");
     } catch (error) {
       console.error("Error deleting classroom", error);

@@ -26,8 +26,9 @@ const TeacherClassroom = () => {
     const classInfoData = async () => {
       try {
         const token = localStorage.getItem("USER_TOKEN");
+        const boardId = 1;
         const response = await axios.get(
-          "http://localhost:8081/v1/classrooms/1",
+          `http://localhost:8081/v1/classrooms/${boardId}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -48,8 +49,9 @@ const TeacherClassroom = () => {
   const noticeUpdate = async () => {
     try {
       const token = localStorage.getItem("USER_TOKEN");
+      const boardId = 1;
       await axios.put(
-        "http://localhost:8081/v1/classrooms/teachers/notice/1",
+        `http://localhost:8081/v1/classrooms/teachers/notice/${boardId}`,
         { notice: noticeContent },
         {
           headers: {
@@ -69,8 +71,9 @@ const TeacherClassroom = () => {
   const bannerUpdate = async () => {
     try {
       const token = localStorage.getItem("USER_TOKEN");
+      const boardId = 1;
       await axios.put(
-        "http://localhost:8081/v1/classrooms/teachers/banner/1",
+        `http://localhost:8081/v1/classrooms/teachers/banner/${boardId}`,
         { banner: classInfo },
         {
           headers: {

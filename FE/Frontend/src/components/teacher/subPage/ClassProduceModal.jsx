@@ -41,6 +41,7 @@ const ClassProduceModal = () => {
   return (
     <div className={styles.produceArray}>
       <div className={styles.modalArray}>
+        <p>우리 학급 생성하기</p>
         <div className={styles.classInput}>
           <p>학년</p>
           <input

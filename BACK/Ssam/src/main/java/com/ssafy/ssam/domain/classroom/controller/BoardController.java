@@ -45,7 +45,7 @@ public class BoardController {
     @PreAuthorize("hasRole('STUDENT')")
     @PostMapping("/{boardId}")
     public ResponseEntity<CommonResponseDto> registClass (
-            @RequestParam Integer boardId) {
+            @PathVariable Integer boardId) {
         return ResponseEntity.ok(boardService.registClass(boardId));
     }
 

@@ -5,8 +5,7 @@ import TeacherDeleteModal from "./TeacherDeleteModal";
 import styles from "./TeacherQuestion.module.scss";
 
 const TeacherQuestion = () => {
-  const { questions, updateQuestion, deleteQuestion, boardId, name } =
-    useQuestions();
+  const { questions, updateQuestion, deleteQuestion, boardId } = useQuestions();
   const [editingAnswerId, setEditingAnswerId] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [questionToDelete, setQuestionToDelete] = useState(null);
@@ -16,7 +15,7 @@ const TeacherQuestion = () => {
   // boardId
   // const { boardId, name } = fetchApiUserInitial();
   console.log("boardId inside ", boardId);
-  console.log("name inside ", name);
+  // console.log("name inside ", name);
 
   // 토큰 확인
   useEffect(() => {

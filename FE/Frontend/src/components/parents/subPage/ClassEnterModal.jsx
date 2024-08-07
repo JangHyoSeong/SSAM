@@ -20,7 +20,6 @@ const ClassEnterModal = () => {
           const response = await axios.get(
             `http://localhost:8081/v1/classrooms/pin/${pin}`,
             {
-              // params: { pin: pin },
               headers: {
                 "Content-Type": "application/json",
                 Authorization: `${token}`,

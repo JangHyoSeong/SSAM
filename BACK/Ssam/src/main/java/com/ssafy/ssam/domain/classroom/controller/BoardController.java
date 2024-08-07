@@ -29,7 +29,7 @@ public class BoardController {
 
     // 학급 페이지 진입
     @GetMapping("/{boardId}")
-    public ResponseEntity<BoardGetResponseDTO> getBoard(@PathVariable Integer boardId) {
+    public ResponseEntity<BoardGetResponseDTO> getBoard(@PathVariable("boardId") Integer boardId) {
         return ResponseEntity.ok(boardService.getBoardById(boardId));
     }
 
@@ -45,7 +45,7 @@ public class BoardController {
     @PreAuthorize("hasRole('STUDENT')")
     @PostMapping("/{boardId}")
     public ResponseEntity<CommonResponseDto> registClass (
-            @RequestParam Integer boardId) {
+            @PathVariable Integer boardId) {
         return ResponseEntity.ok(boardService.registClass(boardId));
     }
 

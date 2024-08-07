@@ -26,8 +26,8 @@ public class S3ImageService {
     }
 
     @Transactional
-    public String upload(MultipartFile image) {
-        String s3FileName = UUID.randomUUID().toString() + "-" + image.getOriginalFilename();
+    public String upload(MultipartFile image, String category) {
+        String s3FileName = category + "/" + UUID.randomUUID().toString() + "-" + image.getOriginalFilename();
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(image.getSize());

@@ -66,7 +66,7 @@ public class UserInfoService {
         user.setPhone(selfPhone);
         user.setOtherPhone(requestDTO.getOtherPhone());
         if (profileImage != null && !profileImage.isEmpty()) {
-            String imagePath = s3ImageService.upload(profileImage);
+            String imagePath = s3ImageService.upload(profileImage, "profile");
             user.setImgUrl(imagePath);
         }
 

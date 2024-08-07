@@ -5,7 +5,7 @@ import { OpenVidu } from 'openvidu-browser';
 import './VideoChatComponent.css';
 
 //const API_BASE_URL = 'http://localhost:8081/v1/video';
-const API_BASE_URL = 'http://i11e201.p.ssafy.io/api/v1/video';
+const API_BASE_URL = 'https://i11e201.p.ssafy.io/api/v1/video';
 
 const VideoChatComponent = () => {
     const { accessCode } = useParams();

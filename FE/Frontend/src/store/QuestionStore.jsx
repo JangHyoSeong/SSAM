@@ -11,21 +11,20 @@ export const QuestionProvider = ({ children }) => {
   // Context를 통해 넘겨주기 위해 상태관리해야함
   const [questions, setQuestions] = useState([]);
   const [boardId, setBoardId] = useState(null);
-  const [name, setUsername] = useState(null);
   const token = localStorage.getItem("USER_TOKEN");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { boardId, name } = await fetchApiUserInitial();
+        const { boardId } = await fetchApiUserInitial();
         if (!boardId) {
           throw new Error("Failed to get boardId from fetchApiUserInitial");
         }
         setBoardId(boardId);
-        setUsername(name);
-        const data = await fetchQuestionData(boardId, name);
+        // setUsername(name);
+        const data = await fetchQuestionData(boardId);
         setQuestions(Array.isArray(data) ? data : [data]); // 응답이 배열인지 확인
-        console.log("QuestionProvider", boardId, name);
+        // console.log("QuestionProvider", boardId);
       } catch (error) {
         console.error("Failed to fetch initial question data:", error);
       }

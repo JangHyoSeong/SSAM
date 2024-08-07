@@ -42,7 +42,7 @@ const TeacherAuthorization = () => {
   };
 
   const handleRejectClick = (request) => {
-    // console.log("Selected Request on Reject Click:", request);
+    console.log("Selected Request on Reject Click:", request);
     setSelectedRequest(request);
     setShowRejectModal(true);
   };
@@ -80,6 +80,7 @@ const TeacherAuthorization = () => {
           )
         );
         setShowRejectModal(false);
+        window.location.reload(); // 페이지 새로고침
       } catch (error) {
         console.error("Failed to reject student:", error);
       }

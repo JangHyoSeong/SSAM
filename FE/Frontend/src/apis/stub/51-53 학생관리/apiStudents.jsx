@@ -49,11 +49,12 @@ export const rejectStudentApi = async (studentId) => {
   if (!token) {
     throw new Error("No authentication token found.");
   }
-  // console.log(`Rejecting student with ID: ${studentId}`); // studentId 로그 출력
-  // console.log("USER_TOKEN:", token); // Add this line to log the token
+  console.log(`Rejecting student with ID: ${studentId}`); // studentId 로그 출력
+  console.log("USER_TOKEN:", token); // Add this line to log the token
 
-  const response = await axios.delete(
+  const response = await axios.put(
     `http://localhost:8081/v1/classrooms/teachers/students/${studentId}/reject`,
+    null,
     {
       headers: {
         "Content-Type": "application/json",

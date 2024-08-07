@@ -1,5 +1,6 @@
 package com.ssafy.ssam.domain.classroom.controller;
 
+import com.amazonaws.Response;
 import com.ssafy.ssam.domain.classroom.dto.request.*;
 import com.ssafy.ssam.domain.classroom.dto.response.BoardGetByPinResponseDTO;
 import com.ssafy.ssam.domain.classroom.dto.response.BoardGetResponseDTO;
@@ -37,8 +38,13 @@ public class BoardController {
     @PreAuthorize("hasRole('STUDENT')")
     @GetMapping()
     public ResponseEntity<BoardGetByPinResponseDTO> getByPin(
+<<<<<<< Updated upstream
             @RequestBody BoardGetByPinRequestDTO requestDTO){
         return ResponseEntity.ok(boardService.getBoardByPin(requestDTO.getPin()));
+=======
+            @PathVariable("pin") String pin){
+        return ResponseEntity.ok(boardService.getBoardByPin(pin));
+>>>>>>> Stashed changes
     }
 
     // 학급 등록 - 학생

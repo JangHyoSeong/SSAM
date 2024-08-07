@@ -35,7 +35,7 @@ public class BoardController {
 
     // Pin번호로 학급 찾기
     @PreAuthorize("hasRole('STUDENT')")
-    @GetMapping("/{pin}")
+    @GetMapping("/pin/{pin}")
     public ResponseEntity<BoardGetByPinResponseDTO> getByPin(
             @PathVariable String pin){
         return ResponseEntity.ok(boardService.getBoardByPin(pin));

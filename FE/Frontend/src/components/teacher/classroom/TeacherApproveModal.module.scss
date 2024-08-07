@@ -8,10 +8,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  backdrop-filter: blur(10px);
 }
 
 .modalContent {
+  font-size: 18px;
   width: 300px;
   background: white;
   padding: 2rem;
@@ -23,32 +23,44 @@
 .buttonContainer {
   margin-top: 1.5rem;
   display: flex;
-  justify-content: space-around;
 }
 
 .button {
-  padding: 0.5rem 1rem;
+  padding: 2rem 4rem;
   border-radius: 8px;
   border: none;
   cursor: pointer;
   font-size: 16px;
-  width: 30%; /* 버튼 크기를 더 작게 설정 */
+  margin: 50px;
 }
 
 .approveButton {
-  background-color: #6eb4ff; /* 애플의 블루 색상 */
-  color: white;
+  border-radius: 25px; /* 둥근 모서리 */
+  padding: 0.8vh 2vh;
+  margin: 0 0.5vw;
+  color: black;
+  border: 0.5px solid #d7e4ff;
+  background-color: #d7e4ff;
+  // box-shadow: 0 0.2vh 0.5vh rgba(1, 1, 1, 0.3);
+  cursor: pointer;
+  font-size: 16px;
+
+  &:hover {
+    background-color: #b9d0fc;
+  }
 }
 
-.approveButton:hover {
-  background-color: #52a1f4; /* 어두운 블루 색상 */
-}
+.closeButton {
+  border-radius: 25px; /* 둥근 모서리 */
+  padding: 0.8vh 2vh;
+  margin: 0 0.5vw;
+  border: 1px solid #b7b7b7;
+  background-color: white;
+  // box-shadow: 0 0.2vh 0.5vh rgba(1, 1, 1, 0.3);
+  cursor: pointer;
+  font-size: 16px;
 
-.cancelButton {
-  background-color: #d5d5d5;
-  color: white;
-}
-
-.cancelButton:hover {
-  background-color: #bbbbbb;
+  &:hover {
+    background-color: #dfdfdf;
+  }
 }

@@ -1,15 +1,17 @@
 package com.ssafy.ssam.domain.user.repository;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
 import com.ssafy.ssam.domain.classroom.entity.Board;
 import com.ssafy.ssam.domain.user.entity.UserBoardRelation;
 import com.ssafy.ssam.domain.user.entity.UserBoardRelationStatus;
 import com.ssafy.ssam.global.auth.entity.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface UserBoardRelationRepository extends JpaRepository<UserBoardRelation, Integer> {
@@ -20,7 +22,7 @@ public interface UserBoardRelationRepository extends JpaRepository<UserBoardRela
     Optional<UserBoardRelation> findByUserUserIdAndBoardBoardIdAndStatus(Integer userId, Integer boardId, UserBoardRelationStatus status);
 
     @Query("SELECT u.user FROM UserBoardRelation u WHERE u.board = :board AND u.status = :status")
-    Optional<List<User>> findUsersByBoardAndStatus(Board board, UserBoardRelationStatus status);
+    Optional<List<User>> findUsersByBoardAndStatus(@Param("board") Board board, @Param("status") UserBoardRelationStatus status);
 
     Optional<UserBoardRelation> findByUserAndBoardAndStatusIn(User user, Board board, List<UserBoardRelationStatus> statuses);
 }

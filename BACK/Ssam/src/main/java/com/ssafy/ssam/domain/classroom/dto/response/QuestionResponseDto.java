@@ -19,4 +19,5 @@ public class QuestionResponseDto {
     private String answer;
     private LocalDateTime contentDate;
     private LocalDateTime answerDate;
+
 }

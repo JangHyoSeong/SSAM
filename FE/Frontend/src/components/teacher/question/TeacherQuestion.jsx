@@ -5,18 +5,11 @@ import TeacherDeleteModal from "./TeacherDeleteModal";
 import styles from "./TeacherQuestion.module.scss";
 
 const TeacherQuestion = () => {
-  const { questions, updateQuestion, deleteQuestion, boardId, name } =
-    useQuestions();
+  const { questions, updateQuestion, deleteQuestion } = useQuestions();
   const [editingAnswerId, setEditingAnswerId] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [questionToDelete, setQuestionToDelete] = useState(null);
   const [newAnswer, setNewAnswer] = useState("");
-  // QuestionProvider 안에 fetchApiUserInitial에서 받아온 데이터 있는듯? name, boardId
-
-  // boardId
-  // const { boardId, name } = fetchApiUserInitial();
-  console.log("boardId inside ", boardId);
-  console.log("name inside ", name);
 
   // 토큰 확인
   useEffect(() => {
@@ -54,11 +47,10 @@ const TeacherQuestion = () => {
     setQuestionToDelete(null);
   };
 
-  // const trimDate = (dateString) => {
-  //   const parts = dateString.split(".");
-  //   if (parts.length < 3) return dateString; // 날짜 형식이 맞지 않는 경우 원본 문자열 반환
-  //   return `${parts[0]}.${parts[1]}.${parts[2]}`;
-  // };
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    return dateString.split("T")[0]; // 'T'를 기준으로 문자열을 나누고 첫 번째 부분을 반환
+  };
 
   return (
     <div className={styles.teacherQuestionContainer}>
@@ -67,8 +59,8 @@ const TeacherQuestion = () => {
           <div className={styles.boxContainer}>
             <div className={styles.questionBox}>
               <div className={styles.authorAndDate}>
-                <p className={styles.author}>{item.studentId}</p>
-                {/* <p className={styles.date}>{trimDate(item.date)}</p> */}
+                <p className={styles.author}>{item.studentName}</p>
+                <p className={styles.date}>{formatDate(item.contentDate)}</p>
               </div>
               <p className={styles.question}>{item.content}</p>
               <FaTrash
@@ -89,7 +81,7 @@ const TeacherQuestion = () => {
                 <>
                   <div className={styles.authorAndDate}>
                     <p className={styles.author}>선생님</p>
-                    {/* <p className={styles.date}>{trimDate(item.date)}</p> */}
+                    <p className={styles.date}>{formatDate(item.answerDate)}</p>
                   </div>
                   <p className={styles.answer}>
                     {item.answer

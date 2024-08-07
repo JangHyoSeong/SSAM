@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import styles from "./TeacherAuthorization.module.scss";
-import TeacherApproveModal from "./TeacherApproveModal";
-import TeacherRejectModal from "./TeacherRejectModal";
 import { useStudentsStore } from "../../../store/StudentsStore"; // 경로 및 named export 확인
 import {
   fetchApiStudentsList,
   approveStudentApi,
+  rejectStudentApi,
 } from "../../../apis/stub/51-53 학생관리/apiStudents";
 
 const TeacherAuthorization = () => {
@@ -14,10 +13,6 @@ const TeacherAuthorization = () => {
     students: state.students,
     setStudents: state.setStudents,
   }));
-
-  const [showApproveModal, setShowApproveModal] = useState(false);
-  const [showRejectModal, setShowRejectModal] = useState(false);
-  const [selectedRequest, setSelectedRequest] = useState(null);
 
   useEffect(() => {
     const getData = async () => {
@@ -33,36 +28,31 @@ const TeacherAuthorization = () => {
     getData();
   }, [setStudents]);
 
-  const handleApproveClick = (request) => {
-    console.log("Selected Request on Approve Click:", request);
-    setSelectedRequest(request);
-    setShowApproveModal(true);
+  const handleApproveClick = async (studentId) => {
+    console.log("Approving Student ID:", studentId);
+    try {
+      await approveStudentApi(studentId); // studentId를 올바르게 전달
+      setStudents((prevStudents) =>
+        prevStudents.map((student) =>
+          student.studentId === studentId
+            ? { ...student, approved: true }
+            : student
+        )
+      );
+    } catch (error) {
+      console.error("Failed to approve student:", error);
+    }
   };
 
-  const handleRejectClick = (request) => {
-    console.log("Selected Request on Reject Click:", request);
-    setSelectedRequest(request);
-    setShowRejectModal(true);
-  };
-
-  const handleApproveStudent = async () => {
-    if (selectedRequest && selectedRequest.studentId) {
-      console.log("Approving Student ID:", selectedRequest.studentId);
-      try {
-        await approveStudentApi(selectedRequest.studentId); // studentId를 올바르게 전달
-        setStudents((prevStudents) =>
-          prevStudents.map((student) =>
-            student.studentId === selectedRequest.studentId
-              ? { ...student, approved: true }
-              : student
-          )
-        );
-        setShowApproveModal(false);
-      } catch (error) {
-        console.error("Failed to approve student:", error);
-      }
-    } else {
-      console.error("Student ID is missing.");
+  const handleRejectClick = async (studentId) => {
+    console.log("Rejecting Student ID:", studentId);
+    try {
+      await rejectStudentApi(studentId); // studentId를 올바르게 전달
+      setStudents((prevStudents) =>
+        prevStudents.filter((student) => student.studentId !== studentId)
+      );
+    } catch (error) {
+      console.error("Failed to reject student:", error);
     }
   };
 
@@ -108,13 +98,13 @@ const TeacherAuthorization = () => {
               <td className={styles.actionColumn}>
                 <button
                   className={styles.approveButton}
-                  onClick={() => handleApproveClick(student)}
+                  onClick={() => handleApproveClick(student.studentId)}
                 >
                   승인
                 </button>
                 <button
                   className={styles.rejectButton}
-                  onClick={() => handleRejectClick(student)}
+                  onClick={() => handleRejectClick(student.studentId)}
                 >
                   거절
                 </button>
@@ -123,23 +113,6 @@ const TeacherAuthorization = () => {
           ))}
         </tbody>
       </table>
-      {showApproveModal && (
-        <TeacherApproveModal
-          request={selectedRequest}
-          onClose={() => setShowApproveModal(false)}
-          onApprove={handleApproveStudent}
-        />
-      )}
-      {showRejectModal && (
-        <TeacherRejectModal
-          request={selectedRequest}
-          onClose={() => setShowRejectModal(false)}
-          onReject={() => {
-            setShowRejectModal(false);
-            // 추가 거절 로직
-          }}
-        />
-      )}
     </div>
   );
 };

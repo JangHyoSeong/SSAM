@@ -204,7 +204,7 @@ public class BoardService {
     public CommonResponseDto updateBannerImage(int boardId, MultipartFile image) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
-        String imageUrl = s3ImageService.upload(image);
+        String imageUrl = s3ImageService.upload(image, "banner");
 
         User user = findUserByToken();
         UserBoardRelation relation = userBoardRelationRepository.findByUserAndBoard(user, board)

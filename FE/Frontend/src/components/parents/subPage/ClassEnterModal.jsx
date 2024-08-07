@@ -59,7 +59,7 @@ const ClassEnterModal = () => {
       console.log(token);
       await axios.post(
         `http://localhost:8081/v1/classrooms/${classroom.boardId}`,
-        {}, // 빈 객체를 요청 본문으로 전달 (필요한 경우 여기에 데이터를 추가하세요)
+        {}, // 빈 객체를 요청 본문으로 전달 (body가 빈 값이라면 {}를 추가해야함)
         {
           headers: {
             "Content-Type": "application/json",

@@ -1,7 +1,7 @@
-.alramArray {
+.alarmArray {
   position: absolute;
-  top: 5.45vw;
-  left: 176vh;
+  top: 12%;
+  left: 80.6%;
   width: 18vw;
   height: 55vh;
   background-color: #eeeeee;
@@ -47,10 +47,33 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   text-align: center;
-  height: 10vh;
+  height: 8.5vh;
   margin-top: 5%;
   border-radius: 25px;
   background-color: white;
   white-space: normal;
+  font-size: 90%;
+}
+
+.content a {
+  text-decoration: none;
+}
+
+.content p {
+  position: relative;
+  top: -20%;
+  color: black;
+}
+
+.deleteBtn {
+  position: relative;
+  top: 10%;
+  right: -42%;
+}
+
+.deleteBtn:hover {
+  color: red !important ;
+  cursor: pointer !important ;
 }

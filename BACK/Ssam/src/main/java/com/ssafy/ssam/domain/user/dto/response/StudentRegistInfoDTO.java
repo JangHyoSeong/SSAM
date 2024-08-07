@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class StudentRegistInfoDTO {
 
+    private Integer studentId;
     private String name;
     private String username;
     private LocalDate followDate;

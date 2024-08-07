@@ -6,15 +6,16 @@ const ClassProduceModal = () => {
   const [showModal, setShowModal] = useState(true);
   const [grade, setGrade] = useState("");
   const [classroom, setClassroom] = useState("");
-  const handleClose = () => {
+  const classClose = () => {
     setShowModal(false);
   };
 
-  const handleCreate = async () => {
+  // 학급 생성하기
+  const classCreate = async () => {
     try {
       const token = localStorage.getItem("USER_TOKEN");
       const response = await axios.post(
-        "/classrooms/teachers",
+        "http://localhost:8081/v1/classrooms/teachers",
         {
           grade,
           classroom,
@@ -31,7 +32,6 @@ const ClassProduceModal = () => {
       setShowModal(false);
     } catch (error) {
       console.error("Error posting data", error);
-      alert("실패");
     }
   };
 
@@ -42,6 +42,7 @@ const ClassProduceModal = () => {
   return (
     <div className={styles.produceArray}>
       <div className={styles.modalArray}>
+        <p>우리 학급 생성하기</p>
         <div className={styles.classInput}>
           <p>학년</p>
           <input
@@ -58,13 +59,13 @@ const ClassProduceModal = () => {
         </div>
         <div className={styles.buttonContainer}>
           <button
-            onClick={handleCreate}
+            onClick={classCreate}
             className={`${styles.button} ${styles.approveButton}`}
           >
             생성
           </button>
           <button
-            onClick={handleClose}
+            onClick={classClose}
             className={`${styles.button} ${styles.cancelButton}`}
           >
             취소

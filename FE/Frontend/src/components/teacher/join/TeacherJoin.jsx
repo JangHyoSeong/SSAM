@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
 import axios from "axios";
+import { useState, useEffect } from "react";
 import styles from "./TeacherJoin.module.scss";
 import human from "../../../assets/human.png";
 import lock from "../../../assets/lock.png";
@@ -24,9 +24,10 @@ const TeacherJoin = () => {
 
   const [schools, setSchools] = useState([]);
 
+  // 학교 리스트 GET
   useEffect(() => {
     axios
-      .get("/schools")
+      .get("http://localhost:8081/v1/schools")
       .then((response) => {
         setSchools(response.data);
       })
@@ -43,12 +44,14 @@ const TeacherJoin = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  // 회원가입 POST
+  const joinSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("/auth/teachers", formData)
+      .post("http://localhost:8081/v1/auth/teachers", formData)
       .then((response) => {
         console.log("axios 성공", response);
+        alert("성공");
         window.location.replace("./teacherlogin");
       })
       .catch((error) => {
@@ -63,7 +66,7 @@ const TeacherJoin = () => {
       <div className={styles.joinFormArray}>
         <div className={styles.joinBtnFormArray}>
           <div className={styles.joinBackground}>
-            <form onSubmit={handleSubmit} className={styles.joinForm}>
+            <form onSubmit={joinSubmit} className={styles.joinForm}>
               <div>
                 <img src={human} className={styles.joinIcon} alt="human" />
                 <input

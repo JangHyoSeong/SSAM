@@ -4,6 +4,7 @@ import Chatbot from "../common/chatbot/Chatbot.jsx";
 import SubNavbar from "../common/navigation/SubNavbar.jsx";
 import MainNavbar from "../common/navigation/MainNavbar.jsx";
 import Video from "../video/Video.jsx";
+import VideoReal from "../video/VideoReal.jsx";
 // import { QuestionProvider } from "../store/QuestionStore";
 
 // Teacher components
@@ -129,7 +130,7 @@ const AppRouter = () => {
 
           {/* Video Route */}
           <Route path="/video" element={<Video />} />
-
+          <Route path="/video/:accessCode" element={<VideoReal />} />
           {/* WebRTC Route */}
           <Route path="/webrtc" element={<WebrtcPage />} />
         </Routes>

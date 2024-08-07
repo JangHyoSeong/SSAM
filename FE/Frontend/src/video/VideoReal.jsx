@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
-import './VideoChatComponent.css'; // 새로운 CSS 파일을 import 합니다
+import './VideoChatComponent.css';
 
-const API_BASE_URL = 'http://localhost:8081/v1/video'; // Spring 백엔드 API 기본 URL
-//const API_BASE_URL = 'https://i11e201.p.ssafy.io/api/v1/video';
+const API_BASE_URL = 'http://localhost:8081/v1/video';
 
 const VideoChatComponent = () => {
-    const [myWebrtcSessionId, setMyWebrtcSessionId] = useState('SessionA');
-    const [mySessionId, setMySessionId] = useState('');
-    const [myUserName, setMyUserName] = useState(`Participant${Math.floor(Math.random() * 100)}`);
+    const { accessCode } = useParams();
+    const [sessionId, setSessionId] = useState(null);
     const [session, setSession] = useState(null);
     const [mainStreamManager, setMainStreamManager] = useState(null);
     const [publisher, setPublisher] = useState(null);
@@ -19,12 +18,18 @@ const VideoChatComponent = () => {
     const [chatInput, setChatInput] = useState('');
     const [isRecording, setIsRecording] = useState(false);
     const [recordingId, setRecordingId] = useState(null);
+    const [isCameraOn, setIsCameraOn] = useState(true);
+    const [isMicOn, setIsMicOn] = useState(true);
     const OV = useRef(new OpenVidu());
+
+    const myUserName = useRef(`user_${Math.floor(Math.random() * 1000) + 1}`);
 
     useEffect(() => {
         window.addEventListener('beforeunload', onBeforeUnload);
+        joinSession();
         return () => {
             window.removeEventListener('beforeunload', onBeforeUnload);
+            leaveSession();
         };
     }, []);
 
@@ -32,16 +37,7 @@ const VideoChatComponent = () => {
         leaveSession();
     };
 
-    const handleChangeWebrtcSessionId = (e) => {
-        setMyWebrtcSessionId(e.target.value);
-    };
-
-    const handleChangeUserName = (e) => {
-        setMyUserName(e.target.value);
-    };
-
     const joinSession = async () => {
-        console.warn('joinSession');
         const mySession = OV.current.initSession();
 
         mySession.on('streamCreated', (event) => {
@@ -61,11 +57,9 @@ const VideoChatComponent = () => {
 
         try {
             const token = await getToken();
-            await mySession.connect(token, { clientData: myUserName });
+            await mySession.connect(token, { clientData: myUserName.current });
 
-            // 세션 연결 후 세션 정보 로깅
-            setMySessionId(mySession.sessionId);
-
+            setSessionId(mySession.sessionId);
             let publisher = await OV.current.initPublisherAsync(undefined, {
                 audioSource: undefined,
                 videoSource: undefined,
@@ -95,7 +89,7 @@ const VideoChatComponent = () => {
         if (session) {
             try {
                 await axios.delete(`${API_BASE_URL}/token`, {
-                    data: { sessionId: myWebrtcSessionId, userId: myUserName, token: session.token },
+                    data: { sessionId: accessCode, userId: myUserName.current, token: session.token },
                 });
             } catch (error) {
                 console.error('Error deleting token:', error);
@@ -140,7 +134,7 @@ const VideoChatComponent = () => {
         if (!isRecording) {
             try {
                 const response = await axios.post(`${API_BASE_URL}/recording/start`, {
-                    session: mySessionId,
+                    session: accessCode,
                     outputMode: 'COMPOSED',
                     hasAudio: true,
                     hasVideo: true,
@@ -163,11 +157,27 @@ const VideoChatComponent = () => {
         }
     };
 
+    const toggleCamera = () => {
+        if (publisher) {
+            publisher.publishVideo(!isCameraOn);
+            setIsCameraOn(!isCameraOn);
+        }
+    };
+
+    const toggleMic = () => {
+        if (publisher) {
+            publisher.publishAudio(!isMicOn);
+            setIsMicOn(!isMicOn);
+        }
+    };
+
+
+
     const sendChatMessage = () => {
         if (chatInput.trim() !== '' && session) {
             const messageData = {
                 message: chatInput,
-                from: myUserName,
+                from: myUserName.current,
                 connectionId: session.connection.connectionId,
             };
             session.signal({
@@ -193,8 +203,8 @@ const VideoChatComponent = () => {
     const getToken = async () => {
         try {
             const response = await axios.post(`${API_BASE_URL}/token`, {
-                webrtcSessionId: myWebrtcSessionId,
-                userId: myUserName,
+                webrtcSessionId: accessCode,
+                userId: myUserName.current,
             });
             return response.data.token;
         } catch (error) {
@@ -208,41 +218,25 @@ const VideoChatComponent = () => {
             {session === null ? (
                 <div className="join-container d-flex align-items-center justify-content-center vh-100">
                     <div className="join-form-container bg-light p-5 rounded shadow">
-                        <h2 className="text-center mb-4">Join Video Session</h2>
-                        <form
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                joinSession();
-                            }}
-                        >
-                            <div className="mb-3">
-                                <label htmlFor="userName" className="form-label">
-                                    Your Name:
-                                </label>
-                                <input type="text" className="form-control" id="userName" value={myUserName} onChange={handleChangeUserName} required />
-                            </div>
-                            <div className="mb-3">
-                                <label htmlFor="sessionId" className="form-label">
-                                    Session ID:
-                                </label>
-                                <input type="text" className="form-control" id="webrtcSessionId" value={myWebrtcSessionId} onChange={handleChangeWebrtcSessionId} required />
-                            </div>
-                            <button type="submit" className="btn btn-primary w-100">
-                                Join Session
-                            </button>
-                        </form>
+                        <h2 className="text-center mb-4">Joining session...</h2>
                     </div>
                 </div>
             ) : (
                 <div className="session-container">
                     <div className="session-header bg-dark text-white p-3 d-flex justify-content-between align-items-center">
-                        <h3 className="m-0">Session: {mySessionId}</h3>
+                        <h3 className="m-0">Session: {sessionId}</h3>
                         <div>
                             <button className="btn btn-outline-light me-2" onClick={switchCamera}>
                                 Switch Camera
                             </button>
                             <button className="btn btn-outline-light me-2" onClick={toggleRecording}>
                                 {isRecording ? 'Stop Recording' : 'Start Recording'}
+                            </button>
+                            <button className="btn btn-outline-light me-2" onClick={toggleCamera}>
+                                {isCameraOn ? 'Turn Off Camera' : 'Turn On Camera'}
+                            </button>
+                            <button className="btn btn-outline-light me-2" onClick={toggleMic}>
+                                {isMicOn ? 'Turn Off Mic' : 'Turn On Mic'}
                             </button>
                             <button className="btn btn-danger" onClick={leaveSession}>
                                 Leave Session

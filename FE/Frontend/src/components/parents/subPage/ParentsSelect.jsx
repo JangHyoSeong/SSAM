@@ -41,7 +41,7 @@ const ParentsSelect = () => {
           </div>
         </NavLink>
         <NavLink
-          to="/studentappointment"
+          to="/studentreservationmanagement"
           className={`${styles.menuBox} ${styles.menuBox3}`}
         >
           <div className={styles.menuTxt}>

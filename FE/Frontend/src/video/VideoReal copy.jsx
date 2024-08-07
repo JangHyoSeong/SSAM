@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 import './VideoChatComponent.css'; // 새로운 CSS 파일을 import 합니다
@@ -7,7 +8,8 @@ const API_BASE_URL = 'http://localhost:8081/v1/video'; // Spring 백엔드 API �
 //const API_BASE_URL = 'https://i11e201.p.ssafy.io/api/v1/video';
 
 const VideoChatComponent = () => {
-    const [myWebrtcSessionId, setMyWebrtcSessionId] = useState('SessionA');
+    const { accessCode } = useParams();
+    const [myWebrtcSessionId, setMyWebrtcSessionId] = useState(accessCode);
     const [mySessionId, setMySessionId] = useState('');
     const [myUserName, setMyUserName] = useState(`Participant${Math.floor(Math.random() * 100)}`);
     const [session, setSession] = useState(null);

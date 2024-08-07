@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  kurento:
+    image: kurento/kurento-media-server:latest
+    container_name: kurento-media-server
+    ports:
+      - "8888:8888"
+      - "5000-5050:5000-5050/udp"
+    environment:
+      - GST_DEBUG=2,Kurento*:4
+      - KMS_STUN_IP=i11e201.p.ssafy.io
+      - KMS_STUN_PORT=3478
+      - KMS_TURN_URL=admin:JddU_RuEn5Iqc@coturn:3478?transport=udp
+      - KMS_NETWORK_INTERFACES=eth0
+    volumes:
+      - ./kurento-logs:/var/log/kurento-media-server
+    networks:
+      - kurento-network
+    depends_on:
+      - coturn
+    restart: always
+
+  coturn:
+    image: coturn/coturn
+    container_name: coturn-server
+    ports:
+      - "3478:3478"
+      - "3478:3478/udp"
+      - "3479:3479"
+      - "3479:3479/udp"
+      - "5349:5349"
+      - "5349:5349/udp"
+    volumes:
+      - ./turnserver.conf:/etc/turnserver.conf
+    networks:
+      - kurento-network
+    restart: always
+
+networks:
+  kurento-network:
+    driver: bridge
+
+volumes:
+  kurento-logs:

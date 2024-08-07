@@ -29,16 +29,16 @@ public class BoardController {
 
     // 학급 페이지 진입
     @GetMapping("/{boardId}")
-    public ResponseEntity<BoardGetResponseDTO> getBoard(@PathVariable Integer boardId) {
+    public ResponseEntity<BoardGetResponseDTO> getBoard(@PathVariable("boardId") Integer boardId) {
         return ResponseEntity.ok(boardService.getBoardById(boardId));
     }
 
     // Pin번호로 학급 찾기
     @PreAuthorize("hasRole('STUDENT')")
-    @GetMapping()
+    @GetMapping("/pin/{pin}")
     public ResponseEntity<BoardGetByPinResponseDTO> getByPin(
-            @RequestBody BoardGetByPinRequestDTO requestDTO){
-        return ResponseEntity.ok(boardService.getBoardByPin(requestDTO.getPin()));
+            @PathVariable String pin){
+        return ResponseEntity.ok(boardService.getBoardByPin(pin));
     }
 
     // 학급 등록 - 학생

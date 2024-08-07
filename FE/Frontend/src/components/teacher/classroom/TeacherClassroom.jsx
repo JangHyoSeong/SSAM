@@ -61,8 +61,8 @@ const TeacherClassroom = () => {
           },
         }
       );
-      setIsEditing(false); // 편집 상태 해제
-      location.reload(); // 페이지 새로고침
+      setIsEditing(false);
+      location.reload();
     } catch (error) {
       console.error("Failed to save banner content:", error);
     }
@@ -83,8 +83,8 @@ const TeacherClassroom = () => {
           },
         }
       );
-      setIsEditingInfo(false); // 편집 상태 해제
-      location.reload(); // 페이지 새로고침
+      setIsEditingInfo(false);
+      location.reload();
     } catch (error) {
       console.error("Failed to save class info:", error);
     }

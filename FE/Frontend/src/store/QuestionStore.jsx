@@ -12,7 +12,6 @@ export const QuestionProvider = ({ children }) => {
   const [questions, setQuestions] = useState([]);
   const [boardId, setBoardId] = useState(null);
   const token = localStorage.getItem("USER_TOKEN");
-
   useEffect(() => {
     const fetchData = async () => {
       try {

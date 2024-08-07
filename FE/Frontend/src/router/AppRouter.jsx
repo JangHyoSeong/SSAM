@@ -49,10 +49,11 @@ const AppRouter = () => {
     "/studentlogin",
     "/studentjoin",
     "/video",
+    "/video/:accessCode",
   ];
   const showChatbot = !hideChatbotOnRoutes.includes(location.pathname);
 
-  const hideNavbarOnRoutes = ["/video"];
+  const hideNavbarOnRoutes = ["/video", "/video/:accessCode"];
   const showNavbar = !hideNavbarOnRoutes.includes(location.pathname);
 
   return (
@@ -131,6 +132,7 @@ const AppRouter = () => {
           {/* Video Route */}
           <Route path="/video" element={<Video />} />
           <Route path="/video/:accessCode" element={<VideoReal />} />
+          
           {/* WebRTC Route */}
           <Route path="/webrtc" element={<WebrtcPage />} />
         </Routes>

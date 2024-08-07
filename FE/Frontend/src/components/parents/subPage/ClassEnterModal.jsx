@@ -1,7 +1,7 @@
-import { useEffect, useState, useRef } from "react";
 import axios from "axios";
+import { useEffect, useState, useRef } from "react";
 import styles from "./ClassEnterModal.module.scss";
-import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
+// import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
 
 const ClassEnterModal = () => {
   // 상태 관리: PIN 번호를 입력받을 배열, 선택된 학급 정보, 모달의 표시 여부
@@ -18,9 +18,9 @@ const ClassEnterModal = () => {
         try {
           const token = localStorage.getItem("USER_TOKEN");
           console.log("Using token: ", token);
-          const { boardId } = await fetchApiUserInitial();
+          // const { boardId } = await fetchApiUserInitial();
           const response = await axios.get(
-            `http://localhost:8081/v1/classrooms/${boardId}`,
+            `http://localhost:8081/v1/classrooms`,
             {
               params: { pin },
 
@@ -31,7 +31,7 @@ const ClassEnterModal = () => {
             }
           );
           if (response.data && response.data.pin === pin) {
-            setClassroom(response.data); // 학급 정보 설정
+            setClassroom(response.data);
             console.log(response.data);
           } else {
             console.error("No matching classroom found with the provided PIN");

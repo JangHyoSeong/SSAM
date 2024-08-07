@@ -37,13 +37,11 @@ $ npm run dev
 ### 담당 업무
 
 - 김동현
-
   - 상위메인, 하위메인 (초대코드, 알림, 설명)
   - 로그인, 회원가입
   - 회원정보 (회원정보, 비밀번호 변경)
 
 - 정유진
-
   - 고객센터
   - 문의사항
   - 학급정보 (학급관리, 승인관리)
@@ -54,50 +52,50 @@ $ npm run dev
 
 # URL
 
-### 메인페이지 : http://localhost:5173/
+### 메인페이지 : http://localhost:3000/
 
 ### 선생님
 
-- 서브페이지 : http://localhost:5173/teachersubpage
+- 서브페이지 : http://localhost:3000/teachersubpage
 
-- 로그인 : http://localhost:5173/teacherlogin
-- 회원가입 : http://localhost:5173/teacherjoin
+- 로그인 : http://localhost:3000/teacherlogin
+- 회원가입 : http://localhost:3000/teacherjoin
 
 - 학급정보
 
-  - 학급관리 : http://localhost:5173/teacherclassroom
-  - 승인관리 : http://localhost:5173/teacherauthorization
+  - 학급관리 : http://localhost:3000/teacherclassroom
+  - 승인관리 : http://localhost:3000/teacherauthorization
 
-- 문의사항 : http://localhost:5173/teacherquestion
+- 문의사항 : http://localhost:3000/teacherquestion
 
 - 상담예약
 
-  - 예약관리 : http://localhost:5173/teacherreservationmanagement
-  - 상담내역 : http://localhost:5173/teacherconsultationlist
+  - 예약관리 : http://localhost:3000/teacherreservationmanagement
+  - 상담내역 : http://localhost:3000/teacherconsultationlist
 
 - 회원정보
-  - 회원정보 수정 : http://localhost:5173/teacherupdate
-  - 비밀번호 변경 : http://localhost:5173/passwordchange
+  - 회원정보 수정 : http://localhost:3000/teacherupdate
+  - 비밀번호 변경 : http://localhost:3000/passwordchange
 
 ### 학부모
 
-- 서브페이지 : http://localhost:5173/parentssubpage
+- 서브페이지 : http://localhost:3000/studentsubpage
 
-- 로그인 : http://localhost:5173/parentslogin
-- 회원가입 : http://localhost:5173/parentsjoin
+- 로그인 : http://localhost:3000/studentlogin
+- 회원가입 : http://localhost:3000/studentjoin
 
 - 학급정보
 
-  - 학급관리 : http://localhost:5173/parentsclassroom
-  - 승인관리 : http://localhost:5173/parentsauthorization
+  - 학급관리 : http://localhost:3000/studentclassroom
+  - 승인관리 : http://localhost:3000/studentauthorization
 
-- 문의사항 : http://localhost:5173/parentsquestion
+- 문의사항 : http://localhost:3000/studentquestion
 
 - 상담예약
 
-  - 예약관리 : http://localhost:5173/parentsreservationmanagement
+  - 예약관리 : http://localhost:3000/studentreservationmanagement
   - 상담신청 :
 
 - 회원정보
-  - 회원정보 수정 : http://localhost:5173/parentsupdate
-  - 비밀번호 변경 : http://localhost:5173/passwordchange
+  - 회원정보 수정 : http://localhost:3000/studentupdate
+  - 비밀번호 변경 : http://localhost:3000/passwordchange

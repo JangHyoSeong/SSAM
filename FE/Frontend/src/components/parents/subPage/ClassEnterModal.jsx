@@ -18,16 +18,16 @@ const ClassEnterModal = () => {
           const token = localStorage.getItem("USER_TOKEN"); // 로컬 스토리지에서 토큰을 가져옴
           console.log("Using token: ", token);
           const response = await axios.get(
-            "http://localhost:8081/v1/classrooms",
+            `http://localhost:8081/v1/classrooms/pin/${pin}`,
             {
-              params: { pin: pin },
+              // params: { pin: pin },
               headers: {
                 "Content-Type": "application/json",
                 Authorization: `${token}`,
               },
             }
           );
-          if (response.data && response.data.pin === pin) {
+          if (response.data) {
             setClassroom(response.data); // 학급 정보 설정
             console.log(response.data);
           } else {

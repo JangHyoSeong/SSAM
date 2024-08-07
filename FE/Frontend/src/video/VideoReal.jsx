@@ -4,7 +4,8 @@ import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 import './VideoChatComponent.css';
 
-const API_BASE_URL = 'http://localhost:8081/v1/video';
+//const API_BASE_URL = 'http://localhost:8081/v1/video';
+const API_BASE_URL = 'http://i11e201.p.ssafy.io/api/v1/video';
 
 const VideoChatComponent = () => {
     const { accessCode } = useParams();
@@ -58,8 +59,6 @@ const VideoChatComponent = () => {
         try {
             const token = await getToken();
             await mySession.connect(token, { clientData: myUserName.current });
-
-            setSessionId(mySession.sessionId);
             let publisher = await OV.current.initPublisherAsync(undefined, {
                 audioSource: undefined,
                 videoSource: undefined,
@@ -134,7 +133,7 @@ const VideoChatComponent = () => {
         if (!isRecording) {
             try {
                 const response = await axios.post(`${API_BASE_URL}/recording/start`, {
-                    session: accessCode,
+                    sessionId: session.sessionId,
                     outputMode: 'COMPOSED',
                     hasAudio: true,
                     hasVideo: true,
@@ -203,7 +202,7 @@ const VideoChatComponent = () => {
     const getToken = async () => {
         try {
             const response = await axios.post(`${API_BASE_URL}/token`, {
-                webrtcSessionId: accessCode,
+                accessCode: accessCode,
                 userId: myUserName.current,
             });
             return response.data.token;
@@ -224,7 +223,7 @@ const VideoChatComponent = () => {
             ) : (
                 <div className="session-container">
                     <div className="session-header bg-dark text-white p-3 d-flex justify-content-between align-items-center">
-                        <h3 className="m-0">Session: {sessionId}</h3>
+                        <h3 className="m-0">Session: {session.sessionId}</h3>
                         <div>
                             <button className="btn btn-outline-light me-2" onClick={switchCamera}>
                                 Switch Camera

@@ -4,7 +4,6 @@ import Chatbot from "../common/chatbot/Chatbot.jsx";
 import SubNavbar from "../common/navigation/SubNavbar.jsx";
 import MainNavbar from "../common/navigation/MainNavbar.jsx";
 import Video from "../video/Video.jsx";
-import VideoReal from "../video/VideoReal.jsx";
 // import { QuestionProvider } from "../store/QuestionStore";
 
 // Teacher components
@@ -48,12 +47,11 @@ const AppRouter = () => {
     "/teacherjoin",
     "/studentlogin",
     "/studentjoin",
-    "/video",
     "/video/:accessCode",
   ];
   const showChatbot = !hideChatbotOnRoutes.includes(location.pathname);
 
-  const hideNavbarOnRoutes = ["/video", "/video/:accessCode"];
+  const hideNavbarOnRoutes = ["/video/:accessCode"];
   const showNavbar = !hideNavbarOnRoutes.includes(location.pathname);
 
   return (
@@ -130,9 +128,8 @@ const AppRouter = () => {
           </Route>
 
           {/* Video Route */}
-          <Route path="/video" element={<Video />} />
-          <Route path="/video/:accessCode" element={<VideoReal />} />
-          
+          <Route path="/video/:accessCode" element={<Video />} />
+
           {/* WebRTC Route */}
           <Route path="/webrtc" element={<WebrtcPage />} />
         </Routes>

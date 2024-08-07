@@ -13,12 +13,10 @@ public class QuestionResponseDto {
 
     private Integer questionId;
     private Integer studentId;
+    private String studentName;
     private Integer boardId;
-
     private String content;
-
     private String answer;
-
     private LocalDateTime contentDate;
     private LocalDateTime answerDate;
 }

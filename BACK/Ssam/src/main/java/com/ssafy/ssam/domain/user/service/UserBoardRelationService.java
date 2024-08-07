@@ -4,6 +4,7 @@ import com.ssafy.ssam.domain.classroom.entity.Board;
 import com.ssafy.ssam.domain.classroom.repository.BoardRepository;
 import com.ssafy.ssam.domain.consult.dto.response.ConsultSummaryDTO;
 import com.ssafy.ssam.domain.consult.entity.Appointment;
+import com.ssafy.ssam.domain.consult.entity.AppointmentStatus;
 import com.ssafy.ssam.domain.consult.entity.Consult;
 import com.ssafy.ssam.domain.consult.repository.AppointmentRepository;
 import com.ssafy.ssam.domain.consult.repository.ConsultRepository;
@@ -27,7 +28,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -101,7 +101,7 @@ public class UserBoardRelationService {
         CustomUserDetails userDetails = findCustomUserDetails();
         Integer teacherId = userDetails.getUserId();
 
-        List<Appointment> appointments = appointmentRepository.findByStudent_UserIdAndTeacher_UserId(studentId, teacherId);
+        List<Appointment> appointments = appointmentRepository.findByStudent_UserIdAndTeacher_UserIdAndStatus(studentId, teacherId, AppointmentStatus.DONE);
         List<Consult> consults =  consultRepository.findByAppointmentIn(appointments);
 
         return StudentInfoDetailDTO.builder()

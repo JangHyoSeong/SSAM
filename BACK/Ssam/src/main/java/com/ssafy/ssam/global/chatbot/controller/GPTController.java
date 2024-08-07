@@ -22,8 +22,8 @@ public class GPTController {
         return gptService.summaryConsult(talk , topic, description);
     }
 
-    @GetMapping("/chat")
-    public String chat(@RequestParam() String talk , String topic) {
-        return gptService.summaryConsult(talk , topic);
-    }
+//    @GetMapping("/chat")
+//    public String chat(@RequestParam() String talk , String topic) {
+//        return gptService.summaryConsult(talk , topic);
+//    }
 }

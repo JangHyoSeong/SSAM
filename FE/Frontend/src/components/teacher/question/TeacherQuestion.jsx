@@ -107,6 +107,7 @@ const TeacherQuestion = () => {
       ))}
       {isDeleteModalOpen && (
         <TeacherDeleteModal
+          // key={questionToDelete}
           onConfirm={handleDeleteModalConfirm}
           onCancel={handleDeleteModalCancel}
         />

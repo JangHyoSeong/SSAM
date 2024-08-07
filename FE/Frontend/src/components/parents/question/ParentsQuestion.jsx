@@ -1,9 +1,9 @@
 import { useState } from "react";
-import styles from "./ParentsQuestion.module.scss";
 import { FaTrash, FaPen } from "react-icons/fa";
+import { useQuestions } from "../../../store/QuestionStore";
 import QuestionModal from "./QuestionModal";
 import ParentsDeleteModal from "./ParentsDeleteModal";
-import { useQuestions } from "../../../store/QuestionStore";
+import styles from "./ParentsQuestion.module.scss";
 
 const ParentsQuestion = () => {
   const { questions, addQuestion, deleteQuestion } = useQuestions();
@@ -11,10 +11,11 @@ const ParentsQuestion = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [newQuestion, setNewQuestion] = useState(""); // 새로운 질문 상태
   const [questionToDelete, setQuestionToDelete] = useState(null);
+  console.log("ParentsQuestion", questions);
 
-  const handleDeleteClick = (id) => {
+  const handleDeleteClick = (questionId) => {
     setIsDeleteModalOpen(true);
-    setQuestionToDelete(id);
+    setQuestionToDelete(questionId);
   };
 
   const handleDeleteModalConfirm = () => {
@@ -29,15 +30,22 @@ const ParentsQuestion = () => {
   };
 
   const handleNewQuestionSubmit = () => {
+    console.log("qustions.questionId", questions.questionId);
     addQuestion({
-      id: questions.length + 1,
-      question: newQuestion,
+      questionId: questions.questionId + 1, // 임시 ID, 실제로는 고유 ID를 사용해야 합니다.
+      content: newQuestion, // 이 부분을 수정합니다.
       answer: "",
       author: "학부모",
-      date: new Date().toLocaleString(),
+      contentDate: new Date().toISOString(), // contentDate 필드를 사용합니다.
+      answerDate: "", // 초기값을 빈 문자열로 설정합니다.
     });
     setIsModalOpen(false);
     setNewQuestion(""); // 질문 제출 후 입력 필드 초기화
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    return dateString.split("T")[0]; // 'T'를 기준으로 문자열을 나누고 첫 번째 부분을 반환
   };
 
   return (
@@ -59,26 +67,28 @@ const ParentsQuestion = () => {
         </button>
       </div>
       {questions.map((item) => (
-        <div key={item.id} className={styles.qaPair}>
+        <div key={item.qustionId} className={styles.qaPair}>
+          {" "}
+          {/* 고유한 key prop 추가 */}
           <div className={styles.questionBox}>
             <div className={styles.textAndDate}>
               <p>
-                <strong>{item.author}</strong> {item.question}
+                <strong>궁금이</strong> {item.content}{" "}
+                {/* content 필드를 사용합니다 */}
               </p>
-              <p className={styles.date}>{item.date}</p>
+              <p className={styles.date}>{formatDate(item.contentDate)}</p>
             </div>
-            <FaTrash
-              className={styles.icon}
-              onClick={() => handleDeleteClick(item.id)}
-            />
+            <FaTrash onClick={() => handleDeleteClick(item.qustionId)} />
           </div>
           {item.answer && (
-            <div className={styles.answerBox}>
+            <div key={item.qustionId} className={styles.answerBox}>
+              {" "}
+              {/* 고유한 key prop 추가 */}
               <div className={styles.textAndDate}>
                 <p>
                   <strong>선생님</strong> {item.answer}
                 </p>
-                <p className={styles.date}>{item.date}</p>
+                <p className={styles.date}>{formatDate(item.answerDate)}</p>
               </div>
             </div>
           )}
@@ -99,6 +109,7 @@ const ParentsQuestion = () => {
 
       {isDeleteModalOpen && (
         <ParentsDeleteModal
+          key={questionToDelete} // key prop 추가
           onConfirm={handleDeleteModalConfirm}
           onCancel={handleDeleteModalCancel}
         />

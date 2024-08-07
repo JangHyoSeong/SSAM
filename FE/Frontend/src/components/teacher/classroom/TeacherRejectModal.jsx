@@ -1,14 +1,20 @@
-import styles from './TeacherRejectModal.module.scss';
+import React from "react";
+import styles from "./TeacherRejectModal.module.scss";
 
-const TeacherRejectModal = ({ onClose, onReject }) => {
+const TeacherRejectModal = ({ request, onClose, onReject }) => {
   return (
     <div className={styles.modalBackdrop}>
       <div className={styles.modalContent}>
-        <h3>거절하시겠습니까?</h3>
-        <div className={styles.buttonContainer}>
-          <button className={`${styles.button} ${styles.rejectButton}`} onClick={onReject}>거절</button>
-          <button className={`${styles.button} ${styles.cancelButton}`} onClick={onClose}>취소</button>
-        </div>
+        <h2>승인 거절</h2>
+        <p>
+          {request.name} 학생의 승인을 <br /> 거절하시겠습니까?
+        </p>
+        <button className={styles.rejectButton} onClick={onReject}>
+          거절
+        </button>
+        <button className={styles.closeButton} onClick={onClose}>
+          닫기
+        </button>
       </div>
     </div>
   );

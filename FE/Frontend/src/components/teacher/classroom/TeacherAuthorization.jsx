@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import styles from "./TeacherAuthorization.module.scss";
+import TeacherApproveModal from "./TeacherApproveModal";
+import TeacherRejectModal from "./TeacherRejectModal";
 import { useStudentsStore } from "../../../store/StudentsStore"; // 경로 및 named export 확인
 import {
   fetchApiStudentsList,
@@ -14,49 +16,79 @@ const TeacherAuthorization = () => {
     setStudents: state.setStudents,
   }));
 
+  const [showApproveModal, setShowApproveModal] = useState(false);
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+
   useEffect(() => {
     const getData = async () => {
       try {
         const data = await fetchApiStudentsList();
-        console.log("Fetched Students Data:", data);
+        // console.log("Fetched Students Data:", data);
         setStudents(data);
       } catch (error) {
         console.error("Failed to fetch students data:", error);
+        setStudents([]); // 실패 시 빈 배열로 설정
       }
     };
 
     getData();
   }, [setStudents]);
 
-  const handleApproveClick = async (studentId) => {
-    console.log("Approving Student ID:", studentId);
-    try {
-      await approveStudentApi(studentId); // studentId를 올바르게 전달
-      setStudents((prevStudents) =>
-        prevStudents.map((student) =>
-          student.studentId === studentId
-            ? { ...student, approved: true }
-            : student
-        )
-      );
-    } catch (error) {
-      console.error("Failed to approve student:", error);
+  const handleApproveClick = (request) => {
+    // console.log("Selected Request on Approve Click:", request);
+    setSelectedRequest(request);
+    setShowApproveModal(true);
+  };
+
+  const handleRejectClick = (request) => {
+    // console.log("Selected Request on Reject Click:", request);
+    setSelectedRequest(request);
+    setShowRejectModal(true);
+  };
+
+  const handleApproveStudent = async () => {
+    if (selectedRequest && selectedRequest.studentId) {
+      // console.log("Approving Student ID:", selectedRequest.studentId);
+      try {
+        await approveStudentApi(selectedRequest.studentId); // studentId를 올바르게 전달
+        setStudents((prevStudents) =>
+          prevStudents.map((student) =>
+            student.studentId === selectedRequest.studentId
+              ? { ...student, approved: true }
+              : student
+          )
+        );
+        setShowApproveModal(false);
+        window.location.reload(); // 페이지 새로고침
+      } catch (error) {
+        console.error("Failed to approve student:", error);
+      }
+    } else {
+      console.error("Student ID is missing.");
     }
   };
 
-  const handleRejectClick = async (studentId) => {
-    console.log("Rejecting Student ID:", studentId);
-    try {
-      await rejectStudentApi(studentId); // studentId를 올바르게 전달
-      setStudents((prevStudents) =>
-        prevStudents.filter((student) => student.studentId !== studentId)
-      );
-    } catch (error) {
-      console.error("Failed to reject student:", error);
+  const handleRejectStudent = async () => {
+    if (selectedRequest && selectedRequest.studentId) {
+      console.log("Rejecting Student ID:", selectedRequest.studentId);
+      try {
+        await rejectStudentApi(selectedRequest.studentId); // studentId를 올바르게 전달
+        setStudents((prevStudents) =>
+          prevStudents.filter(
+            (student) => student.studentId !== selectedRequest.studentId
+          )
+        );
+        setShowRejectModal(false);
+      } catch (error) {
+        console.error("Failed to reject student:", error);
+      }
+    } else {
+      console.error("Student ID is missing.");
     }
   };
 
-  if (!students.length) {
+  if (!Array.isArray(students)) {
     return <div>Loading...</div>;
   }
 
@@ -98,13 +130,13 @@ const TeacherAuthorization = () => {
               <td className={styles.actionColumn}>
                 <button
                   className={styles.approveButton}
-                  onClick={() => handleApproveClick(student.studentId)}
+                  onClick={() => handleApproveClick(student)}
                 >
                   승인
                 </button>
                 <button
                   className={styles.rejectButton}
-                  onClick={() => handleRejectClick(student.studentId)}
+                  onClick={() => handleRejectClick(student)}
                 >
                   거절
                 </button>
@@ -113,6 +145,20 @@ const TeacherAuthorization = () => {
           ))}
         </tbody>
       </table>
+      {showApproveModal && (
+        <TeacherApproveModal
+          request={selectedRequest}
+          onClose={() => setShowApproveModal(false)}
+          onApprove={handleApproveStudent}
+        />
+      )}
+      {showRejectModal && (
+        <TeacherRejectModal
+          request={selectedRequest}
+          onClose={() => setShowRejectModal(false)}
+          onReject={handleRejectStudent}
+        />
+      )}
     </div>
   );
 };

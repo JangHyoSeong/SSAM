@@ -6,7 +6,7 @@ export const fetchApiStudentsList = async () => {
   if (!token) {
     throw new Error("No authentication token found.");
   }
-  console.log("USER_TOKEN:", token); // Add this line to log the token
+  // console.log("USER_TOKEN:", token); // Add this line to log the token
 
   const response = await axios.get(
     "http://localhost:8081/v1/classrooms/teachers/students",
@@ -26,8 +26,8 @@ export const approveStudentApi = async (studentId) => {
   if (!token) {
     throw new Error("No authentication token found.");
   }
-  console.log(`Approving student with ID: ${studentId}`); // studentId 로그 출력
-  console.log("USER_TOKEN:", token); // Add this line to log the token
+  // console.log(`Approving student with ID: ${studentId}`); // studentId 로그 출력
+  // console.log("USER_TOKEN:", token); // Add this line to log the token
 
   const response = await axios.put(
     `http://localhost:8081/v1/classrooms/teachers/students/${studentId}/approve`,
@@ -39,7 +39,7 @@ export const approveStudentApi = async (studentId) => {
       },
     }
   );
-  console.log("API 응답:", response.data); // 응답 데이터 콘솔에 출력
+  // console.log("API 응답:", response.data); // 응답 데이터 콘솔에 출력
   return response.data;
 };
 
@@ -49,8 +49,8 @@ export const rejectStudentApi = async (studentId) => {
   if (!token) {
     throw new Error("No authentication token found.");
   }
-  console.log(`Rejecting student with ID: ${studentId}`); // studentId 로그 출력
-  console.log("USER_TOKEN:", token); // Add this line to log the token
+  // console.log(`Rejecting student with ID: ${studentId}`); // studentId 로그 출력
+  // console.log("USER_TOKEN:", token); // Add this line to log the token
 
   const response = await axios.delete(
     `http://localhost:8081/v1/classrooms/teachers/students/${studentId}/reject`,
@@ -61,6 +61,6 @@ export const rejectStudentApi = async (studentId) => {
       },
     }
   );
-  console.log("API 응답:", response.data); // 응답 데이터 콘솔에 출력
+  // console.log("API 응답:", response.data); // 응답 데이터 콘솔에 출력
   return response.data;
 };

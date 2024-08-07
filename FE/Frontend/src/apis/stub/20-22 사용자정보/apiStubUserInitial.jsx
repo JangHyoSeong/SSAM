@@ -10,6 +10,7 @@ export const fetchApiUserInitial = async () => {
       Authorization: token,
     },
   });
+  // console.log(response);
   return {
     userId: response.data.userId,
     username: response.data.username,

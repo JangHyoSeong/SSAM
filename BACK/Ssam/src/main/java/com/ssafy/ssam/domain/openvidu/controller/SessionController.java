@@ -1,5 +1,6 @@
 package com.ssafy.ssam.domain.openvidu.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,6 +23,7 @@ import com.ssafy.ssam.domain.openvidu.dto.RecordingDto;
 import com.ssafy.ssam.domain.openvidu.dto.RecordingRequestDto;
 import com.ssafy.ssam.global.dto.CommonResponseDto;
 
+import io.openvidu.java.client.Connection;
 import io.openvidu.java.client.ConnectionProperties;
 import io.openvidu.java.client.ConnectionType;
 import io.openvidu.java.client.OpenVidu;
@@ -64,7 +66,7 @@ public class SessionController {
 
     @PostMapping("/token")
     public ResponseEntity<OpenViduSessionDto> getToken(@RequestBody OpenViduSessionDto requestDto) {
-        String sessionId = requestDto.getSessionId();
+        String webrtcSessionId = requestDto.getWebrtcSessionId();
         String userId = requestDto.getUserId();
 
         String serverData = "{\"userId\":\"" + userId + "\"}";
@@ -75,24 +77,24 @@ public class SessionController {
             .build();
 
         try {
-            Session session = mapSessions.computeIfAbsent(sessionId, k -> {
+            Session session = mapSessions.computeIfAbsent(webrtcSessionId, k -> {
                 try {
                     return openVidu.createSession();
                 } catch (Exception e) {
                     throw new RuntimeException("Error creating session", e);
                 }
             });
-
-            String token = session.createConnection(connectionProperties).getToken();
+            Connection c = session.createConnection(connectionProperties);
             
             OpenViduSessionDto responseDto = OpenViduSessionDto.builder()
-                .sessionId(sessionId)
-                .userId(userId)
-                .token(token)
+                .sessionId(session.getSessionId())
+                .token(c.getToken())
+                .connectionId(c.getConnectionId())
+                .createdAt(c.createdAt())
                 .serverData(serverData)
                 .build();
 
-            sessionUserMapping.computeIfAbsent(sessionId, k -> new ConcurrentHashMap<>()).put(userId, responseDto);
+            sessionUserMapping.computeIfAbsent(webrtcSessionId, k -> new ConcurrentHashMap<>()).put(userId, responseDto);
 
             return ResponseEntity.ok(responseDto);
         } catch (Exception e) {
@@ -114,7 +116,6 @@ public class SessionController {
                 sessionUserMapping.remove(sessionId);
             }
         }
-
         return ResponseEntity.ok(new CommonResponseDto("Token successfully deleted"));
     }
 
@@ -223,7 +224,7 @@ public class SessionController {
 		boolean hasVideo = (boolean) params.get("hasVideo");
 
 		RecordingProperties properties = new RecordingProperties.Builder().outputMode(outputMode).hasAudio(hasAudio)
-				.name("namename").hasVideo(hasVideo).build();
+				.hasVideo(hasVideo).build();
 
 		System.out.println("Starting recording for session " + sessionId + " with properties {outputMode=" + outputMode
 				+ ", hasAudio=" + hasAudio + ", hasVideo=" + hasVideo + "}");
@@ -231,7 +232,6 @@ public class SessionController {
 		//return ResponseEntity.ok(new CommonResponseDto("Stream forcefully unpublished"));
 		try {
 			Recording recording = this.openVidu.startRecording(sessionId, properties);
-			System.out.println("나 통과했음");
 			this.sessionRecordings.put(sessionId, true);
 			return new ResponseEntity<>(recording, HttpStatus.OK);
 			//return ResponseEntity.ok(new CommonResponseDto("Stream forcefully unpublished"));

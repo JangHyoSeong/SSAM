@@ -7,7 +7,8 @@ const API_BASE_URL = 'http://localhost:8081/v1/video'; // Spring 백엔드 API �
 //const API_BASE_URL = 'https://i11e201.p.ssafy.io/api/v1/video';
 
 const VideoChatComponent = () => {
-    const [mySessionId, setMySessionId] = useState('SessionA');
+    const [myWebrtcSessionId, setMyWebrtcSessionId] = useState('SessionA');
+    const [mySessionId, setMySessionId] = useState('');
     const [myUserName, setMyUserName] = useState(`Participant${Math.floor(Math.random() * 100)}`);
     const [session, setSession] = useState(null);
     const [mainStreamManager, setMainStreamManager] = useState(null);
@@ -31,8 +32,8 @@ const VideoChatComponent = () => {
         leaveSession();
     };
 
-    const handleChangeSessionId = (e) => {
-        setMySessionId(e.target.value);
+    const handleChangeWebrtcSessionId = (e) => {
+        setMyWebrtcSessionId(e.target.value);
     };
 
     const handleChangeUserName = (e) => {
@@ -94,7 +95,7 @@ const VideoChatComponent = () => {
         if (session) {
             try {
                 await axios.delete(`${API_BASE_URL}/token`, {
-                    data: { sessionId: mySessionId, userId: myUserName, token: session.token },
+                    data: { sessionId: myWebrtcSessionId, userId: myUserName, token: session.token },
                 });
             } catch (error) {
                 console.error('Error deleting token:', error);
@@ -192,7 +193,7 @@ const VideoChatComponent = () => {
     const getToken = async () => {
         try {
             const response = await axios.post(`${API_BASE_URL}/token`, {
-                sessionId: mySessionId,
+                webrtcSessionId: myWebrtcSessionId,
                 userId: myUserName,
             });
             return response.data.token;
@@ -224,7 +225,7 @@ const VideoChatComponent = () => {
                                 <label htmlFor="sessionId" className="form-label">
                                     Session ID:
                                 </label>
-                                <input type="text" className="form-control" id="sessionId" value={mySessionId} onChange={handleChangeSessionId} required />
+                                <input type="text" className="form-control" id="webrtcSessionId" value={myWebrtcSessionId} onChange={handleChangeWebrtcSessionId} required />
                             </div>
                             <button type="submit" className="btn btn-primary w-100">
                                 Join Session

@@ -1,5 +1,7 @@
 package com.ssafy.ssam.domain.openvidu.dto;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class OpenViduSessionDto {
+	private String webrtcSessionId;
     private String sessionId;
     private String userId;
     private String token;

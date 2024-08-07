@@ -1,5 +1,7 @@
 package com.ssafy.ssam.domain.openvidu.dto;
 
+import java.time.LocalDateTime;
+
 import io.openvidu.java.client.Recording;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +26,7 @@ public class RecordingDto {
     private long size;
     private Recording.Status status;
     private String url;
-    private long createdAt;
+    private Long createdAt;
 
     // Getters
 }

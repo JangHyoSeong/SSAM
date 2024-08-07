@@ -2,13 +2,10 @@ import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import useUserInitialStore from "../../store/UserInitialStore";
 import AlarmModal from "./AlarmModal";
-
-// style, image
 import styles from "./SubNavbar.module.scss";
 import alarm from "../../assets/alarm.png";
 
 const SubNavbar = () => {
-  // 상태관리
   const { userInitialData } = useUserInitialStore((state) => ({
     userInitialData: state.userInitialData,
   }));

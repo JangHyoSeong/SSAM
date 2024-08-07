@@ -1,32 +1,34 @@
-import axios from "axios";
 import { useEffect, useState, useRef } from "react";
+import axios from "axios";
 import styles from "./ClassEnterModal.module.scss";
-// import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
 
 const ClassEnterModal = () => {
+  // 상태 관리: PIN 번호를 입력받을 배열, 선택된 학급 정보, 모달의 표시 여부
   const [pins, setPins] = useState(Array(6).fill(""));
   const [classroom, setClassroom] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(true);
-  const inputRefs = useRef([]);
-  const pin = '37249J'; // PIN 번호를 하나의 문자열로 결합
+  const inputRefs = useRef(new Array(6)); // 입력창 참조 배열
+  const pin = pins.join(""); // PIN 번호를 하나의 문자열로 결합
 
+  // PIN 번호가 완성되면 학급 정보를 가져오는 함수
   useEffect(() => {
     const fetchClassroom = async () => {
       if (pin.length === 6) {
         try {
-          const token = localStorage.getItem("USER_TOKEN");
-          // const { boardId } = await fetchApiUserInitial();
+          const token = localStorage.getItem("USER_TOKEN"); // 로컬 스토리지에서 토큰을 가져옴
+          console.log("Using token: ", token);
           const response = await axios.get(
-            `http://localhost:8081/v1/classrooms/${pin}`,
+            `http://localhost:8081/v1/classrooms/pin/${pin}`,
             {
+              // params: { pin: pin },
               headers: {
                 "Content-Type": "application/json",
                 Authorization: `${token}`,
               },
             }
           );
-          if (response.data && response.data.pin === pin) {
-            setClassroom(response.data);
+          if (response.data) {
+            setClassroom(response.data); // 학급 정보 설정
             console.log(response.data);
           } else {
             console.error("No matching classroom found with the provided PIN");
@@ -41,6 +43,7 @@ const ClassEnterModal = () => {
     fetchClassroom();
   }, [pin]);
 
+  // PIN 입력 시 동작하는 함수
   const pinChange = (index) => (e) => {
     const newPins = [...pins];
     newPins[index] = e.target.value.slice(0, 1); // 입력값을 1자리로 제한
@@ -50,6 +53,7 @@ const ClassEnterModal = () => {
     }
   };
 
+  // 모달 닫기 함수
   const closeModal = () => {
     setIsModalVisible(false);
   };

@@ -1,9 +1,24 @@
+import { useState, useEffect } from "react";
 import styles from "./TeacherStudentDetail.module.scss";
 import StudentImage from "../../../assets/student.png"; // 이미지 파일 경로를 정확히 설정하세요
-import students from "./students.jsx";
+import { fetchStudentDetail } from "../../../apis/stub/47-49 학생관리/apiStudentDetail";
 
 const TeacherStudentDetail = ({ studentId, onBack }) => {
-  const student = students.find((student) => student.id === studentId);
+  const [student, setStudent] = useState(null);
+
+  useEffect(() => {
+    const loadStudentDetail = async () => {
+      try {
+        console.log("Student ID in TeacherStudentDetail:", studentId); // studentId 확인
+        const studentDetail = await fetchStudentDetail(studentId);
+        setStudent(studentDetail);
+      } catch (error) {
+        console.error("학생 상세 정보를 불러오는 데 실패했습니다.", error);
+      }
+    };
+
+    loadStudentDetail();
+  }, [studentId]);
 
   return (
     <div className={styles.studentDetail}>
@@ -18,6 +33,7 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
           </div>
           <div className={styles.historyBox}>
             <h3>상담 이력</h3>
+            {/* 상담 이력을 여기에 표시합니다. 예시는 하드코딩으로 표시합니다. */}
             <p>1. 2024.07.01 - 교우 관계</p>
             <p>2. 2024.06.01 - 학교 생활</p>
           </div>

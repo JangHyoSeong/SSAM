@@ -3,7 +3,7 @@
 import axios from "axios";
 import { fetchApiUserInitial } from "../20-22 사용자정보/apiStubUserInitial";
 
-export const fetchUserData = async () => {
+export const fetchStudentData = async () => {
   const token = localStorage.getItem("USER_TOKEN");
   const { boardId } = await fetchApiUserInitial();
   const response = await axios.get(

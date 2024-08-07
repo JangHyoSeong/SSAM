@@ -35,17 +35,17 @@ public class BoardController {
 
     // Pin번호로 학급 찾기
     @PreAuthorize("hasRole('STUDENT')")
-    @GetMapping()
+    @GetMapping("/pin/{pin}")
     public ResponseEntity<BoardGetByPinResponseDTO> getByPin(
-            @RequestBody BoardGetByPinRequestDTO requestDTO){
-        return ResponseEntity.ok(boardService.getBoardByPin(requestDTO.getPin()));
+            @PathVariable String pin){
+        return ResponseEntity.ok(boardService.getBoardByPin(pin));
     }
 
     // 학급 등록 - 학생
     @PreAuthorize("hasRole('STUDENT')")
     @PostMapping("/{boardId}")
     public ResponseEntity<CommonResponseDto> registClass (
-            @PathVariable Integer boardId) {
+            @RequestParam Integer boardId) {
         return ResponseEntity.ok(boardService.registClass(boardId));
     }
 

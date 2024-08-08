@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 public class ConsultSummaryDetailResponseDto {
 
     private Integer consultId;
-    private LocalDate actualDate;
+    private LocalDateTime actualDate;
     private Integer runningTime;
 
     private String keyPoint;

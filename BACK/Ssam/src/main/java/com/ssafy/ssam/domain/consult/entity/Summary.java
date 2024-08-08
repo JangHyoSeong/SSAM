@@ -1,5 +1,7 @@
 package com.ssafy.ssam.domain.consult.entity;
 
+import com.ssafy.ssam.domain.consult.dto.request.SummaryRequestDto;
+import com.ssafy.ssam.domain.consult.dto.response.SummaryResponseDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -13,6 +15,7 @@ import java.util.Date;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Builder
 @Table(name = "summary")
 public class Summary {
 
@@ -45,4 +48,15 @@ public class Summary {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "follow_up_date", columnDefinition = "TIMESTAMP")
     private Date followUpDate;
+
+    public static Summary toSummary(SummaryRequestDto summaryRequestDto, Consult consult){
+        return Summary.builder()
+                .consult(consult)
+                .keyPoint(summaryRequestDto.getKeyPoint())
+                .profanityCount(summaryRequestDto.getProfanityCount())
+                .profanityLevel(summaryRequestDto.getProfanityLevel())
+                .parentConcern(summaryRequestDto.getParentConcern())
+                .teacherRecommendation(summaryRequestDto.getTeacherRecommendation())
+                .build();
+    }
 }

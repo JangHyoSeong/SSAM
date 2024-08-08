@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -17,11 +18,10 @@ import java.util.Date;
 @AllArgsConstructor
 public class SummaryRequestDto {
     private Integer summaryId;
-    private Consult consult;
     private String keyPoint;
     private int profanityCount;
     private String profanityLevel;
     private String parentConcern;
     private String teacherRecommendation;
-    private Date followUpDate;
+//    private LocalDate followUpDate;
 }

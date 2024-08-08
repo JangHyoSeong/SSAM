@@ -108,11 +108,11 @@ public class BoardService {
         List<User> students = userBoardRelationRepository.findUsersByBoardAndStatus(board, UserBoardRelationStatus.ACCEPTED)
                 .orElse(new ArrayList<>());
 
-        List<StudentInfoListDTO> userInfoList = users != null ? users.stream()
-                .map(user -> StudentInfoListDTO.builder()
-                        .name(user.getName())
-                        .profileImage(user.getImgUrl())
-                        .studentId(user.getUserId())
+        List<StudentInfoListDTO> userInfoList = students != null ? students.stream()
+                .map(student -> StudentInfoListDTO.builder()
+                        .name(student.getName())
+                        .profileImage(student.getImgUrl())
+                        .studentId(student.getUserId())
                         .build())
                 .collect(Collectors.toList()) : null;
         return convertToResponseDTO(board, userInfoList);

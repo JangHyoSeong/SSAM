@@ -20,10 +20,25 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
     loadStudentDetail();
   }, [studentId]);
 
+  const handleDelete = () => {
+    // 삭제 처리 로직을 여기에 추가합니다.
+    console.log("삭제 버튼 클릭됨");
+  };
+
   return (
     <div className={styles.studentDetail}>
       {student ? (
         <>
+          <div className={styles.header}></div>
+          <div className={styles.buttons}>
+            <button className={styles.backButton} onClick={onBack}>
+              뒤로가기
+            </button>
+            <button className={styles.deleteButton} onClick={handleDelete}>
+              삭제
+            </button>
+          </div>
+
           <div className={styles.studentDetailBox}>
             <div className={styles.studentPhoto}>
               <img
@@ -47,11 +62,6 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
           <div className={styles.summaryBox}>
             <h3>상담 요약 보고서</h3>
             <p>상담 요약 보고서가 여기에 표시됩니다.</p>
-          </div>
-          <div className={styles.buttonContainer}>
-            <button className={styles.backButton} onClick={onBack}>
-              뒤로가기
-            </button>
           </div>
         </>
       ) : (

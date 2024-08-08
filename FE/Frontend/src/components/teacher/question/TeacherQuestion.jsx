@@ -6,7 +6,7 @@ import styles from "./TeacherQuestion.module.scss";
 
 const TeacherQuestion = () => {
   const { questions, updateQuestion, deleteQuestion } = useQuestions();
-  const [editingAnswerId, setEditingAnswerId] = useState(null);
+  const [editingQuestionId, setEditingQuestionId] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [questionToDelete, setQuestionToDelete] = useState(null);
   const [newAnswer, setNewAnswer] = useState("");
@@ -20,20 +20,24 @@ const TeacherQuestion = () => {
     }
   }, []);
 
-  const handleEditClick = (id, currentAnswer) => {
-    setEditingAnswerId(id);
-    setNewAnswer(currentAnswer);
+  const handleEditClick = (questionId, currentAnswer) => {
+    setEditingQuestionId(questionId);
+    setNewAnswer(currentAnswer || ""); // 빈 문자열로 초기화
   };
 
-  const handleSaveClick = (id) => {
-    updateQuestion(id, newAnswer);
-    setEditingAnswerId(null);
-    setNewAnswer("");
+  const handleSaveClick = async (questionId) => {
+    try {
+      await updateQuestion(questionId, newAnswer);
+      setEditingQuestionId(null);
+      setNewAnswer("");
+    } catch (error) {
+      console.error("Failed to update question:", error);
+    }
   };
 
-  const handleDeleteClick = (id) => {
+  const handleDeleteClick = (questionId) => {
     setIsDeleteModalOpen(true);
-    setQuestionToDelete(id);
+    setQuestionToDelete(questionId);
   };
 
   const handleDeleteModalConfirm = () => {
@@ -49,13 +53,13 @@ const TeacherQuestion = () => {
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
-    return dateString.split("T")[0]; // 'T'를 기준으로 문자열을 나누고 첫 번째 부분을 반환
+    return dateString.split("T")[0];
   };
 
   return (
     <div className={styles.teacherQuestionContainer}>
       {questions.map((item) => (
-        <div key={item.id} className={styles.qaPair}>
+        <div key={item.questionId} className={styles.qaPair}>
           <div className={styles.boxContainer}>
             <div className={styles.questionBox}>
               <div className={styles.authorAndDate}>
@@ -65,19 +69,27 @@ const TeacherQuestion = () => {
               <p className={styles.question}>{item.content}</p>
               <FaTrash
                 className={styles.icon}
-                onClick={() => handleDeleteClick(item.id)}
+                onClick={() => handleDeleteClick(item.questionId)}
               />
             </div>
             <div className={`${styles.answerBox}`}>
-              {editingAnswerId === item.id ? (
-                <input
-                  type="text"
-                  value={newAnswer}
-                  onChange={(e) => setNewAnswer(e.target.value)}
-                  className={styles.inputField}
-                  placeholder="답변을 입력하세요"
-                />
+              {editingQuestionId === item.questionId ? (
+                // 저장
+                <>
+                  <input
+                    type="text"
+                    value={newAnswer}
+                    onChange={(e) => setNewAnswer(e.target.value)}
+                    className={styles.inputField}
+                    placeholder="답변을 입력하세요"
+                  />
+                  <FaSave
+                    className={styles.icon}
+                    onClick={() => handleSaveClick(item.questionId)}
+                  />
+                </>
               ) : (
+                // 편집
                 <>
                   <div className={styles.authorAndDate}>
                     <p className={styles.author}>선생님</p>
@@ -88,18 +100,13 @@ const TeacherQuestion = () => {
                       ? item.answer
                       : "답변이 없어요... 선생님이 답변을 입력해 주세요..."}
                   </p>
+                  <FaEdit
+                    className={styles.icon}
+                    onClick={() =>
+                      handleEditClick(item.questionId, item.answer)
+                    }
+                  />
                 </>
-              )}
-              {editingAnswerId === item.id ? (
-                <FaSave
-                  className={styles.icon}
-                  onClick={() => handleSaveClick(item.id)}
-                />
-              ) : (
-                <FaEdit
-                  className={styles.icon}
-                  onClick={() => handleEditClick(item.id, item.answer)}
-                />
               )}
             </div>
           </div>

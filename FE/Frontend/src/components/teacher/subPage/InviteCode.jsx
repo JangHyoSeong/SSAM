@@ -31,7 +31,7 @@ const InviteCode = () => {
             name: response.data.name,
           });
         } catch (error) {
-          console.error("Failed to fetch profile data:", error);
+          console.error("데이터를 가져오지 못했습니다:", error);
         }
       };
       fetchData();
@@ -57,7 +57,7 @@ const InviteCode = () => {
       );
       alert("학급이 삭제되었습니다");
     } catch (error) {
-      console.error("Error deleting classroom", error);
+      console.error("강의실 삭제 중 오류 발생", error);
       alert("실패");
     }
   };
@@ -79,8 +79,7 @@ const InviteCode = () => {
       );
       alert("PIN이 재발급되었습니다");
     } catch (error) {
-      console.error("Error regenerating PIN", error);
-      alert("PIN 재발급 실패");
+      console.error("PIN 재생성 오류 발생", error);
     }
   };
 

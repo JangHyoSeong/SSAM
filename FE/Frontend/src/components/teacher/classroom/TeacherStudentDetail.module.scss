@@ -1,14 +1,14 @@
 .studentDetail {
   margin: 4vh;
   display: flex;
-  flex-direction: row; /* Ensure horizontal alignment */
-  gap: 2vw; /* Space between the elements */
-  width: 100%; /* Ensure it takes full width of the parent */
-  flex-wrap: wrap; /* Allow wrapping if necessary */
+  flex-direction: row;
+  gap: 2vw;
+  width: 100%;
+  flex-wrap: wrap;
 }
 
 .studentDetailBox {
-  flex: 0.5; /* Half the space of the container */
+  flex: 0.5;
   padding: 30px;
   border: 3px solid #ddd;
   border-radius: 8px;
@@ -18,8 +18,9 @@
   text-align: center;
 }
 
-.historyBox, .summaryBox {
-  flex: 1; /* Equally share the remaining space */
+.historyBox,
+.summaryBox {
+  flex: 1;
   padding: 2vw;
   border: 3px solid #ddd;
   border-radius: 8px;
@@ -29,26 +30,26 @@
 }
 
 .studentPhoto {
-  width: 150px; /* Adjust the size of the student photo container */
+  width: 150px;
   height: 150px;
   border-radius: 50%;
-  overflow: hidden; /* Ensure the image stays within the circular frame */
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 3px solid #ddd; /* Optional: add a border around the circular image */
+  border: 3px solid #ddd;
 }
 
 .studentPhoto img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Ensure the image covers the entire container */
+  object-fit: cover;
 }
 
 .buttonContainer {
   display: flex;
-  justify-content: center; /* Center the button horizontally */
-  width: 100%; /* Ensure it takes full width of the parent */
+  justify-content: center;
+  width: 100%;
 }
 
 .backButton {
@@ -64,24 +65,14 @@
   background-color: #0056b3;
 }
 
-/* Styles for historyBox */
-.historyBox h3 {
-  font-size: 1.5em; /* Increase the font size */
-  margin: 10px 0; /* Add some margin for spacing */
-}
-
-.historyBox p {
-  font-size: 1.2em; /* Increase the font size */
-  margin: 5px 0; /* Add some margin for spacing */
-}
-
-/* Styles for summaryBox */
+.historyBox h3,
 .summaryBox h3 {
-  font-size: 1.5em; /* Increase the font size */
-  margin: 10px 0; /* Add some margin for spacing */
+  font-size: 1.5em;
+  margin: 10px 0;
 }
 
+.historyBox p,
 .summaryBox p {
-  font-size: 1.2em; /* Increase the font size */
-  margin: 5px 0; /* Add some margin for spacing */
+  font-size: 1.2em;
+  margin: 5px 0;
 }

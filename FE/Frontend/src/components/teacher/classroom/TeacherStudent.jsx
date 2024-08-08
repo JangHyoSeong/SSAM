@@ -21,7 +21,7 @@ const TeacherStudent = ({ onSelectStudent }) => {
   }, []);
 
   const handleStudentClick = async (studentId) => {
-    console.log("Selected Student ID:", studentId); // 콘솔에 studentId 출력
+    console.log("Selected Student ID:", studentId); // 콘솔에 studentId 출력 근데 배열로 받아짐
     try {
       const studentDetail = await fetchStudentDetail(studentId);
       onSelectStudent(studentDetail);

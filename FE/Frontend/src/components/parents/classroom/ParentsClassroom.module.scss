@@ -103,13 +103,37 @@
   padding-bottom: 1vh; /* 하단 패딩 추가 */
 }
 
-.infoBox p {
-  margin: 0.5vh 0;
+.inquiryBox .inquiryItem {
+  position: relative;
+  top: 3vh;
+  cursor: pointer;
 }
 
-.studentListContainer {
+.inquiryBox .inquiryItem:hover {
+  color: #5285ee; /* 호버 시 글자 색 변경 */
+}
+
+.headerSeparator {
+  border-bottom: 1px solid #ccc;
   width: 100%;
-  margin-top: 2vh;
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+}
+
+.headerSeparator h2 {
+  width: 100%;
+  border-bottom: 3px solid blue;
+}
+
+.inquiryBox .inquiryItem {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  margin: 4px 0;
+  position: relative;
+  top: 4vh;
+}
+
+.inquiryQuestion {
+  flex: 1;
 }

@@ -1,13 +1,16 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import styles from "./ParentsClassroom.module.scss";
-import ParentsStudent from "./ParentsStudent";
 import ClassImage from "../../../assets/background.png";
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
+import { fetchQuestionList } from "../../../apis/stub/28-31 문의사항/apiOnlyQuestion"; // 수정된 부분
+import TeacherStudent from "../../teacher/classroom/TeacherStudent";
 
 const ParentsClassroom = () => {
   const [banner, setBanner] = useState(""); // 학급 배너
   const [notice, setNotice] = useState(""); // 알림 사항
+  const [questions, setQuestions] = useState([]); // 문의사항 데이터 추가
+  const [selectedStudentId, setSelectedStudentId] = useState(null); // 선택된 학생 ID
 
   // 학급 전체 데이터 불러오기
   useEffect(() => {
@@ -27,6 +30,8 @@ const ParentsClassroom = () => {
         const classData = response.data;
         setBanner(classData.banner);
         setNotice(classData.notice);
+        const questionResponse = await fetchQuestionList(); // 문의사항 데이터 가져오기
+        setQuestions(questionResponse.slice(0, 3)); // 문의사항 데이터 최대 3개 가져오기
       } catch (error) {
         console.error("데이터 불러오기 실패", error);
       }
@@ -53,15 +58,26 @@ const ParentsClassroom = () => {
           <p>{banner}</p>
         </div>
         <div className={styles.inquiryBox}>
-          <h3>문의사항</h3>
-          <p>점심메뉴가 뭔가요: 운영자</p>
-          <p>교무실 전화번호 plz: 박범준</p>
-          <p>소풍 날짜 언제죠: 조성인</p>
+          <h2>문의사항</h2>
+          {questions.length > 0 ? (
+            questions.map((question, index) => (
+              <div
+                key={index}
+                className={styles.inquiryItem}
+                onClick={() =>
+                  (window.location.href =
+                    "http://localhost:3000/teacherquestion")
+                }
+              >
+                <div className={styles.inquiryQuestion}>{question.content}</div>
+              </div>
+            ))
+          ) : (
+            <p>아직 질문이 없습니다</p>
+          )}
         </div>
       </div>
-      <div className={styles.studentListContainer}>
-        <ParentsStudent />
-      </div>
+      <TeacherStudent onSelectStudent={setSelectedStudentId} />
     </div>
   );
 };

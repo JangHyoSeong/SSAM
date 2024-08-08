@@ -32,7 +32,7 @@ export const ConsultationProvider = ({ children }) => {
     // API 호출 및 상태 업데이트 로직 추가 필요
     setConsultations(
       consultations.map((c) =>
-        c.appointment_id === appointmentId ? { ...c, status: "APPROVED" } : c
+        c.appointmentId === appointmentId ? { ...c, status: "APPROVED" } : c
       )
     );
   };
@@ -41,7 +41,7 @@ export const ConsultationProvider = ({ children }) => {
     // API 호출 및 상태 업데이트 로직 추가 필요
     setConsultations(
       consultations.map((c) =>
-        c.appointment_id === appointmentId ? { ...c, status: "REJECT" } : c
+        c.appointmentId === appointmentId ? { ...c, status: "REJECT" } : c
       )
     );
   };

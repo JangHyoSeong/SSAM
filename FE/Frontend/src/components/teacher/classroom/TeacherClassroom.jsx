@@ -168,7 +168,7 @@ const TeacherClassroom = () => {
         </div>
 
         <div className={styles.classInfoBox}>
-          <h2>배너 정보</h2>
+          <h2>학급 사항</h2>
           {isEditingInfo ? (
             <FontAwesomeIcon
               icon={faSave}

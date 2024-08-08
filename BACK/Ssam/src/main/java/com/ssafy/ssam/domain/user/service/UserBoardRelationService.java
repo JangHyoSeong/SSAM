@@ -106,6 +106,7 @@ public class UserBoardRelationService {
         List<Consult> consults =  consultRepository.findByAppointmentIn(appointments);
 
         return StudentInfoDetailDTO.builder()
+                .studentId(student.getUserId())
                 .name(student.getName())
                 .birth(student.getBirth())
                 .studentImage(student.getImgUrl())

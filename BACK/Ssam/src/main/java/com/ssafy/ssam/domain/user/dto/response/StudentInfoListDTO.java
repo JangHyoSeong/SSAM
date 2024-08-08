@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudentInfoListDTO {
+    private Integer studentId;
     private String name;
     private String profileImage;
 }

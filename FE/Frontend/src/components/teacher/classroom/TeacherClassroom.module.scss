@@ -80,7 +80,7 @@
   justify-content: center;
   align-items: center;
   background-color: #ffffff;
-  padding: 2vh 2vw; /* 패딩을 줄여서 박스의 세로 길이를 줄임 */
+  padding: 2vh 2vw;
   border-radius: 1vh;
   width: 30%;
   text-align: center;
@@ -89,8 +89,8 @@
 
 .noticeBox {
   border: 3px solid #dce7fc;
-  position: relative; /* 제목을 왼쪽 상단에 위치시키기 위해 position 속성 추가 */
-  text-align: left; /* 박스 전체 내용 좌측 정렬 */
+  position: relative;
+  text-align: left;
 }
 
 .noticeBox h2 {
@@ -139,7 +139,54 @@
 }
 
 .classInfoBox {
+  position: relative;
+  text-align: left;
   background-color: #dce7fc;
+}
+
+.classInfoBox h2 {
+  position: absolute;
+  top: 1vh; /* 원하는 위치 조정 */
+  left: 1vw; /* 원하는 위치 조정 */
+  width: calc(100% - 2vw); /* 여백을 고려하여 너비 설정 */
+  border-bottom: 2px solid white;
+  margin: 0; /* 제목의 기본 마진 제거 */
+  padding-bottom: 1vh; /* 하단 패딩 추가 */
+}
+
+.classInfoBox p {
+  position: absolute;
+  top: 9.3vh; /* 원하는 위치 조정 */
+  left: 2.3vw; /* 원하는 위치 조정 */
+  width: calc(100% - 3vw); /* 여백을 고려하여 너비 설정 */
+  white-space: pre-wrap;
+}
+
+.classInfoBox .editBox {
+  margin-top: 8vh;
+  height: 100%;
+  width: calc(100% - 0vw);
+}
+
+.classInfoBox .editTextarea {
+  padding: 1%;
+  width: 100%;
+  height: 16vh;
+  font-size: 100%;
+}
+
+.classInfoBox .editIcon {
+  position: absolute;
+  top: 1.8vh;
+  right: 1vw;
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.classInfoBox .editIcon:hover {
+  color: #cccccc;
 }
 
 .inquiryBox {
@@ -161,6 +208,11 @@
 .inquiryBox .inquiryItem {
   position: relative;
   top: 3vh;
+  cursor: pointer;
+}
+
+.inquiryBox .inquiryItem:hover {
+  color: #5285ee; /* 호버 시 글자 색 변경 */
 }
 
 .headerSeparator {

@@ -37,15 +37,16 @@ public class BoardController {
     @PreAuthorize("hasRole('STUDENT')")
     @GetMapping("/pin/{pin}")
     public ResponseEntity<BoardGetByPinResponseDTO> getByPin(
-            @PathVariable String pin){
+            @PathVariable("pin") String pin){
         return ResponseEntity.ok(boardService.getBoardByPin(pin));
     }
 
     // 학급 등록 - 학생
-    @PreAuthorize("hasRole('STUDENT')")
+    // @PreAuthorize("hasRole('STUDENT')")
     @PostMapping("/{boardId}")
     public ResponseEntity<CommonResponseDto> registClass (
             @PathVariable Integer boardId) {
+        System.out.println("Something went wrong...");
         return ResponseEntity.ok(boardService.registClass(boardId));
     }
 

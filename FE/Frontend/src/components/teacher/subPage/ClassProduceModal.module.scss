@@ -17,16 +17,23 @@
   width: 30vw;
   height: 30vh;
   background-color: white;
-  border: 1px solid black;
+  border: 10px solid #D0E0FE;
   border-radius: 25px;
+}
+
+.headerArray {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20%;
+  background-color: #D0E0FE;
 }
 
 .classInput {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 30vw;
-  height: 16vh;
+  height: 13vh;
   font-size: 120%;
   gap: 2%;
 }
@@ -41,7 +48,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 30vw;
   display: flex;
   gap: 10%;
 }

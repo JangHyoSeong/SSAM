@@ -1,11 +1,10 @@
 import { NavLink } from "react-router-dom";
-import login from "./ParentsLogin.module.scss";
+import styles from "./ParentsLogin.module.scss";
 import { loginUser } from "../../../apis/user";
 import useLoginStore from "../../../store/AuthStore";
-
-// 이미지
 import round1 from "../../../assets/round1.png";
 import round2 from "../../../assets/round2.png";
+import round3 from "../../../assets/round3.png";
 import google from "../../../assets/google.png";
 import naver from "../../../assets/naver.png";
 import kakao from "../../../assets/kakao.png";
@@ -46,11 +45,11 @@ const ParentsLogin = () => {
   };
 
   return (
-    <div className={login.loginArray}>
-      <h1 className={login.loginTitle}>로그인</h1>
-      <div className={login.loginFormArray}>
-        <div className={login.loginBackground}>
-          <form onSubmit={handleLogin} className={login.loginForm}>
+    <div className={styles.loginArray}>
+      <h1 className={styles.loginTitle}>로그인</h1>
+      <div className={styles.loginFormArray}>
+        <div className={styles.loginBackground}>
+          <form onSubmit={handleLogin} className={styles.loginForm}>
             <input
               type="text"
               name="username"
@@ -67,33 +66,33 @@ const ParentsLogin = () => {
               placeholder="비밀번호"
               required
             />
-            <button type="submit" className={login.loginBtn}>
+            <button type="submit" className={styles.loginBtn}>
               로그인
             </button>
-            <div className={login.loginRoute}>
-              <NavLink to="/studentjoin" className={login.joinNavLink}>
+            <div className={styles.loginRoute}>
+              <NavLink to="/studentjoin" className={styles.joinNavLink}>
                 <p>회원가입</p>
               </NavLink>
               <p>아이디 / 비밀번호 찾기</p>
             </div>
-            <button type="button" className={login.googleBtn}>
-              <img src={google} className={login.googleImg} alt="google" />
+            <button type="button" className={styles.googleBtn}>
+              <img src={google} className={styles.googleImg} alt="google" />
               <p>구글로 시작하세요</p>
             </button>
-            <button type="button" className={login.naverBtn}>
-              <img src={naver} className={login.naverImg} alt="naver" />
+            {/* <button type="button" className={styles.naverBtn}>
+              <img src={naver} className={styles.naverImg} alt="naver" />
               <p>네이버로 시작하세요</p>
             </button>
-            <button type="button" className={login.kakaoBtn}>
-              <img src={kakao} className={login.kakaoImg} alt="kakao" />
+            <button type="button" className={styles.kakaoBtn}>
+              <img src={kakao} className={styles.kakaoImg} alt="kakao" />
               <p>카카오로 시작하세요</p>
-            </button>
+            </button> */}
           </form>
         </div>
       </div>
-      <img src={round1} className={login.round1} alt="round1" />
-      <img src={round2} className={login.round2} alt="round2" />
-      <img src={round1} className={login.round3} alt="round1" />
+      <img src={round1} className={styles.round1} alt="round1" />
+      <img src={round2} className={styles.round2} alt="round2" />
+      <img src={round3} className={styles.round3} alt="round3" />
     </div>
   );
 };

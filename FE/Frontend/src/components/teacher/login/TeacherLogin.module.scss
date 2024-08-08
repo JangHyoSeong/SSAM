@@ -7,7 +7,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 20vh;
+  height: 25vh;
   font-size: 300%;
   color: white;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 1);
@@ -16,22 +16,23 @@
 .loginFormArray {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .loginBackground {
-  width: 30%;
+  z-index: 1;
+  width: 30vw;
   height: 100%;
   background-color: white;
   border-radius: 25px;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-  z-index: 2;
 }
 
 .loginForm {
   margin: 5%;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  flex-direction: column;
 
   input {
     width: 20vw;
@@ -55,6 +56,10 @@
   cursor: pointer;
 }
 
+.loginBtn:hover {
+  background-color: #4b7ee5;
+}
+
 .loginRoute {
   width: 20vw;
   margin-top: 3%;
@@ -63,6 +68,10 @@
   color: #5285ee;
   font-weight: bold;
   font-size: 80%;
+}
+
+.searchId {
+  cursor: pointer;
 }
 
 .joinNavLink {
@@ -93,6 +102,10 @@
   background-color: white;
 }
 
+.googleBtn:hover {
+  background-color: #f4f4f4;
+}
+
 .naverBtn {
   background-color: #00b818;
   color: white;
@@ -114,6 +127,7 @@
   position: absolute;
   width: 15%;
   padding: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   &.round1 {
     top: 15%;

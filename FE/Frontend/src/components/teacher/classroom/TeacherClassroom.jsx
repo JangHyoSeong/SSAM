@@ -9,6 +9,7 @@ import whiteshare from "../../../assets/whiteshare.png";
 import TeacherStudent from "./TeacherStudent";
 import TeacherStudentDetail from "./TeacherStudentDetail";
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
+import { fetchQuestionList } from "../../../apis/stub/28-31 문의사항/apiOnlyQuestion"; // 수정된 부분
 
 const TeacherClassroom = () => {
   const [banner, setBanner] = useState(""); // 학급 배너
@@ -19,6 +20,7 @@ const TeacherClassroom = () => {
   const [isEditingInfo, setIsEditingInfo] = useState(false); // 배너 정보 편집 상태
   const [selectedStudentId, setSelectedStudentId] = useState(null); // 선택된 학생 ID
   const [uploadedImageUrl, setUploadedImageUrl] = useState(ClassImage); // 업로드된 이미지 URL
+  const [questions, setQuestions] = useState([]); // 문의사항 데이터 추가
   const noticeTextRef = useRef(null); // 공지사항 텍스트 영역 참조
   const bannerTextRef = useRef(null); // 배너 정보 텍스트 영역 참조
 
@@ -39,6 +41,10 @@ const TeacherClassroom = () => {
         );
         setBanner(response.data.banner); // 학급 배너 상태 업데이트
         setNotice(response.data.notice); // 알림 사항 상태 업데이트
+
+        const questionResponse = await fetchQuestionList(); // 문의사항 데이터 가져오기
+        setQuestions(questionResponse.slice(0, 3)); // 문의사항 데이터 최대 3개 가져오기
+        console.log("문의사항 데이터:", questionResponse); // 문의사항 데이터 콘솔 출력
       } catch (error) {
         console.error("데이터 불러오기 실패", error);
       }
@@ -198,20 +204,22 @@ const TeacherClassroom = () => {
 
         <div className={styles.inquiryBox}>
           <h2>문의사항</h2>
-          <div className={styles.inquiryItem}>
-            <div className={styles.inquiryQuestion}>점심메뉴가 뭔가요</div>
-          </div>
-          <div className={styles.inquiryItem}>
-            <div className={styles.inquiryQuestion}>
-              교무실 전화번호가 뭔가요
-            </div>
-          </div>
-          <div className={styles.inquiryItem}>
-            <div className={styles.inquiryQuestion}>소풍 날짜 언제죠</div>
-          </div>
-          <div className={styles.inquiryItem}>
-            <div className={styles.inquiryQuestion}>소풍 장소가 어디죠</div>
-          </div>
+          {questions.length > 0 ? (
+            questions.map((question, index) => (
+              <div
+                key={index}
+                className={styles.inquiryItem}
+                onClick={() =>
+                  (window.location.href =
+                    "http://localhost:3000/teacherquestion")
+                }
+              >
+                <div className={styles.inquiryQuestion}>{question.content}</div>
+              </div>
+            ))
+          ) : (
+            <p>아직 질문이 없습니다</p>
+          )}
         </div>
       </div>
       {selectedStudentId === null ? (

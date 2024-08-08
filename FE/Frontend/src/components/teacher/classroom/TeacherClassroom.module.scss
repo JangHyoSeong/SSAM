@@ -208,6 +208,11 @@
 .inquiryBox .inquiryItem {
   position: relative;
   top: 3vh;
+  cursor: pointer;
+}
+
+.inquiryBox .inquiryItem:hover {
+  color: #5285ee; /* 호버 시 글자 색 변경 */
 }
 
 .headerSeparator {

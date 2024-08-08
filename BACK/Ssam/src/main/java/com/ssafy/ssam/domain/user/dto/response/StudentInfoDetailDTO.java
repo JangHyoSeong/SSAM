@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class StudentInfoDetailDTO {
 
+    private Integer studentId;
     private String name;
     private LocalDate birth;
     private String studentImage;

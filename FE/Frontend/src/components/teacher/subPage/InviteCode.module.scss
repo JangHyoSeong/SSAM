@@ -25,12 +25,17 @@
   z-index: 1;
 }
 
-.inviteTxtBox {
-  padding: 1.5%;
+
+.btnArray {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .classBtn {
-  padding: 1% 4%;
+  margin: 2%;
+  padding: 1% 5%;
   border-radius: 25px;
   color: #5285ee;
   font-size: 120%;

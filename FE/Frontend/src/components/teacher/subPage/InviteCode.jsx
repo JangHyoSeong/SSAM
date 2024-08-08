@@ -6,6 +6,7 @@ import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/ap
 
 const InviteCode = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [classInfo, setClassInfo] = useState(null);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -40,6 +41,33 @@ const InviteCode = () => {
   };
 
   const profile = useProfile();
+
+  // pin 번호 확인
+  const useClassInfo = () => {
+    useEffect(() => {
+      const fetchClassInfo = async () => {
+        try {
+          const token = localStorage.getItem("USER_TOKEN");
+          const { boardId } = await fetchApiUserInitial();
+          const response = await axios.get(
+            `http://localhost:8081/v1/classrooms/${boardId}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `${token}`,
+              },
+            }
+          );
+          setClassInfo(response.data);
+        } catch (error) {
+          console.error("클래스 정보를 가져오지 못했습니다:", error);
+        }
+      };
+      fetchClassInfo();
+    }, []);
+  };
+
+  useClassInfo();
 
   // 학급 삭제하기
   const classDelete = async () => {
@@ -85,20 +113,28 @@ const InviteCode = () => {
 
   return (
     <div className={styles.inviteCodeBox}>
-      <div className={styles.inviteTxtBox}>
-        <h2>{profile.name} 환영합니다</h2>
-        <h3>학급 만들기를 통해 초대코드를 생성하세요.</h3>
-      </div>
+      <h2>{profile.name}님 환영합니다</h2>
       <div className={styles.btn}>
-      <button className={styles.classBtn} onClick={toggleModal}>
-        학급 만들기
-      </button>
-      <button className={styles.deleteBtn} onClick={classDelete}>
-        학급 삭제
-      </button>
-      <button className={styles.pinArray} onClick={rePin}>
-        PIN 재발급
-      </button>
+        {classInfo && classInfo.pin ? (
+          <div>
+            <h3>초대 코드 {classInfo.pin}</h3>
+            <div className={styles.btnArray}>
+              <button className={styles.classBtn} onClick={classDelete}>
+                학급 삭제
+              </button>
+              <button className={styles.classBtn} onClick={rePin}>
+                PIN 재발급
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className={styles.btnArray}>
+            <h3>학급 만들기를 통해 초대코드를 생성하세요.</h3>
+            <button className={styles.classBtn} onClick={toggleModal}>
+              학급 생성
+            </button>
+          </div>
+        )}
       </div>
       {isModalOpen && <ClassProduceModal />}
     </div>

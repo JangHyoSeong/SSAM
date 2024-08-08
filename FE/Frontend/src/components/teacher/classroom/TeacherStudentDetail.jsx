@@ -52,8 +52,10 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
                 alt="Student"
               />
             </div>
-            <h3>이름: {student.name}</h3>
-            <p>생일: {student.birth}</p>
+            <div className={styles.studentInfo}>
+              <h3>이름: {student.name}</h3>
+              <p>생일: {student.birth}</p>
+            </div>
           </div>
           <div className={styles.historyBox}>
             <h3>상담 이력</h3>

@@ -74,7 +74,6 @@ const TeacherQuestion = () => {
             </div>
             <div className={`${styles.answerBox}`}>
               {editingQuestionId === item.questionId ? (
-                // 저장
                 <>
                   <input
                     type="text"
@@ -96,9 +95,7 @@ const TeacherQuestion = () => {
                     <p className={styles.date}>{formatDate(item.answerDate)}</p>
                   </div>
                   <p className={styles.answer}>
-                    {item.answer
-                      ? item.answer
-                      : "답변이 없어요... 선생님이 답변을 입력해 주세요..."}
+                    {item.answer ? item.answer : ""}
                   </p>
                   <FaEdit
                     className={styles.icon}

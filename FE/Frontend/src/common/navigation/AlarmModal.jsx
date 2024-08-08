@@ -55,22 +55,22 @@ const AlarmModal = () => {
               <p>
                 {post.alarmTime.split("T")[0]} {post.alarmTime.split("T")[1]}
               </p>
-              {post.alarmType === "QUESTION" && (
+              {post.alarmType === "QUESTION" && ( // 질문이 생성됐음 (선생 입장)
                 <a href="http://localhost:3000/teacherquestion">
                   <p>문의사항을 확인해주세요</p>
                 </a>
               )}
-              {post.alarmType === "ANSWER" && (
+              {post.alarmType === "ANSWER" && ( // 질문에 정답 달렸다고 알림 (학생 입장)
                 <a href="http://localhost:3000/studentquestion">
                   <p>문의사항을 확인해주세요</p>
                 </a>
               )}
-              {post.alarmType === "ACCEPT" && (
+              {post.alarmType === "REGISTRATION" && ( // 학급에 등록 요청이 왔음 (선생님 입장)
                 <a href="http://localhost:3000/teacherauthorization">
                   <p>승인 요청을 보냈습니다</p>
                 </a>
               )}
-              {post.alarmType === "REGISTRATION" && (
+              {post.alarmType === "ACCEPT" && ( // 자신의 등록이 승락되었음 (학생입장)
                 <a href="http://localhost:3000/studentsubpage">
                   <p>승인 요청이 수락되었습니다</p>
                 </a>

@@ -98,6 +98,7 @@ public class BoardService {
                 .map(user -> StudentInfoListDTO.builder()
                         .name(user.getName())
                         .profileImage(user.getImgUrl())
+                        .studentId(user.getUserId())
                         .build())
                 .collect(Collectors.toList()) : null;
         return convertToResponseDTO(board, userInfoList);

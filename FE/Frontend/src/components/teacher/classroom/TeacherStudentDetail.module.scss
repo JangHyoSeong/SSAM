@@ -1,60 +1,34 @@
 .studentDetail {
   margin: 4vh;
   display: flex;
-  flex-direction: row; /* Ensure horizontal alignment */
-  gap: 2vw; /* Space between the elements */
-  width: 100%; /* Ensure it takes full width of the parent */
-  flex-wrap: wrap; /* Allow wrapping if necessary */
-}
-
-.studentDetailBox {
-  flex: 0.5; /* Half the space of the container */
-  padding: 30px;
-  border: 3px solid #ddd;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.historyBox, .summaryBox {
-  flex: 1; /* Equally share the remaining space */
-  padding: 2vw;
-  border: 3px solid #ddd;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.studentPhoto {
-  width: 150px; /* Adjust the size of the student photo container */
-  height: 150px;
-  border-radius: 50%;
-  overflow: hidden; /* Ensure the image stays within the circular frame */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 3px solid #ddd; /* Optional: add a border around the circular image */
-}
-
-.studentPhoto img {
+  flex-direction: row; /* 가로 배치로 변경 */
+  gap: 2vw;
   width: 100%;
-  height: 100%;
-  object-fit: cover; /* Ensure the image covers the entire container */
+  flex-wrap: wrap;
 }
 
-.buttonContainer {
+.header {
+  width: 100%;
+  margin-left: 0px;
+  border-bottom: 2px solid #ddd; /* 버튼 위에 선 추가 */
+  margin-bottom: -15px; /* 선과 나머지 콘텐츠 사이의 간격 추가 */
   display: flex;
-  justify-content: center; /* Center the button horizontally */
-  width: 100%; /* Ensure it takes full width of the parent */
+  justify-content: center; /* 중앙 정렬을 위해 추가 */
+  align-items: center; /* 수직 정렬을 위해 추가 */
+}
+
+.buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  margin-bottom: -25px; /* 기존 margin-bottom 유지 */
 }
 
 .backButton {
   padding: 10px 20px;
   border: none;
-  border-radius: 5px;
+  border-radius: 25px;
   background-color: #007bff;
   color: white;
   cursor: pointer;
@@ -64,24 +38,66 @@
   background-color: #0056b3;
 }
 
-/* Styles for historyBox */
-.historyBox h3 {
-  font-size: 1.5em; /* Increase the font size */
-  margin: 10px 0; /* Add some margin for spacing */
+.deleteButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  background-color: #ff4d4f;
+  color: white;
+  cursor: pointer;
 }
 
-.historyBox p {
-  font-size: 1.2em; /* Increase the font size */
-  margin: 5px 0; /* Add some margin for spacing */
+.deleteButton:hover {
+  background-color: #d9363e;
 }
 
-/* Styles for summaryBox */
+.studentDetailBox {
+  flex: 0.5; /* flex-grow를 1로 설정하여 공간을 균등하게 나눔 */
+  padding: 30px;
+  border: 3px solid #ddd;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.historyBox,
+.summaryBox {
+  flex: 1; /* flex-grow를 1로 설정하여 공간을 균등하게 나눔 */
+  padding: 2vw;
+  border: 3px solid #ddd;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.studentPhoto {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #ddd;
+}
+
+.studentPhoto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.historyBox h3,
 .summaryBox h3 {
-  font-size: 1.5em; /* Increase the font size */
-  margin: 10px 0; /* Add some margin for spacing */
+  font-size: 1.5em;
+  margin: 10px 0;
 }
 
+.historyBox p,
 .summaryBox p {
-  font-size: 1.2em; /* Increase the font size */
-  margin: 5px 0; /* Add some margin for spacing */
+  font-size: 1.2em;
+  margin: 5px 0;
 }

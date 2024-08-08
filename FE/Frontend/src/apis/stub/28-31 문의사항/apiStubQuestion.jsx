@@ -15,38 +15,62 @@ export const fetchQuestionData = async () => {
         },
       }
     );
-    console.log("axios-questions: ", response.data);
+    console.log("axios-questions-get: ", response.data);
     return response.data;
   } catch (error) {
     console.error("Failed to fetch question data:", error);
     throw error;
   }
 };
-// POST -대답 api: /classrooms/answers/{qustion_id}
-// export const useApiTeachrClassroomsAnswers = create((set) => ({
-//   question: { ...defaultQuestion },
 
-//   init: () => {
-//     set({ question: { ...defaultQuestion } });
-//   },
+// POST - 학생 질문 생성 api: /classrooms/answers/{board_id}
+// content 상태를 받아올 방법을 생각하자. -> async의 인자로 content를 바로 넣어버림!!
+export const fetchCreateQuestionData = async (content) => {
+  try {
+    const token = localStorage.getItem("USER_TOKEN");
+    const { boardId } = await fetchApiUserInitial();
+    const response = await axios.post(
+      `http://localhost:8081/v1/classrooms/questions/${boardId}`,
+      { content }, // content를 key로 사용하고 value는 전달된 문자열로 설정
+      {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: token,
+        },
+      }
+    );
+    console.log("axios-questions-post: ", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch question data:", error);
+    throw error;
+  }
+};
 
-//   fetchQuestionData: async (question_id) => {
-//     try {
-//       const token = localStorage.getItem("USER_TOKEN");
-//       console.log(token);
-//       const response = await axios.put(`classrooms/answers/${question_id}`, {
-//         headers: {
-//           "Content-Type": "application/json",
-//           authorization: `${token}`,
-//         },
-//       });
-//       set({ question: response.data });
-//       // response.data에 있는 내용 쓰시면 됩니다.
-//       console.log("question.jsx: ", response.data);
-//       return response.data;
-//     } catch (error) {
-//       console.error("Failed to fetch question data:", error);
-//       throw error;
-//     }
-//   },
-// }));
+// PUT - 학생 질문 생성 api: /classrooms/answers/{qustion_id}
+export const fetchUpdateQuestionData = async (questionId, answer) => {
+  try {
+    if (typeof questionId !== "number" || isNaN(questionId)) {
+      throw new Error("Invalid questionId: Must be a number");
+    }
+
+    const token = localStorage.getItem("USER_TOKEN");
+    const { boardId } = await fetchApiUserInitial();
+    const response = await axios.put(
+      // qustionId값이 지금 answer내용으로 들어옴
+      `http://localhost:8081/v1/classrooms/answers/${questionId}`,
+      { answer, boardId }, // answer와 boardId를 JSON 형태로 전달
+      {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: token,
+        },
+      }
+    );
+    console.log("axios-questions-put: ", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to update question:", error);
+    throw error;
+  }
+};

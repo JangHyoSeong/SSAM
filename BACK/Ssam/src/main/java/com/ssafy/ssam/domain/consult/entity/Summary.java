@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.Date;
 
@@ -27,7 +29,7 @@ public class Summary {
     @Column(name = "key_point", nullable = false)
     private String keyPoint;
 
-    @NotNull
+    @ColumnDefault("0")
     @Column(name = "profanity_count", nullable = false)
     private int profanityCount;
 

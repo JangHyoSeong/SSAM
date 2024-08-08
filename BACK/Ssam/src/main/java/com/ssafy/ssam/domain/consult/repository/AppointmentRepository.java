@@ -1,6 +1,7 @@
 package com.ssafy.ssam.domain.consult.repository;
 
 import com.ssafy.ssam.domain.consult.entity.Appointment;
+import com.ssafy.ssam.domain.consult.entity.AppointmentStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,5 +23,5 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
 
     Optional<Appointment> findByAppointmentId(Integer id);
     Optional<List<Appointment>> findByTeacher_UserId(Integer teacherId);
-    List<Appointment> findByStudent_UserIdAndTeacher_UserId(Integer studentId, Integer teacherId);
+    List<Appointment> findByStudent_UserIdAndTeacher_UserIdAndStatus(Integer studentId, Integer teacherId, AppointmentStatus status);
 }

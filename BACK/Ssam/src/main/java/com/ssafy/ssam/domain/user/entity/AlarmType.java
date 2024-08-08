@@ -6,8 +6,9 @@ import java.util.Arrays;
 
 @Getter
 public enum AlarmType {
-    ANSWER,
-    QUESTION,
-    REGISTRATION,
-    ACCEPT
+    ANSWER, // 대답
+    QUESTION, //질문
+    REGISTRATION, // 팔로우신청
+    ACCEPT, //팔로우허락
+    CONSULT
 }

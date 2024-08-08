@@ -2,15 +2,15 @@ package com.ssafy.ssam.domain.consult.dto.response;
 
 import com.ssafy.ssam.domain.consult.entity.AppointmentStatus;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Builder
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class AppointmentResponseDto {
 
     private Integer appointmentId;

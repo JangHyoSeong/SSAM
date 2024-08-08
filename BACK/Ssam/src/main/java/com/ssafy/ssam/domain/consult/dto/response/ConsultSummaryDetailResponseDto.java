@@ -29,4 +29,6 @@ public class ConsultSummaryDetailResponseDto {
     private Integer attGrade;
     private Integer attClassroom;
 
+    private String content;
+
 }

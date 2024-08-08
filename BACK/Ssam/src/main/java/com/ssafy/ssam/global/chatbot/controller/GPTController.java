@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 @RestController
-@RequestMapping("/gpt")
+@RequestMapping("/consults/teachers/summary")
 @RequiredArgsConstructor
 public class GPTController {
     private final GPTService gptService;
 
-    @GetMapping("/summary")
-    public String summary(@RequestParam("talk") String talk , String topic, String description) {
-        return gptService.summaryConsult(talk , topic, description);
+    @GetMapping("/{consultId}")
+    public String createSummary(Integer consultId, String topic) {
+        return gptService.summaryConsult(consultId, topic);
     }
 
 //    @GetMapping("/chat")

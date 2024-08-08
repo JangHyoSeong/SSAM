@@ -40,10 +40,14 @@ const TeacherQuestion = () => {
     setQuestionToDelete(questionId);
   };
 
-  const handleDeleteModalConfirm = () => {
-    deleteQuestion(questionToDelete);
-    setIsDeleteModalOpen(false);
-    setQuestionToDelete(null);
+  const handleDeleteModalConfirm = async () => {
+    try {
+      await deleteQuestion(questionToDelete);
+      setIsDeleteModalOpen(false);
+      setQuestionToDelete(null);
+    } catch (error) {
+      console.error("Failed to delete question:", error);
+    }
   };
 
   const handleDeleteModalCancel = () => {

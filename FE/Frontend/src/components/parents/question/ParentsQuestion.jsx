@@ -61,23 +61,18 @@ const ParentsQuestion = () => {
         </button>
       </div>
       {questions.map((item) => (
-        <div key={item.qustionId} className={styles.qaPair}>
-          {" "}
-          {/* 고유한 key prop 추가 */}
+        <div key={item.questionId} className={styles.qaPair}>
           <div className={styles.questionBox}>
             <div className={styles.textAndDate}>
               <p>
-                <strong>궁금이</strong> {item.content}{" "}
-                {/* content 필드를 사용합니다 */}
+                <strong>궁금이</strong> {item.content}
               </p>
               <p className={styles.date}>{formatDate(item.contentDate)}</p>
             </div>
-            <FaTrash onClick={() => handleDeleteClick(item.qustionId)} />
+            <FaTrash onClick={() => handleDeleteClick(item.questionId)} />
           </div>
           {item.answer && (
-            <div key={item.qustionId} className={styles.answerBox}>
-              {" "}
-              {/* 고유한 key prop 추가 */}
+            <div className={styles.answerBox}>
               <div className={styles.textAndDate}>
                 <p>
                   <strong>선생님</strong> {item.answer}
@@ -103,7 +98,6 @@ const ParentsQuestion = () => {
 
       {isDeleteModalOpen && (
         <ParentsDeleteModal
-          key={questionToDelete} // key prop 추가
           onConfirm={handleDeleteModalConfirm}
           onCancel={handleDeleteModalCancel}
         />

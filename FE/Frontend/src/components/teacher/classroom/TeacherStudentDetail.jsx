@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styles from "./TeacherStudentDetail.module.scss";
 import DefaultStudentImage from "../../../assets/student.png"; // 기본 이미지 파일 경로를 정확히 설정하세요
 import { fetchStudentDetail } from "../../../apis/stub/47-49 학생관리/apiStudentDetail";
+import { fetchStudentDelete } from "../../../apis/stub/47-49 학생관리/apiStudentDelete"; // 추가
 
 const TeacherStudentDetail = ({ studentId, onBack }) => {
   const [student, setStudent] = useState(null);
@@ -20,9 +21,14 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
     loadStudentDetail();
   }, [studentId]);
 
-  const handleDelete = () => {
-    // 삭제 처리 로직을 여기에 추가합니다.
-    console.log("삭제 버튼 클릭됨");
+  const handleDelete = async () => {
+    try {
+      const result = await fetchStudentDelete(studentId.studentId);
+      console.log("Delete response:", result);
+      onBack(); // 성공적으로 삭제한 후 뒤로가기 또는 삭제를 반영하기 위해 페이지 새로고침 등의 액션
+    } catch (error) {
+      console.error("학생 삭제에 실패했습니다.", error);
+    }
   };
 
   return (
@@ -42,17 +48,17 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
           <div className={styles.studentDetailBox}>
             <div className={styles.studentPhoto}>
               <img
-                src={studentId.studentImage || DefaultStudentImage}
+                src={student.studentImage || DefaultStudentImage}
                 alt="Student"
               />
             </div>
-            <h3>이름: {studentId.name}</h3>
-            <p>생일: {studentId.birth}</p>
+            <h3>이름: {student.name}</h3>
+            <p>생일: {student.birth}</p>
           </div>
           <div className={styles.historyBox}>
             <h3>상담 이력</h3>
-            {studentId.consultList && studentId.consultList.length > 0 ? (
-              studentId.consultList.map((consult, index) => (
+            {student.consultList && student.consultList.length > 0 ? (
+              student.consultList.map((consult, index) => (
                 <p key={index}>{consult}</p>
               ))
             ) : (

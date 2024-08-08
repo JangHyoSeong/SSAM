@@ -47,11 +47,11 @@ const AppRouter = () => {
     "/teacherjoin",
     "/studentlogin",
     "/studentjoin",
-    "/video/:accessCode",
+    "/video/1234567",
   ];
   const showChatbot = !hideChatbotOnRoutes.includes(location.pathname);
 
-  const hideNavbarOnRoutes = ["/video/:accessCode"];
+  const hideNavbarOnRoutes = ["/video/1234567"];
   const showNavbar = !hideNavbarOnRoutes.includes(location.pathname);
 
   return (
@@ -71,7 +71,7 @@ const AppRouter = () => {
           <Route path="/studentlogin" element={<ParentsLogin />} />
           <Route path="/studentjoin" element={<ParentsJoin />} />
 
-          {/* Teacher Routes */}
+          {/* 선생님 */}
           <Route element={<RoleBasedRoute allowedRoles={["TEACHER"]} />}>
             <Route path="/teachersubpage" element={<TeacherSubpage />} />
             <Route path="/teacherupdate" element={<TeacherUpdate />} />
@@ -98,14 +98,14 @@ const AppRouter = () => {
             <Route path="/teacherclassroom" element={<TeacherClassroom />} />
           </Route>
 
-          {/* Teacher layouts */}
+          {/* 선생님 */}
           <Route element={<QuestionProviderLayout />}>
             <Route element={<RoleBasedRoute allowedRoles={["TEACHER"]} />}>
               <Route path="/teacherquestion" element={<TeacherQuestion />} />
             </Route>
           </Route>
 
-          {/* Parents Routes */}
+          {/* 학생 / 학부모 */}
           <Route element={<RoleBasedRoute allowedRoles={["STUDENT"]} />}>
             <Route path="/studentsubpage" element={<ParentsSubpage />} />
             <Route path="/studentupdate" element={<ParentsUpdate />} />
@@ -120,7 +120,7 @@ const AppRouter = () => {
             />
           </Route>
 
-          {/* Parents layouts */}
+          {/* 학생 / 학부모 */}
           <Route element={<QuestionProviderLayout />}>
             <Route element={<RoleBasedRoute allowedRoles={["STUDENT"]} />}>
               <Route path="/studentquestion" element={<ParentsQuestion />} />

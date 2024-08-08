@@ -99,13 +99,12 @@ const ClassEnterModal = () => {
           </form>
           <div className={styles.classInfo}>
             {classroom && (
-              <div className={styles.classroomDetails}>
-                <p>{classroom.boardId}</p>
+              <div>
                 <p>학교 : {classroom.schoolName}</p>
                 <p>
                   학급 : {classroom.grade}학년 {classroom.classroom}반
                 </p>
-                <p>선생님 : {classroom.teacherName}</p>{" "}
+                <p>선생님 : {classroom.teacherName}</p>
               </div>
             )}
           </div>

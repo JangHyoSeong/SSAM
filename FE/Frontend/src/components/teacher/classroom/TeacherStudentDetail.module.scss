@@ -22,11 +22,13 @@
   display: flex;
   justify-content: space-between;
   padding: 10px;
-  margin-bottom: -25px; /* 기존 margin-bottom 유지 */
+  margin-top: -10px;
+  margin-bottom: -25px;
 }
 
 .backButton {
-  padding: 10px 20px;
+  font-size: 100%;
+  padding: 5px 15px;
   border: none;
   border-radius: 25px;
   background-color: #007bff;
@@ -35,11 +37,12 @@
 }
 
 .backButton:hover {
-  background-color: #0056b3;
+  background-color: #0070e9;
 }
 
 .deleteButton {
-  padding: 10px 20px;
+  font-size: 100%;
+  padding: 5px 15px;
   border: none;
   border-radius: 25px;
   background-color: #ff4d4f;
@@ -48,7 +51,7 @@
 }
 
 .deleteButton:hover {
-  background-color: #d9363e;
+  background-color: #e90000;
 }
 
 .studentDetailBox {

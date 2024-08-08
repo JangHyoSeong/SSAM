@@ -108,7 +108,7 @@ table {
 }
 
 .imgBtn:hover {
-  background-color: #5285ee;
+  background-color: #ee5252;
   color: white;
   border: none;
 }
@@ -141,7 +141,7 @@ table {
   justify-content: center;
 }
 
-.formBtn {
+.saveBtn {
   width: 5vw;
   height: 5vh;
   font-size: 120%;
@@ -151,8 +151,24 @@ table {
   cursor: pointer;
 }
 
-.formBtn:hover {
+.saveBtn:hover {
   background-color: #5285ee;
   color: white;
   border: none;
+}
+
+.deleteBtn {
+  width: 5vw;
+  height: 5vh;
+  font-size: 120%;
+  border-radius: 20px;
+  margin: 2%;
+  background-color: white;
+  cursor: pointer;
+}
+
+.deleteBtn:hover {
+  border: none;
+  background-color: #ee5252;
+  color: white;
 }

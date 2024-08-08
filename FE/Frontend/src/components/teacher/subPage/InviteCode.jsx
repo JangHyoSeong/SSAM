@@ -7,6 +7,7 @@ import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/ap
 const InviteCode = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [classInfo, setClassInfo] = useState(null);
+  const [isCopied, setIsCopied] = useState(false);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -106,9 +107,18 @@ const InviteCode = () => {
         }
       );
       alert("PIN이 재발급되었습니다");
+      location.reload();
     } catch (error) {
       console.error("PIN 재생성 오류 발생", error);
     }
+  };
+
+  // 초대 코드 복사하기
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 3000);
+    });
   };
 
   return (
@@ -117,12 +127,17 @@ const InviteCode = () => {
       <div className={styles.btn}>
         {classInfo && classInfo.pin ? (
           <div>
-            <h3>초대 코드 {classInfo.pin}</h3>
+            <div className={styles.copyButton}>
+              <h3>초대 코드 {classInfo.pin}</h3>
+              <button onClick={() => copyToClipboard(classInfo.pin)}>
+                {isCopied ? "복사 완료 ☑" : "코드 복사 ☐"}
+              </button>
+            </div>
             <div className={styles.btnArray}>
-              <button className={styles.classBtn} onClick={classDelete}>
+              <button className={styles.deleteBtn} onClick={classDelete}>
                 학급 삭제
               </button>
-              <button className={styles.classBtn} onClick={rePin}>
+              <button className={styles.pinBtn} onClick={rePin}>
                 PIN 재발급
               </button>
             </div>

@@ -42,10 +42,11 @@ public class BoardController {
     }
 
     // 학급 등록 - 학생
-    @PreAuthorize("hasRole('STUDENT')")
+    // @PreAuthorize("hasRole('STUDENT')")
     @PostMapping("/{boardId}")
     public ResponseEntity<CommonResponseDto> registClass (
             @PathVariable Integer boardId) {
+        System.out.println("Something went wrong...");
         return ResponseEntity.ok(boardService.registClass(boardId));
     }
 

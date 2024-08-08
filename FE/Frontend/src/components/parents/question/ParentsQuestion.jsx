@@ -30,17 +30,11 @@ const ParentsQuestion = () => {
   };
 
   const handleNewQuestionSubmit = () => {
-    console.log("qustions.questionId", questions.questionId);
-    addQuestion({
-      questionId: questions.questionId + 1, // 임시 ID, 실제로는 고유 ID를 사용해야 합니다.
-      content: newQuestion, // 이 부분을 수정합니다.
-      answer: "",
-      author: "학부모",
-      contentDate: new Date().toISOString(), // contentDate 필드를 사용합니다.
-      answerDate: "", // 초기값을 빈 문자열로 설정합니다.
-    });
-    setIsModalOpen(false);
-    setNewQuestion(""); // 질문 제출 후 입력 필드 초기화
+    if (newQuestion.trim()) {
+      addQuestion(newQuestion); // addQuestion 함수를 호출하여 새로운 질문 추가
+      setIsModalOpen(false);
+      setNewQuestion(""); // 질문 제출 후 입력 필드 초기화
+    }
   };
 
   const formatDate = (dateString) => {

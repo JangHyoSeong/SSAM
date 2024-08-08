@@ -38,13 +38,8 @@ public class BoardController {
     @PreAuthorize("hasRole('STUDENT')")
     @GetMapping()
     public ResponseEntity<BoardGetByPinResponseDTO> getByPin(
-<<<<<<< Updated upstream
-            @RequestBody BoardGetByPinRequestDTO requestDTO){
-        return ResponseEntity.ok(boardService.getBoardByPin(requestDTO.getPin()));
-=======
             @PathVariable("pin") String pin){
         return ResponseEntity.ok(boardService.getBoardByPin(pin));
->>>>>>> Stashed changes
     }
 
     // 학급 등록 - 학생

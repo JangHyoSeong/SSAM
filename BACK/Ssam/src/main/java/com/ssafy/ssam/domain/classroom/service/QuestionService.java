@@ -21,6 +21,8 @@ import com.ssafy.ssam.global.error.CustomException;
 import com.ssafy.ssam.global.error.ErrorCode;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Builder
 @Transactional
@@ -98,9 +101,12 @@ public class QuestionService {
                 .orElseThrow(() -> new CustomException(ErrorCode.QuestionNotFoundException));
         // 질문을 지울 권한이 있는 사용자인지 확인
         // 1) 같은 반 선생님 2) 작성자 본인
-        if(!question.getBoard().getBoardId().equals(details.getBoardId()))
+
+        log.info("Question Delete");
+        log.info("{}", question.getBoard().getBoardId());
+        if(details.getRole().equals(UserRole.TEACHER.toString()) && !question.getBoard().getBoardId().equals(details.getBoardId()))
             throw new CustomException(ErrorCode.IllegalArgument);
-        if(!details.getRole().equals(UserRole.STUDENT.toString()) && !details.getUserId().equals(question.getStudent().getUserId()))
+        else if(details.getRole().equals(UserRole.STUDENT.toString()) && !details.getUserId().equals(question.getStudent().getUserId()))
             throw new CustomException(ErrorCode.IllegalArgument);
 
         questionRepository.delete(question);

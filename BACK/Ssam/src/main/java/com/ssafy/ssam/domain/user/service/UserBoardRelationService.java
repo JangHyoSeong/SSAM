@@ -53,6 +53,7 @@ public class UserBoardRelationService {
 
         return relations != null ? relations.stream()
                 .map(relation -> StudentRegistInfoDTO.builder()
+                        .studentId(relation.getUser().getUserId())
                         .name(relation.getUser().getName())
                         .username(relation.getUser().getUsername())
                         .followDate(relation.getFollowDate().toLocalDate())
@@ -105,6 +106,7 @@ public class UserBoardRelationService {
         List<Consult> consults =  consultRepository.findByAppointmentIn(appointments);
 
         return StudentInfoDetailDTO.builder()
+                .studentId(student.getUserId())
                 .name(student.getName())
                 .birth(student.getBirth())
                 .studentImage(student.getImgUrl())

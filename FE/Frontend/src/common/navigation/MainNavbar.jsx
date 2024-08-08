@@ -1,23 +1,27 @@
 import { NavLink, useLocation } from "react-router-dom";
+import useUserInitialStore from "../../store/UserInitialStore";
 import SSAM from "../../assets/SSAM.png";
 import styles from "./MainNavbar.module.scss";
 
 const MainNavbar = () => {
   const location = useLocation();
+  const { userInitialData } = useUserInitialStore((state) => ({
+    userInitialData: state.userInitialData,
+  }));
+
+  const rolePath = userInitialData?.role === "TEACHER" ? "teacher" : "student";
 
   return (
-    // role이 teacher인지 parents인지에 따라서 `${role}path`로 라우팅되도록.
     <div className={styles.navbarArray}>
-      <NavLink to="/">
+      <NavLink to={`/${rolePath}subpage`}>
         <img src={SSAM} className={styles.logo} alt="Logo" />
       </NavLink>
       <div className={styles.menuArray}>
         <NavLink
-          to="/teacherclassroom"
+          to={`/${rolePath}classroom`}
           className={
-            location.pathname.startsWith("/teacherclassroom") ||
-            location.pathname.startsWith("/parentsclassroom") ||
-            location.pathname.startsWith("/teacherauthorization")
+            location.pathname.startsWith(`/${rolePath}classroom`) ||
+            location.pathname.startsWith(`/${rolePath}authorization`)
               ? `${styles.navtxt} ${styles.active}`
               : styles.navtxt
           }
@@ -25,7 +29,7 @@ const MainNavbar = () => {
           <h2>학급정보</h2>
         </NavLink>
         <NavLink
-          to="/teacherquestion"
+          to={`/${rolePath}question`}
           className={({ isActive }) =>
             isActive ? `${styles.navtxt} ${styles.active}` : styles.navtxt
           }
@@ -33,10 +37,10 @@ const MainNavbar = () => {
           <h2>문의사항</h2>
         </NavLink>
         <NavLink
-          to="/teacherreservationmanagement"
+          to={`/${rolePath}reservationmanagement`}
           className={
-            location.pathname.startsWith("/teacherreservationmanagement") ||
-            location.pathname.startsWith("/teacherconsultationlist")
+            location.pathname.startsWith(`/${rolePath}reservationmanagement`) ||
+            location.pathname.startsWith(`/${rolePath}consultationlist`)
               ? `${styles.navtxt} ${styles.active}`
               : styles.navtxt
           }

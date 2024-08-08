@@ -1,7 +1,7 @@
-.alramArray {
+.alarmArray {
   position: absolute;
-  top: 5.45vw;
-  left: 176vh;
+  top: 12%;
+  left: 80.6%;
   width: 18vw;
   height: 55vh;
   background-color: #eeeeee;
@@ -17,7 +17,7 @@
 .triangle {
   position: absolute;
   top: -4%;
-  left: 11.2%;
+  left: 16%;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
   border-bottom: 16px solid #eeeeee;
@@ -43,14 +43,36 @@
   overflow-y: auto;
 }
 
+.postContent {
+  position: relative;
+  top: -20%;
+}
+
 .content {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   text-align: center;
-  height: 10vh;
+  height: 8.5vh;
   margin-top: 5%;
   border-radius: 25px;
   background-color: white;
   white-space: normal;
+}
+
+.content a {
+  color: black;
+  text-decoration: none;
+}
+
+.deleteBtn {
+  position: relative;
+  top: 20%;
+  right: -42%;
+}
+
+.deleteBtn:hover {
+  color: red !important ;
+  cursor: pointer !important ;
 }

@@ -1,309 +1,310 @@
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+import { OpenVidu } from 'openvidu-browser';
+import './VideoChatComponent.css'; // 새로운 CSS 파일을 import 합니다
 
-const WebRTCChat = () => {
-    const [room, setRoom] = useState('');
-    const [message, setMessage] = useState('');
+const API_BASE_URL = 'http://localhost:8081/v1/video'; // Spring 백엔드 API 기본 URL
+//const API_BASE_URL = 'https://i11e201.p.ssafy.io/api/v1/video';
+
+const VideoChatComponent = () => {
+    const [myWebrtcSessionId, setMyWebrtcSessionId] = useState('SessionA');
+    const [mySessionId, setMySessionId] = useState('');
+    const [myUserName, setMyUserName] = useState(`Participant${Math.floor(Math.random() * 100)}`);
+    const [session, setSession] = useState(null);
+    const [mainStreamManager, setMainStreamManager] = useState(null);
+    const [publisher, setPublisher] = useState(null);
+    const [subscribers, setSubscribers] = useState([]);
+    const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
     const [chatMessages, setChatMessages] = useState([]);
-    const [isConnected, setIsConnected] = useState(false);
-    const [participants, setParticipants] = useState([]);
-    const webSocketRef = useRef(null);
-    const localVideoRef = useRef(null);
-    const remoteVideosRef = useRef({});
-    const peerConnections = useRef({});
-    const localStreamRef = useRef(null);
+    const [chatInput, setChatInput] = useState('');
+    const [isRecording, setIsRecording] = useState(false);
+    const [recordingId, setRecordingId] = useState(null);
+    const OV = useRef(new OpenVidu());
 
     useEffect(() => {
+        window.addEventListener('beforeunload', onBeforeUnload);
         return () => {
-            closeWebSocketConnection();
-            closePeerConnections();
+            window.removeEventListener('beforeunload', onBeforeUnload);
         };
     }, []);
 
-    const closeWebSocketConnection = () => {
-        if (webSocketRef.current && webSocketRef.current.readyState === WebSocket.OPEN) {
-            webSocketRef.current.close();
-        }
+    const onBeforeUnload = () => {
+        leaveSession();
     };
 
-    const closePeerConnections = () => {
-        Object.values(peerConnections.current).forEach((pc) => pc.close());
-        peerConnections.current = {};
-        if (localStreamRef.current) {
-            localStreamRef.current.getTracks().forEach((track) => track.stop());
-        }
+    const handleChangeWebrtcSessionId = (e) => {
+        setMyWebrtcSessionId(e.target.value);
     };
 
-    const createRoom = async () => {
-        if (!room) {
-            alert('Please enter a room name');
-            return;
-        }
+    const handleChangeUserName = (e) => {
+        setMyUserName(e.target.value);
+    };
+
+    const joinSession = async () => {
+        console.warn('joinSession');
+        const mySession = OV.current.initSession();
+
+        mySession.on('streamCreated', (event) => {
+            if (event.stream.connection.connectionId !== mySession.connection.connectionId) {
+                const subscriber = mySession.subscribe(event.stream, undefined);
+                setSubscribers((subscribers) => [...subscribers, subscriber]);
+            }
+        });
+
+        mySession.on('streamDestroyed', (event) => {
+            setSubscribers((subscribers) => subscribers.filter((sub) => sub !== event.stream.streamManager));
+        });
+
+        mySession.on('exception', (exception) => {
+            console.warn(exception);
+        });
 
         try {
-            const response = await fetch(`https://i11e201.p.ssafy.io/api/v1/kurento/room`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ roomName: room }),
+            const token = await getToken();
+            await mySession.connect(token, { clientData: myUserName });
+
+            // 세션 연결 후 세션 정보 로깅
+            setMySessionId(mySession.sessionId);
+
+            let publisher = await OV.current.initPublisherAsync(undefined, {
+                audioSource: undefined,
+                videoSource: undefined,
+                publishAudio: true,
+                publishVideo: true,
+                resolution: '640x480',
+                frameRate: 30,
+                insertMode: 'APPEND',
+                mirror: false,
             });
+            mySession.publish(publisher);
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const result = await response.text();
-            console.log(result);
-            alert(`Room "${room}" created successfully. You can now join it.`);
+            const devices = await OV.current.getDevices();
+            const videoDevices = devices.filter((device) => device.kind === 'videoinput');
+            const currentVideoDeviceId = publisher.stream.getMediaStream().getVideoTracks()[0].getSettings().deviceId;
+            const currentVideoDevice = videoDevices.find((device) => device.deviceId === currentVideoDeviceId);
+            setSession(mySession);
+            setMainStreamManager(publisher);
+            setPublisher(publisher);
+            setCurrentVideoDevice(currentVideoDevice);
         } catch (error) {
-            console.error('Error creating room:', error);
-            alert(`Failed to create room: ${error.message}`);
+            console.log('There was an error connecting to the session:', error.code, error.message);
         }
     };
 
-    const joinRoom = async () => {
-        if (!room) {
-            alert('Please enter a room name');
-            return;
+    const leaveSession = async () => {
+        if (session) {
+            try {
+                await axios.delete(`${API_BASE_URL}/token`, {
+                    data: { sessionId: myWebrtcSessionId, userId: myUserName, token: session.token },
+                });
+            } catch (error) {
+                console.error('Error deleting token:', error);
+            }
+            session.disconnect();
         }
+        setSession(null);
+        setSubscribers([]);
+        setMainStreamManager(null);
+        setPublisher(null);
+    };
 
+    const switchCamera = async () => {
         try {
-            await setupLocalStream();
-            closeWebSocketConnection();
-            connectWebSocket();
-        } catch (error) {
-            console.error('Error joining room:', error);
-            alert(`Failed to join room: ${error.message}`);
+            const devices = await OV.current.getDevices();
+            const videoDevices = devices.filter((device) => device.kind === 'videoinput');
+
+            if (videoDevices && videoDevices.length > 1) {
+                const newVideoDevice = videoDevices.filter((device) => device.deviceId !== currentVideoDevice.deviceId);
+
+                if (newVideoDevice.length > 0) {
+                    const newPublisher = OV.current.initPublisher(undefined, {
+                        videoSource: newVideoDevice[0].deviceId,
+                        publishAudio: true,
+                        publishVideo: true,
+                        mirror: false,
+                    });
+
+                    await session.unpublish(mainStreamManager);
+                    await session.publish(newPublisher);
+                    setCurrentVideoDevice(newVideoDevice[0]);
+                    setMainStreamManager(newPublisher);
+                    setPublisher(newPublisher);
+                }
+            }
+        } catch (e) {
+            console.error(e);
         }
     };
 
-    const setupLocalStream = async () => {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-            localStreamRef.current = stream;
-            if (localVideoRef.current) {
-                localVideoRef.current.srcObject = stream;
+    const toggleRecording = async () => {
+        if (!isRecording) {
+            try {
+                const response = await axios.post(`${API_BASE_URL}/recording/start`, {
+                    session: mySessionId,
+                    outputMode: 'COMPOSED',
+                    hasAudio: true,
+                    hasVideo: true,
+                });
+                setRecordingId(response.data.id);
+                setIsRecording(true);
+            } catch (error) {
+                console.error('Error starting recording:', error);
             }
+        } else {
+            try {
+                await axios.post(`${API_BASE_URL}/recording/stop`, {
+                    recordingId: recordingId,
+                });
+                setIsRecording(false);
+                setRecordingId(null);
+            } catch (error) {
+                console.error('Error stopping recording:', error);
+            }
+        }
+    };
+
+    const sendChatMessage = () => {
+        if (chatInput.trim() !== '' && session) {
+            const messageData = {
+                message: chatInput,
+                from: myUserName,
+                connectionId: session.connection.connectionId,
+            };
+            session.signal({
+                data: JSON.stringify(messageData),
+                type: 'chat',
+            });
+            setChatMessages((prevMessages) => [...prevMessages, messageData]);
+            setChatInput('');
+        }
+    };
+
+    useEffect(() => {
+        if (session) {
+            session.on('signal:chat', (event) => {
+                const data = JSON.parse(event.data);
+                if (data.connectionId !== session.connection.connectionId) {
+                    setChatMessages((prevMessages) => [...prevMessages, data]);
+                }
+            });
+        }
+    }, [session]);
+
+    const getToken = async () => {
+        try {
+            const response = await axios.post(`${API_BASE_URL}/token`, {
+                webrtcSessionId: myWebrtcSessionId,
+                userId: myUserName,
+            });
+            return response.data.token;
         } catch (error) {
-            console.error('Error accessing media devices:', error);
+            console.error('Error getting token:', error);
             throw error;
         }
     };
 
-    const connectWebSocket = () => {
-        const wsUrl = `wss://i11e201.p.ssafy.io/api/v1/kurento`;
-        webSocketRef.current = new WebSocket(wsUrl);
-
-        webSocketRef.current.onopen = () => {
-            setIsConnected(true);
-            sendJoinRoomMessage();
-        };
-
-        webSocketRef.current.onmessage = (event) => {
-            const message = JSON.parse(event.data);
-            handleMessage(message);
-        };
-
-        webSocketRef.current.onclose = () => {
-            setIsConnected(false);
-        };
-
-        webSocketRef.current.onerror = (error) => {
-            console.error('WebSocket error:', error);
-            setIsConnected(false);
-        };
-    };
-
-    const sendJoinRoomMessage = () => {
-        sendWebSocketMessage({
-            id: 'joinRoom',
-            room: room,
-            name: `User_${Math.floor(Math.random() * 1000)}`,
-        });
-    };
-
-    const handleMessage = async (message) => {
-        switch (message.id) {
-            case 'existingParticipants':
-                handleExistingParticipants(message);
-                break;
-            case 'newParticipantArrived':
-                handleNewParticipant(message);
-                break;
-            case 'participantLeft':
-                handleParticipantLeft(message);
-                break;
-            case 'receiveVideoAnswer':
-                handleReceiveVideoAnswer(message);
-                break;
-            case 'iceCandidate':
-                handleIceCandidate(message);
-                break;
-            case 'newChatMessage':
-                handleNewChatMessage(message);
-                break;
-            default:
-                console.log('Unhandled message:', message);
-        }
-    };
-
-    const handleExistingParticipants = (message) => {
-        const existingUsers = message.data.split(',');
-        setParticipants(existingUsers);
-        existingUsers.forEach((userName) => {
-            createPeerConnection(userName);
-        });
-        sendWebSocketMessage({
-            id: 'receiveVideoFrom',
-            sender: 'me',
-            sdpOffer: 'YOUR_SDP_OFFER', // You need to create and set the actual SDP offer here
-        });
-    };
-
-    const handleNewParticipant = (message) => {
-        setParticipants((prev) => [...prev, message.name]);
-        createPeerConnection(message.name);
-    };
-
-    const handleParticipantLeft = (message) => {
-        setParticipants((prev) => prev.filter((name) => name !== message.name));
-        if (peerConnections.current[message.name]) {
-            peerConnections.current[message.name].close();
-            delete peerConnections.current[message.name];
-        }
-        if (remoteVideosRef.current[message.name]) {
-            remoteVideosRef.current[message.name].srcObject = null;
-        }
-    };
-
-    const handleReceiveVideoAnswer = (message) => {
-        const pc = peerConnections.current[message.name];
-        if (pc) {
-            pc.setRemoteDescription(
-                new RTCSessionDescription({
-                    type: 'answer',
-                    sdp: message.sdpAnswer,
-                })
-            );
-        }
-    };
-
-    const handleIceCandidate = (message) => {
-        const pc = peerConnections.current[message.name];
-        if (pc) {
-            pc.addIceCandidate(new RTCIceCandidate(message.candidate));
-        }
-    };
-
-    const handleNewChatMessage = (message) => {
-        setChatMessages((prev) => [...prev, { sender: message.user, text: message.message }]);
-    };
-
-    const createPeerConnection = (userName) => {
-        const pc = new RTCPeerConnection({
-            iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
-        });
-
-        pc.onicecandidate = (event) => {
-            if (event.candidate) {
-                sendWebSocketMessage({
-                    id: 'onIceCandidate',
-                    candidate: event.candidate,
-                    name: userName,
-                });
-            }
-        };
-
-        pc.ontrack = (event) => {
-            if (remoteVideosRef.current[userName]) {
-                remoteVideosRef.current[userName].srcObject = event.streams[0];
-            }
-        };
-
-        localStreamRef.current.getTracks().forEach((track) => {
-            pc.addTrack(track, localStreamRef.current);
-        });
-
-        peerConnections.current[userName] = pc;
-
-        pc.createOffer()
-            .then((offer) => pc.setLocalDescription(offer))
-            .then(() => {
-                sendWebSocketMessage({
-                    id: 'receiveVideoFrom',
-                    sender: userName,
-                    sdpOffer: pc.localDescription.sdp,
-                });
-            })
-            .catch(console.error);
-    };
-
-    const sendChatMessage = () => {
-        if (message && isConnected) {
-            sendWebSocketMessage({
-                id: 'chatMessage',
-                room: room,
-                name: 'User_' + Math.floor(Math.random() * 1000),
-                message: message,
-            });
-            setChatMessages((prev) => [...prev, { sender: 'You', text: message }]);
-            setMessage('');
-        } else if (!isConnected) {
-            alert('Not connected to a room. Please join a room first.');
-        }
-    };
-
-    const sendWebSocketMessage = (message) => {
-        if (webSocketRef.current && webSocketRef.current.readyState === WebSocket.OPEN) {
-            webSocketRef.current.send(JSON.stringify(message));
-        } else {
-            console.error('WebSocket is not connected. Current state:', webSocketRef.current?.readyState);
-        }
-    };
-
     return (
-        <div className="p-4">
-            <h1 className="text-2xl font-bold mb-4">WebRTC Chat and Video Call</h1>
-
-            <div className="mb-4">
-                <input type="text" value={room} onChange={(e) => setRoom(e.target.value)} placeholder="Enter room name" className="border p-2 mr-2" />
-                <button onClick={createRoom} className="bg-blue-500 text-white p-2 rounded mr-2">
-                    Create Room
-                </button>
-                <button onClick={joinRoom} className="bg-green-500 text-white p-2 rounded">
-                    Join Room
-                </button>
-            </div>
-
-            <div className="flex flex-wrap justify-between mb-4">
-                <video ref={localVideoRef} autoPlay playsInline muted className="w-1/3 border"></video>
-                {participants.map((userName) => (
-                    <video key={userName} ref={(el) => (remoteVideosRef.current[userName] = el)} autoPlay playsInline className="w-1/3 border"></video>
-                ))}
-            </div>
-
-            <div className="border p-4 h-64 overflow-y-auto mb-4">
-                {chatMessages.map((msg, index) => (
-                    <p key={index}>
-                        <strong>{msg.sender}:</strong> {msg.text}
-                    </p>
-                ))}
-            </div>
-
-            <div className="flex">
-                <input
-                    type="text"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Type your message"
-                    className="border p-2 flex-grow mr-2"
-                />
-                <button onClick={sendChatMessage} className="bg-green-500 text-white p-2 rounded">
-                    Send
-                </button>
-            </div>
+        <div className="container-fluid p-0">
+            {session === null ? (
+                <div className="join-container d-flex align-items-center justify-content-center vh-100">
+                    <div className="join-form-container bg-light p-5 rounded shadow">
+                        <h2 className="text-center mb-4">Join Video Session</h2>
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                joinSession();
+                            }}
+                        >
+                            <div className="mb-3">
+                                <label htmlFor="userName" className="form-label">
+                                    Your Name:
+                                </label>
+                                <input type="text" className="form-control" id="userName" value={myUserName} onChange={handleChangeUserName} required />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="sessionId" className="form-label">
+                                    Session ID:
+                                </label>
+                                <input type="text" className="form-control" id="webrtcSessionId" value={myWebrtcSessionId} onChange={handleChangeWebrtcSessionId} required />
+                            </div>
+                            <button type="submit" className="btn btn-primary w-100">
+                                Join Session
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            ) : (
+                <div className="session-container">
+                    <div className="session-header bg-dark text-white p-3 d-flex justify-content-between align-items-center">
+                        <h3 className="m-0">Session: {mySessionId}</h3>
+                        <div>
+                            <button className="btn btn-outline-light me-2" onClick={switchCamera}>
+                                Switch Camera
+                            </button>
+                            <button className="btn btn-outline-light me-2" onClick={toggleRecording}>
+                                {isRecording ? 'Stop Recording' : 'Start Recording'}
+                            </button>
+                            <button className="btn btn-danger" onClick={leaveSession}>
+                                Leave Session
+                            </button>
+                        </div>
+                    </div>
+                    <div className="main-container">
+                        <div className="video-container">
+                            {mainStreamManager !== null && (
+                                <div className="video-item">
+                                    <UserVideoComponent streamManager={mainStreamManager} />
+                                </div>
+                            )}
+                            {subscribers.map((sub) => (
+                                <div key={sub.stream.connection.connectionId} className="video-item">
+                                    <UserVideoComponent streamManager={sub} />
+                                </div>
+                            ))}
+                        </div>
+                        <div className="chat-container">
+                            <div className="chat-messages">
+                                {chatMessages.map((msg, index) => (
+                                    <div
+                                        key={index}
+                                        className={`chat-message ${msg.connectionId === session.connection.connectionId ? 'own-message' : 'other-message'}`}
+                                    >
+                                        <strong>{msg.from}:</strong> {msg.message}
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="chat-input">
+                                <input
+                                    type="text"
+                                    value={chatInput}
+                                    onChange={(e) => setChatInput(e.target.value)}
+                                    onKeyPress={(e) => e.key === 'Enter' && sendChatMessage()}
+                                    placeholder="Type a message..."
+                                />
+                                <button onClick={sendChatMessage}>Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
 
-export default WebRTCChat;
+const UserVideoComponent = ({ streamManager }) => {
+    const videoRef = useRef();
+
+    useEffect(() => {
+        if (streamManager && videoRef.current) {
+            streamManager.addVideoElement(videoRef.current);
+        }
+    }, [streamManager]);
+
+    return (
+        <div>
+            <video autoPlay={true} ref={videoRef} />
+        </div>
+    );
+};
+
+export default VideoChatComponent;

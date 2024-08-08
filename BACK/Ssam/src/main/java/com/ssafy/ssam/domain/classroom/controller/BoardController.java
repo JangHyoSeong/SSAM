@@ -1,6 +1,5 @@
 package com.ssafy.ssam.domain.classroom.controller;
 
-import com.amazonaws.Response;
 import com.ssafy.ssam.domain.classroom.dto.request.*;
 import com.ssafy.ssam.domain.classroom.dto.response.BoardGetByPinResponseDTO;
 import com.ssafy.ssam.domain.classroom.dto.response.BoardGetResponseDTO;
@@ -30,13 +29,13 @@ public class BoardController {
 
     // 학급 페이지 진입
     @GetMapping("/{boardId}")
-    public ResponseEntity<BoardGetResponseDTO> getBoard(@PathVariable Integer boardId) {
+    public ResponseEntity<BoardGetResponseDTO> getBoard(@PathVariable("boardId") Integer boardId) {
         return ResponseEntity.ok(boardService.getBoardById(boardId));
     }
 
     // Pin번호로 학급 찾기
     @PreAuthorize("hasRole('STUDENT')")
-    @GetMapping()
+    @GetMapping("/pin/{pin}")
     public ResponseEntity<BoardGetByPinResponseDTO> getByPin(
             @PathVariable("pin") String pin){
         return ResponseEntity.ok(boardService.getBoardByPin(pin));

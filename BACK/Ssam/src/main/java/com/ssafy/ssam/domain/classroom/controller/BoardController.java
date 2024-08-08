@@ -37,7 +37,7 @@ public class BoardController {
     @PreAuthorize("hasRole('STUDENT')")
     @GetMapping("/pin/{pin}")
     public ResponseEntity<BoardGetByPinResponseDTO> getByPin(
-            @PathVariable String pin){
+            @PathVariable("pin") String pin){
         return ResponseEntity.ok(boardService.getBoardByPin(pin));
     }
 

@@ -10,7 +10,7 @@ const ClassProduceModal = () => {
     setShowModal(false);
   };
 
-  // 학급 생성하기
+  // 학급 생성하기 POST
   const classCreate = async () => {
     try {
       const token = localStorage.getItem("USER_TOKEN");

@@ -5,18 +5,11 @@ import TeacherDeleteModal from "./TeacherDeleteModal";
 import styles from "./TeacherQuestion.module.scss";
 
 const TeacherQuestion = () => {
-  const { questions, updateQuestion, deleteQuestion, boardId, name } =
-    useQuestions();
-  const [editingAnswerId, setEditingAnswerId] = useState(null);
+  const { questions, updateQuestion, deleteQuestion } = useQuestions();
+  const [editingQuestionId, setEditingQuestionId] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [questionToDelete, setQuestionToDelete] = useState(null);
   const [newAnswer, setNewAnswer] = useState("");
-  // QuestionProvider 안에 fetchApiUserInitial에서 받아온 데이터 있는듯? name, boardId
-
-  // boardId
-  // const { boardId, name } = fetchApiUserInitial();
-  console.log("boardId inside ", boardId);
-  console.log("name inside ", name);
 
   // 토큰 확인
   useEffect(() => {
@@ -27,20 +20,24 @@ const TeacherQuestion = () => {
     }
   }, []);
 
-  const handleEditClick = (id, currentAnswer) => {
-    setEditingAnswerId(id);
-    setNewAnswer(currentAnswer);
+  const handleEditClick = (questionId, currentAnswer) => {
+    setEditingQuestionId(questionId);
+    setNewAnswer(currentAnswer || ""); // 빈 문자열로 초기화
   };
 
-  const handleSaveClick = (id) => {
-    updateQuestion(id, newAnswer);
-    setEditingAnswerId(null);
-    setNewAnswer("");
+  const handleSaveClick = async (questionId) => {
+    try {
+      await updateQuestion(questionId, newAnswer);
+      setEditingQuestionId(null);
+      setNewAnswer("");
+    } catch (error) {
+      console.error("Failed to update question:", error);
+    }
   };
 
-  const handleDeleteClick = (id) => {
+  const handleDeleteClick = (questionId) => {
     setIsDeleteModalOpen(true);
-    setQuestionToDelete(id);
+    setQuestionToDelete(questionId);
   };
 
   const handleDeleteModalConfirm = () => {
@@ -54,60 +51,62 @@ const TeacherQuestion = () => {
     setQuestionToDelete(null);
   };
 
-  // const trimDate = (dateString) => {
-  //   const parts = dateString.split(".");
-  //   if (parts.length < 3) return dateString; // 날짜 형식이 맞지 않는 경우 원본 문자열 반환
-  //   return `${parts[0]}.${parts[1]}.${parts[2]}`;
-  // };
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    return dateString.split("T")[0];
+  };
 
   return (
     <div className={styles.teacherQuestionContainer}>
       {questions.map((item) => (
-        <div key={item.id} className={styles.qaPair}>
+        <div key={item.questionId} className={styles.qaPair}>
           <div className={styles.boxContainer}>
             <div className={styles.questionBox}>
               <div className={styles.authorAndDate}>
-                <p className={styles.author}>{item.studentId}</p>
-                {/* <p className={styles.date}>{trimDate(item.date)}</p> */}
+                <p className={styles.author}>{item.studentName}</p>
+                <p className={styles.date}>{formatDate(item.contentDate)}</p>
               </div>
               <p className={styles.question}>{item.content}</p>
               <FaTrash
                 className={styles.icon}
-                onClick={() => handleDeleteClick(item.id)}
+                onClick={() => handleDeleteClick(item.questionId)}
               />
             </div>
             <div className={`${styles.answerBox}`}>
-              {editingAnswerId === item.id ? (
-                <input
-                  type="text"
-                  value={newAnswer}
-                  onChange={(e) => setNewAnswer(e.target.value)}
-                  className={styles.inputField}
-                  placeholder="답변을 입력하세요"
-                />
+              {editingQuestionId === item.questionId ? (
+                // 저장
+                <>
+                  <input
+                    type="text"
+                    value={newAnswer}
+                    onChange={(e) => setNewAnswer(e.target.value)}
+                    className={styles.inputField}
+                    placeholder="답변을 입력하세요"
+                  />
+                  <FaSave
+                    className={styles.icon}
+                    onClick={() => handleSaveClick(item.questionId)}
+                  />
+                </>
               ) : (
+                // 편집
                 <>
                   <div className={styles.authorAndDate}>
                     <p className={styles.author}>선생님</p>
-                    {/* <p className={styles.date}>{trimDate(item.date)}</p> */}
+                    <p className={styles.date}>{formatDate(item.answerDate)}</p>
                   </div>
                   <p className={styles.answer}>
                     {item.answer
                       ? item.answer
                       : "답변이 없어요... 선생님이 답변을 입력해 주세요..."}
                   </p>
+                  <FaEdit
+                    className={styles.icon}
+                    onClick={() =>
+                      handleEditClick(item.questionId, item.answer)
+                    }
+                  />
                 </>
-              )}
-              {editingAnswerId === item.id ? (
-                <FaSave
-                  className={styles.icon}
-                  onClick={() => handleSaveClick(item.id)}
-                />
-              ) : (
-                <FaEdit
-                  className={styles.icon}
-                  onClick={() => handleEditClick(item.id, item.answer)}
-                />
               )}
             </div>
           </div>

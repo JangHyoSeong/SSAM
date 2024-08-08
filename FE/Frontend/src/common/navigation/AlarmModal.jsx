@@ -51,27 +51,31 @@ const AlarmModal = () => {
             >
               X
             </div>
-            <p>{post.alarmTime}</p>
-            {post.alarmType === "QUESTION" && (
-              <a href="http://localhost:3000/teacherquestion">
-                <p>문의사항을 확인해주세요</p>
-              </a>
-            )}
-            {post.alarmType === "ANSWER" && (
-              <a href="http://localhost:3000/studentquestion">
-                <p>문의사항을 확인해주세요</p>
-              </a>
-            )}
-            {post.alarmType === "ACCEPT" && (
-              <a href="http://localhost:3000/teacherauthorization">
-                <p>승인 요청을 보냈습니다</p>
-              </a>
-            )}
-            {post.alarmType === "REGISTRATION" && (
-              <a href="http://localhost:3000/studentsubpage">
-                <p>승인 요청이 수락되었습니다</p>
-              </a>
-            )}
+            <div className={styles.postContent}>
+              <p>
+                {post.alarmTime.split("T")[0]} {post.alarmTime.split("T")[1]}
+              </p>
+              {post.alarmType === "QUESTION" && (
+                <a href="http://localhost:3000/teacherquestion">
+                  <p>문의사항을 확인해주세요</p>
+                </a>
+              )}
+              {post.alarmType === "ANSWER" && (
+                <a href="http://localhost:3000/studentquestion">
+                  <p>문의사항을 확인해주세요</p>
+                </a>
+              )}
+              {post.alarmType === "ACCEPT" && (
+                <a href="http://localhost:3000/teacherauthorization">
+                  <p>승인 요청을 보냈습니다</p>
+                </a>
+              )}
+              {post.alarmType === "REGISTRATION" && (
+                <a href="http://localhost:3000/studentsubpage">
+                  <p>승인 요청이 수락되었습니다</p>
+                </a>
+              )}
+            </div>
           </div>
         ))}
       </div>

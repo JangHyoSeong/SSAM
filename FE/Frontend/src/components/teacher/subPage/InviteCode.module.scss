@@ -5,6 +5,10 @@
 }
 
 .inviteCodeBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   margin-top: 3%;
   position: relative;
   top: 5%;
@@ -39,4 +43,9 @@
   border: none;
   background-color: #5285ee;
   color: white;
+}
+
+.btn {
+  display: flex;
+  white-space: nowrap;
 }

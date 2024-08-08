@@ -18,7 +18,7 @@ export const fetchQuestionData = async () => {
     console.log("axios-questions-get: ", response.data);
     return response.data;
   } catch (error) {
-    console.error("Failed to fetch question data:", error);
+    console.error("Failed to fetch get question data:", error);
     throw error;
   }
 };
@@ -42,7 +42,7 @@ export const fetchCreateQuestionData = async (content) => {
     console.log("axios-questions-post: ", response.data);
     return response.data;
   } catch (error) {
-    console.error("Failed to fetch question data:", error);
+    console.error("Failed to fetch post question data:", error);
     throw error;
   }
 };
@@ -50,10 +50,6 @@ export const fetchCreateQuestionData = async (content) => {
 // PUT - 학생 질문 생성 api: /classrooms/answers/{qustion_id}
 export const fetchUpdateQuestionData = async (questionId, answer) => {
   try {
-    if (typeof questionId !== "number" || isNaN(questionId)) {
-      throw new Error("Invalid questionId: Must be a number");
-    }
-
     const token = localStorage.getItem("USER_TOKEN");
     const { boardId } = await fetchApiUserInitial();
     const response = await axios.put(
@@ -70,7 +66,28 @@ export const fetchUpdateQuestionData = async (questionId, answer) => {
     console.log("axios-questions-put: ", response.data);
     return response.data;
   } catch (error) {
-    console.error("Failed to update question:", error);
+    console.error("Failed to update put question:", error);
+    throw error;
+  }
+};
+
+// DELETE - 공통api: /classrooms/questions/{questions_id}
+export const fetchDeleteQuestionData = async (questionId) => {
+  try {
+    const token = localStorage.getItem("USER_TOKEN");
+    const response = await axios.delete(
+      `http://localhost:8081/v1/classrooms/questions/${questionId}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: token,
+        },
+      }
+    );
+    console.log("axios-questions-delete: ", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch question delete data:", error);
     throw error;
   }
 };

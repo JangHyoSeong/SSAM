@@ -37,7 +37,7 @@ const useProfile = () => {
           otherPhone: response.data.otherPhone,
         });
       } catch (error) {
-        console.error("Failed to fetch profile data:", error);
+        console.error("데이터를 가져오지 못했습니다:", error);
       }
     };
 

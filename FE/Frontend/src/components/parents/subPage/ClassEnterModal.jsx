@@ -9,6 +9,7 @@ const ClassEnterModal = () => {
   const inputRefs = useRef(new Array(6));
   const pin = pins.join("");
 
+  // PIN 번호 GET
   useEffect(() => {
     const fetchClassroom = async () => {
       if (pin.length === 6) {
@@ -27,11 +28,11 @@ const ClassEnterModal = () => {
             setClassroom(response.data);
             console.log(response.data);
           } else {
-            console.error("No matching classroom found with the provided PIN");
+            console.error("제공된 PIN과 일치하는 강의실을 찾을 수 없습니다");
             setClassroom(null);
           }
         } catch (error) {
-          console.error("Axios error: ", error.response || error);
+          console.error("Axios 실패: ", error.response || error);
           setClassroom(null);
         }
       }

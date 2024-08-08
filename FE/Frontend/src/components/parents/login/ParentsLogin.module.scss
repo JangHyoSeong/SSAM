@@ -1,35 +1,31 @@
-$sky-blue: #5285ee;
-$white: white;
-$naver-green: #00b818;
-$kakao-yellow: #fddc3f;
-
 .loginArray {
   height: 90vh;
-  background-color: $sky-blue;
+  background-color: #5285ee;
 }
 
 .loginTitle {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 20vh;
+  height: 25vh;
   font-size: 300%;
-  color: $white;
+  color: white;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 1);
 }
 
 .loginFormArray {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .loginBackground {
+  z-index: 1;
   width: 30%;
   height: 100%;
-  background-color: $white;
+  background-color: white;
   border-radius: 25px;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-  z-index: 2;
 }
 
 .loginForm {
@@ -51,12 +47,13 @@ $kakao-yellow: #fddc3f;
   padding: 2%;
   margin-top: 3%;
   border-radius: 25px;
-  background-color: $sky-blue;
-  color: $white;
+  background-color: #5285ee;
+  color: white;
   font-size: 120%;
   font-weight: bold;
   text-align: center;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .loginRoute {
@@ -64,14 +61,14 @@ $kakao-yellow: #fddc3f;
   margin-top: 3%;
   display: flex;
   justify-content: space-between;
-  color: $sky-blue;
+  color: #5285ee;
   font-weight: bold;
   font-size: 80%;
 }
 
 .joinNavLink {
   text-decoration: none;
-  color: $sky-blue;
+  color: #5285ee;
 }
 
 .googleBtn,
@@ -82,25 +79,32 @@ $kakao-yellow: #fddc3f;
   margin-top: 3%;
   padding: 2%;
   border-radius: 25px;
-  font-size: 110%;
+  cursor: pointer;
+}
+
+.googleBtn p,
+.naverBtn p,
+.kakaoBtn p {
+  font-size: 120%;
   font-weight: bold;
+  margin-left: 20%;
+}
 
-  &.googleBtn {
-    background-color: $white;
-  }
+.googleBtn {
+  background-color: white;
+}
 
-  p {
-    padding-left: 20%;
-  }
+.googleBtn:hover {
+  background-color: #f4f4f4;
 }
 
 .naverBtn {
-  background-color: $naver-green;
-  color: $white;
+  background-color: #00b818;
+  color: white;
 }
 
 .kakaoBtn {
-  background-color: $kakao-yellow;
+  background-color: #fddc3f;
 }
 
 .googleImg,

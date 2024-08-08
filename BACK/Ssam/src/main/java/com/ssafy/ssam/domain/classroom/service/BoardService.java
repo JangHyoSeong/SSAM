@@ -1,5 +1,6 @@
 package com.ssafy.ssam.domain.classroom.service;
 
+import com.ssafy.ssam.domain.user.service.UserBoardRelationService;
 import com.ssafy.ssam.global.amazonS3.service.S3ImageService;
 import com.ssafy.ssam.domain.classroom.dto.request.BoardCreateRequestDTO;
 import com.ssafy.ssam.domain.classroom.dto.response.BoardGetByPinResponseDTO;
@@ -11,6 +12,7 @@ import com.ssafy.ssam.domain.classroom.repository.BoardRepository;
 import com.ssafy.ssam.domain.user.repository.UserBoardRelationRepository;
 import com.ssafy.ssam.domain.classroom.repository.SchoolRepository;
 import com.ssafy.ssam.domain.user.dto.response.StudentInfoListDTO;
+import com.ssafy.ssam.global.auth.dto.CustomUserDetails;
 import com.ssafy.ssam.global.auth.entity.User;
 import com.ssafy.ssam.global.auth.repository.UserRepository;
 import com.ssafy.ssam.global.dto.CommonResponseDto;
@@ -37,6 +39,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class BoardService {
 
+    private final UserBoardRelationService userBoardRelationService;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final UserBoardRelationRepository userBoardRelationRepository;
@@ -88,16 +91,28 @@ public class BoardService {
     // id를 통해 board 찾기
     @Transactional(readOnly = true)
     public BoardGetResponseDTO getBoardById(int classId) {
+
+        CustomUserDetails userDetails = userBoardRelationService.findCustomUserDetails();
+        User user = findUserByToken();
         Board board = boardRepository.findById(classId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
+        UserBoardRelation relation = userBoardRelationRepository.findByUserAndBoard(user, board)
+                .orElse(null);
 
-        List<User> users = userBoardRelationRepository.findUsersByBoardAndStatus(board, UserBoardRelationStatus.ACCEPTED)
+        if (relation == null) throw new CustomException(ErrorCode.Forbidden);
+
+        if (relation != null && (relation.getStatus().equals(UserBoardRelationStatus.WAITING) || relation.getStatus().equals(UserBoardRelationStatus.BLOCKED))) {
+            throw new CustomException(ErrorCode.Forbidden);
+        }
+
+        List<User> students = userBoardRelationRepository.findUsersByBoardAndStatus(board, UserBoardRelationStatus.ACCEPTED)
                 .orElse(new ArrayList<>());
 
-        List<StudentInfoListDTO> userInfoList = users != null ? users.stream()
-                .map(user -> StudentInfoListDTO.builder()
-                        .name(user.getName())
-                        .profileImage(user.getImgUrl())
+        List<StudentInfoListDTO> userInfoList = students != null ? students.stream()
+                .map(student -> StudentInfoListDTO.builder()
+                        .name(student.getName())
+                        .profileImage(student.getImgUrl())
+                        .studentId(student.getUserId())
                         .build())
                 .collect(Collectors.toList()) : null;
         return convertToResponseDTO(board, userInfoList);
@@ -204,7 +219,7 @@ public class BoardService {
     public CommonResponseDto updateBannerImage(int boardId, MultipartFile image) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BoardNotFoundException));
-        String imageUrl = s3ImageService.upload(image);
+        String imageUrl = s3ImageService.upload(image, "banner");
 
         User user = findUserByToken();
         UserBoardRelation relation = userBoardRelationRepository.findByUserAndBoard(user, board)

@@ -45,9 +45,8 @@
 }
 
 .infoArray {
-  margin-top: 2%;
   width: 100vw;
-  height: 83vh;
+  height: 75vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -114,10 +113,32 @@ table {
   border: none;
 }
 
+.inputBtn {
+  display: none;
+}
+
+.updateBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 5vw;
+  height: 3.7vh;
+  font-size: 80%;
+  margin: 2% 0.5%;
+  background-color: white;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.updateBtn:hover {
+  background-color: #5285ee;
+  color: white;
+  border: none;
+}
+
 .formBtnArray {
   display: flex;
   justify-content: center;
-  width: 50vw;
 }
 
 .formBtn {

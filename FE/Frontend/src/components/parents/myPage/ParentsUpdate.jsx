@@ -1,44 +1,130 @@
 // 선생님 정보 수정 페이지 컴포넌트
-import { NavLink } from 'react-router-dom';
-import update from './ParentsUpdate.module.scss';
+import axios from "axios";
+import { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import styles from "./ParentsUpdate.module.scss";
+
+const useProfile = () => {
+  const [profileData, setProfileData] = useState({
+    profileImage: "",
+    name: "",
+    birth: "",
+    school: "",
+    username: "",
+    email: "",
+    selfPhone: "",
+    otherPhone: "",
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("USER_TOKEN");
+      try {
+        const response = await axios.get("http://localhost:8081/v1/users", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+        });
+        setProfileData({
+          profileImage: response.data.profileImage,
+          name: response.data.name,
+          birth: response.data.birth,
+          school: response.data.school,
+          username: response.data.username,
+          email: response.data.email,
+          selfPhone: response.data.selfPhone,
+          otherPhone: response.data.otherPhone,
+        });
+      } catch (error) {
+        console.error("Failed to fetch profile data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return profileData;
+};
 
 const ParentsUpdate = () => {
+  const profile = useProfile();
   return (
-    <div>
-      <div className={update.menuArray}>
-        <div className={update.updateMenu}>
-          <h2>회원정보 수정</h2>
-        </div>
-        <NavLink to="/studentpasswordchange" className={update.changeMenu}>
-          <h2>비밀번호 변경</h2>
+    <div className={styles.Container}>
+      <div className={styles.menuNavbar}>
+        <div className={styles.updateItem}>회원정보 수정</div>
+        <NavLink to="/studentpasswordchange" className={styles.changeItem}>
+          비밀번호 변경
         </NavLink>
       </div>
-      <div className={update.infoArray}>
-        <div className={update.infoForm}>
-          <table className={update.tableArray}>
+      <div className={styles.infoArray}>
+        <form className={styles.infoForm}>
+          <table className={styles.tableArray}>
             <tr>
               <th>사진</th>
-              <td className={update.imgTd}>
-                <div className={update.profileImg}></div>
-                <div className={update.btn}>
-                  <button className={update.imgBtn}>수정</button>
-                  <button className={update.imgBtn}>삭제</button>
+              <td className={styles.imgTd}>
+                <div className={styles.profileImg}></div>
+                <div className={styles.btn}>
+                  <input type="file" id="file" className={styles.inputBtn} />
+                  <label htmlFor="file" className={styles.updateBtn}>
+                    수정
+                  </label>
+                  <button className={styles.imgBtn}>삭제</button>
                 </div>
               </td>
             </tr>
-            <tr><th>이름</th><td></td></tr>
-            <tr><th>생년월일</th><td></td></tr>
-            <tr><th>학교</th><td></td></tr>
-            <tr><th>아이디</th><td></td></tr>
-            <tr><th>이메일</th><td></td></tr>
-            <tr><th>학생<br/>전화번호</th><td></td></tr>
-            <tr><th>학부모<br/>전화번호</th><td></td></tr>
+            <tr>
+              <th>이름</th>
+              <td>
+                <input type="text" name="name" value={profile.name} />
+              </td>
+            </tr>
+            <tr>
+              <th>생년월일</th>
+              <td>
+                <input type="date" name="birth" value={profile.birth} />
+              </td>
+            </tr>
+            <tr>
+              <th>학교</th>
+              <td>
+                <input type="text" name="school" value={profile.school} />
+              </td>
+            </tr>
+            <tr>
+              <th>아이디</th>
+              <td>
+                <input type="text" name="username" value={profile.username} />
+              </td>
+            </tr>
+            <tr>
+              <th>이메일</th>
+              <td>
+                <input type="email" name="email" value={profile.email} />
+              </td>
+            </tr>
+            <tr>
+              <th>학생 전화번호</th>
+              <td>
+                <input type="text" name="phone" value={profile.selfPhone} />
+              </td>
+            </tr>
+            <tr>
+              <th>학부모 전화번호</th>
+              <td>
+                <input type="text" name="phone" value={profile.otherPhone} />
+              </td>
+            </tr>
           </table>
-        </div>
-        <div className={update.formBtnArray}>
-          <button className={update.formBtn}>저장</button>
-          <button className={update.formBtn}>취소</button>
-        </div>
+          <div className={styles.formBtnArray}>
+            <button type="submit" className={styles.formBtn}>
+              저장
+            </button>
+            <button type="button" className={styles.formBtn}>
+              취소
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

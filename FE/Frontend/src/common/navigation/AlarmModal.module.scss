@@ -17,7 +17,7 @@
 .triangle {
   position: absolute;
   top: -4%;
-  left: 11.2%;
+  left: 16%;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
   border-bottom: 16px solid #eeeeee;
@@ -43,6 +43,11 @@
   overflow-y: auto;
 }
 
+.postContent {
+  position: relative;
+  top: -20%;
+}
+
 .content {
   display: flex;
   align-items: center;
@@ -54,22 +59,16 @@
   border-radius: 25px;
   background-color: white;
   white-space: normal;
-  font-size: 90%;
 }
 
 .content a {
-  text-decoration: none;
-}
-
-.content p {
-  position: relative;
-  top: -20%;
   color: black;
+  text-decoration: none;
 }
 
 .deleteBtn {
   position: relative;
-  top: 10%;
+  top: 20%;
   right: -42%;
 }
 

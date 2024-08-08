@@ -47,98 +47,94 @@ const ParentsJoin = () => {
   return (
     <div className={join.joinArray}>
       <h1 className={join.joinTitle}>회원가입</h1>
-      <form onSubmit={joinSubmit} className={join.joinForm}>
-        <div className={join.joinFormArray}>
-          <div className={join.joinBtnFormArray}>
-            <div className={join.joinBackground}>
-              <div>
-                <img src={human} className={join.joinIcon} alt="human" />
-                <input
-                  type="text"
-                  name="username"
-                  value={formData.username}
-                  onChange={handleChange}
-                  placeholder="아이디"
-                  required
-                />
-              </div>
-              <hr />
-              <div>
-                <img src={lock} className={join.joinIcon} alt="lock" />
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="비밀번호"
-                  required
-                />
-              </div>
-              <hr />
-              <div>
-                <img src={mail} className={join.joinIcon} alt="mail" />
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="이메일"
-                  required
-                />
-              </div>
-              <hr />
-              <div>
-                <img src={human} className={join.joinIcon} alt="human" />
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="이름"
-                  required
-                />
-              </div>
-              <hr />
-              <div>
-                <img src={calendar} className={join.joinIcon} alt="calendar" />
-                <input
-                  type="text"
-                  name="birth"
-                  value={formData.birth}
-                  onChange={handleChange}
-                  placeholder="생년월일 8자리"
-                  required
-                />
-              </div>
-              <hr />
-              <div>
-                <img src={phone} className={join.joinIcon} alt="phone" />
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="휴대전화 번호"
-                  required
-                />
-              </div>
-            </div>
-            <div className={join.joinBtnArray}>
-              <button type="submit" className={join.joinBtn}>
-                가입
-              </button>
-              <button
-                type="button"
-                className={join.joinBtn}
-                onClick={() => window.location.reload()}
-              >
-                취소
-              </button>
-            </div>
+      <div className={join.joinBackground}>
+        <form onSubmit={joinSubmit} className={join.joinForm}>
+          <div>
+            <img src={human} className={join.joinIcon} alt="human" />
+            <input
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              placeholder="아이디"
+              required
+            />
           </div>
-        </div>
-      </form>
-
+          <hr />
+          <div>
+            <img src={lock} className={join.joinIcon} alt="lock" />
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="비밀번호"
+              required
+            />
+          </div>
+          <hr />
+          <div>
+            <img src={mail} className={join.joinIcon} alt="mail" />
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="이메일"
+              required
+            />
+          </div>
+          <hr />
+          <div>
+            <img src={human} className={join.joinIcon} alt="human" />
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="이름"
+              required
+            />
+          </div>
+          <hr />
+          <div>
+            <img src={calendar} className={join.joinIcon} alt="calendar" />
+            <input
+              type="text"
+              name="birth"
+              value={formData.birth}
+              onChange={handleChange}
+              placeholder="생년월일 8자리"
+              required
+            />
+          </div>
+          <hr />
+          <div>
+            <img src={phone} className={join.joinIcon} alt="phone" />
+            <input
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder="휴대전화 번호"
+              required
+            />
+          </div>
+          <hr />
+          <div className={join.joinBtnArray}>
+            <button type="submit" className={join.joinBtn}>
+              가입
+            </button>
+            <button
+              type="button"
+              className={join.joinBtn}
+              onClick={() => window.location.reload()}
+            >
+              취소
+            </button>
+          </div>
+        </form>
+      </div>
       <img src={round1} className={join.round1} alt="round1" />
       <img src={round2} className={join.round2} alt="round2" />
       <img src={round3} className={join.round3} alt="round1" />

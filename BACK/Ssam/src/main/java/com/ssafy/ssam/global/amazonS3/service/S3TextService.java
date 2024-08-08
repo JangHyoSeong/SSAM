@@ -36,7 +36,7 @@ public class S3TextService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(text);
+//        System.out.println(text);
         return text;
     }
 

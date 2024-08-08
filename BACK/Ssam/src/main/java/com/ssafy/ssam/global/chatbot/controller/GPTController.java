@@ -21,7 +21,7 @@ public class GPTController {
 
     @GetMapping("/{consultId}")
     public ResponseEntity<CommonResponseDto> createSummary(Integer consultId, String topic) {
-        gptService.GPTsummaryConsult(topic, topic);
+//        gptService.GPTsummaryConsult(topic, topic);
         return ResponseEntity.ok(new CommonResponseDto("ok"));
     }
 

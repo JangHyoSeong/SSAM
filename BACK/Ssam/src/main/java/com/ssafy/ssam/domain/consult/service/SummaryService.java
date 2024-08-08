@@ -42,9 +42,10 @@ public class SummaryService {
         String talk = s3TextService.readText(consult.getWebrtcSessionId());
 
         // 대화기반 chatGpt 요약
-        SummaryRequestDto summaryRequestDto = gptService.GPTsummaryConsult(talk, appointment.getTopic().toString());
+        SummaryRequestDto summaryRequestDto = gptService.GPTsummaryConsult(talk, appointment.getTopic().toString(), appointment.getStartTime());
         Summary summary = Summary.toSummary(summaryRequestDto, consult);
         summaryRepository.save(summary);
         return new CommonResponseDto("finish consult");
     }
 }
+

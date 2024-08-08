@@ -8,11 +8,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  backdrop-filter: blur(10px); /* 배경 블러 추가 */
 }
 
 .modalContent {
-  width: 300px; /* 너비를 좀 더 넓게 설정 */
+  font-size: 18px;
+  width: 300px;
   background: white;
   padding: 2rem;
   border-radius: 8px; /* 더 부드러운 모서리 */
@@ -20,35 +20,40 @@
   text-align: center;
 }
 
-.buttonContainer {
-  margin-top: 1.5rem;
-  display: flex;
-  justify-content: space-around;
-}
-
 .button {
-  padding: 0.5rem 1rem;
+  padding: 2rem 4rem;
   border-radius: 8px;
   border: none;
   cursor: pointer;
   font-size: 16px;
-  width: 30%; /* 버튼 크기를 더 작게 설정 */
+  margin: 50px;
 }
 
 .rejectButton {
-  background-color: #ff3b30; /* 애플의 레드 색상 */
-  color: white;
-}
+  border-radius: 25px; /* 둥근 모서리 */
+  padding: 0.8vh 2vh;
+  margin: 0 0.5vw;
+  color: black;
+  border: 0.5px solid #ffcccc;
+  background-color: #ffcccc;
+  cursor: pointer;
+  font-size: 16px;
 
-.rejectButton:hover {
-  background-color: #d32f2f; /* 어두운 레드 색상 */
+  &:hover {
+    background-color: #ff9999;
+  }
 }
 
 .cancelButton {
-  background-color: #d5d5d5;
-  color: white;
-}
+  border-radius: 25px; /* 둥근 모서리 */
+  padding: 0.8vh 2vh;
+  margin: 0 0.5vw;
+  border: 1px solid #b7b7b7;
+  background-color: white;
+  cursor: pointer;
+  font-size: 16px;
 
-.cancelButton:hover {
-  background-color: #bbbbbb;
+  &:hover {
+    background-color: #dfdfdf;
+  }
 }

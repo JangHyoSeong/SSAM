@@ -14,6 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class OpenViduSessionDto {
+	private String accessCode;
 	private String webrtcSessionId;
     private String sessionId;
     private String userId;

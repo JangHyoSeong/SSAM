@@ -67,6 +67,7 @@ public class Appointment {
         return AppointmentResponseDto.builder()
                 .appointmentId(appointment.getAppointmentId())
                 .studentId(appointment.getStudent().getUserId())
+                .studentName(appointment.getStudent().getName())
                 .teacherId(appointment.getTeacher().getUserId())
                 .startTime(appointment.getStartTime())
                 .endTime(appointment.getEndTime())

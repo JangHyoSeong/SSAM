@@ -161,7 +161,7 @@ const TeacherJoin = () => {
             <button
               type="button"
               className={styles.joinBtn}
-              onClick={() => window.location.reload()}
+              onClick={() => window.location.replace('./')}
             >
               취소
             </button>

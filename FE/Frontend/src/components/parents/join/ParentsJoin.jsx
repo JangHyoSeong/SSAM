@@ -128,7 +128,7 @@ const ParentsJoin = () => {
             <button
               type="button"
               className={join.joinBtn}
-              onClick={() => window.location.reload()}
+              onClick={() => window.location.replace('./')}
             >
               취소
             </button>

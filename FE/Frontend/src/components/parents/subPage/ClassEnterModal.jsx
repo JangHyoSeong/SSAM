@@ -68,7 +68,8 @@ const ClassEnterModal = () => {
           },
         }
       );
-      console.log("성공");
+      alert("성공");
+      location.reload();
     } catch (error) {
       console.error("실패", error);
     }

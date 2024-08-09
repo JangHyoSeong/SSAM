@@ -44,8 +44,12 @@ const TeacherPasswordChange = () => {
               />
             </div>
             <div className={styles.formBtnArray}>
-              <button className={styles.formBtn}>저장</button>
-              <button className={styles.formBtn}>취소</button>
+              <button type="submit" className={styles.saveBtn}>
+                저장
+              </button>
+              <button type="button" className={styles.deleteBtn}>
+                취소
+              </button>
             </div>
           </div>
         </div>

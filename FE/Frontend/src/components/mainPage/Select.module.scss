@@ -58,7 +58,7 @@
   justify-content: center;
   align-items: center;
   height: 25vh;
-  font-size: 280%;
+  font-size: 300%;
   color: #ffffff;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   position: relative;
@@ -109,30 +109,24 @@
 
   h1 {
     margin-top: 8%;
-    font-size: 210%;
+    font-size: 250%;
   }
 
   h3 {
     margin-top: 4%;
-    font-size: 120%;
+    font-size: 150%;
     color: gray;
   }
 }
 
-.imgArray {
-  display: flex;
-  justify-content: center;
-
-}
-
 .teacherImg {
-  margin-top: 10%;
+  margin-top: 5%;
   width: 19vw;
   height: 36vh;
 }
 
 .parentsImg {
-  margin-top: 10%;
+  margin-top: 5%;
   width: 19vw;
   height: 35vh;
 }

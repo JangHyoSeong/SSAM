@@ -25,7 +25,6 @@
   z-index: 1;
 }
 
-
 .btnArray {
   width: 100%;
   display: flex;
@@ -33,18 +32,35 @@
   align-items: center;
 }
 
-.classBtn {
-  margin: 2%;
+.deleteBtn {
+  margin: 4% 2%;
   padding: 1% 5%;
   border-radius: 25px;
+  color: #ee5252;
+  font-size: 100%;
+  border-color: #ee5252;
+  background-color: white;
+  cursor: pointer;
+}
+
+.deleteBtn:hover {
+  border: none;
+  background-color: #ee5252;
+  color: white;
+}
+
+.pinBtn {
+  margin: 4% 2%;
+  padding: 1% 5%;
+  border-radius: 25px;
+  font-size: 100%;
   color: #5285ee;
-  font-size: 120%;
   border-color: #5285ee;
   background-color: white;
   cursor: pointer;
 }
 
-.classBtn:hover {
+.pinBtn:hover {
   border: none;
   background-color: #5285ee;
   color: white;
@@ -53,4 +69,21 @@
 .btn {
   display: flex;
   white-space: nowrap;
+}
+
+.copyButton {
+  display: flex;
+  gap: 5%;
+}
+
+.copyButton button:hover {
+  background-color: #f4f4f4;
+}
+
+.copyButton button {
+  padding: 0% 3%;
+  font-size: 75%;
+  border-style: none;
+  border-radius: 5px;
+  background-color: white;
 }

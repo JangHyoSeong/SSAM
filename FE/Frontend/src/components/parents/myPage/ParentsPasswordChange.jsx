@@ -44,8 +44,8 @@ const ParentsPasswordChange = () => {
               />
             </div>
             <div className={styles.formBtnArray}>
-              <button className={styles.formBtn}>저장</button>
-              <button className={styles.formBtn}>취소</button>
+              <button className={styles.saveBtn}>저장</button>
+              <button className={styles.deleteBtn}>취소</button>
             </div>
           </div>
         </div>

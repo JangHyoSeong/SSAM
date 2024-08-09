@@ -9,6 +9,7 @@ import calendar from "../../../assets/calendar.png";
 import phone from "../../../assets/phone.png";
 import round1 from "../../../assets/round1.png";
 import round2 from "../../../assets/round2.png";
+import Swal from "sweetalert2";
 const apiUrl = import.meta.env.API_URL;
 
 const TeacherJoin = () => {
@@ -51,8 +52,15 @@ const TeacherJoin = () => {
       .post(`${apiUrl}/v1/auth/teachers`, formData)
       .then((response) => {
         console.log("axios 성공", response);
-        alert("성공");
-        window.location.replace("./teacherlogin");
+        Swal.fire({
+          title: "성공!",
+          text: "회원가입이 완료되었습니다",
+          icon: "success",
+        }).then(function (isConfirm) {
+          if (isConfirm) {
+            window.location.replace("./teacherlogin");
+          }
+        });
       })
       .catch((error) => {
         console.error("axios 실패", error);
@@ -161,7 +169,7 @@ const TeacherJoin = () => {
             </button>
             <button
               type="button"
-              className={styles.joinBtn}
+              className={styles.cancleBtn}
               onClick={() => window.location.replace("./")}
             >
               취소

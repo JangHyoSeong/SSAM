@@ -19,13 +19,15 @@
   background-color: white;
   border: 10px solid #D0E0FE;
   border-radius: 25px;
+  font-size: 120%;
 }
 
 .headerArray {
+  width: 100%;
+  height: 25%;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 20%;
   background-color: #D0E0FE;
 }
 
@@ -77,4 +79,8 @@
 
 .cancelButton:hover {
   background-color: #bbbbbb;
+}
+
+.reLoginTxt {
+  margin: 3% 0%;
 }

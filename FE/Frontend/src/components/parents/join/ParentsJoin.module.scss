@@ -64,13 +64,13 @@
     align-items: center;
     width: 6vw;
     height: 5vh;
-    border: 1px solid black;
     border-radius: 25px;
     font-size: 1.2em;
     background-color: white;
     margin: 4% 2%;
     text-decoration: none;
-    color: black;
+    border: 2px solid #5285ee;
+    color: #5285ee;
     cursor: pointer;
   }
 
@@ -79,31 +79,45 @@
     color: white;
     border-style: none;
   }
+
+  .cancleBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 6vw;
+    height: 5vh;
+    border-radius: 25px;
+    font-size: 1.2em;
+    background-color: white;
+    margin: 4% 2%;
+    text-decoration: none;
+    border: 2px solid #ee5252;
+    color: #ee5252;
+    cursor: pointer;
+  }
+
+  .cancleBtn:hover {
+    border: none;
+    background-color: #ee5252;
+    color: white;
+  }
 }
 
 .round1,
-.round2,
-.round3 {
+.round2 {
   position: absolute;
   width: 15%;
   padding: 20px;
-}
 
-.round1 {
-  top: 15%;
-  left: 8%;
-  animation: flyInFromLeft 1.1s ease-out;
-}
+  &.round1 {
+    top: 15%;
+    left: 8%;
+    animation: flyInFromLeft 1.1s ease-out;
+  }
 
-.round2 {
-  top: 20%;
-  right: 3%;
-  animation: flyInFromRight 1.1s ease-out;
-}
-
-.round3 {
-  top: 50%;
-  left: 42%;
-  width: 20%;
-  animation: flyInFromBottom 1.1s ease-out;
+  &.round2 {
+    top: 20%;
+    right: 3%;
+    animation: flyInFromRight 1.1s ease-out;
+  }
 }

@@ -82,11 +82,11 @@ const ClassEnterModal = () => {
         <div className={styles.enterArray}>
           <div className={styles.headerArray}>
             <p>초대코드로 학급 검색하기</p>
-            <p className={styles.outBtn} onClick={closeModal}>
+            <h2 className={styles.outBtn} onClick={closeModal}>
               X
-            </p>
+            </h2>
           </div>
-          <form id="numberForm" className={styles.inputForm}>
+          <form className={styles.inputForm}>
             {pins.map((_, index) => (
               <input
                 key={index}

@@ -38,7 +38,7 @@ export const ConsultationProvider = ({ children }) => {
       await updateAppointmentStatus(appointmentId);
       setConsultations(
         consultations.map((c) =>
-          c.appointmentId === appointmentId ? { ...c, status: "BEFORE" } : c
+          c.appointmentId === appointmentId ? { ...c, status: "ACCEPTED" } : c
         )
       );
     } catch (err) {

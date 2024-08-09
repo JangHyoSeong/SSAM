@@ -33,6 +33,7 @@ const ConsultationItem = ({
   onReject,
 }) => {
   const handleConsult = () => {
+    // 비디오 링크
     window.open("https://www.naver.com", "_blank");
   };
 
@@ -62,7 +63,7 @@ const ConsultationItem = ({
       <div className={styles.cellMedium}>{getTopicDisplay(topic)}</div>
       <div className={styles.cellLarge}>{description || "설명 없음"}</div>
       <div className={styles.cellButtons}>
-        {status === "BEFORE" ? (
+        {status === "APPLY" ? (
           <>
             <button
               className={styles.approveButton}
@@ -77,13 +78,13 @@ const ConsultationItem = ({
               거절
             </button>
           </>
-        ) : status === "APPROVED" ? (
+        ) : status === "ACCEPTED" ? (
           <button className={styles.statusButton} onClick={handleConsult}>
             상담 하기
           </button>
-        ) : (
-          <span className={styles.rejectedStatus}>거절됨</span>
-        )}
+        ) : status === "CANCEL" ? (
+          <span className={styles.cancelStatus}>취소됨</span>
+        ) : null}
       </div>
     </div>
   );
@@ -151,6 +152,7 @@ const TeacherConsultationList = () => {
       <nav className={styles.classNavbar}>
         <NavLink
           to="/teacherreservationmanagement"
+          ConsultationItem
           className={({ isActive }) =>
             isActive ? `${styles.navItem} ${styles.active}` : styles.navItem
           }

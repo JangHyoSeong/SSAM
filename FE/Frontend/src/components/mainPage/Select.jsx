@@ -19,9 +19,7 @@ const Select = () => {
           <div className={styles.menuTxt}>
             <h1>선생님</h1>
             <h3>선생님으로 시작하세요</h3>
-            <div className={styles.imgArray}>
-              <img src={teacher} className={styles.teacherImg} alt="teacher" />
-            </div>
+            <img src={teacher} className={styles.teacherImg} alt="teacher" />
           </div>
         </NavLink>
         <NavLink
@@ -31,9 +29,7 @@ const Select = () => {
           <div className={styles.menuTxt}>
             <h1>학생 / 학부모</h1>
             <h3>학생과 자녀가 있는 학부모</h3>
-            <div className={styles.imgArray}>
-              <img src={parents} className={styles.parentsImg} alt="student" />
-            </div>
+            <img src={parents} className={styles.parentsImg} alt="student" />
           </div>
         </NavLink>
       </div>

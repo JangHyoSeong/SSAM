@@ -27,6 +27,7 @@ public enum ErrorCode {
     AppointmentNotFoundException(HttpStatus.NOT_FOUND, "존재하지 않는 예약입니다"),
     ConsultNotFountException(HttpStatus.NOT_FOUND, "존재하지 않는 상담입니다"),
     UnavailableDate(HttpStatus.BAD_REQUEST, "예약이 불가능한 날짜입니다."),
+    BadApproveRequest(HttpStatus.BAD_REQUEST, "승인 대기 중인 상담만 승인 가능합니다"),
 
     // boardException
     BoardNotFoundException(HttpStatus.NOT_FOUND, "존재하지 않는 학급입니다."),

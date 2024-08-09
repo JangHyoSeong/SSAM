@@ -1,5 +1,5 @@
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
-import { useState } from "react";
 import { FiCalendar } from "react-icons/fi";
 import useTeacherCalendarStore from "../../../store/TeacherCalendarStore";
 import Modal from "./Modal";
@@ -7,18 +7,21 @@ import ConsultationButton from "./ConsultationButton";
 import styles from "./ParentsReservationList.module.scss";
 
 const ParentsReservationList = ({ selectedDate }) => {
-  const initialConsultations = useTeacherCalendarStore(
-    (state) => state.consultations
-  );
-  const [consultations, setConsultations] = useState(initialConsultations);
-  const [showModal, setShowModal] = useState(false);
-  const [clickedIndex, setClickedIndex] = useState(null);
+  const { consultations, fetchReservations, isAvailable, setConsultations } =
+    useTeacherCalendarStore();
+
+  const [showModal, setShowModal] = React.useState(false);
+  const [clickedIndex, setClickedIndex] = React.useState(null);
+
+  useEffect(() => {
+    fetchReservations();
+  }, [fetchReservations]);
 
   // selectedDate를 문자열로 변환하여 표시
   const formatDate = (date) => {
     if (date instanceof Date) {
       const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, "0"); // getMonth()는 0부터 시작
+      const month = String(date.getMonth() + 1).padStart(2, "0");
       const day = String(date.getDate()).padStart(2, "0");
       return `${year}-${month}-${day}`;
     }
@@ -34,12 +37,12 @@ const ParentsReservationList = ({ selectedDate }) => {
         console.log(`Updating consultation at index ${index}:`, consultation);
 
         let newConsultation = { ...consultation };
-        if (consultation.text === "신청취소") {
-          newConsultation.text = "신청가능";
-          newConsultation.available = true;
-          console.log(`Changed to available and text to "신청가능"`);
+        if (!isAvailable(consultation.status)) {
+          newConsultation.status = null; // Set to available
+          console.log(`Changed to available`);
+        } else {
+          console.log("No changes made");
         }
-        console.log("변경사항 없음");
         return newConsultation;
       }
       return consultation;
@@ -58,6 +61,7 @@ const ParentsReservationList = ({ selectedDate }) => {
           index={index}
           clickedIndex={clickedIndex}
           onClick={handleClick}
+          isAvailable={isAvailable(consultation.status)}
         />
       </div>
     </div>
@@ -70,8 +74,7 @@ const ParentsReservationList = ({ selectedDate }) => {
         if (i === clickedIndex) {
           return {
             ...consultation,
-            text: "신청취소",
-            available: false,
+            status: "APPLY", // Assuming 'APPLY' is the status for a new reservation
           };
         }
         return consultation;
@@ -84,7 +87,7 @@ const ParentsReservationList = ({ selectedDate }) => {
 
   // 취소 버튼 클릭 시 실행되는 함수
   const handleCancel = () => {
-    window.location.reload(); // 페이지 새로고침
+    fetchReservations(); // Reset to original state from the server
   };
 
   return (

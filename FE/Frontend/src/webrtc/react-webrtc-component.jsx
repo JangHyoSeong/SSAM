@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
 import "./VideoChatComponent.css"; // 새로운 CSS 파일을 import 합니다
-const apiUrl = import.meta.env.API_URL
+const apiUrl = import.meta.env.API_URL;
 
 const API_BASE_URL = `${apiUrl}/v1/video`; // Spring 백엔드 API 기본 URL
 //const API_BASE_URL = 'https://i11e201.p.ssafy.io/api/v1/video';

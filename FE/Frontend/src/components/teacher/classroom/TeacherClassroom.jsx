@@ -23,7 +23,7 @@ const TeacherClassroom = () => {
   const [questions, setQuestions] = useState([]); // 문의사항 데이터 추가
   const noticeTextRef = useRef(null); // 공지사항 텍스트 영역 참조
   const bannerTextRef = useRef(null); // 배너 정보 텍스트 영역 참조
-  const apiUrl = import.meta.env.API_URL
+  const apiUrl = import.meta.env.API_URL;
 
   // 학급 전체 데이터 불러오기
   useEffect(() => {

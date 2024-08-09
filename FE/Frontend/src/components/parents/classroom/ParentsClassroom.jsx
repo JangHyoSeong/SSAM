@@ -11,7 +11,7 @@ const ParentsClassroom = () => {
   const [notice, setNotice] = useState(""); // 알림 사항
   const [questions, setQuestions] = useState([]); // 문의사항 데이터 추가
   const [selectedStudentId, setSelectedStudentId] = useState(null); // 선택된 학생 ID
-  const apiUrl = import.meta.env.API_URL
+  const apiUrl = import.meta.env.API_URL;
 
   // 학급 전체 데이터 불러오기
   useEffect(() => {

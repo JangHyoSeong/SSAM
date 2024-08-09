@@ -3,7 +3,8 @@ import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { OpenVidu } from "openvidu-browser";
 import styles from "./Video.module.scss";
-const apiUrl = import.meta.env.API_URL
+
+const apiUrl = import.meta.env.API_URL;
 
 const VideoChatComponent = () => {
   const { accessCode } = useParams();

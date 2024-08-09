@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import styles from "./ClassProduceModal.module.scss";
-const apiUrl = import.meta.env.API_URL
+const apiUrl = import.meta.env.API_URL;
 
 const ClassProduceModal = () => {
   const [showModal, setShowModal] = useState(true);

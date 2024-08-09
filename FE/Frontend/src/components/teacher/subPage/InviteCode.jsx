@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import styles from "./InviteCode.module.scss";
 import ClassProduceModal from "./ClassProduceModal";
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
-const apiUrl = import.meta.env.API_URL
+const apiUrl = import.meta.env.API_URL;
 
 const InviteCode = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

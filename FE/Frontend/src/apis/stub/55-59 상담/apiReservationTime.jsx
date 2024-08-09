@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { fetchApiUserInitial } from "../20-22 사용자정보/apiStubUserInitial";
-const apiUrl = import.meta.env.API_URL
+const apiUrl = import.meta.env.API_URL;
 
 export const fetchSetTime = async (startTime, endTime) => {
   const token = localStorage.getItem("USER_TOKEN");

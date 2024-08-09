@@ -122,7 +122,7 @@ public class SessionController {
     public ResponseEntity<CommonResponseDto> deleteToken(@RequestBody OpenViduSessionDto requestDto) {        
         String accessCode = requestDto.getAccessCode();
         String userId = requestDto.getUserId();
-
+        
         Map<String, OpenViduSessionDto> sessionUsers = sessionUserMapping.get(accessCode);
         if (sessionUsers != null) {
             sessionUsers.remove(userId);

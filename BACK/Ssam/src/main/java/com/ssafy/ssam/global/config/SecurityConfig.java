@@ -35,7 +35,7 @@ public class SecurityConfig {
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+    public static AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
@@ -63,7 +63,6 @@ public class SecurityConfig {
                 .with(new Custom(authenticationManager(authenticationConfiguration), jwtUtil), Custom::getClass)
                 .build();
     }
-
     @RequiredArgsConstructor
     public static class Custom extends AbstractHttpConfigurer<Custom, HttpSecurity> {
         private final AuthenticationManager authenticationManager;
@@ -77,4 +76,5 @@ public class SecurityConfig {
             http.addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
         }
     }
+
 }

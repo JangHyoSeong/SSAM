@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
+const apiUrl = import.meta.env.API_URL;
 
 const defaultPin = {
   board_id: "",
@@ -22,7 +23,7 @@ const PinStore = create((set) => ({
       const token = localStorage.getItem("USER_TOKEN");
       console.log(token);
       const response = await axios.get(
-        `http://localhost:8081/v1/classrooms`,
+        `${apiUrl}/v1/classrooms`,
         {
           pin: "123456",
         },

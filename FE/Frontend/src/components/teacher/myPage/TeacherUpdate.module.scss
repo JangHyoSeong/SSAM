@@ -54,7 +54,7 @@
 }
 
 .infoForm {
-  width: 40vw;
+  width: 30vw;
   height: 65vh;
   border-top: 2px solid black;
   border-bottom: 2px solid black;
@@ -64,13 +64,13 @@ table {
   width: 100%;
   height: 100%;
   border-collapse: collapse;
-
+  
   th,
   td {
     border: 1px solid black;
     text-align: left;
     font-size: 120%;
-    padding-left: 2%;
+    padding-right: 50px;
   }
 }
 
@@ -102,13 +102,14 @@ table {
   height: 3.7vh;
   font-size: 80%;
   margin: 2% 0.5%;
+  border: 2px solid #ee5252;
+  color: #ee5252;
   background-color: white;
-  border: 1px solid black;
   cursor: pointer;
 }
 
 .imgBtn:hover {
-  background-color: #5285ee;
+  background-color: #ee5252;
   color: white;
   border: none;
 }
@@ -125,8 +126,8 @@ table {
   height: 3.7vh;
   font-size: 80%;
   margin: 2% 0.5%;
-  background-color: white;
-  border: 1px solid black;
+  border: 2px solid #5285ee;
+  color: #5285ee;
   cursor: pointer;
 }
 
@@ -139,20 +140,40 @@ table {
 .formBtnArray {
   display: flex;
   justify-content: center;
+  margin-top: 2%;
 }
 
-.formBtn {
+.saveBtn {
   width: 5vw;
   height: 5vh;
   font-size: 120%;
   border-radius: 20px;
   margin: 2%;
   background-color: white;
+  border: 2px solid #5285ee;
+  color: #5285ee;
   cursor: pointer;
 }
 
-.formBtn:hover {
+.saveBtn:hover {
   background-color: #5285ee;
   color: white;
+}
+
+.deleteBtn {
+  width: 5vw;
+  height: 5vh;
+  font-size: 120%;
+  border-radius: 20px;
+  margin: 2%;
+  background-color: white;
+  border: 2px solid #ee5252;
+  color: #ee5252;
+  cursor: pointer;
+}
+
+.deleteBtn:hover {
   border: none;
+  background-color: #ee5252;
+  color: white;
 }

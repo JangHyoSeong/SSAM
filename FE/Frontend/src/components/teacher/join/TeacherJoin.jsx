@@ -9,6 +9,7 @@ import calendar from "../../../assets/calendar.png";
 import phone from "../../../assets/phone.png";
 import round1 from "../../../assets/round1.png";
 import round2 from "../../../assets/round2.png";
+const apiUrl = import.meta.env.API_URL
 
 const TeacherJoin = () => {
   const [formData, setFormData] = useState({
@@ -26,7 +27,7 @@ const TeacherJoin = () => {
   // 학교 리스트 GET
   useEffect(() => {
     axios
-      .get("http://localhost:8081/v1/schools")
+      .get(`${apiUrl}/v1/schools`)
       .then((response) => {
         setSchools(response.data);
       })
@@ -47,7 +48,7 @@ const TeacherJoin = () => {
   const joinSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:8081/v1/auth/teachers", formData)
+      .post(`${apiUrl}/v1/auth/teachers`, formData)
       .then((response) => {
         console.log("axios 성공", response);
         alert("성공");
@@ -161,7 +162,7 @@ const TeacherJoin = () => {
             <button
               type="button"
               className={styles.joinBtn}
-              onClick={() => window.location.reload()}
+              onClick={() => window.location.replace("./")}
             >
               취소
             </button>

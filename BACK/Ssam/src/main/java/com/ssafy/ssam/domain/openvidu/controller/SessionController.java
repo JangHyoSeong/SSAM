@@ -122,7 +122,7 @@ public class SessionController {
     public ResponseEntity<CommonResponseDto> deleteToken(@RequestBody OpenViduSessionDto requestDto) {        
         String accessCode = requestDto.getAccessCode();
         String userId = requestDto.getUserId();
-
+        
         Map<String, OpenViduSessionDto> sessionUsers = sessionUserMapping.get(accessCode);
         if (sessionUsers != null) {
             sessionUsers.remove(userId);
@@ -260,12 +260,11 @@ public class SessionController {
     @PostMapping("/recording/start")
     public ResponseEntity<RecordingDto> startRecording(@RequestBody RecordingRequestDto requestDto) {
         try {
-        	System.out.println("들어왔음!!");
-        	System.out.println(requestDto.getSessionId());
+        	System.out.println("START RECORDING AT SESSION ID ::: " + requestDto.getSessionId());
             RecordingProperties properties = new RecordingProperties.Builder()
                 .outputMode(requestDto.getOutputMode())
                 .hasAudio(requestDto.isHasAudio())
-                .hasVideo(requestDto.isHasVideo())
+                .hasVideo(false)
                 .build();
 
             Recording recording = this.openVidu.startRecording(requestDto.getSessionId(), properties);

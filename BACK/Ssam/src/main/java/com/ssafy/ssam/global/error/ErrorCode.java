@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+import java.io.FileNotFoundException;
+
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -38,7 +40,12 @@ public enum ErrorCode {
     QuestionNotFoundException(HttpStatus.NOT_FOUND, "존재하지 않는 질문입니다."),
 
     // alarmException
-    AlarmNotFoundException(HttpStatus.NOT_FOUND, "존재하지 않는 알람입니다");
+    AlarmNotFoundException(HttpStatus.NOT_FOUND, "존재하지 않는 알람입니다"),
+
+    //S3Exception
+    FileNotFoundException(HttpStatus.NOT_FOUND, "아마존에는 해당 파일이 없습니다");
+
+
     private final HttpStatus httpStatus;
     private String errorMessage;
 }

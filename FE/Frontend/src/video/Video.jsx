@@ -3,8 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { OpenVidu } from "openvidu-browser";
 import styles from "./Video.module.scss";
-
-const API_BASE_URL = "http://localhost:8081/v1/video";
+const apiUrl = import.meta.env.API_URL
 
 const VideoChatComponent = () => {
   const { accessCode } = useParams();
@@ -111,11 +110,10 @@ const VideoChatComponent = () => {
   const leaveSession = async () => {
     if (session) {
       try {
-        await axios.delete(`${API_BASE_URL}/token`, {
+        await axios.delete(`${apiUrl}/v1/video/token`, {
           data: {
-            sessionId: accessCode,
+            accessCode: accessCode,
             userId: myUserName.current,
-            token: session.token,
           },
         });
       } catch (error) {
@@ -166,12 +164,15 @@ const VideoChatComponent = () => {
   const toggleRecording = async () => {
     if (!isRecording) {
       try {
-        const response = await axios.post(`${API_BASE_URL}/recording/start`, {
-          session: accessCode,
-          outputMode: "COMPOSED",
-          hasAudio: true,
-          hasVideo: true,
-        });
+        const response = await axios.post(
+          `${apiUrl}/v1/video/recording/start`,
+          {
+            accessCode: accessCode,
+            outputMode: "COMPOSED",
+            hasAudio: true,
+            hasVideo: true,
+          }
+        );
         setRecordingId(response.data.id);
         setIsRecording(true);
       } catch (error) {
@@ -179,7 +180,7 @@ const VideoChatComponent = () => {
       }
     } else {
       try {
-        await axios.post(`${API_BASE_URL}/recording/stop`, {
+        await axios.post(`${apiUrl}/v1/video/recording/stop`, {
           recordingId: recordingId,
         });
         setIsRecording(false);
@@ -238,8 +239,8 @@ const VideoChatComponent = () => {
   // 토큰을 가져오는 함수
   const getToken = async () => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/token`, {
-        webrtcSessionId: accessCode,
+      const response = await axios.post(`${apiUrl}/v1/video/token`, {
+        accessCode: accessCode,
         userId: myUserName.current,
       });
       return response.data.token;

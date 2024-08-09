@@ -134,11 +134,11 @@ const InviteCode = () => {
               </button>
             </div>
             <div className={styles.btnArray}>
-              <button className={styles.deleteBtn} onClick={classDelete}>
-                학급 삭제
-              </button>
               <button className={styles.pinBtn} onClick={rePin}>
                 PIN 재발급
+              </button>
+              <button className={styles.deleteBtn} onClick={classDelete}>
+                학급 삭제
               </button>
             </div>
           </div>

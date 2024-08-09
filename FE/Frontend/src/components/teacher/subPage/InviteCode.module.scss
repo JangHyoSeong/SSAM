@@ -30,14 +30,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 2%;
+  gap: 2%;
 }
 
 .deleteBtn {
   margin: 4% 2%;
   padding: 1% 5%;
   border-radius: 25px;
-  color: #ee5252;
   font-size: 100%;
+  color: #ee5252;
   border-color: #ee5252;
   background-color: white;
   cursor: pointer;
@@ -45,8 +47,8 @@
 
 .deleteBtn:hover {
   border: none;
-  background-color: #ee5252;
   color: white;
+  background-color: #ee5252;
 }
 
 .pinBtn {

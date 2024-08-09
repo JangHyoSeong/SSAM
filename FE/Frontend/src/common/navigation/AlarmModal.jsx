@@ -39,7 +39,7 @@ const AlarmModal = () => {
 
   return (
     <div className={styles.alarmArray}>
-      {/* <div className={styles.triangle}></div> */}
+      <div className={styles.triangle}></div>
       <div className={styles.titleArray}>알림</div>
       <hr />
       <div className={styles.contentArray}>

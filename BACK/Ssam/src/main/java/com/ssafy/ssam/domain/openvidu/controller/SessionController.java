@@ -260,12 +260,11 @@ public class SessionController {
     @PostMapping("/recording/start")
     public ResponseEntity<RecordingDto> startRecording(@RequestBody RecordingRequestDto requestDto) {
         try {
-        	System.out.println("들어왔음!!");
         	System.out.println(requestDto.getSessionId());
             RecordingProperties properties = new RecordingProperties.Builder()
                 .outputMode(requestDto.getOutputMode())
                 .hasAudio(requestDto.isHasAudio())
-                .hasVideo(requestDto.isHasVideo())
+                .hasVideo(false)
                 .build();
 
             Recording recording = this.openVidu.startRecording(requestDto.getSessionId(), properties);

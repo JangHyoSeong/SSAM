@@ -37,6 +37,9 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class ConsultService {
+    private final UserRepository userRepository;
+    private final ConsultRepository consultRepository;
+
     // 상담 종료시 상담 entity 생성
     public void createConsultEntity(Appointment appointment) {
         ConsultRequestDto requestDto = ConsultRequestDto.builder()

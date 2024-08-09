@@ -10,5 +10,4 @@ import java.util.List;
 public interface SummaryRepository extends JpaRepository<Summary, Integer>{
     // Id 기반으로 존재하는지 여부 검증 jpa
     Summary findById(int id);
-    List<Summary> findByConsultIn(List<Consult> appointments);
 }

@@ -45,9 +45,6 @@ public class Summary {
     @Column(name = "teacher_recommendation", columnDefinition = "TEXT")
     private String teacherRecommendation;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "follow_up_date", columnDefinition = "TIMESTAMP")
-    private Date followUpDate;
 
     public static Summary toSummary(SummaryRequestDto summaryRequestDto, Consult consult){
         return Summary.builder()

@@ -39,9 +39,9 @@ public class GPTService {
     private final S3TextService s3TextService;
     private final ConsultRepository consultRepository;
 
-    public SummaryRequestDto GPTsummaryConsult(String talk, String topic, LocalDateTime time) {
-        String before = "At that time \"20240809\".\n" +
-                "When making a reservation, refer to the topic of \"+topic+\" entered by parents and classify the conversation received by STT\n" +
+    public SummaryRequestDto GPTsummaryConsult(String talk, String topic) {
+        String before =
+                "When making a reservation, refer to the topic of "+topic+" entered by parents and classify the conversation received by STT\n" +
                 "Teachers should be able to see this file and see at a glance the important elements of the conversation they had with their parents. The output includes a lot of parents' concerns or mentioning a specific person, and includes minimal information about their daily lives.\n" +
                 "Also, if you are open to criticism with aggressive language towards the teacher or if there is a word for the purpose of slander, please count and fill the level of the entire conversation\n" +
                 "When the stages of verbal abuse are divided into 0 to 5\n" +

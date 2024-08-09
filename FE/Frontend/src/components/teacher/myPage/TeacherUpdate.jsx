@@ -3,7 +3,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import styles from "./TeacherUpdate.module.scss";
-const apiUrl = import.meta.env.API_URL
+const apiUrl = import.meta.env.API_URL;
 
 const useProfile = () => {
   const [profileData, setProfileData] = useState({

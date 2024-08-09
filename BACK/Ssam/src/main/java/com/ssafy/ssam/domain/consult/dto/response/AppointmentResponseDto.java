@@ -26,8 +26,6 @@ public class AppointmentResponseDto {
     private LocalDateTime startTime;
     @NotNull(message = "종료시간은 Null 일 수 없습니다!")
     private LocalDateTime endTime;
-
-
     @NotNull(message = "상태는 Null 일 수 없습니다!")
     private AppointmentStatus status;
 }

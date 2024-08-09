@@ -8,7 +8,7 @@ const ClassEnterModal = () => {
   const [isModalVisible, setIsModalVisible] = useState(true);
   const inputRefs = useRef(new Array(6));
   const pin = pins.join("");
-  const apiUrl = import.meta.env.API_URL
+  const apiUrl = import.meta.env.API_URL;
 
   // PIN 번호 GET
   useEffect(() => {

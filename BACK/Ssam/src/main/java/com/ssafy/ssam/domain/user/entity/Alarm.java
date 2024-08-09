@@ -30,6 +30,9 @@ public class Alarm {
     @Column(name = "alarm_type", nullable = false)
     private AlarmType alarmType;
 
+    @Column
+    private String content;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;

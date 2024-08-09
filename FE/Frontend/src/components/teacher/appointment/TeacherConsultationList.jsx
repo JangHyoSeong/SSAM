@@ -6,6 +6,19 @@ import styles from "./TeacherConsultationList.module.scss";
 import ConsultationApproveModal from "./ConsultationApproveModal";
 import ConsultationRejectModal from "./ConsultationRejectModal";
 
+const topicDisplayMap = {
+  FRIEND: "교우 관계",
+  BULLYING: "학교 폭력",
+  SCORE: "성적",
+  CAREER: "진로",
+  ATTITUDE: "학습 태도",
+  OTHER: "기타",
+};
+
+const getTopicDisplay = (topic) => {
+  return topicDisplayMap[topic] || topic;
+};
+
 const ConsultationItem = ({
   appointmentId,
   startTime,
@@ -44,7 +57,7 @@ const ConsultationItem = ({
         startTime
       )} ~ ${formatTime(endTime)}`}</div>
       <div className={styles.cellSmall}>{studentName}</div>
-      <div className={styles.cellMedium}>{topic}</div>
+      <div className={styles.cellMedium}>{getTopicDisplay(topic)}</div>
       <div className={styles.cellLarge}>{description}</div>
       <div className={styles.cellButtons}>
         {status === "BEFORE" ? (

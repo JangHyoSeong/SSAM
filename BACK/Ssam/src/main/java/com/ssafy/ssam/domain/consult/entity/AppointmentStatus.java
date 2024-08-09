@@ -6,7 +6,8 @@ import java.util.Arrays;
 
 @Getter
 public enum AppointmentStatus {
-    BEFORE,
+    APPLY,
+    ACCEPTED,
     DONE,
     CANCEL,
     REJECT

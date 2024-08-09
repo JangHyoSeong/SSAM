@@ -113,9 +113,8 @@ const VideoChatComponent = () => {
       try {
         await axios.delete(`${API_BASE_URL}/token`, {
           data: {
-            sessionId: accessCode,
+            accessCode: accessCode,
             userId: myUserName.current,
-            token: session.token,
           },
         });
       } catch (error) {
@@ -167,7 +166,7 @@ const VideoChatComponent = () => {
     if (!isRecording) {
       try {
         const response = await axios.post(`${API_BASE_URL}/recording/start`, {
-          session: accessCode,
+          accessCode: accessCode,
           outputMode: "COMPOSED",
           hasAudio: true,
           hasVideo: true,
@@ -239,7 +238,7 @@ const VideoChatComponent = () => {
   const getToken = async () => {
     try {
       const response = await axios.post(`${API_BASE_URL}/token`, {
-        webrtcSessionId: accessCode,
+        accessCode: accessCode,
         userId: myUserName.current,
       });
       return response.data.token;

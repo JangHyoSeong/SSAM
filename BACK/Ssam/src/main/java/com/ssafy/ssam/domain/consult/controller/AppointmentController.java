@@ -36,6 +36,9 @@ public class AppointmentController {
         return new CommonResponseDto("ok");
     }
 
-
+    @PutMapping("/{appointmentId}/approve")
+    public ResponseEntity<CommonResponseDto> approveAppointment(@PathVariable Integer appointmentId) {
+        return ResponseEntity.ok(appointmentService.approveAppointment(appointmentId));
+    }
 
 }

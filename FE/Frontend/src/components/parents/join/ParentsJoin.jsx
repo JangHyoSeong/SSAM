@@ -9,7 +9,7 @@ import phone from "../../../assets/phone.png";
 import round1 from "../../../assets/round1.png";
 import round2 from "../../../assets/round2.png";
 import round3 from "../../../assets/round3.png";
-const apiUrl = import.meta.env.API_URL
+const apiUrl = import.meta.env.API_URL;
 
 const ParentsJoin = () => {
   const [formData, setFormData] = useState({

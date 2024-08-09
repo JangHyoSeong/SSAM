@@ -24,20 +24,12 @@ import java.util.List;
 @RequestMapping("/v1/consults")
 public class ConsultController {
     private final ConsultService consultService;
-    private final SummaryService summaryService;
-//    @GetMapping("/teachers/{consultId}")
-//    public ResponseEntity<ConsultSummaryDetailResponseDto> getConsults(@PathVariable Integer consultId) {
-//        return ResponseEntity.ok(consultService.getConsultsAndSummaryDetails(consultId));
-//    }
 
-    @GetMapping("/test")
-    public ResponseEntity<CommonResponseDto> test() {
-        summaryService.endConsult(1);
-        return ResponseEntity.ok(new CommonResponseDto("ok"));
-    }
-//    @PutMapping("/teachers/{consultId}")
-//    public ResponseEntity<ConsultSummaryDetailResponseDto> updateConsults(@PathVariable Integer consultId) {
-//        return ResponseEntity.ok(consultService.updateConsultsAndSummaryDetails(consultId));
+//    @GetMapping("/test")
+//    public ResponseEntity<CommonResponseDto> test() {
+//        log.info("test");
+//        consultService.startConsult(1);
+//        return ResponseEntity.ok(new CommonResponseDto("ok"));
 //    }
 
 }

@@ -1,10 +1,13 @@
 package com.ssafy.ssam.domain.consult.dto.response;
 
+import com.ssafy.ssam.domain.consult.entity.Appointment;
+import com.ssafy.ssam.domain.consult.entity.AppointmentTopic;
 import com.ssafy.ssam.domain.consult.entity.Consult;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -12,23 +15,24 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class ConsultSummaryDetailResponseDto {
-
+    //consult
     private Integer consultId;
-    private LocalDate actualDate;
+    private LocalDateTime actualDate;
     private Integer runningTime;
+    private String content;
+    private Integer attSchool;
+    private Integer attGrade;
+    private Integer attClassroom;
 
+    //summary
     private String keyPoint;
     private int profanityCount;
     private String profanityLevel;
     private String parentConcern;
     private String teacherRecommendation;
-    private LocalDate followUpDate;
 
+    //appointment
     private Integer studentId;
-    private Integer attSchool;
-    private Integer attGrade;
-    private Integer attClassroom;
-
-    private String content;
+    private AppointmentTopic topic;
 
 }

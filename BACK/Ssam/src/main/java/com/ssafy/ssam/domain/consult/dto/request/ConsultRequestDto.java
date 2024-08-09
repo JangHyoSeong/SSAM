@@ -20,11 +20,15 @@ import java.time.LocalDateTime;
 public class ConsultRequestDto {
     private Integer consultId;
     @NotNull
-    private Integer appointmentId;
+    private Appointment appointment;
     @NotNull
     private LocalDateTime actualDate;
+    private String runningTime;
     private String content;
     private String videoUrl;
     private String webrtcSessionId;
     private String accessCode;
+    private Integer attClassroom;
+    private Integer attGrade;
+    private String attSchool;
 }

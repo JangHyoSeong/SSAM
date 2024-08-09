@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import styles from "./EnterCode.module.scss";
 import ClassEnterModal from "./ClassEnterModal";
-const apiUrl = import.meta.env.API_URL
+const apiUrl = import.meta.env.API_URL;
 
 const EnterCode = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

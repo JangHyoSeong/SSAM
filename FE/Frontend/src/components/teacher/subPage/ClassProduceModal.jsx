@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import styles from "./ClassProduceModal.module.scss";
+const apiUrl = import.meta.env.API_URL
 
 const ClassProduceModal = () => {
   const [showModal, setShowModal] = useState(true);
@@ -15,7 +16,7 @@ const ClassProduceModal = () => {
     try {
       const token = localStorage.getItem("USER_TOKEN");
       const response = await axios.post(
-        "http://localhost:8081/v1/classrooms/teachers",
+        `${apiUrl}/v1/classrooms/teachers`,
         {
           grade,
           classroom,
@@ -42,8 +43,8 @@ const ClassProduceModal = () => {
   return (
     <div className={styles.produceArray}>
       <div className={styles.modalArray}>
-      <div className={styles.headerArray}>
-        <p>우리 학급 생성하기</p>
+        <div className={styles.headerArray}>
+          <p>우리 학급 생성하기</p>
         </div>
         <div className={styles.classInput}>
           <p>학년</p>

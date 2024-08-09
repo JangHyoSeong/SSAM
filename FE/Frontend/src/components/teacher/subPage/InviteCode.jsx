@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import styles from "./InviteCode.module.scss";
 import ClassProduceModal from "./ClassProduceModal";
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
+const apiUrl = import.meta.env.API_URL
 
 const InviteCode = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,7 +24,7 @@ const InviteCode = () => {
       const fetchData = async () => {
         const token = localStorage.getItem("USER_TOKEN");
         try {
-          const response = await axios.get("http://localhost:8081/v1/users", {
+          const response = await axios.get(`${apiUrl}/v1/users`, {
             headers: {
               "Content-Type": "application/json",
               Authorization: token,
@@ -51,7 +52,7 @@ const InviteCode = () => {
           const token = localStorage.getItem("USER_TOKEN");
           const { boardId } = await fetchApiUserInitial();
           const response = await axios.get(
-            `http://localhost:8081/v1/classrooms/${boardId}`,
+            `${apiUrl}/v1/classrooms/${boardId}`,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -75,15 +76,12 @@ const InviteCode = () => {
     try {
       const token = localStorage.getItem("USER_TOKEN");
       const { boardId } = await fetchApiUserInitial();
-      await axios.delete(
-        `http://localhost:8081/v1/classrooms/teachers/${boardId}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-          },
-        }
-      );
+      await axios.delete(`${apiUrl}/v1/classrooms/teachers/${boardId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      });
       alert("학급이 삭제되었습니다");
     } catch (error) {
       console.error("강의실 삭제 중 오류 발생", error);
@@ -97,7 +95,7 @@ const InviteCode = () => {
       const token = localStorage.getItem("USER_TOKEN");
       const { boardId } = await fetchApiUserInitial();
       await axios.put(
-        `http://localhost:8081/v1/classrooms/teachers/pin/${boardId}`,
+        `${apiUrl}/v1/classrooms/teachers/pin/${boardId}`,
         {},
         {
           headers: {

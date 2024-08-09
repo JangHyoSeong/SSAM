@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "./AlarmModal.module.scss";
+const apiUrl = import.meta.env.API_URL;
 
 const AlarmModal = () => {
   const [alarms, setAlarms] = useState([]);
@@ -9,7 +10,7 @@ const AlarmModal = () => {
   useEffect(() => {
     const token = localStorage.getItem("USER_TOKEN");
     axios
-      .get("http://localhost:8081/v1/alarms", {
+      .get(`${apiUrl}/v1/alarms`, {
         headers: {
           "Content-Type": "application/json",
           authorization: `${token}`,
@@ -23,7 +24,7 @@ const AlarmModal = () => {
   const alarmDelete = (alarmId) => {
     const token = localStorage.getItem("USER_TOKEN");
     axios
-      .delete(`http://localhost:8081/v1/alarms/${alarmId}`, {
+      .delete(`${apiUrl}/v1/alarms/${alarmId}`, {
         headers: {
           "Content-Type": "application/json",
           authorization: `${token}`,
@@ -55,24 +56,24 @@ const AlarmModal = () => {
               <p>
                 {post.alarmTime.split("T")[0]} {post.alarmTime.split("T")[1]}
               </p>
-              {post.alarmType === "QUESTION" && ( // 질문이 생성됐음 (선생 입장)
-                <a href="http://localhost:3000/teacherquestion">
-                  <p>문의사항을 확인해주세요</p>
+              {post.alarmType === "QUESTION" && (
+                <a href={`${apiUrl}/teacherquestion`}>
+                  <p>Please check your inquiry</p>
                 </a>
               )}
-              {post.alarmType === "ANSWER" && ( // 질문에 정답 달렸다고 알림 (학생 입장)
-                <a href="http://localhost:3000/studentquestion">
-                  <p>문의사항을 확인해주세요</p>
+              {post.alarmType === "ANSWER" && (
+                <a href={`${apiUrl}/studentquestion`}>
+                  <p>Please check your inquiry</p>
                 </a>
               )}
-              {post.alarmType === "REGISTRATION" && ( // 학급에 등록 요청이 왔음 (선생님 입장)
-                <a href="http://localhost:3000/teacherauthorization">
-                  <p>승인 요청을 보냈습니다</p>
+              {post.alarmType === "REGISTRATION" && (
+                <a href={`${apiUrl}/teacherauthorization`}>
+                  <p>Your approval request has been sent</p>
                 </a>
               )}
-              {post.alarmType === "ACCEPT" && ( // 자신의 등록이 승락되었음 (학생입장)
-                <a href="http://localhost:3000/studentsubpage">
-                  <p>승인 요청이 수락되었습니다</p>
+              {post.alarmType === "ACCEPT" && (
+                <a href={`${apiUrl}/studentsubpage`}>
+                  <p>Your approval request has been accepted</p>
                 </a>
               )}
             </div>

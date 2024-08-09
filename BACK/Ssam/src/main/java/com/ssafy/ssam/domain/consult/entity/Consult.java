@@ -7,6 +7,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -15,6 +16,7 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
+@Setter
 @Table(name = "consult")
 public class Consult {
 
@@ -27,7 +29,6 @@ public class Consult {
     @JoinColumn(name = "appointment_id", nullable = false)
     private Appointment appointment;
 
-    @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "actual_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime actualDate;

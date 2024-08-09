@@ -92,32 +92,36 @@
 }
 
 .approveButton {
-  border-radius: 25px; /* 둥근 모서리 */
+  border-radius: 25px;
   padding: 0.8vh 2vh;
   margin: 0 0.5vw;
   color: black;
-  border: 0.5px solid #d7e4ff;
-  background-color: #d7e4ff;
-  // box-shadow: 0 0.2vh 0.5vh rgba(1, 1, 1, 0.3);
+  color: #5285ee;
+  border-color: #5285ee;
+  background-color: white;
   cursor: pointer;
   font-size: 16px;
 
   &:hover {
-    background-color: #c2d7fe;
+    background-color: #5285ee;
+    color: white;
+    border-style: none;
   }
 }
 
 .rejectButton {
-  border-radius: 25px; /* 둥근 모서리 */
+  border-radius: 25px;
   padding: 0.8vh 2vh;
   margin: 0 0.5vw;
-  border: 1px solid #b7b7b7;
+  color: #ee5252;
+  border-color: #ee5252;
   background-color: white;
-  // box-shadow: 0 0.2vh 0.5vh rgba(1, 1, 1, 0.3);
   cursor: pointer;
   font-size: 16px;
 
   &:hover {
-    background-color: #f4f4f4;
+    border: none;
+    color: white;
+    background-color: #ee5252;
   }
 }

@@ -8,6 +8,7 @@ const ClassEnterModal = () => {
   const [isModalVisible, setIsModalVisible] = useState(true);
   const inputRefs = useRef(new Array(6));
   const pin = pins.join("");
+  const apiUrl = import.meta.env.API_URL
 
   // PIN 번호 GET
   useEffect(() => {
@@ -16,7 +17,7 @@ const ClassEnterModal = () => {
         try {
           const token = localStorage.getItem("USER_TOKEN");
           const response = await axios.get(
-            `http://localhost:8081/v1/classrooms/pin/${pin}`,
+            `${apiUrl}/v1/classrooms/pin/${pin}`,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -59,7 +60,7 @@ const ClassEnterModal = () => {
       const token = localStorage.getItem("USER_TOKEN");
       console.log(token);
       await axios.post(
-        `http://localhost:8081/v1/classrooms/${classroom.boardId}`,
+        `${apiUrl}/v1/classrooms/${classroom.boardId}`,
         {}, // 빈 객체를 요청 본문으로 전달 (body가 빈 값이라면 {}를 추가해야함)
         {
           headers: {

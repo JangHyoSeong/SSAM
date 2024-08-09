@@ -9,6 +9,7 @@ import phone from "../../../assets/phone.png";
 import round1 from "../../../assets/round1.png";
 import round2 from "../../../assets/round2.png";
 import round3 from "../../../assets/round3.png";
+const apiUrl = import.meta.env.API_URL
 
 const ParentsJoin = () => {
   const [formData, setFormData] = useState({
@@ -33,7 +34,7 @@ const ParentsJoin = () => {
   const joinSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:8081/v1/auth/students", formData)
+      .post(`${apiUrl}/v1/auth/students`, formData)
       .then((response) => {
         console.log("axios 성공", response);
         alert("성공");
@@ -128,7 +129,7 @@ const ParentsJoin = () => {
             <button
               type="button"
               className={join.joinBtn}
-              onClick={() => window.location.replace('./')}
+              onClick={() => window.location.replace("./")}
             >
               취소
             </button>

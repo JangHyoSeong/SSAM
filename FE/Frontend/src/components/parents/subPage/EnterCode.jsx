@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import styles from "./EnterCode.module.scss";
 import ClassEnterModal from "./ClassEnterModal";
+const apiUrl = import.meta.env.API_URL
 
 const EnterCode = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,7 +21,7 @@ const EnterCode = () => {
       const fetchData = async () => {
         const token = localStorage.getItem("USER_TOKEN");
         try {
-          const response = await axios.get("http://localhost:8081/v1/users", {
+          const response = await axios.get(`${apiUrl}/v1/users`, {
             headers: {
               "Content-Type": "application/json",
               Authorization: token,

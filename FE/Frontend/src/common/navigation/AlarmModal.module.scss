@@ -1,9 +1,9 @@
 .alarmArray {
   position: absolute;
-  top: 12%;
-  left: 80.6%;
-  width: 18vw;
-  height: 55vh;
+  top: 210%;
+  left: -20%;
+  width: 18.3vw;
+  height: 55.2vh;
   background-color: #eeeeee;
   z-index: 10;
   border-radius: 15px;
@@ -17,7 +17,7 @@
 .triangle {
   position: absolute;
   top: -4%;
-  left: 16%;
+  left: 12%;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
   border-bottom: 16px solid #eeeeee;
@@ -27,7 +27,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 17.7vw;
+  width: 18.1vw;
   height: 6vh;
   background-color: white;
   border-radius: 15px 15px 0px 0px;
@@ -35,7 +35,7 @@
 }
 
 .contentArray {
-  width: 17.7vw;
+  width: 18vw;
   height: 48vh;
   border-radius: 0px 0px 15px 15px;
   padding: 0px 10px;
@@ -68,7 +68,7 @@
 
 .deleteBtn {
   position: relative;
-  top: 20%;
+  top: 14%;
   right: -42%;
 }
 

@@ -115,20 +115,20 @@ public class AppointmentService {
         return Appointment.toAppointmentDto(appointment);
     }
 
-    public AppointmentResponseDto changeAppointment(Integer appointmentId, AppointmentStatus status) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        User user = userRepository.findByUserIdAndRole(userDetails.getUserId(), UserRole.TEACHER)
-                .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
-        Appointment appointment = appointmentRepository.findByAppointmentId(appointmentId)
-                .orElseThrow(() -> new CustomException(ErrorCode.AppointmentNotFoundException));
-
-
-        if (!userDetails.getUserId().equals(appointment.getTeacher().getUserId()))
-            throw new CustomException(ErrorCode.Unauthorized);
-
-        appointment.setStatus(status);
-        return Appointment.toAppointmentDto(appointment);
-    }
+//    public AppointmentResponseDto changeAppointment(Integer appointmentId, AppointmentStatus status) {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+//
+//        User user = userRepository.findByUserIdAndRole(userDetails.getUserId(), UserRole.TEACHER)
+//                .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
+//        Appointment appointment = appointmentRepository.findByAppointmentId(appointmentId)
+//                .orElseThrow(() -> new CustomException(ErrorCode.AppointmentNotFoundException));
+//
+//
+//        if (!userDetails.getUserId().equals(appointment.getTeacher().getUserId()))
+//            throw new CustomException(ErrorCode.Unauthorized);
+//
+//        appointment.setStatus(status);
+//        return Appointment.toAppointmentDto(appointment);
+//    }
 }

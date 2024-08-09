@@ -62,7 +62,7 @@ const ConsultationItem = ({
       <div className={styles.cellMedium}>{getTopicDisplay(topic)}</div>
       <div className={styles.cellLarge}>{description || "설명 없음"}</div>
       <div className={styles.cellButtons}>
-        {status === "BEFORE" ? (
+        {status === "APPLY" ? (
           <>
             <button
               className={styles.approveButton}

@@ -1,7 +1,8 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import {
   fetchApiReservationList,
-  updateAppointmentStatus,
+  fetchApiCancelReservation,
+  fetchApiApproveReservation,
 } from "../apis/stub/55-59 상담/apiStubReservation";
 
 const ConsultationContext = createContext();
@@ -25,8 +26,8 @@ export const ConsultationProvider = ({ children }) => {
       setConsultations(data);
       setError(null);
     } catch (err) {
-      setError("상담 목록을 불러오는데 실패했습니다.");
       console.error("Failed to fetch consultations:", err);
+      setError("상담 목록을 불러오는데 실패했습니다.");
     } finally {
       setLoading(false);
     }
@@ -35,7 +36,7 @@ export const ConsultationProvider = ({ children }) => {
   // 승인
   const approveConsultation = async (appointmentId) => {
     try {
-      await updateAppointmentStatus(appointmentId);
+      await fetchApiApproveReservation(appointmentId);
       setConsultations(
         consultations.map((c) =>
           c.appointmentId === appointmentId ? { ...c, status: "ACCEPTED" } : c
@@ -47,18 +48,18 @@ export const ConsultationProvider = ({ children }) => {
     }
   };
 
-  // 거절
-  const rejectConsultation = async (appointmentId) => {
+  // 취소
+  const cancelConsultation = async (appointmentId) => {
     try {
-      await updateAppointmentStatus(appointmentId);
+      await fetchApiCancelReservation(appointmentId);
       setConsultations(
         consultations.map((c) =>
           c.appointmentId === appointmentId ? { ...c, status: "CANCEL" } : c
         )
       );
     } catch (err) {
-      console.error("Failed to reject consultation:", err);
-      setError("상담 거절에 실패했습니다.");
+      console.error("Failed to cancel consultation:", err);
+      setError("상담 취소에 실패했습니다.");
     }
   };
 
@@ -69,7 +70,7 @@ export const ConsultationProvider = ({ children }) => {
         loading,
         error,
         approveConsultation,
-        rejectConsultation,
+        cancelConsultation,
         refreshConsultations: fetchConsultations,
       }}
     >

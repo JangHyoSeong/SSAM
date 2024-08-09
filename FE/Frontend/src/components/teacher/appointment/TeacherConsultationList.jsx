@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 import { useConsultation } from "../../../store/ConsultationStore";
@@ -6,6 +6,7 @@ import styles from "./TeacherConsultationList.module.scss";
 import ConsultationApproveModal from "./ConsultationApproveModal";
 import ConsultationRejectModal from "./ConsultationRejectModal";
 
+// topic db랑 화면 매핑
 const topicDisplayMap = {
   FRIEND: "교우 관계",
   BULLYING: "학교 폭력",
@@ -19,13 +20,14 @@ const getTopicDisplay = (topic) => {
   return topicDisplayMap[topic] || topic;
 };
 
+// ConsultationItem 컴포넌트
 const ConsultationItem = ({
   appointmentId,
   startTime,
   endTime,
   studentName,
   topic,
-  description,
+  description = "", // 기본값을 빈 문자열로 설정
   status,
   onApprove,
   onReject,
@@ -58,7 +60,7 @@ const ConsultationItem = ({
       )} ~ ${formatTime(endTime)}`}</div>
       <div className={styles.cellSmall}>{studentName}</div>
       <div className={styles.cellMedium}>{getTopicDisplay(topic)}</div>
-      <div className={styles.cellLarge}>{description}</div>
+      <div className={styles.cellLarge}>{description || "설명 없음"}</div>
       <div className={styles.cellButtons}>
         {status === "BEFORE" ? (
           <>
@@ -87,18 +89,20 @@ const ConsultationItem = ({
   );
 };
 
+// propTypes
 ConsultationItem.propTypes = {
   appointmentId: PropTypes.number.isRequired,
   startTime: PropTypes.string.isRequired,
   endTime: PropTypes.string.isRequired,
   studentName: PropTypes.string.isRequired,
   topic: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
+  description: PropTypes.string,
   status: PropTypes.string.isRequired,
   onApprove: PropTypes.func.isRequired,
   onReject: PropTypes.func.isRequired,
 };
 
+// TeacherConsultationList 컴포넌트
 const TeacherConsultationList = () => {
   const {
     consultations,
@@ -129,13 +133,13 @@ const TeacherConsultationList = () => {
     setRejectModalOpen(false);
   };
 
-  const confirmApprove = () => {
-    approveConsultation(selectedConsultationId);
+  const confirmApprove = async () => {
+    await approveConsultation(selectedConsultationId);
     setApproveModalOpen(false);
   };
 
-  const confirmReject = () => {
-    rejectConsultation(selectedConsultationId);
+  const confirmReject = async () => {
+    await rejectConsultation(selectedConsultationId);
     setRejectModalOpen(false);
   };
 

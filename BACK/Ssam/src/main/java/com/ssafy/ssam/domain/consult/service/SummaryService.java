@@ -28,39 +28,17 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class SummaryService {
-    private final GPTService gptService;
-    private final S3TextService s3TextService;
     private final ConsultRepository consultRepository;
-    private final AppointmentRepository appointmentRepository;
-    private final SummaryRepository summaryRepository;
     private final UserRepository userRepository;
 
-    public CommonResponseDto endConsult(Integer consultId) {
+    public ConsultSummaryDetailResponseDto getConsultsAndSummaryDetails(Integer consultId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        Consult consult = consultRepository.findByConsultId(consultId).orElseThrow(()->new CustomException(ErrorCode.ConsultNotFountException));
+        User user = userRepository.findByUserIdAndRole(userDetails.getUserId(), UserRole.TEACHER)
+                .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
 
-        // 연결된 예약찾아서 주제 가져오기
-        Appointment appointment = appointmentRepository.findByAppointmentId(consult.getAppointment().getAppointmentId()).orElseThrow(()->new CustomException(ErrorCode.AppointmentNotFoundException));
-        // S3에서 대화 가져오기
-        String talk = s3TextService.readText(consult.getWebrtcSessionId());
-
-        // 대화기반 chatGpt 요약
-        SummaryRequestDto summaryRequestDto = gptService.GPTsummaryConsult(talk, appointment.getTopic().toString());
-        Summary summary = Summary.toSummary(summaryRequestDto, consult);
-        summaryRepository.save(summary);
-        return new CommonResponseDto("finish consult");
+        return consultRepository.findConsultSummaryByConsultId(consultId).orElseThrow(() -> new CustomException(ErrorCode.ConsultNotFountException));
     }
-
-//    public ConsultSummaryDetailResponseDto getConsultsAndSummaryDetails(Integer consultId){
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-//
-//        User user = userRepository.findByUserIdAndRole(userDetails.getUserId(), UserRole.TEACHER)
-//                .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
-//
-//        return consultRepository.findConsultSummaryByConsultId(consultId).orElseThrow(() -> new CustomException(ErrorCode.ConsultNotFountException));
-//    }
 }
 

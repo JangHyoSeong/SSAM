@@ -260,7 +260,7 @@ public class SessionController {
     @PostMapping("/recording/start")
     public ResponseEntity<RecordingDto> startRecording(@RequestBody RecordingRequestDto requestDto) {
         try {
-        	System.out.println(requestDto.getSessionId());
+        	System.out.println("START RECORDING AT SESSION ID ::: " + requestDto.getSessionId());
             RecordingProperties properties = new RecordingProperties.Builder()
                 .outputMode(requestDto.getOutputMode())
                 .hasAudio(requestDto.isHasAudio())

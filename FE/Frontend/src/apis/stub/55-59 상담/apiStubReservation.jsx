@@ -1,3 +1,4 @@
+//src/apis/stub/55-59 상담/apiStubReservation.jsx
 // 데이터 요청
 import axios from "axios";
 import { fetchApiUserInitial } from "../20-22 사용자정보/apiStubUserInitial";

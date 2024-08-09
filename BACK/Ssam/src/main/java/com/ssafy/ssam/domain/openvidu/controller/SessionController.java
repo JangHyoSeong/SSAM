@@ -279,7 +279,7 @@ public class SessionController {
     @PostMapping("/recording/stop")
     public ResponseEntity<RecordingDto> stopRecording(@RequestBody RecordingRequestDto requestDto) {
         try {
-            Recording recording = this.openVidu.stopRecording(requestDto.getRecordingId());
+            Recording recording = this.openVidu.stopRecording(requestDto.getSessionId());
             this.sessionRecordings.remove(recording.getSessionId());
             return ResponseEntity.ok(convertRecordingToDto(recording));
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {

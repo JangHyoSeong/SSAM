@@ -168,7 +168,7 @@ const VideoChatComponent = () => {
         const response = await axios.post(
           `${apiUrl}/v1/video/recording/start`,
           {
-            accessCode: accessCode,
+            sessionId: session.sessionId,
             outputMode: "COMPOSED",
             hasAudio: true,
             hasVideo: true,
@@ -182,7 +182,7 @@ const VideoChatComponent = () => {
     } else {
       try {
         await axios.post(`${apiUrl}/v1/video/recording/stop`, {
-          recordingId: recordingId,
+          sessionId: session.sessionId,
         });
         setIsRecording(false);
         setRecordingId(null);

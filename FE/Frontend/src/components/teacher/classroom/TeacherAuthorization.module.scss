@@ -95,12 +95,12 @@
   border-radius: 25px;
   padding: 0.8vh 2vh;
   margin: 0 0.5vw;
-  color: black;
   color: #5285ee;
   border-color: #5285ee;
   background-color: white;
   cursor: pointer;
   font-size: 16px;
+  border: 2px solid #5285ee;
 
   &:hover {
     background-color: #5285ee;
@@ -118,6 +118,7 @@
   background-color: white;
   cursor: pointer;
   font-size: 16px;
+  border: 2px solid #ee5252;
 
   &:hover {
     border: none;

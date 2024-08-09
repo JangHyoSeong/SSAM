@@ -118,10 +118,10 @@ const ParentsUpdate = () => {
             </tr>
           </table>
           <div className={styles.formBtnArray}>
-            <button type="submit" className={styles.formBtn}>
+            <button type="submit" className={styles.saveBtn}>
               저장
             </button>
-            <button type="button" className={styles.formBtn}>
+            <button type="button" className={styles.deleteBtn}>
               취소
             </button>
           </div>

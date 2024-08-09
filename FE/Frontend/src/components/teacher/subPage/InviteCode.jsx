@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import styles from "./InviteCode.module.scss";
 import ClassProduceModal from "./ClassProduceModal";
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
-const apiUrl = import.meta.env.API_URL
+const apiUrl = import.meta.env.API_URL;
 
 const InviteCode = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -120,36 +120,38 @@ const InviteCode = () => {
   };
 
   return (
-    <div className={styles.inviteCodeBox}>
-      <h2>{profile.name}님 환영합니다</h2>
-      <div className={styles.btn}>
-        {classInfo && classInfo.pin ? (
-          <div>
-            <div className={styles.copyButton}>
-              <h3>초대 코드 {classInfo.pin}</h3>
-              <button onClick={() => copyToClipboard(classInfo.pin)}>
-                {isCopied ? "복사 완료 ☑" : "코드 복사 ☐"}
-              </button>
+    <div className={styles.inviteArray}>
+      <div className={styles.inviteCodeBox}>
+        <h1>{profile.name}님 환영합니다</h1>
+        <div className={styles.btn}>
+          {classInfo && classInfo.pin ? (
+            <div>
+              <div className={styles.copyButton}>
+                <h3>초대 코드 {classInfo.pin}</h3>
+                <button onClick={() => copyToClipboard(classInfo.pin)}>
+                  {isCopied ? "복사 완료 ☑" : "코드 복사 ☐"}
+                </button>
+              </div>
+              <div className={styles.btnArray}>
+                <button className={styles.pinBtn} onClick={rePin}>
+                  PIN 재발급
+                </button>
+                <button className={styles.deleteBtn} onClick={classDelete}>
+                  학급 삭제
+                </button>
+              </div>
             </div>
+          ) : (
             <div className={styles.btnArray}>
-              <button className={styles.pinBtn} onClick={rePin}>
-                PIN 재발급
-              </button>
-              <button className={styles.deleteBtn} onClick={classDelete}>
-                학급 삭제
+              <h3>학급 만들기를 통해 초대코드를 생성하세요.</h3>
+              <button className={styles.classBtn} onClick={toggleModal}>
+                학급 생성
               </button>
             </div>
-          </div>
-        ) : (
-          <div className={styles.btnArray}>
-            <h3>학급 만들기를 통해 초대코드를 생성하세요.</h3>
-            <button className={styles.classBtn} onClick={toggleModal}>
-              학급 생성
-            </button>
-          </div>
-        )}
+          )}
+        </div>
+        {isModalOpen && <ClassProduceModal />}
       </div>
-      {isModalOpen && <ClassProduceModal />}
     </div>
   );
 };

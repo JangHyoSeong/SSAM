@@ -49,6 +49,7 @@ public class AlarmService {
         Alarm alarm = Alarm.builder()
                 .user(user)
                 .alarmType(alarmCreateRequestDto.getAlarmType())
+                .content(alarmCreateRequestDto.getAccessCode())
                 .build();
 
         log.info("creat alarm");

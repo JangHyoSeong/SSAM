@@ -56,9 +56,9 @@ public class Consult {
     @Column(name = "att_classroom", columnDefinition = "TINYINT")
     private Integer attClassroom;
 
-    public static Consult toConsult(Appointment appointment, ConsultRequestDto requestDto) {
+    public static Consult toConsult(ConsultRequestDto requestDto) {
         return Consult.builder()
-                .appointment(appointment)
+                .appointment(requestDto.getAppointment())
                 .runningTime((int) Duration.between(LocalDateTime.now(), requestDto.getActualDate()).toMinutes())
                 .actualDate(requestDto.getActualDate())
                 .accessCode(requestDto.getAccessCode())

@@ -50,7 +50,7 @@ public class Appointment {
     private LocalDateTime endTime;
 
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("'BEFORE'") // default 값 설정
+    @ColumnDefault("'APPLY'") // default 값 설정
     private AppointmentStatus status;
 
     public static Appointment toAppointment(User teacher, User user, AppointmentRequestDto appointmentRequestDto){

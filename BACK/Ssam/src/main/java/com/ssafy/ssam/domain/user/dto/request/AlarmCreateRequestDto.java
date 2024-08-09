@@ -14,4 +14,5 @@ public class AlarmCreateRequestDto {
     private Integer userId;
     @NotNull
     private AlarmType alarmType;
+    private String accessCode;
 }

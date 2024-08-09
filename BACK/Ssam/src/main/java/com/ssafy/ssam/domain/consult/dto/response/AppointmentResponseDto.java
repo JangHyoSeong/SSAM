@@ -16,6 +16,8 @@ public class AppointmentResponseDto {
     private Integer appointmentId;
     @NotNull(message = "신청하는 사람은 Null 일 수 없습니다!")
     private Integer studentId;
+    @NotNull(message = "신청하는 사람은 Null 일 수 없습니다!")
+    private String studentName;
     @NotNull(message = "선생님은 Null 일 수 없습니다!")
     private Integer teacherId;
     private String description;

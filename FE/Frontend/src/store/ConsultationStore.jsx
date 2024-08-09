@@ -1,5 +1,8 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import { fetchApiReservationList } from "../apis/stub/55-59 상담/apiStubReservation";
+import {
+  fetchApiReservationList,
+  updateAppointmentStatus,
+} from "../apis/stub/55-59 상담/apiStubReservation";
 
 const ConsultationContext = createContext();
 
@@ -14,6 +17,7 @@ export const ConsultationProvider = ({ children }) => {
     fetchConsultations();
   }, []);
 
+  // 목록
   const fetchConsultations = async () => {
     try {
       setLoading(true);
@@ -28,22 +32,34 @@ export const ConsultationProvider = ({ children }) => {
     }
   };
 
-  const approveConsultation = (appointmentId) => {
-    // API 호출 및 상태 업데이트 로직 추가 필요
-    setConsultations(
-      consultations.map((c) =>
-        c.appointmentId === appointmentId ? { ...c, status: "APPROVED" } : c
-      )
-    );
+  // 승인
+  const approveConsultation = async (appointmentId) => {
+    try {
+      await updateAppointmentStatus(appointmentId);
+      setConsultations(
+        consultations.map((c) =>
+          c.appointmentId === appointmentId ? { ...c, status: "BEFORE" } : c
+        )
+      );
+    } catch (err) {
+      console.error("Failed to approve consultation:", err);
+      setError("상담 승인에 실패했습니다.");
+    }
   };
 
-  const rejectConsultation = (appointmentId) => {
-    // API 호출 및 상태 업데이트 로직 추가 필요
-    setConsultations(
-      consultations.map((c) =>
-        c.appointmentId === appointmentId ? { ...c, status: "REJECT" } : c
-      )
-    );
+  // 거절
+  const rejectConsultation = async (appointmentId) => {
+    try {
+      await updateAppointmentStatus(appointmentId);
+      setConsultations(
+        consultations.map((c) =>
+          c.appointmentId === appointmentId ? { ...c, status: "CANCEL" } : c
+        )
+      );
+    } catch (err) {
+      console.error("Failed to reject consultation:", err);
+      setError("상담 거절에 실패했습니다.");
+    }
   };
 
   return (

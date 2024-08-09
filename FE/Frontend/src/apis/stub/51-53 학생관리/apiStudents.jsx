@@ -1,4 +1,5 @@
 import axios from "axios";
+const apiUrl = import.meta.env.API_URL;
 
 // 학생 리스트를 가져오는 API 호출 함수
 export const fetchApiStudentsList = async () => {
@@ -9,7 +10,7 @@ export const fetchApiStudentsList = async () => {
   // console.log("USER_TOKEN:", token); // Add this line to log the token
 
   const response = await axios.get(
-    "http://localhost:8081/v1/classrooms/teachers/students",
+    `${apiUrl}/v1/classrooms/teachers/students`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -30,7 +31,7 @@ export const approveStudentApi = async (studentId) => {
   // console.log("USER_TOKEN:", token); // Add this line to log the token
 
   const response = await axios.put(
-    `http://localhost:8081/v1/classrooms/teachers/students/${studentId}/approve`,
+    `${apiUrl}/v1/classrooms/teachers/students/${studentId}/approve`,
     null,
     {
       headers: {
@@ -53,7 +54,7 @@ export const rejectStudentApi = async (studentId) => {
   console.log("USER_TOKEN:", token); // Add this line to log the token
 
   const response = await axios.put(
-    `http://localhost:8081/v1/classrooms/teachers/students/${studentId}/reject`,
+    `${apiUrl}/v1/classrooms/teachers/students/${studentId}/reject`,
     null,
     {
       headers: {

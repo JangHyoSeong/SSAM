@@ -23,6 +23,7 @@ const TeacherClassroom = () => {
   const [questions, setQuestions] = useState([]); // 문의사항 데이터 추가
   const noticeTextRef = useRef(null); // 공지사항 텍스트 영역 참조
   const bannerTextRef = useRef(null); // 배너 정보 텍스트 영역 참조
+  const apiUrl = import.meta.env.API_URL
 
   // 학급 전체 데이터 불러오기
   useEffect(() => {
@@ -30,15 +31,12 @@ const TeacherClassroom = () => {
       try {
         const token = localStorage.getItem("USER_TOKEN");
         const { boardId } = await fetchApiUserInitial();
-        const response = await axios.get(
-          `http://localhost:8081/v1/classrooms/${boardId}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}/v1/classrooms/${boardId}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        });
         setBanner(response.data.banner); // 학급 배너 상태 업데이트
         setNotice(response.data.notice); // 알림 사항 상태 업데이트
 
@@ -58,7 +56,7 @@ const TeacherClassroom = () => {
       const token = localStorage.getItem("USER_TOKEN");
       const { boardId } = await fetchApiUserInitial();
       await axios.put(
-        `http://localhost:8081/v1/classrooms/teachers/notice/${boardId}`,
+        `${apiUrl}/v1/classrooms/teachers/notice/${boardId}`,
         { notice: noticeContent },
         {
           headers: {
@@ -80,7 +78,7 @@ const TeacherClassroom = () => {
       const token = localStorage.getItem("USER_TOKEN");
       const { boardId } = await fetchApiUserInitial();
       await axios.put(
-        `http://localhost:8081/v1/classrooms/teachers/banner/${boardId}`,
+        `${apiUrl}/v1/classrooms/teachers/banner/${boardId}`,
         { banner: classInfo },
         {
           headers: {

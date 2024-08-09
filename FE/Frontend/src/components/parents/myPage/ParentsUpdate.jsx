@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import styles from "./ParentsUpdate.module.scss";
+const apiUrl = import.meta.env.API_URL
 
 const useProfile = () => {
   const [profileData, setProfileData] = useState({
@@ -20,7 +21,7 @@ const useProfile = () => {
     const fetchData = async () => {
       const token = localStorage.getItem("USER_TOKEN");
       try {
-        const response = await axios.get("http://localhost:8081/v1/users", {
+        const response = await axios.get(`${apiUrl}/v1/users`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: token,

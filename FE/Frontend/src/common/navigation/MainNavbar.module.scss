@@ -1,17 +1,14 @@
 .navbarArray {
-  width: 82.5vw;
+  width: 100vw;
   height: 10vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .logo {
   position: absolute;
   top: 1.2%;
   left: 5%;
-  width: 8vw;
-  height: 8vh;
+  width: 7vw;
+  height: 7vh;
 }
 
 .navtxt {
@@ -23,8 +20,11 @@
 }
 
 .menuArray {
+  height: 10vh;
+  gap: 10%;
   display: flex;
-  gap: 51%;
+  justify-content: center;
+  align-items: center;
 }
 
 .menuArray a {

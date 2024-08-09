@@ -8,13 +8,8 @@ import calendar from "../../../assets/calendar.png";
 import phone from "../../../assets/phone.png";
 import round1 from "../../../assets/round1.png";
 import round2 from "../../../assets/round2.png";
-<<<<<<< HEAD
 
 const apiUrl = import.meta.env.API_URL
-=======
-import round3 from "../../../assets/round3.png";
-const apiUrl = import.meta.env.API_URL;
->>>>>>> master
 
 const ParentsJoin = () => {
   const [formData, setFormData] = useState({

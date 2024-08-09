@@ -27,6 +27,7 @@
   opacity: 0;
   animation: fadeIn 1s ease-in forwards;
   z-index: 1;
+  padding-top: 1%;
 }
 
 .deleteBtn {
@@ -45,6 +46,7 @@
   border: none;
   color: white;
   background-color: #ee5252;
+  border: 2px solid #ee5252;
 }
 
 .pinBtn {
@@ -63,6 +65,7 @@
   border: none;
   background-color: #5285ee;
   color: white;
+  border: 2px solid #5285ee;
 }
 
 .btn {
@@ -95,4 +98,23 @@
   align-items: center;
   margin-top: 2%;
   gap: 2%;
+}
+
+.classBtn {
+  margin: 4% 2%;
+  padding: 1% 5%;
+  border-radius: 25px;
+  font-size: 100%;
+  color: #5285ee;
+  border-color: #5285ee;
+  background-color: white;
+  border: 2px solid #5285ee;
+  cursor: pointer;
+}
+
+.classBtn:hover {
+  border: none;
+  background-color: #5285ee;
+  color: white;
+  border: 2px solid #5285ee;
 }

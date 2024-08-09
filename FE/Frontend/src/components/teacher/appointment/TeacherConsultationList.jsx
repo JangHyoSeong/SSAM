@@ -164,7 +164,7 @@ const TeacherConsultationList = () => {
             appointmentId={consultation.appointmentId}
             startTime={consultation.startTime}
             endTime={consultation.endTime}
-            studentName={`${consultation.studentId}`} // 실제 이름 정보가 없어 임시로 처리
+            studentName={consultation.studentName}
             topic={consultation.topic}
             description={consultation.description}
             status={consultation.status}

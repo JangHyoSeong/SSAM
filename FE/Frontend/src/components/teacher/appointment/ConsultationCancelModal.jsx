@@ -1,6 +1,6 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import styles from "./ConsultationRejectModal.module.scss";
+import styles from "./ConsultationCancelModal.module.scss";
 
 const ConsultationRejectModal = ({ onClose, onReject }) => {
   const [isRejected, setIsRejected] = useState(false);
@@ -15,7 +15,7 @@ const ConsultationRejectModal = ({ onClose, onReject }) => {
       <div className={styles.modalContent}>
         <p>상담을 거절하시겠습니까?</p>
         <div className={styles.buttonContainer}>
-          <button className={styles.rejectButton} onClick={handleReject}>
+          <button className={styles.cancelButton} onClick={handleReject}>
             거절
           </button>
           {!isRejected && (

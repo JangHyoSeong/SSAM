@@ -29,7 +29,7 @@
   display: flex;
   justify-content: center;
   margin-top: 1.5rem; /* 버튼을 아래로 내리기 위해 값을 증가 */
-  
+
   button {
     padding: 0.5rem 1rem;
     border: none;
@@ -41,7 +41,7 @@
   }
 }
 
-.rejectButton {
+.cancelButton {
   background-color: #dce7fc;
 
   &:hover {

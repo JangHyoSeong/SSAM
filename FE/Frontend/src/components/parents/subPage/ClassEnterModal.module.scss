@@ -1,80 +1,95 @@
 .modalArray {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .enterArray {
-    width: 450px;
-    height: 500px;
-    background-color: white;
-    border: 10px solid #D0E0FE;
-    border-radius: 25px;
+  width: 450px;
+  height: 500px;
+  background-color: white;
+  border: 10px solid #d0e0fe;
+  border-radius: 25px;
 }
 
 .headerArray {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 12%;
-    background-color: #D0E0FE;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 12%;
+  background-color: #d0e0fe;
 }
 
 .headerArray p {
-    font-size: 120%;
+  font-size: 120%;
 }
 
 .outBtn {
-    position: relative;
-    left: 20%;
-    cursor: pointer;
+  position: relative;
+  left: 20%;
+  cursor: pointer;
 }
 
 .outBtn:hover {
-    color: red;
+  color: red;
 }
 
 .inputForm {
-    display: flex;
-    justify-content: space-evenly;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .inputBox {
-    margin-top: 5%;
-    width: 12%;
-    height: 10%;
-    font-size: 200%;
-    text-align: center;
+  margin-top: 5%;
+  width: 12%;
+  height: 10%;
+  font-size: 200%;
+  text-align: center;
 }
 
 .classInfo {
-    height: 60%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 120%;
+  height: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 120%;
 }
 
 .classInfo p {
-    margin: 5% 0%;
+  margin: 5% 0%;
 }
 
 .registComplete {
-    width: 100%;
-    height: 12.1%;
-    border-radius: 0 0 15px 15px;
-    border-style: none;
-    font-size: 120%;
-    cursor: pointer;
+  width: 100%;
+  height: 12.1%;
+  border-radius: 0 0 15px 15px;
+  border-style: none;
+  font-size: 120%;
+  cursor: pointer;
 }
 
 .registComplete:hover {
-    background-color: #e5e5e5;
+  background-color: #e5e5e5;
+}
+
+.classroomDetails {
+  display: flex;
+  flex-direction: column; /* 텍스트가 이미지 위에 오도록 설정 */
+  align-items: center;
+  text-align: center; /* 텍스트를 가운데 정렬 */
+}
+
+.teacherImage {
+  width: 120px; /* 이미지의 너비 */
+  height: 120px; /* 이미지의 높이 */
+  border-radius: 50%; /* 이미지의 둥근 모서리 (원형으로 표시) */
+  object-fit: cover; /* 이미지가 주어진 크기에 맞게 잘리는 방식 */
+  margin-top: 10px; /* 이미지와 텍스트 사이의 여백 추가 */
 }

@@ -3,6 +3,13 @@ import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { OpenVidu } from "openvidu-browser";
 import styles from "./Video.module.scss";
+import whitelogo from "../assets/whitelogo.png";
+import REC from "../assets/REC.png";
+import Conversion from "../assets/Conversion.png";
+import mikeOn from "../assets/mikeOn.png";
+import mikeOff from "../assets/mikeOff.png";
+import cameraOn from "../assets/cameraOn.png";
+import cameraOff from "../assets/cameraOff.png";
 
 const apiUrl = import.meta.env.API_URL;
 
@@ -19,31 +26,43 @@ const VideoChatComponent = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [recordingId, setRecordingId] = useState(null);
   const [isCameraOn, setIsCameraOn] = useState(true);
+  const [isRECOn, setIsRECOn] = useState(true);
   const [isMicOn, setIsMicOn] = useState(true);
+  const [time, setTime] = useState({ minutes: 0, seconds: 0 }); // State for time
   const OV = useRef(new OpenVidu());
 
   const myUserName = useRef(`user_${Math.floor(Math.random() * 1000) + 1}`);
 
-  // 컴포넌트가 마운트 될 때와 언마운트 될 때 이벤트 리스너 추가 및 제거
   useEffect(() => {
     window.addEventListener("beforeunload", onBeforeUnload);
     joinSession();
+
+    const timerInterval = setInterval(() => {
+      setTime((prevTime) => {
+        const newSeconds = prevTime.seconds + 1;
+        const newMinutes =
+          newSeconds >= 60 ? prevTime.minutes + 1 : prevTime.minutes;
+        return {
+          minutes: newMinutes,
+          seconds: newSeconds >= 60 ? 0 : newSeconds,
+        };
+      });
+    }, 1000);
+
     return () => {
       window.removeEventListener("beforeunload", onBeforeUnload);
       leaveSession();
+      clearInterval(timerInterval);
     };
   }, []);
 
-  // 페이지를 떠나기 전 세션을 떠나는 함수
   const onBeforeUnload = () => {
     leaveSession();
   };
 
-  // 세션에 참가하는 함수
   const joinSession = async () => {
     const mySession = OV.current.initSession();
 
-    // 새로운 스트림이 생성될 때 이벤트 리스너
     mySession.on("streamCreated", (event) => {
       if (
         event.stream.connection.connectionId !==
@@ -54,14 +73,12 @@ const VideoChatComponent = () => {
       }
     });
 
-    // 스트림이 파괴될 때 이벤트 리스너
     mySession.on("streamDestroyed", (event) => {
       setSubscribers((subscribers) =>
         subscribers.filter((sub) => sub !== event.stream.streamManager)
       );
     });
 
-    // 예외가 발생할 때 이벤트 리스너
     mySession.on("exception", (exception) => {
       console.warn(exception);
     });
@@ -107,7 +124,6 @@ const VideoChatComponent = () => {
     }
   };
 
-  // 세션을 떠나는 함수
   const leaveSession = async () => {
     if (session) {
       try {
@@ -128,7 +144,6 @@ const VideoChatComponent = () => {
     setPublisher(null);
   };
 
-  // 카메라를 전환하는 함수
   const switchCamera = async () => {
     try {
       const devices = await OV.current.getDevices();
@@ -161,7 +176,6 @@ const VideoChatComponent = () => {
     }
   };
 
-  // 녹화를 시작/중지하는 함수
   const toggleRecording = async () => {
     if (!isRecording) {
       try {
@@ -192,7 +206,6 @@ const VideoChatComponent = () => {
     }
   };
 
-  // 카메라를 켜고 끄는 함수
   const toggleCamera = () => {
     if (publisher) {
       publisher.publishVideo(!isCameraOn);
@@ -200,7 +213,6 @@ const VideoChatComponent = () => {
     }
   };
 
-  // 마이크를 켜고 끄는 함수
   const toggleMic = () => {
     if (publisher) {
       publisher.publishAudio(!isMicOn);
@@ -208,7 +220,6 @@ const VideoChatComponent = () => {
     }
   };
 
-  // 채팅 메시지를 보내는 함수
   const sendChatMessage = () => {
     if (chatInput.trim() !== "" && session) {
       const messageData = {
@@ -225,7 +236,6 @@ const VideoChatComponent = () => {
     }
   };
 
-  // 세션이 변경될 때 채팅 메시지를 수신하는 이벤트 리스너 추가
   useEffect(() => {
     if (session) {
       session.on("signal:chat", (event) => {
@@ -237,7 +247,6 @@ const VideoChatComponent = () => {
     }
   }, [session]);
 
-  // 토큰을 가져오는 함수
   const getToken = async () => {
     try {
       const response = await axios.post(`${apiUrl}/v1/video/token`, {
@@ -254,43 +263,56 @@ const VideoChatComponent = () => {
   return (
     <div className={styles.videoArray}>
       {session === null ? (
-        <div className="join-container d-flex align-items-center justify-content-center vh-100">
-          <div className="join-form-container bg-light p-5 rounded shadow">
-            <h2 className="text-center mb-4">Joining session...</h2>
-          </div>
-        </div>
+        <h1 className={styles.entering}>화상상담 입장 중...</h1>
       ) : (
         <div className={styles.top}>
           <div className={styles.menubarArray}>
             <div className={styles.menubar}>
-              <h3 className="m-0">Session: {sessionId}</h3>
-              <div>
-                <button
-                  className="btn btn-outline-light me-2"
+              <div className={styles.logoArray}>
+                <img src={whitelogo} className={styles.logo} alt="Logo" />
+              </div>
+              {/* <h3>Session: {sessionId}</h3> */}
+              <div className={styles.dayArray}>
+                <p>2024년 8월 10일</p>
+              </div>
+              <div className={styles.iconArray}>
+                {/* 녹화 버튼 */}
+                <button onClick={toggleRecording}>
+                  {isRECOn ? (
+                    <img src={REC} className={styles.imgIcon} />
+                  ) : (
+                    "Off REC"
+                  )}
+                </button>
+
+                {/* 화면 전환 버튼 */}
+                <img
+                  src={Conversion}
+                  className={styles.imgIcon}
                   onClick={switchCamera}
-                >
-                  Switch Camera
+                />
+
+                {/* 카메라 ON / Off 버튼 */}
+                <button onClick={toggleCamera}>
+                  {isCameraOn ? (
+                    <img src={cameraOn} className={styles.imgIcon} />
+                  ) : (
+                    "On Camera"
+                  )}
                 </button>
-                <button
-                  className="btn btn-outline-light me-2"
-                  onClick={toggleRecording}
-                >
-                  {isRecording ? "Stop Recording" : "Start Recording"}
+
+                {/* 마이크 ON / Off 버튼 */}
+                <button onClick={toggleMic}>
+                  {isMicOn ? (
+                    <img src={mikeOn} className={styles.imgIcon} />
+                  ) : (
+                    "On Mic"
+                  )}
                 </button>
-                <button
-                  className="btn btn-outline-light me-2"
-                  onClick={toggleCamera}
-                >
-                  {isCameraOn ? "Turn Off Camera" : "Turn On Camera"}
-                </button>
-                <button
-                  className="btn btn-outline-light me-2"
-                  onClick={toggleMic}
-                >
-                  {isMicOn ? "Turn Off Mic" : "Turn On Mic"}
-                </button>
-                <button className="btn btn-danger" onClick={leaveSession}>
-                  Leave Session
+
+                {/* 나가기 버튼 */}
+                <button className={styles.leaveSession} onClick={leaveSession}>
+                  <h1>X</h1>
                 </button>
               </div>
             </div>
@@ -298,21 +320,23 @@ const VideoChatComponent = () => {
 
           <div className={styles.timeArray}>
             <div className={styles.time}>
-              <h1>04 : 49</h1>
+              <h1>{`${String(time.minutes).padStart(2, "0")}:${String(
+                time.seconds
+              ).padStart(2, "0")}`}</h1>
             </div>
           </div>
 
           <div className={styles.bottom}>
             <div className={styles.screen}>
               {mainStreamManager !== null && (
-                <div className={styles.videoItem}>
+                <div className={styles.youvideoItem}>
                   <UserVideoComponent streamManager={mainStreamManager} />
                 </div>
               )}
               {subscribers.map((sub) => (
                 <div
                   key={sub.stream.connection.connectionId}
-                  className={styles.videoItem}
+                  className={styles.myvideoItem}
                 >
                   <UserVideoComponent streamManager={sub} />
                 </div>
@@ -338,18 +362,15 @@ const VideoChatComponent = () => {
                   </div>
                 ))}
               </div>
-              <div>
+              <div className={styles.chatInputArray}>
                 <input
                   type="text"
                   value={chatInput}
                   className={styles.chatForm}
                   onChange={(e) => setChatInput(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && sendChatMessage()}
-                  placeholder="Type a message..."
+                  placeholder="채팅을 입력해주세요"
                 />
-                <button className={styles.chatSend} onClick={sendChatMessage}>
-                  Send
-                </button>
               </div>
             </div>
           </div>
@@ -359,7 +380,6 @@ const VideoChatComponent = () => {
   );
 };
 
-// 유저 비디오 컴포넌트
 const UserVideoComponent = ({ streamManager }) => {
   const videoRef = useRef();
 

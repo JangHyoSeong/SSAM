@@ -79,17 +79,39 @@
   background-color: #e5e5e5;
 }
 
-.classroomDetails {
+.classDetails {
   display: flex;
-  flex-direction: column; /* 텍스트가 이미지 위에 오도록 설정 */
-  align-items: center;
-  text-align: center; /* 텍스트를 가운데 정렬 */
+  align-items: center; /* 이미지와 텍스트를 수직 가운데 정렬 */
+  justify-content: center; /* 이미지와 텍스트 사이 공간을 중앙 정렬 */
+  height: 60%;
+}
+
+.container {
+  display: flex;
+  width: 100%;
 }
 
 .teacherImage {
-  width: 120px; /* 이미지의 너비 */
-  height: 120px; /* 이미지의 높이 */
-  border-radius: 50%; /* 이미지의 둥근 모서리 (원형으로 표시) */
-  object-fit: cover; /* 이미지가 주어진 크기에 맞게 잘리는 방식 */
-  margin-top: 10px; /* 이미지와 텍스트 사이의 여백 추가 */
+  width: 180px;
+  height: 180px;
+  border-radius: 50%; /* 둥근 모서리 (원형으로 표시) */
+  object-fit: cover;
+  // border: 3px solid #d0e0fe;
+  margin-right: 20px;
+}
+
+.classText {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 텍스트를 수직 가운데 정렬 */
+}
+
+.classText h2 {
+  font-size: 25px;
+  margin: 5px;
+}
+
+.errorMessage {
+  font-size: 28px;
 }

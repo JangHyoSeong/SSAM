@@ -7,7 +7,7 @@ const ClassEnterModal = () => {
   const [pins, setPins] = useState(Array(6).fill(""));
   const [classroom, setClassroom] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("초대코드를 입력해주세요."); // 초기 메시지를 설정합니다.
+  const [errorMessage, setErrorMessage] = useState("초대코드를 입력해주세요.");
   const inputRefs = useRef(new Array(6));
   const apiUrl = import.meta.env.API_URL;
 
@@ -16,7 +16,7 @@ const ClassEnterModal = () => {
     const fetchClassroom = async () => {
       const pin = pins.join("");
       if (pin.length === 0) {
-        setErrorMessage("초대코드를 입력해주세요."); // 아무 글자도 입력되지 않았을 때
+        setErrorMessage("초대코드를 입력해주세요.");
         setClassroom(null);
       } else if (pin.length === 6) {
         try {
@@ -32,7 +32,7 @@ const ClassEnterModal = () => {
           );
           if (response.data) {
             setClassroom(response.data);
-            setErrorMessage(null); // 성공 시 오류 메시지 초기화
+            setErrorMessage(null);
             console.log(response.data);
           } else {
             console.error("제공된 PIN과 일치하는 강의실을 찾을 수 없습니다");
@@ -45,47 +45,41 @@ const ClassEnterModal = () => {
           setErrorMessage("일치하는 학급이 없습니다.");
         }
       } else {
-        setClassroom(null); // 핀 번호가 6자리가 아닐 때 classroom 상태를 초기화
-        setErrorMessage("일치하는 학급이 없습니다."); // 오류 메시지를 설정
+        setClassroom(null);
+        setErrorMessage("일치하는 학급이 없습니다.");
       }
     };
     fetchClassroom();
   }, [pins]);
 
   const pinChange = (index) => (e) => {
-    const value = e.target.value; // 입력된 값을 가져옴
+    const value = e.target.value;
     const newPins = [...pins];
 
     if (e.key === "Backspace" || e.key === "Delete") {
-      // 백스페이스와 삭제 키 처리
-      newPins[index] = ""; // 현재 칸의 값을 지움
+      newPins[index] = "";
       setPins(newPins);
       if (index > 0 && pins[index] === "") {
-        inputRefs.current[index - 1].focus(); // 이전 칸으로 포커스를 이동
+        inputRefs.current[index - 1].focus();
       }
     } else if (e.key === "ArrowLeft") {
-      // 왼쪽 화살표 처리
       if (index > 0) {
-        inputRefs.current[index - 1].focus(); // 이전 칸으로 포커스를 이동
+        inputRefs.current[index - 1].focus();
       }
     } else if (e.key === "ArrowRight") {
-      // 오른쪽 화살표 처리
       if (index < 5) {
-        inputRefs.current[index + 1].focus(); // 다음 칸으로 포커스를 이동
+        inputRefs.current[index + 1].focus();
       }
     } else if (value.length > 1) {
-      // 복사-붙여넣기 처리
       for (let i = 0; i < value.length && index + i < 6; i++) {
         newPins[index + i] = value[i];
       }
       setPins(newPins);
 
-      // 다음 입력 칸으로 포커스 이동
       if (index + value.length < 6) {
         inputRefs.current[index + value.length].focus();
       }
     } else {
-      // 단일 문자 입력 처리
       newPins[index] = value;
       setPins(newPins);
       if (index < 5 && value) {
@@ -102,10 +96,9 @@ const ClassEnterModal = () => {
   const classRegistration = async () => {
     try {
       const token = localStorage.getItem("USER_TOKEN");
-      console.log(token);
       await axios.post(
         `${apiUrl}/v1/classrooms/${classroom.boardId}`,
-        {}, // 빈 객체를 요청 본문으로 전달 (body가 빈 값이라면 {}를 추가해야함)
+        {},
         {
           headers: {
             "Content-Type": "application/json",
@@ -124,7 +117,7 @@ const ClassEnterModal = () => {
       });
     } catch (error) {
       console.error("실패", error);
-      setErrorMessage("일치하는 학급이 없습니다."); // POST 요청이 실패할 경우에도 오류 메시지 표시
+      setErrorMessage("일치하는 학급이 없습니다.");
     }
   };
 
@@ -155,22 +148,26 @@ const ClassEnterModal = () => {
           </form>
           <div className={styles.classInfo}>
             {classroom ? (
-              <div>
-                <p>{classroom.schoolName}</p>
-                <p>
-                  {classroom.grade}학년 {classroom.classroom}반
-                </p>
-                <p>{classroom.teacherName} 선생님</p>
-                {classroom.teacherImage && (
+              <div className={styles.classDetails}>
+                <div className={styles.container}>
                   <img
                     src={classroom.teacherImage}
                     alt="Teacher"
                     className={styles.teacherImage}
                   />
-                )}
+                  <div className={styles.classText}>
+                    <h2>
+                      {classroom.schoolName} <br />
+                      {classroom.grade}학년{"  "} {classroom.classroom}반
+                    </h2>
+                    <h2>{classroom.teacherName} 선생님</h2>
+                  </div>
+                </div>
               </div>
             ) : (
-              errorMessage && <p>{errorMessage}</p> // 오류 메시지 표시
+              errorMessage && (
+                <p className={styles.errorMessage}>{errorMessage}</p>
+              )
             )}
           </div>
           <button className={styles.registComplete} onClick={classRegistration}>

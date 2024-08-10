@@ -31,6 +31,7 @@ export const fetchApiRequestReservation = async (
     {
       topic: "ATTITUDE",
       description,
+      // ISO 8601 형식 ("YYYY-MM-DDTHH:mm:ss")
       startTime,
       endTime,
     },

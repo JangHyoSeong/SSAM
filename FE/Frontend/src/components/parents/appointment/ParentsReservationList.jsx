@@ -1,17 +1,20 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { FiCalendar } from "react-icons/fi";
 import useTeacherCalendarStore from "../../../store/TeacherCalendarStore";
 import Modal from "./Modal";
 import ConsultationButton from "./ConsultationButton";
 import styles from "./ParentsReservationList.module.scss";
+import { fetchApiRequestReservation } from "../../../apis/stub/55-59 상담/apiStubReservation";
 
 const ParentsReservationList = ({ selectedDate }) => {
   const { consultations, fetchReservations, isAvailable, setConsultations } =
     useTeacherCalendarStore();
 
-  const [showModal, setShowModal] = React.useState(false);
-  const [clickedIndex, setClickedIndex] = React.useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [clickedIndex, setClickedIndex] = useState(null);
+  const [consultationDescription, setConsultationDescription] = useState("");
+  const [consultationPurpose, setConsultationPurpose] = useState("");
 
   useEffect(() => {
     fetchReservations();
@@ -26,29 +29,6 @@ const ParentsReservationList = ({ selectedDate }) => {
       return `${year}-${month}-${day}`;
     }
     return date;
-  };
-
-  // 신청취소 클릭 시 색상 변경 및 상태 업데이트
-  const handleClick = (index) => {
-    console.log(`Button at index ${index} clicked`);
-
-    const updatedConsultations = consultations.map((consultation, i) => {
-      if (i === index) {
-        console.log(`Updating consultation at index ${index}:`, consultation);
-
-        let newConsultation = { ...consultation };
-        if (!isAvailable(consultation.status)) {
-          newConsultation.status = null; // Set to available
-          console.log(`Changed to available`);
-        } else {
-          console.log("No changes made");
-        }
-        return newConsultation;
-      }
-      return consultation;
-    });
-    setConsultations(updatedConsultations);
-    setClickedIndex(index);
   };
 
   // 테이블 정보 렌더링
@@ -67,27 +47,60 @@ const ParentsReservationList = ({ selectedDate }) => {
     </div>
   );
 
-  // 예약하기 버튼 클릭 시 실행되는 함수
-  const handleReservation = () => {
-    if (clickedIndex !== null) {
-      const updatedConsultations = consultations.map((consultation, i) => {
-        if (i === clickedIndex) {
-          return {
-            ...consultation,
-            status: "APPLY", // Assuming 'APPLY' is the status for a new reservation
-          };
+  // 버튼 클릭 시 실행되는 함수
+  const handleClick = (index) => {
+    const updatedConsultations = consultations.map((consultation, i) => {
+      if (i === index) {
+        let newConsultation = { ...consultation };
+        if (!isAvailable(consultation.status)) {
+          newConsultation.status = null;
         }
-        return consultation;
-      });
-      setConsultations(updatedConsultations);
-      setClickedIndex(null);
-      setShowModal(true); // 모달 표시
+        return newConsultation;
+      }
+      return consultation;
+    });
+    setConsultations(updatedConsultations);
+    setClickedIndex(index);
+  };
+
+  // 예약하기 버튼 클릭 시 실행되는 함수: axios요청
+  const handleReservation = async () => {
+    if (clickedIndex !== null) {
+      const selectedConsultation = consultations[clickedIndex];
+      const [startTime, endTime] = selectedConsultation.time.split(" ~ ");
+
+      const formattedStartTime = `${formatDate(selectedDate)}T${startTime}:00`;
+      const formattedEndTime = `${formatDate(selectedDate)}T${endTime}:00`;
+
+      try {
+        await fetchApiRequestReservation(
+          consultationDescription,
+          formattedStartTime,
+          formattedEndTime
+        );
+
+        const updatedConsultations = consultations.map((consultation, i) => {
+          if (i === clickedIndex) {
+            return {
+              ...consultation,
+              status: "APPLY",
+            };
+          }
+          return consultation;
+        });
+        setConsultations(updatedConsultations);
+        setClickedIndex(null);
+        setShowModal(true);
+      } catch (error) {
+        console.error("예약 생성 실패:", error);
+        // 오류 처리 (예: 사용자에게 오류 메시지 표시)
+      }
     }
   };
 
   // 취소 버튼 클릭 시 실행되는 함수
   const handleCancel = () => {
-    fetchReservations(); // Reset to original state from the server
+    fetchReservations();
   };
 
   return (
@@ -96,12 +109,12 @@ const ParentsReservationList = ({ selectedDate }) => {
         <h2>{formatDate(selectedDate)}</h2>
         <FiCalendar className={styles.calendarIcon} />
 
-        {/* 상담 목적 선택 필터 */}
         <div className={styles.filterContainer}>
           <select
             id="consultationPurpose"
             className={styles.filterSelect}
-            defaultValue=""
+            value={consultationPurpose}
+            onChange={(e) => setConsultationPurpose(e.target.value)}
           >
             <option value="" disabled>
               상담 목적을 선택해주세요!
@@ -114,7 +127,6 @@ const ParentsReservationList = ({ selectedDate }) => {
         </div>
       </div>
 
-      {/* 상담 시간 테이블 */}
       <div className={styles.table}>
         <div className={styles.row}>
           <div className={styles.cellHeader}>상담 시간</div>
@@ -123,13 +135,23 @@ const ParentsReservationList = ({ selectedDate }) => {
         {consultations.map(renderConsultationRow)}
       </div>
 
-      {/* 상담 내용 입력*/}
       <textarea
         className={styles.consultationInput}
         placeholder="상담 내용을 입력해 주세요. (50자 이내)"
+        value={consultationDescription}
+        onChange={(e) => setConsultationDescription(e.target.value)}
+        maxLength={50}
       />
       <div className={styles.actions}>
-        <button className={styles.modify} onClick={handleReservation}>
+        <button
+          className={styles.modify}
+          onClick={handleReservation}
+          disabled={
+            !consultationPurpose ||
+            !consultationDescription ||
+            clickedIndex === null
+          }
+        >
           예약하기
         </button>
         <button className={styles.cancel} onClick={handleCancel}>
@@ -137,13 +159,11 @@ const ParentsReservationList = ({ selectedDate }) => {
         </button>
       </div>
 
-      {/* 예약 완료 모달 창 */}
       <Modal show={showModal} onClose={() => setShowModal(false)} />
     </div>
   );
 };
 
-// PropTypes 설정
 ParentsReservationList.propTypes = {
   selectedDate: PropTypes.oneOfType([
     PropTypes.instanceOf(Date),

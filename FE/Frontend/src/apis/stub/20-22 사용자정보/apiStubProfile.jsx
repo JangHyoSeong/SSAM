@@ -21,7 +21,7 @@ export const useProfileStore = async () => {
     username: response.data.username,
     email: response.data.email,
     selfPhone: response.data.selfPhone,
-    // otherPhone: response.data.otherPhone,
+    otherPhone: response.data.otherPhone,
   };
 };
 

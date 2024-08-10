@@ -1,4 +1,3 @@
-// // 선생님 정보 수정 페이지 컴포넌트
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
@@ -27,7 +26,8 @@ const useProfile = () => {
             Authorization: token,
           },
         });
-        setProfileData({
+
+        const data = {
           profileImage: response.data.profileImage,
           name: response.data.name,
           birth: response.data.birth,
@@ -36,7 +36,11 @@ const useProfile = () => {
           email: response.data.email,
           selfPhone: response.data.selfPhone,
           otherPhone: response.data.otherPhone,
-        });
+        };
+
+        setProfileData(data);
+
+        console.log("Fetched Profile Data:", data);
       } catch (error) {
         console.error("데이터를 가져오지 못했습니다:", error);
       }
@@ -64,7 +68,15 @@ const TeacherUpdate = () => {
             <tr>
               <th>사진</th>
               <td className={styles.imgTd}>
-                <div className={styles.profileImg} />
+                <div className={styles.profileImg}>
+                  {profile.profileImage && (
+                    <img
+                      src={profile.profileImage}
+                      alt="Profile"
+                      className={styles.profileImage}
+                    />
+                  )}
+                </div>
                 <div className={styles.btn}>
                   <input type="file" id="file" className={styles.inputBtn} />
                   <label htmlFor="file" className={styles.updateBtn}>

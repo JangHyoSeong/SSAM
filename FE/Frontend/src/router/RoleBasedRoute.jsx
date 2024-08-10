@@ -32,7 +32,7 @@ const RoleBasedRoute = ({ allowedRoles }) => {
   }, [userInitialData, setUserInitialData]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
 
   return userInitialData && allowedRoles.includes(userInitialData.role) ? (

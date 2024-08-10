@@ -90,7 +90,7 @@ const TeacherAuthorization = () => {
   };
 
   if (!Array.isArray(students)) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
 
   return (

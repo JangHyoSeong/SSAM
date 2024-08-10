@@ -72,7 +72,7 @@ const ConsultationItem = ({
               승인
             </button>
             <button
-              className={styles.cancelButton}
+              className={styles.rejectButton}
               onClick={() => onCancel(appointmentId)}
             >
               거절
@@ -144,7 +144,7 @@ const TeacherConsultationList = () => {
     setCancelModalOpen(false);
   };
 
-  if (loading) return <div>로딩 중...</div>;
+  if (loading) return <div></div>;
   if (error) return <div>에러: {error}</div>;
 
   return (

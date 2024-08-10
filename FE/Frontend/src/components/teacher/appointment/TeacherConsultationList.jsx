@@ -72,7 +72,7 @@ const ConsultationItem = ({
               승인
             </button>
             <button
-              className={styles.cancelButton}
+              className={styles.rejectButton}
               onClick={() => onCancel(appointmentId)}
             >
               거절

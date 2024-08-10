@@ -64,7 +64,7 @@ table {
   width: 100%;
   height: 100%;
   border-collapse: collapse;
-  
+
   th,
   td {
     border: 1px solid black;
@@ -75,7 +75,7 @@ table {
 }
 
 .imgTd {
-  width: 33vw;
+  width: 60vw;
   height: 20vh;
 }
 
@@ -84,10 +84,20 @@ table {
 }
 
 .profileImg {
-  width: 10.5vw;
-  height: 25vh;
+  width: 150px; /* 가로 354px */
+  height: 200px; /* 세로 472px */
   margin-top: 2%;
   background-color: #e0e0e0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.profileImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .btn {

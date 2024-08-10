@@ -43,12 +43,29 @@ const EnterCode = () => {
 
   return (
     <div className={styles.EnterArray}>
-      <h2>{profile.name}님 환영합니다</h2>
-      <h3>선생님께 받은 초대코드로 학급을 등록하세요.</h3>
-      <button className={styles.classBtn} onClick={toggleModal}>
-        초대코드 입력하기
-      </button>
-      {isModalOpen && <ClassEnterModal />}
+      <div className={styles.welcomeBox}>
+        <h2>
+          {profile.name}님<br /> 환영합니다
+        </h2>
+      </div>
+      <div className={styles.codeBox}>
+        <h3>
+          선생님께 받은 초대코드로
+          <br /> 학급을 등록하세요.
+        </h3>
+        <button className={styles.classBtn} onClick={toggleModal}>
+          초대코드 입력하기
+        </button>
+        {isModalOpen && <ClassEnterModal />}
+      </div>
+      {/* 클릭하면 상담코드로 이동하도록 수정 */}
+      <div className={styles.codeBox}>
+        <h3>예정된 상담이 있습니다.</h3>
+        <button className={styles.classBtn} onClick={toggleModal}>
+          상담 시작하기
+        </button>
+        {isModalOpen && <ClassEnterModal />}
+      </div>
     </div>
   );
 };

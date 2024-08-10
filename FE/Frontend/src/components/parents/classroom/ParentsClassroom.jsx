@@ -39,6 +39,7 @@ const ParentsClassroom = () => {
 
   return (
     <div className={styles.classInfoContainer}>
+      {/* 간격띄우는 컨테이너 */}
       <div className={styles.imageContainer}>
         <img
           src={ClassImage}

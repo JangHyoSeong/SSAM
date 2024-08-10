@@ -6,38 +6,47 @@
 
 .EnterArray {
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
-  margin-top: 3%;
-  position: relative;
-  top: 5%;
-  left: 25%;
-  text-align: center;
-  width: 50vw;
-  height: 20vh;
-  background-color: #dae9ff;
-  border-radius: 25px;
-  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  opacity: 0;
-  animation: fadeIn 1s ease-in forwards;
-  z-index: 1;
+  justify-content: space-between; // 세로 방향으로 컨텐츠 분산
+  height: 100%; // 부모 컨테이너의 높이를 채움
+
+  // welcomeBox와 codeBox에 공통으로 적용되는 스타일
+  .welcomeBox,
+  .codeBox {
+    background-color: rgba(218, 233, 255, 0.9); // 약간의 투명도 추가
+    border-radius: 15px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .welcomeBox h2,
+  .codeBox h3 {
+    font-size: 0.9em;
+    margin: 0 0 10px 0;
+  }
+
+  .classBtn {
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    // 나머지 버튼 스타일 유지
+  }
 }
 
 .classBtn {
-  margin-top: 1%;
-  padding: 1% 4%;
+  padding: 10px 20px;
   border-radius: 25px;
   color: #5285ee;
   font-size: 120%;
-  border-color: #5285ee;
+  border: 1px solid #5285ee;
   background-color: white;
   cursor: pointer;
-}
+  transition: all 0.3s ease; // 부드러운 전환 효과 추가
 
-.classBtn:hover {
-  border: none;
-  background-color: #5285ee;
-  color: white;
+  &:hover {
+    background-color: #5285ee;
+    color: white;
+  }
 }

@@ -24,9 +24,10 @@ export const fetchApiRequestReservation = async (
   endTime
 ) => {
   const token = localStorage.getItem("USER_TOKEN");
-  const { userId } = await fetchApiUserInitial();
+  const { teacherId } = await fetchApiUserInitial();
+  console.log(teacherId);
   const response = await axios.post(
-    `${apiUrl}/v1/consults/${userId}`,
+    `${apiUrl}/v1/consults/${teacherId}`,
     {
       topic: "ATTITUDE",
       description,

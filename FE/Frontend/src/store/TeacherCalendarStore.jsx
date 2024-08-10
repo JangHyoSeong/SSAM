@@ -12,7 +12,7 @@ export const AppointmentStatus = {
   REJECT: "REJECT",
 };
 
-const useTeacherCalendarStore = create((set, get) => ({
+const useTeacherCalendarStore = create((set) => ({
   consultations: [
     { time: "14:00 ~ 14:20", status: null },
     { time: "14:30 ~ 14:50", status: null },
@@ -22,40 +22,66 @@ const useTeacherCalendarStore = create((set, get) => ({
     { time: "16:30 ~ 16:50", status: null },
     { time: "17:00 ~ 17:20", status: null },
   ],
+  currentDate: new Date().toISOString().split("T")[0], // 현재 날짜 추가
   setConsultations: (consultations) => set({ consultations }),
+  setCurrentDate: (date) => set({ currentDate: date }),
+  // 상담 가능 상태
   isAvailable: (status) =>
     status === null || status === AppointmentStatus.CANCEL,
-  getAvailableCount: () => {
-    return get().consultations.filter((consultation) =>
-      get().isAvailable(consultation.status)
-    ).length;
-  },
+
   fetchReservations: async () => {
     try {
       const token = localStorage.getItem("USER_TOKEN");
-      const { userId } = await fetchApiUserInitial();
-      const response = await axios.get(`${apiUrl}/v1/consults/${userId}`, {
+      const { teacherId } = await fetchApiUserInitial();
+      const response = await axios.get(`${apiUrl}/v1/consults/${teacherId}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: token,
         },
       });
+      console.log("Received reservations:", response.data);
 
       set((state) => {
+        console.log("Current consultations:", state.consultations);
+        console.log("Current date:", state.currentDate);
+
         const updatedConsultations = state.consultations.map((consultation) => {
           const [startTime, endTime] = consultation.time.split(" ~ ");
-          const matchingReservation = response.data.find(
-            (reservation) =>
-              reservation.start_time.includes(startTime) &&
-              reservation.end_time.includes(endTime)
-          );
+          const matchingReservation = response.data.find((reservation) => {
+            const reservationDate = reservation.startTime.split("T")[0];
+            const reservationStartTime = reservation.startTime
+              .split("T")[1]
+              .substring(0, 5);
+            const reservationEndTime = reservation.endTime
+              .split("T")[1]
+              .substring(0, 5);
+            return (
+              reservationDate === state.currentDate &&
+              reservationStartTime === startTime &&
+              reservationEndTime === endTime
+            );
+          });
 
-          return {
+          console.log(`Consultation time: ${consultation.time}`);
+          console.log(`Matching reservation:`, matchingReservation);
+
+          const updatedConsultation = {
             ...consultation,
             status: matchingReservation ? matchingReservation.status : null,
+            appointmentId: matchingReservation
+              ? matchingReservation.appointmentId
+              : null,
+            description: matchingReservation
+              ? matchingReservation.description
+              : null,
+            topic: matchingReservation ? matchingReservation.topic : null,
           };
+
+          console.log(`Updated consultation:`, updatedConsultation);
+          return updatedConsultation;
         });
 
+        console.log("Updated consultations:", updatedConsultations);
         return { consultations: updatedConsultations };
       });
     } catch (error) {

@@ -4,19 +4,21 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import koLocale from "@fullcalendar/core/locales/ko";
 import styles from "./ParentsCalendar.module.scss";
-import useTeacherCalendarStore from "../../../store/TeacherCalendarStore";
 import { useState, useEffect, useRef } from "react";
+import useTeacherCalendarStore from "../../../store/TeacherCalendarStore";
 
 const ParentsCalendar = ({ onDateSelect }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const calendarRef = useRef(null);
-  const getAvailableCount = useTeacherCalendarStore(
-    (state) => state.getAvailableCount
-  );
+  const { setCurrentDate, fetchReservations } = useTeacherCalendarStore(); // store에서 필요한 함수들을 가져옵니다.
 
-  const handleDateClick = (info) => {
+  const handleDateClick = async (info) => {
     setSelectedDate(info.dateStr);
     onDateSelect(info.dateStr); // 선택된 날짜를 부모 컴포넌트에 전달
+
+    // store의 currentDate를 업데이트하고 예약 정보를 가져옵니다.
+    setCurrentDate(info.dateStr);
+    await fetchReservations();
   };
 
   useEffect(() => {
@@ -46,9 +48,9 @@ const ParentsCalendar = ({ onDateSelect }) => {
           center: "title",
           right: "next",
         }}
-        locale={koLocale} // 로케일을 한국어로 설정
-        dayCellContent={(arg) => arg.dayNumberText.replace("일", "")} // 날짜 셀에서 '일' 제거
-        fixedWeekCount={false} // 마지막 주 숨기기
+        locale={koLocale}
+        dayCellContent={(arg) => arg.dayNumberText.replace("일", "")}
+        fixedWeekCount={false}
         height="auto"
       />
     </div>
@@ -56,7 +58,7 @@ const ParentsCalendar = ({ onDateSelect }) => {
 };
 
 ParentsCalendar.propTypes = {
-  onDateSelect: PropTypes.func.isRequired, // onDateSelect prop 타입 정의
+  onDateSelect: PropTypes.func.isRequired,
 };
 
 export default ParentsCalendar;

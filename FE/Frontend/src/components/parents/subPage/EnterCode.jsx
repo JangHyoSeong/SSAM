@@ -44,9 +44,9 @@ const EnterCode = () => {
   return (
     <div className={styles.EnterArray}>
       <div className={styles.welcomeBox}>
-        <h2>
+        <h3>
           {profile.name}님<br /> 환영합니다
-        </h2>
+        </h3>
       </div>
       <div className={styles.codeBox}>
         <h3>

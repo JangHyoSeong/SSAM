@@ -1,6 +1,6 @@
 @keyframes slide {
   0% {
-    right: -500px;
+    right: -200px;
     opacity: 0;
   }
   100% {
@@ -15,7 +15,7 @@
     opacity: 1;
   }
   100% {
-    right: -500px;
+    right: -200px;
     opacity: 0;
   }
 }
@@ -46,7 +46,7 @@
     justify-content: center;
     flex-direction: column;
     position: relative;
-    animation: slide 1s ease-out;
+    animation: slide 3s ease-out;
 
     h1 {
       font-size: 350%;
@@ -58,7 +58,7 @@
       font-size: 120%;
       color: #777777;
       position: relative;
-      animation: slide 1.5s ease-out;
+      animation: slide 4s ease-out;
     }
   }
 }

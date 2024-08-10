@@ -144,7 +144,7 @@ const TeacherConsultationList = () => {
     setCancelModalOpen(false);
   };
 
-  if (loading) return <div>로딩 중...</div>;
+  if (loading) return <div></div>;
   if (error) return <div>에러: {error}</div>;
 
   return (

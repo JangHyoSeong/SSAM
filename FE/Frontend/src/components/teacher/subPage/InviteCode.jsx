@@ -3,18 +3,20 @@ import { useState, useEffect } from "react";
 import styles from "./InviteCode.module.scss";
 import ClassProduceModal from "./ClassProduceModal";
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
-const apiUrl = import.meta.env.API_URL;
-import Swal from "sweetalert2";
+const apiUrl = import.meta.env.API_URL; // API URL 가져오기
+import Swal from "sweetalert2"; // 알림을 위한 SweetAlert2 라이브러리 임포트
 
 const InviteCode = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [classInfo, setClassInfo] = useState(null);
-  const [isCopied, setIsCopied] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태를 관리
+  const [classInfo, setClassInfo] = useState(null); // 클래스 정보 상태 관리
+  const [isCopied, setIsCopied] = useState(false); // 복사 상태를 관리
 
+  // 모달 토글 함수
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
 
+  // 사용자 프로필 정보를 불러오는 훅
   const useProfile = () => {
     const [profileData, setProfileData] = useState({
       name: "",
@@ -45,6 +47,7 @@ const InviteCode = () => {
 
   const profile = useProfile();
 
+  // 클래스 정보를 불러오는 효과
   useEffect(() => {
     const fetchClassInfo = async () => {
       try {
@@ -64,6 +67,7 @@ const InviteCode = () => {
     fetchClassInfo();
   }, []);
 
+  // 클래스 정보 업데이트 함수
   const updateClassInfo = async () => {
     const { boardId } = await fetchApiUserInitial();
     const token = localStorage.getItem("USER_TOKEN");
@@ -76,6 +80,7 @@ const InviteCode = () => {
     setClassInfo(response.data);
   };
 
+  // 클래스 삭제 함수
   const classDelete = async () => {
     const token = localStorage.getItem("USER_TOKEN");
     const { boardId } = await fetchApiUserInitial();
@@ -89,37 +94,52 @@ const InviteCode = () => {
     });
 
     if (result.isConfirmed) {
-      await axios.delete(`${apiUrl}/v1/classrooms/teachers/${boardId}`, {
+      try {
+        await axios.delete(`${apiUrl}/v1/classrooms/teachers/${boardId}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+        });
+        Swal.fire({
+          title: "삭제됨!",
+          text: "학급이 삭제되었습니다.",
+          icon: "success",
+        });
+        setClassInfo(null);
+      } catch (error) {
+        console.error("학급 삭제 실패:", error);
+        Swal.fire({
+          title: "삭제 실패",
+          text: "학급 삭제에 실패했습니다.",
+          icon: "error",
+        });
+      }
+    }
+  };
+
+  // PIN 코드 재발급 함수
+  const rePin = async () => {
+    const token = localStorage.getItem("USER_TOKEN");
+    const { boardId } = await fetchApiUserInitial();
+    await axios.put(
+      `${apiUrl}/v1/classrooms/teachers/pin/${boardId}`,
+      {},
+      {
         headers: {
           "Content-Type": "application/json",
           Authorization: token,
         },
-      });
-      Swal.fire({
-        title: "삭제됨!",
-        text: "학급이 삭제되었습니다.",
-        icon: "success",
-      });
-      updateClassInfo(); // Update class info after deletion
-    }
-  };
-
-  const rePin = async () => {
-    const token = localStorage.getItem("USER_TOKEN");
-    const { boardId } = await fetchApiUserInitial();
-    await axios.put(`${apiUrl}/v1/classrooms/teachers/pin/${boardId}`, {}, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    });
+      }
+    );
     Swal.fire("PIN이 재발급되었습니다").then((isConfirm) => {
       if (isConfirm) {
-        updateClassInfo(); // Update class info after re-issuing the pin
+        updateClassInfo();
       }
     });
   };
 
+  // 클립보드로 복사하는 함수
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text).then(() => {
       setIsCopied(true);

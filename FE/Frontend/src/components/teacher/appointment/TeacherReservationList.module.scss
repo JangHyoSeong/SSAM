@@ -7,13 +7,13 @@
 }
 
 .consultationList {
+  height: 87vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 45%;
   border: 0.2px solid rgb(220, 220, 220);
   border-top: none;
-  height: 94vh;
   margin: -18px 0% 50px 0%; /* 상우하좌 */
   max-width: 750px;
   padding: 2vh; /* 상우하좌 */

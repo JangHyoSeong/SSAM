@@ -47,13 +47,13 @@
   height: 8vh;
 }
 
-.iconArray {
-  width: 100%;
+.btnIcon {
+  border-style: none;
+  background-color: transparent;
 }
 
 .imgIcon {
   cursor: pointer;
-  width: 4vw;
 }
 
 .dayArray {
@@ -70,12 +70,11 @@
 .iconArray {
   display: flex;
   justify-content: space-evenly;
-  width: 41vw;
-  height: 10vh;
+  width: 40vw;
 }
 
 .iconArray img {
-  width: 5vw;
+  width: 3.5vw;
 }
 
 .leaveSession {
@@ -85,10 +84,8 @@
 
 .leaveSession h1 {
   cursor: pointer;
-}
-
-.leaveSession h1:hover {
   color: red;
+  font-size: 300%;
 }
 
 .timeArray {
@@ -120,21 +117,21 @@
 
 // videoItem 화면
 .myvideoItem {
-  position: fixed;
-  top: 18%;
-  right: 17%;
+  position: absolute;
+  top: 15%;
+  left: 4%;
 }
 
 .youvideoItem {
-  position: fixed;
-  top: 18%;
-  left: 0%;
+  position: absolute;
+  top: 15%;
+  left: 39%;
 }
 
 .subTitleArray {
   position: fixed;
   bottom: 2%;
-  left: 0%;
+  left: 1%;
 }
 
 .subTitle {

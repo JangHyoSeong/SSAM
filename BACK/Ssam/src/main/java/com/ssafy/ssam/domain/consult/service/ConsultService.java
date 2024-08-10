@@ -1,6 +1,6 @@
 package com.ssafy.ssam.domain.consult.service;
 
-import com.ssafy.ssam.domain.consult.dto.request.AppointmentRequestDto;
+import com.ssafy.ssam.domain.classroom.repository.BoardRepository;
 import com.ssafy.ssam.domain.consult.dto.request.ConsultRequestDto;
 import com.ssafy.ssam.domain.consult.dto.request.SummaryRequestDto;
 import com.ssafy.ssam.domain.consult.dto.response.AppointmentResponseDto;
@@ -12,6 +12,9 @@ import com.ssafy.ssam.domain.consult.entity.Consult;
 import com.ssafy.ssam.domain.consult.entity.Summary;
 import com.ssafy.ssam.domain.consult.repository.AppointmentRepository;
 import com.ssafy.ssam.domain.consult.repository.ConsultRepository;
+import com.ssafy.ssam.domain.user.dto.request.AlarmCreateRequestDto;
+import com.ssafy.ssam.domain.user.entity.AlarmType;
+import com.ssafy.ssam.domain.user.service.AlarmService;
 import com.ssafy.ssam.domain.consult.repository.SummaryRepository;
 import com.ssafy.ssam.domain.user.entity.UserBoardRelation;
 import com.ssafy.ssam.domain.user.entity.UserBoardRelationStatus;
@@ -19,8 +22,8 @@ import com.ssafy.ssam.domain.user.repository.UserBoardRelationRepository;
 import com.ssafy.ssam.global.amazonS3.service.S3TextService;
 import com.ssafy.ssam.global.auth.dto.CustomUserDetails;
 import com.ssafy.ssam.global.auth.entity.User;
-import com.ssafy.ssam.global.auth.entity.UserRole;
 import com.ssafy.ssam.global.auth.repository.UserRepository;
+import com.ssafy.ssam.global.dto.CommonResponseDto;
 import com.ssafy.ssam.global.chatbot.service.GPTService;
 import com.ssafy.ssam.global.dto.CommonResponseDto;
 import com.ssafy.ssam.global.error.CustomException;
@@ -28,7 +31,6 @@ import com.ssafy.ssam.global.error.ErrorCode;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -36,8 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Random;
 
 @Slf4j
 @Builder
@@ -52,16 +53,33 @@ public class ConsultService {
     private final UserBoardRelationRepository userBoardRelationRepository;
     private final S3TextService s3TextService;
     private final GPTService gptService;
+    private final BoardRepository boardRepository;
+    private final AlarmService alarmService;
 
-    // 상담 종료시 상담 entity 생성
-    public void createConsultEntity(Appointment appointment) {
+    // 상담 시작 시 consult 초기 생성
+    @Transactional
+    public CommonResponseDto createConsultEntity(Appointment appointment) {
+
+        User student = appointment.getStudent();
+        // 더 추가해야함. 머지하고 만들자
+        String accessCode = createConsultAccessCode();
         ConsultRequestDto requestDto = ConsultRequestDto.builder()
                 .actualDate(LocalDateTime.now())
-                .videoUrl("sample.com")
-                .webrtcSessionId("123456")
-                .accessCode("123456")
+                .appointment(appointment)
+                .accessCode(accessCode)
                 .build();
-        Consult consult = Consult.toConsult(appointment, requestDto);
+        Consult consult = Consult.toConsult(requestDto);
+
+        // consult accesscode를 담은 알람을 생성
+        AlarmCreateRequestDto studentAlarmCreateRequestDto
+                = AlarmCreateRequestDto.builder()
+                .userId(student.getUserId())
+                .alarmType(AlarmType.CONSULT)
+                .accessCode(accessCode)
+                .build();
+        alarmService.creatAlarm(studentAlarmCreateRequestDto);
+
+        return new CommonResponseDto("Consult Created");
     }
     // 학생기준
     public CommonResponseDto startConsult(Integer consultId) {
@@ -103,7 +121,6 @@ public class ConsultService {
         // 3)
         consult.setContent(talk);
 
-
         // 2. GPT 입력 1) 연결된 예약찾아서 주제 가져오기 2) 주제, 대화기반 chatGpt 요약
         // 1)
         Appointment appointment = appointmentRepository.findByAppointmentId(consult.getAppointment().getAppointmentId()).orElseThrow(()->new CustomException(ErrorCode.AppointmentNotFoundException));
@@ -113,5 +130,22 @@ public class ConsultService {
         summaryRepository.save(summary);
 
         return new CommonResponseDto("end consult");
+    }
+
+    // 상담 AccessCode 생성
+    public String createConsultAccessCode() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder accessCode = new StringBuilder();
+        Random random = new Random();
+
+        // 7자리 코드 생성(영어 대문자 + 숫자)
+        do {
+            accessCode.setLength(0); // Clear the StringBuilder
+            for (int i = 0; i < 7; i++) {
+                accessCode.append(characters.charAt(random.nextInt(characters.length())));
+            }
+        } while (consultRepository.existsByAccessCode(accessCode.toString()));
+
+        return accessCode.toString();
     }
 }

@@ -24,15 +24,41 @@
   display: flex;
   justify-content: center;
   flex-direction: column;
+  position: relative;
+  animation: slide 1s ease-out;
+}
+
+@keyframes slide {
+  0% {
+    right: -500px;
+    opacity: 0;
+  }
+  100% {
+    right: 0px;
+    opacity: 1;
+  }
+}
+
+@keyframes disappear {
+  0% {
+    right: 0px;
+    opacity: 1;
+  }
+  100% {
+    right: -500px;
+    opacity: 0;
+  }
 }
 
 .txtArray h1 {
   font-size: 350%;
-  color: #5285EE;
+  color: #5285ee;
 }
 
 .txtP {
   margin-top: 3%;
   font-size: 120%;
   color: #777777;
+  position: relative;
+  animation: slide 1.5s ease-out;
 }

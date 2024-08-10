@@ -75,7 +75,7 @@ public class SessionController {
         String accessCode = requestDto.getAccessCode();
         String userId = requestDto.getUserId();
 
-//        // AccessCode로 Consult 엔티티 조회
+        // AccessCode로 Consult 엔티티 조회
 //        Optional<Consult> consults = consultRepository.findByAccessCode(accessCode);
 //        
 //        if (consults.isEmpty()) {
@@ -280,6 +280,7 @@ public class SessionController {
     public ResponseEntity<RecordingDto> stopRecording(@RequestBody RecordingRequestDto requestDto) {
         try {
             Recording recording = this.openVidu.stopRecording(requestDto.getRecordingId());
+
             this.sessionRecordings.remove(recording.getSessionId());
             return ResponseEntity.ok(convertRecordingToDto(recording));
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {

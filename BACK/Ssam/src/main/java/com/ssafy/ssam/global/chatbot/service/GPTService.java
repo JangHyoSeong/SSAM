@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -38,6 +39,25 @@ public class GPTService {
 
     private final S3TextService s3TextService;
     private final ConsultRepository consultRepository;
+
+//    public String uploadImage(String imageUrl) {
+//        String prompt = "";
+//        GPTRequest request =
+//                GPTRequest.builder()
+//                        .model(model)
+//                        .messages(new ArrayList<>())
+//                        .temperature(0.5F)
+//                        .maxTokens(500)
+//                        .topP(0.3F)
+//                        .frequencyPenalty(0.8F)
+//                        .presencePenalty(0.5F)
+//                        .build();
+//        request.getMessages().add(new Message("system", prompt));
+//        request.getMessages().add(new Message("user", imageUrl));
+//        GPTResponse chatGPTResponse = restTemplate.postForObject(apiUrl, request, GPTResponse.class);
+//
+//        return jsonToSummaryRequest(chatGPTResponse.getChoices().get(0).getMessage().getContent());
+//    }
 
     public SummaryRequestDto GPTsummaryConsult(String talk, String topic) {
         String before =

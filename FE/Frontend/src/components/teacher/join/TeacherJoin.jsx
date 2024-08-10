@@ -146,7 +146,7 @@ const TeacherJoin = () => {
               name="birth"
               value={formData.birth}
               onChange={handleChange}
-              placeholder="생년월일 8자리"
+              placeholder="생년월일 [YYYY-MM-DD]"
               required
             />
           </div>
@@ -158,7 +158,7 @@ const TeacherJoin = () => {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              placeholder="휴대전화 번호"
+              placeholder="휴대전화 [01012345678]"
               required
             />
           </div>

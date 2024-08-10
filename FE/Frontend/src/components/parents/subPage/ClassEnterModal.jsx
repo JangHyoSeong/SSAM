@@ -8,12 +8,12 @@ const ClassEnterModal = () => {
   const [classroom, setClassroom] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(true);
   const inputRefs = useRef(new Array(6));
-  const pin = pins.join("");
   const apiUrl = import.meta.env.API_URL;
 
   // PIN 번호 GET
   useEffect(() => {
     const fetchClassroom = async () => {
+      const pin = pins.join("");
       if (pin.length === 6) {
         try {
           const token = localStorage.getItem("USER_TOKEN");
@@ -40,14 +40,30 @@ const ClassEnterModal = () => {
       }
     };
     fetchClassroom();
-  }, [pin]);
+  }, [pins]);
 
   const pinChange = (index) => (e) => {
+    const value = e.target.value; // 입력된 값을 가져옴
     const newPins = [...pins];
-    newPins[index] = e.target.value.slice(0, 1);
-    setPins(newPins);
-    if (index < 5 && e.target.value) {
-      inputRefs.current[index + 1].focus();
+
+    // 복사-붙여넣기 처리
+    if (value.length > 1) {
+      for (let i = 0; i < value.length && index + i < 6; i++) {
+        newPins[index + i] = value[i];
+      }
+      setPins(newPins);
+
+      // 다음 입력 칸으로 포커스 이동
+      if (index + value.length < 6) {
+        inputRefs.current[index + value.length].focus();
+      }
+    } else {
+      // 단일 문자 입력 처리
+      newPins[index] = value;
+      setPins(newPins);
+      if (index < 5 && value) {
+        inputRefs.current[index + 1].focus();
+      }
     }
   };
 
@@ -99,7 +115,7 @@ const ClassEnterModal = () => {
               <input
                 key={index}
                 type="text"
-                maxLength="1"
+                maxLength="6"
                 value={pins[index]}
                 onChange={pinChange(index)}
                 className={styles.inputBox}

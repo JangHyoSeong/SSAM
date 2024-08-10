@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 import { useConsultation } from "../../../store/ConsultationStore";
 import styles from "./TeacherConsultationList.module.scss";
 import ConsultationApproveModal from "./ConsultationApproveModal";
-import ConsultationRejectModal from "./ConsultationRejectModal";
+import ConsultationCancelModal from "./ConsultationCancelModal";
 
 // topic db랑 화면 매핑
 const topicDisplayMap = {
@@ -30,9 +30,10 @@ const ConsultationItem = ({
   description = "", // 기본값을 빈 문자열로 설정
   status,
   onApprove,
-  onReject,
+  onCancel,
 }) => {
   const handleConsult = () => {
+    // 비디오 링크
     window.open("https://www.naver.com", "_blank");
   };
 
@@ -71,19 +72,19 @@ const ConsultationItem = ({
               승인
             </button>
             <button
-              className={styles.editButton}
-              onClick={() => onReject(appointmentId)}
+              className={styles.cancelButton}
+              onClick={() => onCancel(appointmentId)}
             >
               거절
             </button>
           </>
-        ) : status === "APPROVED" ? (
+        ) : status === "ACCEPTED" ? (
           <button className={styles.statusButton} onClick={handleConsult}>
             상담 하기
           </button>
-        ) : (
-          <span className={styles.rejectedStatus}>거절됨</span>
-        )}
+        ) : status === "CANCEL" ? (
+          <span className={styles.cancelStatus}>취소됨</span>
+        ) : null}
       </div>
     </div>
   );
@@ -99,7 +100,7 @@ ConsultationItem.propTypes = {
   description: PropTypes.string,
   status: PropTypes.string.isRequired,
   onApprove: PropTypes.func.isRequired,
-  onReject: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
 };
 
 // TeacherConsultationList 컴포넌트
@@ -109,10 +110,10 @@ const TeacherConsultationList = () => {
     loading,
     error,
     approveConsultation,
-    rejectConsultation,
+    cancelConsultation,
   } = useConsultation();
   const [isApproveModalOpen, setApproveModalOpen] = useState(false);
-  const [isRejectModalOpen, setRejectModalOpen] = useState(false);
+  const [isCancelModalOpen, setCancelModalOpen] = useState(false);
   const [selectedConsultationId, setSelectedConsultationId] = useState(null);
 
   const handleApprove = (appointmentId) => {
@@ -120,17 +121,17 @@ const TeacherConsultationList = () => {
     setApproveModalOpen(true);
   };
 
-  const handleReject = (appointmentId) => {
+  const handleCancel = (appointmentId) => {
     setSelectedConsultationId(appointmentId);
-    setRejectModalOpen(true);
+    setCancelModalOpen(true);
   };
 
   const closeApproveModal = () => {
     setApproveModalOpen(false);
   };
 
-  const closeRejectModal = () => {
-    setRejectModalOpen(false);
+  const closeCancelModal = () => {
+    setCancelModalOpen(false);
   };
 
   const confirmApprove = async () => {
@@ -138,9 +139,9 @@ const TeacherConsultationList = () => {
     setApproveModalOpen(false);
   };
 
-  const confirmReject = async () => {
-    await rejectConsultation(selectedConsultationId);
-    setRejectModalOpen(false);
+  const confirmCancel = async () => {
+    await cancelConsultation(selectedConsultationId);
+    setCancelModalOpen(false);
   };
 
   if (loading) return <div>로딩 중...</div>;
@@ -151,6 +152,7 @@ const TeacherConsultationList = () => {
       <nav className={styles.classNavbar}>
         <NavLink
           to="/teacherreservationmanagement"
+          ConsultationItem
           className={({ isActive }) =>
             isActive ? `${styles.navItem} ${styles.active}` : styles.navItem
           }
@@ -186,7 +188,7 @@ const TeacherConsultationList = () => {
             description={consultation.description}
             status={consultation.status}
             onApprove={handleApprove}
-            onReject={handleReject}
+            onCancel={handleCancel}
           />
         ))}
       </section>
@@ -196,10 +198,10 @@ const TeacherConsultationList = () => {
           onApprove={confirmApprove}
         />
       )}
-      {isRejectModalOpen && (
-        <ConsultationRejectModal
-          onClose={closeRejectModal}
-          onReject={confirmReject}
+      {isCancelModalOpen && (
+        <ConsultationCancelModal
+          onClose={closeCancelModal}
+          onCancel={confirmCancel}
         />
       )}
     </div>

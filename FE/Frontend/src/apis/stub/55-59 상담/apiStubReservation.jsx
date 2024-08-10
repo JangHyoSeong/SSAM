@@ -8,15 +8,12 @@ const apiUrl = import.meta.env.API_URL;
 export const fetchApiReservationList = async () => {
   const token = localStorage.getItem("USER_TOKEN");
   const { userId } = await fetchApiUserInitial();
-  const response = await axios.get(
-    `${apiUrl}/v1/consults/${userId}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    }
-  );
+  const response = await axios.get(`${apiUrl}/v1/consults/${userId}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  });
   return response.data; // 응답 데이터 반환
 };
 
@@ -36,11 +33,27 @@ export const fetchApiReservationList = async () => {
 //   return response.data; // 응답 데이터 반환
 // };
 
-// 상담 상태 업데이트 (DONE, REJECT 등)
-export const updateAppointmentStatus = async (appointmentId) => {
+// 상담 취소
+export const fetchApiCancelReservation = async (appointmentId) => {
   const token = localStorage.getItem("USER_TOKEN");
   const response = await axios.put(
     `${apiUrl}/v1/consults/${appointmentId}`,
+    {},
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    }
+  );
+  return response.data;
+};
+
+// 상담 승인
+export const fetchApiApproveReservation = async (appointmentId) => {
+  const token = localStorage.getItem("USER_TOKEN");
+  const response = await axios.put(
+    `${apiUrl}/v1/consults/${appointmentId}/approve`,
     {},
     {
       headers: {

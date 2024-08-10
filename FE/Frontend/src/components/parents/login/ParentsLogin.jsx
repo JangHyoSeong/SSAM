@@ -6,8 +6,8 @@ import round1 from "../../../assets/round1.png";
 import round2 from "../../../assets/round2.png";
 import round3 from "../../../assets/round3.png";
 import google from "../../../assets/google.png";
-import naver from "../../../assets/naver.png";
-import kakao from "../../../assets/kakao.png";
+// import naver from "../../../assets/naver.png";
+// import kakao from "../../../assets/kakao.png";
 
 const ParentsLogin = () => {
   const { username, password, handleChange, setLoggedIn } = useLoginStore(
@@ -23,7 +23,6 @@ const ParentsLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      // loginUser 함수를 사용하여 로그인 요청을 보낸다.
       const response = await loginUser(username, password);
       console.log(response);
       const token = response.headers.authorization;
@@ -31,7 +30,7 @@ const ParentsLogin = () => {
       localStorage.setItem("USER_NAME", username);
       console.log("axios 성공", response);
       setLoggedIn(true);
-      window.location.replace("/studentsubpage");
+      window.location.replace("./studentsubpage");
     } catch (error) {
       console.error("axios 실패", error);
       if (error.response && error.response.status === 401) {

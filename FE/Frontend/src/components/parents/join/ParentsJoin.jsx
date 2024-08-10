@@ -8,8 +8,9 @@ import calendar from "../../../assets/calendar.png";
 import phone from "../../../assets/phone.png";
 import round1 from "../../../assets/round1.png";
 import round2 from "../../../assets/round2.png";
-import round3 from "../../../assets/round3.png";
-const apiUrl = import.meta.env.API_URL;
+import Swal from "sweetalert2";
+
+const apiUrl = import.meta.env.API_URL
 
 const ParentsJoin = () => {
   const [formData, setFormData] = useState({
@@ -30,14 +31,22 @@ const ParentsJoin = () => {
     });
   };
 
-  // 폼 제출 시 호출되는 함수
+  // 회원가입 POST
   const joinSubmit = (e) => {
     e.preventDefault();
     axios
       .post(`${apiUrl}/v1/auth/students`, formData)
       .then((response) => {
         console.log("axios 성공", response);
-        alert("성공");
+        Swal.fire({
+          title: "성공!",
+          text: "회원가입이 완료되었습니다",
+          icon: "success",
+        }).then(function (isConfirm) {
+          if (isConfirm) {
+            window.location.replace("./teacherlogin");
+          }
+        });
       })
       .catch((error) => {
         console.error("axios 실패", error);
@@ -128,7 +137,7 @@ const ParentsJoin = () => {
             </button>
             <button
               type="button"
-              className={join.joinBtn}
+              className={join.cancleBtn}
               onClick={() => window.location.replace("./")}
             >
               취소
@@ -138,7 +147,6 @@ const ParentsJoin = () => {
       </div>
       <img src={round1} className={join.round1} alt="round1" />
       <img src={round2} className={join.round2} alt="round2" />
-      <img src={round3} className={join.round3} alt="round1" />
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import styles from "./ClassEnterModal.module.scss";
+import Swal from "sweetalert2";
 
 const ClassEnterModal = () => {
   const [pins, setPins] = useState(Array(6).fill(""));
@@ -69,8 +70,15 @@ const ClassEnterModal = () => {
           },
         }
       );
-      alert("성공");
-      location.reload();
+      Swal.fire({
+        title: "등록 완료!",
+        text: "선생님께 승인 요청을 보냈습니다",
+        icon: "success",
+      }).then(function (isConfirm) {
+        if (isConfirm) {
+          location.reload();
+        }
+      });
     } catch (error) {
       console.error("실패", error);
     }
@@ -82,11 +90,11 @@ const ClassEnterModal = () => {
         <div className={styles.enterArray}>
           <div className={styles.headerArray}>
             <p>초대코드로 학급 검색하기</p>
-            <p className={styles.outBtn} onClick={closeModal}>
+            <h2 className={styles.outBtn} onClick={closeModal}>
               X
-            </p>
+            </h2>
           </div>
-          <form id="numberForm" className={styles.inputForm}>
+          <form className={styles.inputForm}>
             {pins.map((_, index) => (
               <input
                 key={index}

@@ -187,3 +187,24 @@ table {
   background-color: #ee5252;
   color: white;
 }
+
+.my-swal-popup {
+  height: 200px; /* 모달의 높이 설정 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px; /* 모달의 내부 여백 */
+  border-radius: 8px; /* 모달의 테두리 둥글게 */
+}
+
+.my-swal-confirm-button {
+  background-color: #5285ee; /* 확인 버튼 색상 */
+  color: white;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1rem;
+}
+
+.my-swal-confirm-button:hover {
+  background-color: #4076e4; /* 버튼에 마우스 올렸을 때 색상 */
+}

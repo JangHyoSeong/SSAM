@@ -214,14 +214,52 @@
   border: none;
   border-radius: 25px;
   cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease; /* 색상 전환 애니메이션 추가 */
+}
+
+.inputContainer button:hover {
+  background-color: #d798fd; /* hover 시 배경색을 더 진한 색으로 변경 */
+  color: #fff;
 }
 
 .inputContainer button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
 }
+.iconCircle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e1b0ff; /* 기본 배경색 */
+  border-radius: 25px;
+  width: 40px; /* 동그라미 크기 설정 */
+  height: 40px; /* 동그라미 크기 설정 */
+  border: none;
 
-.inputContainer button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+  transition: background-color 0.3s ease, color 0.3s ease; /* 배경색 및 텍스트 색상 전환 애니메이션 */
+  cursor: pointer;
+}
+
+.iconCircle:hover {
+  background-color: #d798fd; /* hover 시 더 진한 배경색 */
+}
+
+.icon {
+  color: #fff; /* 기본 아이콘 색상 */
+  font-size: 15px;
+  transition: color 0.3s ease; /* 아이콘 색상 전환 애니메이션 */
+}
+
+.iconCircle:hover .icon {
+  color: #fff; /* hover 시 아이콘 색상 */
+}
+
+.trashicon {
+  cursor: pointer;
+  color: #000; /* 기본 아이콘 색상 */
+  transition: color 0.3s ease; /* 색상 전환 애니메이션 */
+}
+
+.trashicon:hover {
+  color: #e80000; /* hover 시 빨간색으로 변경 */
 }

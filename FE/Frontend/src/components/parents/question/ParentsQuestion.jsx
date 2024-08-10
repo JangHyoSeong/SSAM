@@ -120,7 +120,7 @@ const ParentsQuestion = () => {
             </div>
             <FaTrash
               onClick={() => handleDeleteClick(item.questionId)}
-              className={isLoading ? styles.disabledIcon : styles.icon}
+              className={isLoading ? styles.disabledIcon : styles.trashicon}
             />
           </div>
           {item.answer && (

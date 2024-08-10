@@ -15,5 +15,6 @@ public class UserInitialInfoResponseDTO {
     private String school;
     private Integer boardId;
     private String role;
+    private Integer teacherId;
 
 }

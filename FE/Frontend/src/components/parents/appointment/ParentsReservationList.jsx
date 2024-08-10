@@ -1,20 +1,27 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { FiCalendar } from "react-icons/fi";
-import useTeacherCalendarStore from "../../../store/TeacherCalendarStore";
+import useTeacherCalendarStore, {
+  AppointmentTopic,
+} from "../../../store/TeacherCalendarStore";
 import Modal from "./Modal";
 import ConsultationButton from "./ConsultationButton";
 import styles from "./ParentsReservationList.module.scss";
 import { fetchApiRequestReservation } from "../../../apis/stub/55-59 상담/apiStubReservation";
 
 const ParentsReservationList = ({ selectedDate }) => {
-  const { consultations, fetchReservations, isAvailable, setConsultations } =
-    useTeacherCalendarStore();
+  const {
+    consultations,
+    setConsultations,
+    selectedTopic,
+    setSelectedTopic,
+    isAvailable,
+    fetchReservations,
+  } = useTeacherCalendarStore();
 
   const [showModal, setShowModal] = useState(false);
   const [clickedIndex, setClickedIndex] = useState(null);
   const [consultationDescription, setConsultationDescription] = useState("");
-  const [consultationPurpose, setConsultationPurpose] = useState("");
 
   useEffect(() => {
     fetchReservations();
@@ -64,7 +71,8 @@ const ParentsReservationList = ({ selectedDate }) => {
   };
 
   // 예약하기 버튼 클릭 시 실행되는 함수: axios요청
-  const handleReservation = async () => {
+  const handleReservation = async (event) => {
+    event.preventDefault(); // 폼 제출 방지
     if (clickedIndex !== null) {
       const selectedConsultation = consultations[clickedIndex];
       const [startTime, endTime] = selectedConsultation.time.split(" ~ ");
@@ -74,6 +82,7 @@ const ParentsReservationList = ({ selectedDate }) => {
 
       try {
         await fetchApiRequestReservation(
+          selectedTopic,
           consultationDescription,
           formattedStartTime,
           formattedEndTime
@@ -91,6 +100,10 @@ const ParentsReservationList = ({ selectedDate }) => {
         setConsultations(updatedConsultations);
         setClickedIndex(null);
         setShowModal(true);
+
+        // 입력 필드 초기화
+        setConsultationDescription("");
+        setSelectedTopic("");
       } catch (error) {
         console.error("예약 생성 실패:", error);
         // 오류 처리 (예: 사용자에게 오류 메시지 표시)
@@ -113,16 +126,18 @@ const ParentsReservationList = ({ selectedDate }) => {
           <select
             id="consultationPurpose"
             className={styles.filterSelect}
-            value={consultationPurpose}
-            onChange={(e) => setConsultationPurpose(e.target.value)}
+            value={selectedTopic}
+            onChange={(e) => setSelectedTopic(e.target.value)}
           >
             <option value="" disabled>
               상담 목적을 선택해주세요!
             </option>
-            <option value="정기 상담">정기 상담</option>
-            <option value="학교 생활">학교 생활</option>
-            <option value="교육 관계">교육 관계</option>
-            <option value="기타">기타</option>
+            <option value={AppointmentTopic.FRIEND}>교우 관계</option>
+            <option value={AppointmentTopic.BULLYING}>학교 폭력</option>
+            <option value={AppointmentTopic.SCORE}>성적</option>
+            <option value={AppointmentTopic.CAREER}>진로</option>
+            <option value={AppointmentTopic.ATTITUDE}>학습 태도</option>
+            <option value={AppointmentTopic.OTHER}>기타</option>
           </select>
         </div>
       </div>
@@ -147,9 +162,7 @@ const ParentsReservationList = ({ selectedDate }) => {
           className={styles.modify}
           onClick={handleReservation}
           disabled={
-            !consultationPurpose ||
-            !consultationDescription ||
-            clickedIndex === null
+            !selectedTopic || !consultationDescription || clickedIndex === null
           }
         >
           예약하기

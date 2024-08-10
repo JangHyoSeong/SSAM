@@ -19,17 +19,23 @@ export const fetchApiReservationList = async () => {
 
 // 학생 - 상담신청
 export const fetchApiRequestReservation = async (
+  topic,
   description,
   startTime,
   endTime
 ) => {
   const token = localStorage.getItem("USER_TOKEN");
   const { teacherId } = await fetchApiUserInitial();
-  console.log(teacherId);
+  console.log("Sending reservation request:", {
+    topic,
+    description,
+    startTime,
+    endTime,
+  });
   const response = await axios.post(
     `${apiUrl}/v1/consults/${teacherId}`,
     {
-      topic: "ATTITUDE",
+      topic,
       description,
       // ISO 8601 형식 ("YYYY-MM-DDTHH:mm:ss")
       startTime,

@@ -12,6 +12,15 @@ export const AppointmentStatus = {
   REJECT: "REJECT",
 };
 
+export const AppointmentTopic = {
+  FRIEND: "FRIEND",
+  BULLYING: "BULLYING",
+  SCORE: "SCORE",
+  CAREER: "CAREER",
+  ATTITUDE: "ATTITUDE",
+  OTHER: "OTHER",
+};
+
 const useTeacherCalendarStore = create((set) => ({
   consultations: [
     { time: "14:00 ~ 14:20", status: null },
@@ -24,6 +33,7 @@ const useTeacherCalendarStore = create((set) => ({
   ],
   currentDate: new Date().toISOString().split("T")[0], // 현재 날짜 추가
   setConsultations: (consultations) => set({ consultations }),
+  setSelectedTopic: (topic) => set({ selectedTopic: topic }),
   setCurrentDate: (date) => set({ currentDate: date }),
   // 상담 가능 상태
   isAvailable: (status) =>
@@ -67,14 +77,14 @@ const useTeacherCalendarStore = create((set) => ({
 
           const updatedConsultation = {
             ...consultation,
-            status: matchingReservation ? matchingReservation.status : null,
             appointmentId: matchingReservation
               ? matchingReservation.appointmentId
               : null,
+            status: matchingReservation ? matchingReservation.status : null,
+            topic: matchingReservation ? matchingReservation.topic : null,
             description: matchingReservation
               ? matchingReservation.description
               : null,
-            topic: matchingReservation ? matchingReservation.topic : null,
           };
 
           console.log(`Updated consultation:`, updatedConsultation);

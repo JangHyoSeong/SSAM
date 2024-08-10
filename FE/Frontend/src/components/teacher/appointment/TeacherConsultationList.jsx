@@ -84,7 +84,9 @@ const ConsultationItem = ({
           </button>
         ) : status === "CANCEL" ? (
           <span className={styles.cancelStatus}>취소됨</span>
-        ) : null}
+        ) : (
+          "예약불가"
+        )}
       </div>
     </div>
   );

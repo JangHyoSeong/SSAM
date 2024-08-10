@@ -6,50 +6,32 @@
 
 .EnterArray {
   display: flex;
-  flex-direction: column; // 세로 방향으로 요소 배치
-  align-items: center; // 가로 중앙 정렬
-  margin-top: 3%;
-  position: absolute;
-  top: 5%;
-  left: 25%;
-  width: 50vw;
-  background-color: transparent; // 배경색 제거
-  opacity: 0;
-  animation: fadeIn 1s ease-in forwards;
-  z-index: 1;
+  flex-direction: column;
+  justify-content: space-between; // 세로 방향으로 컨텐츠 분산
+  height: 100%; // 부모 컨테이너의 높이를 채움
 
   // welcomeBox와 codeBox에 공통으로 적용되는 스타일
   .welcomeBox,
   .codeBox {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    background-color: #dae9ff;
-    border-radius: 25px;
-    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    padding: 20px;
-    margin-bottom: 20px; // 박스 사이 간격 추가
+    background-color: rgba(218, 233, 255, 0.9); // 약간의 투명도 추가
+    border-radius: 15px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    margin-bottom: 10px;
+    text-align: center;
   }
 
-  // welcomeBox 내부 스타일 조정
-  .welcomeBox {
-    h2 {
-      margin: 0 0 15px 0;
-      text-align: center; // 텍스트 중앙 정렬
-      line-height: 1.5; // 줄 간격 조정
-    }
+  .welcomeBox h2,
+  .codeBox h3 {
+    font-size: 0.9em;
+    margin: 0 0 10px 0;
   }
 
-  // codeBox 내부 스타일 조정
-  .codeBox {
-    h3 {
-      margin: 0 0 15px 0;
-      text-align: center; // 텍스트 중앙 정렬
-      line-height: 1.5; // 줄 간격 조정
-    }
+  .classBtn {
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    // 나머지 버튼 스타일 유지
   }
 }
 

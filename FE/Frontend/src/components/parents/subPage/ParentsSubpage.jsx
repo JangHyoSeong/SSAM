@@ -7,15 +7,18 @@ const ParentsSubpage = () => {
   return (
     <>
       <div className={styles.subPageContainer}>
-        <img
-          src={SubpageImg1}
-          className={styles.subpageImg}
-          alt="SubpageImg1"
-        />
+        {/* 배경 이미지 */}
+        <div className={styles.imageContainer}>
+          <img
+            src={SubpageImg1}
+            className={styles.subpageImg}
+            alt="SubpageImg1"
+          />
+        </div>
+        {/* EnterCode 컴포넌트를 포함하는 컨테이너 */}
         <div className={styles.enterCodeContainer}>
           <EnterCode />
         </div>
-        <div className={styles.parentsSelectContainer}></div>
       </div>
       <ParentsSelect />
     </>

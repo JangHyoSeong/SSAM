@@ -1,0 +1,22 @@
+.subPageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2vh 5vw;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .subpageImg {
+    width: 100%;
+    max-width: 1000px;
+    height: auto;
+    margin-bottom: 2rem;
+  }
+
+  .enterCodeContainer,
+  .parentsSelectContainer {
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 2rem;
+  }
+}

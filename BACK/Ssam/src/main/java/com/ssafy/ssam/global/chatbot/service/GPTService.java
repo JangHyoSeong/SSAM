@@ -49,6 +49,9 @@ public class GPTService {
         String text = imageRequestDto.getText();
         MultipartFile image = imageRequestDto.getImage();
         String imageUrl = s3ImageService.upload(image, "gptnotice");
+        
+        System.out.println("TEST IMAGE URL: " + imageUrl);
+     
         String prompt = "Give me all possible information in the picture in Korean without a summary.";
         log.info("service");
         ImageGPTRequest request =
@@ -67,11 +70,18 @@ public class GPTService {
         uploadPrompt.add(new Content("text", prompt));
         uploadImageUrl.add(new Content("image_url", ImageUrl.builder().url(imageUrl).build()));
 
+        
+        
         request.getMessages().add(new ImageMessage("system", uploadPrompt));
         request.getMessages().add(new ImageMessage("user", uploadImageUrl));
         log.info("add");
-
-        GPTResponse chatGPTResponse = restTemplate.postForObject(apiUrl, request, GPTResponse.class);
+        GPTResponse chatGPTResponse = null;
+        try {
+        	chatGPTResponse = restTemplate.postForObject(apiUrl, request, GPTResponse.class);
+        } catch (Exception e){
+        	System.out.println(e);
+        }
+        
         System.out.println(chatGPTResponse.toString());
 //        return jsonToSummaryRequest(chatGPTResponse.getChoices().get(0).getMessage().getContent());
         return new CommonResponseDto("ok");

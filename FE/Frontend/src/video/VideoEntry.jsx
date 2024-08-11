@@ -26,7 +26,9 @@ const VideoEntry = () => {
           화상 상담에 참여함으로써 귀하는 본 약관을 인정하고 동의하는 것으로
           간주됩니다
         </h2>
+        <div className={styles.divider}></div>
       </div>
+
       <div className={styles.inputBox}>
         <input
           type="text"

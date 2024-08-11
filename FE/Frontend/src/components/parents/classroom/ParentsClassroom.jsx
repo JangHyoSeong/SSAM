@@ -3,14 +3,15 @@ import { useState, useEffect } from "react";
 import styles from "./ParentsClassroom.module.scss";
 import ClassImage from "../../../assets/background.png";
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
-import { fetchQuestionList } from "../../../apis/stub/28-31 문의사항/apiOnlyQuestion"; // 수정된 부분
-import TeacherStudent from "../../teacher/classroom/TeacherStudent";
+import { fetchQuestionList } from "../../../apis/stub/28-31 문의사항/apiOnlyQuestion";
+import { fetchStudentData } from "../../../apis/stub/35-43 학급/apiStubStudents";
+import DefaultStudentImage from "../../../assets/student.png"; // 기본 이미지 경로
 
 const ParentsClassroom = () => {
   const [banner, setBanner] = useState(""); // 학급 배너
   const [notice, setNotice] = useState(""); // 알림 사항
   const [questions, setQuestions] = useState([]); // 문의사항 데이터 추가
-  const [selectedStudentId, setSelectedStudentId] = useState(null); // 선택된 학생 ID
+  const [students, setStudents] = useState([]); // 학생 데이터 추가
   const apiUrl = import.meta.env.API_URL;
 
   // 학급 전체 데이터 불러오기
@@ -28,8 +29,12 @@ const ParentsClassroom = () => {
         const classData = response.data;
         setBanner(classData.banner);
         setNotice(classData.notice);
+
         const questionResponse = await fetchQuestionList(); // 문의사항 데이터 가져오기
         setQuestions(questionResponse.slice(0, 3)); // 문의사항 데이터 최대 3개 가져오기
+
+        const studentData = await fetchStudentData(); // 학생 데이터 가져오기
+        setStudents(studentData.students || []); // 데이터를 설정, students 필드에서 가져옴
       } catch (error) {
         console.error("데이터 불러오기 실패", error);
       }
@@ -39,7 +44,6 @@ const ParentsClassroom = () => {
 
   return (
     <div className={styles.classInfoContainer}>
-      {/* 간격띄우는 컨테이너 */}
       <div className={styles.imageContainer}>
         <img
           src={ClassImage}
@@ -61,7 +65,7 @@ const ParentsClassroom = () => {
           {questions.length > 0 ? (
             questions.map((question, index) => (
               <div
-                key={index}
+                key={index} // 고유한 key 설정
                 className={styles.inquiryItem}
                 onClick={() =>
                   (window.location.href =
@@ -76,7 +80,27 @@ const ParentsClassroom = () => {
           )}
         </div>
       </div>
-      <TeacherStudent onSelectStudent={setSelectedStudentId} />
+      <div className={styles.studentList}>
+        {students.length > 0 ? (
+          students.map((student) => (
+            <div className={styles.studentItem} key={student.studentId}>
+              <div className={styles.studentPhoto}>
+                <img
+                  src={student.profileImage || DefaultStudentImage}
+                  alt={student.name}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = DefaultStudentImage;
+                  }}
+                />
+              </div>
+              <div className={styles.studentName}>{student.name}</div>
+            </div>
+          ))
+        ) : (
+          <p>학생 정보가 없습니다</p>
+        )}
+      </div>
     </div>
   );
 };

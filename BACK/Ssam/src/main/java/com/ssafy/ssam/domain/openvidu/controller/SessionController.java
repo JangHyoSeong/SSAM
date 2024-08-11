@@ -279,6 +279,7 @@ public class SessionController {
     @PostMapping("/recording/stop")
     public ResponseEntity<RecordingDto> stopRecording(@RequestBody RecordingRequestDto requestDto) {
         try {
+        	System.out.println("MY RECODING ID ::: " + requestDto.getRecordingId());
             Recording recording = this.openVidu.stopRecording(requestDto.getRecordingId());
 
             this.sessionRecordings.remove(recording.getSessionId());

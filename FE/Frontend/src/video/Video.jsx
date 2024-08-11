@@ -70,7 +70,6 @@ const VideoChatComponent = () => {
       const token = await getToken();
       await mySession.connect(token, { clientData: myUserName.current });
 
-      setSessionId(mySession.sessionId);
       let publisher = await OV.current.initPublisherAsync(undefined, {
         audioSource: undefined,
         videoSource: undefined,
@@ -94,6 +93,7 @@ const VideoChatComponent = () => {
       const currentVideoDevice = videoDevices.find(
         (device) => device.deviceId === currentVideoDeviceId
       );
+      console.warn(session.sessionId);
       setSession(mySession);
       setMainStreamManager(publisher);
       setPublisher(publisher);
@@ -186,6 +186,7 @@ const VideoChatComponent = () => {
         });
         setIsRecording(false);
         setRecordingId(null);
+        console.warn(recordingId);
       } catch (error) {
         console.error("Error stopping recording:", error);
       }

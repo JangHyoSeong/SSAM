@@ -65,7 +65,7 @@ const ParentsClassroom = () => {
                 className={styles.inquiryItem}
                 onClick={() =>
                   (window.location.href =
-                    "http://localhost:3000/teacherquestion")
+                    "http://localhost:3000/studentquestion")
                 }
               >
                 <div className={styles.inquiryQuestion}>{question.content}</div>

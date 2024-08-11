@@ -75,7 +75,7 @@ public class SessionController {
         String accessCode = requestDto.getAccessCode();
         String userId = requestDto.getUserId();
 
-//        // AccessCode로 Consult 엔티티 조회
+        // AccessCode로 Consult 엔티티 조회
 //        Optional<Consult> consults = consultRepository.findByAccessCode(accessCode);
 //        
 //        if (consults.isEmpty()) {
@@ -268,7 +268,6 @@ public class SessionController {
                 .build();
 
             Recording recording = this.openVidu.startRecording(requestDto.getSessionId(), properties);
-            
             this.sessionRecordings.put(requestDto.getSessionId(), true);
             return ResponseEntity.ok(convertRecordingToDto(recording));
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
@@ -279,8 +278,9 @@ public class SessionController {
     @PostMapping("/recording/stop")
     public ResponseEntity<RecordingDto> stopRecording(@RequestBody RecordingRequestDto requestDto) {
         try {
+        	System.out.println("STOP RECORDING AT SESSION ID ::: " + requestDto.getSessionId());
             Recording recording = this.openVidu.stopRecording(requestDto.getSessionId());
-            this.sessionRecordings.remove(recording.getSessionId());
+            this.sessionRecordings.remove(requestDto.getSessionId());
             return ResponseEntity.ok(convertRecordingToDto(recording));
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
             throw new RuntimeException("Error stopping recording", e);
@@ -290,7 +290,7 @@ public class SessionController {
     @DeleteMapping("/recording")
     public ResponseEntity<Void> deleteRecording(@RequestBody RecordingRequestDto requestDto) {
         try {
-            this.openVidu.deleteRecording(requestDto.getRecordingId());
+            this.openVidu.deleteRecording(requestDto.getSessionId());
             return ResponseEntity.ok().build();
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
             throw new RuntimeException("Error deleting recording", e);

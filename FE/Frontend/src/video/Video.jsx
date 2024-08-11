@@ -34,13 +34,13 @@ const VideoChatComponent = () => {
   const [formattedDate, setFormattedDate] = useState("");
   const [sttMessages, setSTTMessages] = useState([]);
   const [tmpMessage, setTmpMessage] = useState("");
-  // const [timesub, setTimeSub] = useState("");
   const OV = useRef(new OpenVidu());
   const myUserName = useRef(`user_${Math.floor(Math.random() * 1000) + 1}`);
   const chatContainerRef = useRef(null);
   const subtitleRef = useRef(null);
   const lastTranscriptRef = useRef("");
   const timeoutRef = useRef(null);
+  const [time, setTime] = useState({ minutes: 0, seconds: 0 });
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -55,6 +55,25 @@ const VideoChatComponent = () => {
     resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
+
+  useEffect(() => {
+    // 타이머 설정
+    const timerInterval = setInterval(() => {
+      setTime((prevTime) => {
+        const newSeconds = prevTime.seconds + 1;
+        const newMinutes = newSeconds >= 60 ? prevTime.minutes + 1 : prevTime.minutes;
+        return {
+          minutes: newMinutes,
+          seconds: newSeconds >= 60 ? 0 : newSeconds,
+        };
+      });
+    }, 1000);
+  
+    // 컴포넌트 언마운트 시 정리
+    return () => {
+      clearInterval(timerInterval);
+    };
+  }, []);
 
   useEffect(() => {
     if (transcript !== lastTranscriptRef.current) {
@@ -464,9 +483,14 @@ const VideoChatComponent = () => {
                 </div>
               </div>
             </div>
+
             {/* 시간 */}
             <div className={styles.timeArray}>
-              <div className={styles.time}></div>
+              <div className={styles.time}>
+                <h1>{`${String(time.minutes).padStart(2, "0")}:${String(
+                  time.seconds
+                ).padStart(2, "0")}`}</h1>
+              </div>
             </div>
           </div>
 

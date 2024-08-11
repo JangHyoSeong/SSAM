@@ -163,10 +163,14 @@
 }
 
 .subTitle {
+  overflow: auto;
   width: 71.2vw;
   height: 15vh;
   border: 5px solid white;
   border-radius: 15px;
+  color: white;
+  padding-left: 2%;
+  font-size: 150%;
 }
 
 .right {

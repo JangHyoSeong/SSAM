@@ -4,7 +4,8 @@ import Chatbot from "../common/chatbot/Chatbot.jsx";
 import SubNavbar from "../common/navigation/SubNavbar.jsx";
 import MainNavbar from "../common/navigation/MainNavbar.jsx";
 import Video from "../video/Video.jsx";
-
+import STT from "../video/STT.jsx";
+import VideoSTT from "../video/Video-STT.jsx";
 // Teacher components
 import TeacherJoin from "../components/teacher/join/TeacherJoin";
 import TeacherLogin from "../components/teacher/login/TeacherLogin";
@@ -135,6 +136,8 @@ const AppRouter = () => {
           {/* Video Route */}
           <Route path="/video/:accessCode" element={<Video />} />
 
+          <Route path="/stt" element={<STT />} />
+          <Route path="/video-stt/:accessCode" element={<VideoSTT />} />
           {/* WebRTC Route */}
           <Route path="/webrtc" element={<WebrtcPage />} />
 

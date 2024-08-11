@@ -47,11 +47,11 @@ const AppRouter = () => {
     "/teacherjoin",
     "/studentlogin",
     "/studentjoin",
-    "/video/9456151",
+    "/video/15516",
   ];
   const showChatbot = !hideChatbotOnRoutes.includes(location.pathname);
 
-  const hideNavbarOnRoutes = ["/video/9456151"];
+  const hideNavbarOnRoutes = ["/video/15516"];
   const showNavbar = !hideNavbarOnRoutes.includes(location.pathname);
 
   return (

@@ -177,3 +177,19 @@ table {
   background-color: #ee5252;
   color: white;
 }
+
+.googleLinkBtn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #4285f4; /* Google Blue */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.googleLinkBtn:hover {
+  background-color: #357ae8;
+}

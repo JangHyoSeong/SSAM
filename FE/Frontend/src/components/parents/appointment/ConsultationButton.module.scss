@@ -5,7 +5,7 @@
 .clicked {
   @include radius(2rem);
   padding: 0.5vh 1vh;
-  background-color: #dce7fc;
+  background-color: #dce7fc; // 클릭된 상태의 배경색을 #dce7fc로 변경
   color: black;
   border: 1px solid #ddd;
   box-shadow: 0 0.2vh 0.5vh rgba(1, 1, 1, 0.3);
@@ -23,7 +23,7 @@
   transition: background-color 0.1s ease, transform 0.1s ease;
 
   &:hover {
-    background-color: #dce7fc;
+    background-color: #dce7fc; // hover 상태의 배경색도 #dce7fc로 변경
     transform: scale(1.1);
   }
 }

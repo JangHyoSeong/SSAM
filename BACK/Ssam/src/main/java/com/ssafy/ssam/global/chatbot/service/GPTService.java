@@ -6,17 +6,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.ssam.domain.consult.dto.request.SummaryRequestDto;
 import com.ssafy.ssam.domain.consult.repository.ConsultRepository;
 import com.ssafy.ssam.domain.consult.service.ConsultService;
+import com.ssafy.ssam.global.amazonS3.service.S3ImageService;
 import com.ssafy.ssam.global.amazonS3.service.S3TextService;
-import com.ssafy.ssam.global.chatbot.dto.GPTRequest;
-import com.ssafy.ssam.global.chatbot.dto.GPTResponse;
-import com.ssafy.ssam.global.chatbot.dto.Message;
+import com.ssafy.ssam.global.chatbot.dto.*;
+import com.ssafy.ssam.global.dto.CommonResponseDto;
 import com.ssafy.ssam.global.error.CustomException;
 import com.ssafy.ssam.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -36,8 +38,54 @@ public class GPTService {
     private String apiUrl;
     private final RestTemplate restTemplate;
 
+    private final S3ImageService s3ImageService;
     private final S3TextService s3TextService;
     private final ConsultRepository consultRepository;
+
+    public CommonResponseDto uploadImage(ImageRequestDto imageRequestDto) {
+        // 이미지 서버에 업로드
+        // 업로드된 데이터 gpt한테 데이터 가져오라고 시키기
+        // gpt의 요약데이터 + 선생님의 설명을 기반으로 DB 저장
+        String text = imageRequestDto.getText();
+        MultipartFile image = imageRequestDto.getImage();
+        String imageUrl = s3ImageService.upload(image, "gptnotice");
+        
+        System.out.println("TEST IMAGE URL: " + imageUrl);
+     
+        String prompt = "Give me all possible information in the picture in Korean without a summary.";
+        log.info("service");
+        ImageGPTRequest request =
+                ImageGPTRequest.builder()
+                        .model(model)
+                        .messages(new ArrayList<>())
+                        .temperature(0.5F)
+                        .maxTokens(500)
+                        .topP(0.3F)
+                        .frequencyPenalty(0.8F)
+                        .presencePenalty(0.5F)
+                        .build();
+
+        List<Content> uploadPrompt = new ArrayList<>();
+        List<Content> uploadImageUrl = new ArrayList<>();
+        uploadPrompt.add(new Content("text", prompt));
+        uploadImageUrl.add(new Content("image_url", ImageUrl.builder().url(imageUrl).build()));
+
+        
+        
+        request.getMessages().add(new ImageMessage("system", uploadPrompt));
+        request.getMessages().add(new ImageMessage("user", uploadImageUrl));
+        log.info("add");
+        GPTResponse chatGPTResponse = null;
+        try {
+        	chatGPTResponse = restTemplate.postForObject(apiUrl, request, GPTResponse.class);
+        } catch (Exception e){
+        	System.out.println(e);
+        }
+        
+        System.out.println(chatGPTResponse.toString());
+//        return jsonToSummaryRequest(chatGPTResponse.getChoices().get(0).getMessage().getContent());
+        return new CommonResponseDto("ok");
+    }
 
     public SummaryRequestDto GPTsummaryConsult(String talk, String topic) {
         String before =
@@ -85,6 +133,7 @@ public class GPTService {
                         .build();
         request.getMessages().add(new Message("system", before));
         request.getMessages().add(new Message("user", talk));
+
         GPTResponse chatGPTResponse = restTemplate.postForObject(apiUrl, request, GPTResponse.class);
 
         return jsonToSummaryRequest(chatGPTResponse.getChoices().get(0).getMessage().getContent());

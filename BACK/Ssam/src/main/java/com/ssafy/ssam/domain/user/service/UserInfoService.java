@@ -1,13 +1,19 @@
 package com.ssafy.ssam.domain.user.service;
 
+import com.ssafy.ssam.domain.classroom.entity.Board;
+import com.ssafy.ssam.domain.classroom.repository.BoardRepository;
 import com.ssafy.ssam.domain.user.dto.response.UserInitialInfoResponseDTO;
 import com.ssafy.ssam.domain.classroom.repository.SchoolRepository;
 import com.ssafy.ssam.domain.user.dto.request.UserInfoModificationRequestDTO;
 import com.ssafy.ssam.domain.user.dto.response.UserInfoResponseDTO;
+import com.ssafy.ssam.domain.user.entity.UserBoardRelation;
+import com.ssafy.ssam.domain.user.entity.UserBoardRelationStatus;
+import com.ssafy.ssam.domain.user.repository.UserBoardRelationRepository;
 import com.ssafy.ssam.global.amazonS3.service.S3ImageService;
 import com.ssafy.ssam.global.auth.dto.CustomUserDetails;
 import com.ssafy.ssam.global.auth.entity.User;
 import com.ssafy.ssam.domain.classroom.entity.School;
+import com.ssafy.ssam.global.auth.entity.UserRole;
 import com.ssafy.ssam.global.auth.repository.UserRepository;
 import com.ssafy.ssam.global.dto.CommonResponseDto;
 import com.ssafy.ssam.global.error.CustomException;
@@ -18,6 +24,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -27,6 +35,8 @@ public class UserInfoService {
     private final UserRepository userRepository;
     private final SchoolRepository schoolRepository;
     private final S3ImageService s3ImageService;
+    private final BoardRepository boardRepository;
+    private final UserBoardRelationRepository userBoardRelationRepository;
 
 
     // 사용자 상세 정보 제공 로직
@@ -82,6 +92,16 @@ public class UserInfoService {
         User user = userRepository.findByUserId(userDetails.getUserId())
                 .orElseThrow(() -> new CustomException(ErrorCode.Unauthorized));
 
+        UserBoardRelation relation = userBoardRelationRepository.findByBoardIdAndStatus(userDetails.getBoardId())
+                .orElse(null);
+
+        Integer teacherId = null;
+        if (relation != null) {
+            teacherId = relation.getUser().getUserId();
+        }
+
+        List<UserBoardRelation> relations = userBoardRelationRepository.findByBoardBoardIdAndStatus(userDetails.getBoardId(), UserBoardRelationStatus.ACCEPTED);
+
         return UserInitialInfoResponseDTO.builder()
                 .userId(user.getUserId())
                 .username(user.getUsername())
@@ -89,6 +109,7 @@ public class UserInfoService {
                 .boardId(userDetails.getBoardId())
                 .role(String.valueOf(user.getRole()))
                 .school(Optional.ofNullable(user.getSchool()).map(School::getName).orElse(null))
+                .teacherId(teacherId)
                 .build();
     }
 

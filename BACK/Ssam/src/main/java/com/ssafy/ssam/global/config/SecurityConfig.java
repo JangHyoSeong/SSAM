@@ -54,7 +54,7 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/v1/auth/**", "/v1/schools", "/v1/video/**").permitAll()
+                        .requestMatchers("/v1/auth/**", "/v1/schools", "/v1/video/**", "/v1/gpt/**").permitAll()
                         .requestMatchers("/v1/**").authenticated()
                         .requestMatchers("/v1/classrooms/answers/**", "/v1/classrooms/teachers/**", "/v1/consults/teachers/**").hasRole("TEACHER")
                         .anyRequest().permitAll())

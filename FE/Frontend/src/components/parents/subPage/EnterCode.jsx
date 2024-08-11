@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import styles from "./EnterCode.module.scss";
 import ClassEnterModal from "./ClassEnterModal";
+import { useNavigate } from "react-router-dom";
 const apiUrl = import.meta.env.API_URL;
 
 const EnterCode = () => {
@@ -14,6 +15,11 @@ const EnterCode = () => {
 
   const toggleConsultationModal = () => {
     setIsConsultationModalOpen(!isConsultationModalOpen);
+  };
+  const navigate = useNavigate(); // useNavigate 훅을 사용해 navigate 정의
+
+  const handleConsultationStart = () => {
+    navigate("/video/entry"); // 경로를 videoentry로 이동
   };
 
   const useProfile = () => {
@@ -63,13 +69,12 @@ const EnterCode = () => {
         </button>
         {isClassModalOpen && <ClassEnterModal />}
       </div>
-      {/* 클릭하면 상담코드로 이동하도록 수정 */}
+      {/* 클릭하면 videoentry 화면으로 이동하도록 수정 */}
       <div className={styles.codeBox}>
         <h3>예정된 상담이 있습니다.</h3>
-        <button className={styles.classBtn} onClick={toggleConsultationModal}>
+        <button className={styles.classBtn} onClick={handleConsultationStart}>
           상담 시작하기
         </button>
-        {isConsultationModalOpen && <ClassEnterModal />}
       </div>
     </div>
   );

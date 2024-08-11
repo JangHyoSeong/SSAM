@@ -131,8 +131,8 @@ const TeacherUpdate = () => {
           <table className={styles.tableArray}>
             <tbody>
               <tr>
-                <th>사진</th>
-                <td className={styles.imgTd}>
+                <th style={{ borderTop: 'none' }}>사진</th>
+                <td className={styles.imgTd} style={{ borderTop: 'none' }}>
                   <div className={styles.profileImg}>
                     {profile.profileImage && (
                       <img
@@ -231,8 +231,8 @@ const TeacherUpdate = () => {
                 </td>
               </tr>
               <tr>
-                <th>휴대전화</th>
-                <td>
+                <th style={{ borderBottom: 'none' }}>휴대전화</th>
+                <td style={{ borderBottom: 'none' }}>
                   <input
                     type="text"
                     name="phone"
@@ -240,6 +240,7 @@ const TeacherUpdate = () => {
                     onChange={(e) =>
                       setProfileData({ ...profile, selfPhone: e.target.value })
                     }
+                    
                   />
                 </td>
               </tr>

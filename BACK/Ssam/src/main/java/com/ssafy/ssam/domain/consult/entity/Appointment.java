@@ -8,6 +8,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,7 +20,6 @@ import java.time.LocalDateTime;
 @DynamicInsert // 애초에 날릴때 null은 배제하고 날려야 default값이 입력된다. 그래서 배제하도록 해주는 어노테이션
 @Table(name = "appointment")
 public class Appointment {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "appointment_id")
@@ -50,7 +50,7 @@ public class Appointment {
     private LocalDateTime endTime;
 
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("'BEFORE'") // default 값 설정
+    @ColumnDefault("'APPLY'") // default 값 설정
     private AppointmentStatus status;
 
     public static Appointment toAppointment(User teacher, User user, AppointmentRequestDto appointmentRequestDto){
@@ -67,6 +67,7 @@ public class Appointment {
         return AppointmentResponseDto.builder()
                 .appointmentId(appointment.getAppointmentId())
                 .studentId(appointment.getStudent().getUserId())
+                .studentName(appointment.getStudent().getName())
                 .teacherId(appointment.getTeacher().getUserId())
                 .startTime(appointment.getStartTime())
                 .endTime(appointment.getEndTime())
@@ -75,4 +76,5 @@ public class Appointment {
                 .status(appointment.getStatus())
                 .build();
     }
+
 }

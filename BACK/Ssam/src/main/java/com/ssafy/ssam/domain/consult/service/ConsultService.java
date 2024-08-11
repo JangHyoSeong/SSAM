@@ -1,17 +1,31 @@
 package com.ssafy.ssam.domain.consult.service;
 
-import com.ssafy.ssam.domain.consult.dto.request.AppointmentRequestDto;
+import com.ssafy.ssam.domain.classroom.repository.BoardRepository;
 import com.ssafy.ssam.domain.consult.dto.request.ConsultRequestDto;
+import com.ssafy.ssam.domain.consult.dto.request.SummaryRequestDto;
 import com.ssafy.ssam.domain.consult.dto.response.AppointmentResponseDto;
+import com.ssafy.ssam.domain.consult.dto.response.ConsultResponseDto;
+import com.ssafy.ssam.domain.consult.dto.response.ConsultSummaryDetailResponseDto;
 import com.ssafy.ssam.domain.consult.entity.Appointment;
 import com.ssafy.ssam.domain.consult.entity.AppointmentStatus;
 import com.ssafy.ssam.domain.consult.entity.Consult;
+import com.ssafy.ssam.domain.consult.entity.Summary;
 import com.ssafy.ssam.domain.consult.repository.AppointmentRepository;
 import com.ssafy.ssam.domain.consult.repository.ConsultRepository;
+import com.ssafy.ssam.domain.user.dto.request.AlarmCreateRequestDto;
+import com.ssafy.ssam.domain.user.entity.AlarmType;
+import com.ssafy.ssam.domain.user.service.AlarmService;
+import com.ssafy.ssam.domain.consult.repository.SummaryRepository;
+import com.ssafy.ssam.domain.user.entity.UserBoardRelation;
+import com.ssafy.ssam.domain.user.entity.UserBoardRelationStatus;
+import com.ssafy.ssam.domain.user.repository.UserBoardRelationRepository;
+import com.ssafy.ssam.global.amazonS3.service.S3TextService;
 import com.ssafy.ssam.global.auth.dto.CustomUserDetails;
 import com.ssafy.ssam.global.auth.entity.User;
-import com.ssafy.ssam.global.auth.entity.UserRole;
 import com.ssafy.ssam.global.auth.repository.UserRepository;
+import com.ssafy.ssam.global.dto.CommonResponseDto;
+import com.ssafy.ssam.global.chatbot.service.GPTService;
+import com.ssafy.ssam.global.dto.CommonResponseDto;
 import com.ssafy.ssam.global.error.CustomException;
 import com.ssafy.ssam.global.error.ErrorCode;
 import lombok.Builder;
@@ -22,9 +36,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Random;
 
 @Slf4j
 @Builder
@@ -32,104 +46,106 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class ConsultService {
-    private final AppointmentRepository appointmentRepository;
-    private final ConsultRepository consultRepository;
     private final UserRepository userRepository;
+    private final ConsultRepository consultRepository;
+    private final AppointmentRepository appointmentRepository;
+    private final SummaryRepository summaryRepository;
+    private final UserBoardRelationRepository userBoardRelationRepository;
+    private final S3TextService s3TextService;
+    private final GPTService gptService;
+    private final BoardRepository boardRepository;
+    private final AlarmService alarmService;
 
-    @Transactional(readOnly = true)
-    public List<AppointmentResponseDto> getAppointments(Integer teacherId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+    // 상담 시작 시 consult 초기 생성
+    @Transactional
+    public CommonResponseDto createConsultEntity(Appointment appointment) {
 
-        User user = userRepository.findByUserId(userDetails.getUserId())
-                .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
-        User teacher = userRepository.findByUserIdAndRole(teacherId, UserRole.TEACHER)
-                .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
-
-        List<Appointment> appointments = appointmentRepository.findByTeacher_UserId(teacherId)
-                .orElse(new ArrayList<>());
-
-        List<AppointmentResponseDto> appointmentResponseDtos = new ArrayList<>();
-        for(Appointment appointment : appointments) {
-            appointmentResponseDtos.add(Appointment.toAppointmentDto(appointment));
-        }
-
-        return appointmentResponseDtos;
-    }
-    public AppointmentResponseDto createAppointment(Integer teacherId, AppointmentRequestDto appointmentRequestDto){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        User user = userRepository.findByUserId(userDetails.getUserId())
-                .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
-        User teacher = userRepository.findByUserIdAndRole(teacherId, UserRole.TEACHER)
-                .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
-
-        // 상담예약시간이 이전에 지난 시간일 때 에러
-        if(appointmentRequestDto.getStartTime().isBefore(LocalDateTime.now()))
-            throw new CustomException(ErrorCode.UnavailableDate);
-
-        // 상담예약시간에 이미 예약이 존재하면 에러
-        if(appointmentRepository.existsByStatusAndTimeRange(appointmentRequestDto.getStartTime(), appointmentRequestDto.getEndTime()))
-            throw new CustomException(ErrorCode.UnavailableDate);
-
-        Appointment appointment = Appointment.toAppointment(teacher, user, appointmentRequestDto);
-
-        // 예약자가 선생님이다 -> 예약 거부 상태 / 아니다 예약 신청
-        if(teacher.getUserId().equals(user.getUserId()) && userDetails.getRole().equals(UserRole.TEACHER.toString()))
-            appointment.setStatus(AppointmentStatus.REJECT);
-
-        return Appointment.toAppointmentDto(appointmentRepository.save(appointment));
-    }
-
-    public AppointmentResponseDto deleteAppointment(Integer appointmentId){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        User user = userRepository.findByUserId(userDetails.getUserId())
-                .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
-        Appointment appointment = appointmentRepository.findByAppointmentId(appointmentId)
-                .orElseThrow(() -> new CustomException(ErrorCode.AppointmentNotFoundException));
-
-        // 학생은 자신이 한 예약들 취소 가능
-        if(userDetails.getRole().equals(UserRole.STUDENT.toString())){
-            if(!appointment.getStudent().equals(user)) throw new CustomException(ErrorCode.Unauthorized);
-            appointment.setStatus(AppointmentStatus.CANCEL);
-        }
-        // 선생님일때는 자신 이름 앞으로 된 예약들 취소 가능함
-        else if(userDetails.getRole().equals(UserRole.TEACHER.toString())){
-            if(!appointment.getTeacher().equals(user)) throw new CustomException(ErrorCode.Unauthorized);
-            appointment.setStatus(AppointmentStatus.CANCEL);
-        }
-        return Appointment.toAppointmentDto(appointment);
-    }
-
-    public AppointmentResponseDto doneAppointment(Integer appointmentId){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        User user = userRepository.findByUserIdAndRole(userDetails.getUserId(), UserRole.TEACHER)
-                .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
-        Appointment appointment = appointmentRepository.findByAppointmentId(appointmentId)
-                .orElseThrow(() -> new CustomException(ErrorCode.AppointmentNotFoundException));
-
-
-        if(!userDetails.getUserId().equals(appointment.getTeacher().getUserId()))
-            throw new CustomException(ErrorCode.Unauthorized);
-
-        appointment.setStatus(AppointmentStatus.DONE);
-        return Appointment.toAppointmentDto(appointment);
-    }
-
-    // 상담 종료시 상담 entity 생성
-    public void createConsultEntity(Appointment appointment) {
+        User student = appointment.getStudent();
+        // 더 추가해야함. 머지하고 만들자
+        String accessCode = createConsultAccessCode();
         ConsultRequestDto requestDto = ConsultRequestDto.builder()
-                .appointment(appointment)
                 .actualDate(LocalDateTime.now())
-                .videoUrl("sample.com")
-                .webrtcSessionId("123456")
-                .accessCode("123456")
+                .appointment(appointment)
+                .accessCode(accessCode)
                 .build();
         Consult consult = Consult.toConsult(requestDto);
+
+        // consult accesscode를 담은 알람을 생성
+        AlarmCreateRequestDto studentAlarmCreateRequestDto
+                = AlarmCreateRequestDto.builder()
+                .userId(student.getUserId())
+                .alarmType(AlarmType.CONSULT)
+                .accessCode(accessCode)
+                .build();
+        alarmService.creatAlarm(studentAlarmCreateRequestDto);
+
+        return new CommonResponseDto("Consult Created");
+    }
+    // 학생기준
+    public CommonResponseDto startConsult(Integer consultId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User student = userRepository.findByUserId(userDetails.getUserId())
+                .orElseThrow(()->new CustomException(ErrorCode.UserNotFoundException));
+        UserBoardRelation relation = userBoardRelationRepository.findByBoardIdAndStatus(userDetails.getBoardId())
+                .orElseThrow(()->new CustomException(ErrorCode.NotFoundStudentInBoardException));
+
+        // 1. consult 1) 시작시간 2) att 설정
+        Consult consult = consultRepository.findByConsultId(consultId).orElseThrow(()->new CustomException(ErrorCode.ConsultNotFountException));
+        if(!consult.getAppointment().getStudent().getUserId().equals(student.getUserId())) {
+            throw new CustomException(ErrorCode.IllegalArgument);
+        }
+        // 1)
+        consult.setActualDate(LocalDateTime.now());
+        // 2)
+        consult.setAttSchool(relation.getUser().getSchool().getSchoolId());
+        consult.setAttGrade(relation.getBoard().getGrade());
+        consult.setAttClassroom(relation.getBoard().getClassroom());
+
+        // 2. appointment 설정
+        Appointment appointment = appointmentRepository.findByAppointmentId(consult.getAppointment().getAppointmentId()).orElseThrow(()->new CustomException(ErrorCode.AppointmentNotFoundException));
+        appointment.setStatus(AppointmentStatus.DONE);
+
+        return new CommonResponseDto("start consult");
+    }
+    // 학생기준
+    public CommonResponseDto endConsult(Integer consultId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // 1. consult 종료시간 기준으로 1) runningtime 수정, 2) S3에서 대화 가져오기 3) content 입력
+        Consult consult = consultRepository.findByConsultId(consultId).orElseThrow(()->new CustomException(ErrorCode.ConsultNotFountException));
+        // 1)
+        consult.setRunningTime((int)Duration.between(consult.getActualDate(), LocalDateTime.now()).toMinutes());
+        // 2)
+        String talk = s3TextService.readText(consult.getWebrtcSessionId());
+        // 3)
+        consult.setContent(talk);
+
+        // 2. GPT 입력 1) 연결된 예약찾아서 주제 가져오기 2) 주제, 대화기반 chatGpt 요약
+        // 1)
+        Appointment appointment = appointmentRepository.findByAppointmentId(consult.getAppointment().getAppointmentId()).orElseThrow(()->new CustomException(ErrorCode.AppointmentNotFoundException));
+        // 2)
+        SummaryRequestDto summaryRequestDto = gptService.GPTsummaryConsult(talk, appointment.getTopic().toString());
+        Summary summary = Summary.toSummary(summaryRequestDto, consult);
+        summaryRepository.save(summary);
+
+        return new CommonResponseDto("end consult");
+    }
+
+    // 상담 AccessCode 생성
+    public String createConsultAccessCode() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder accessCode = new StringBuilder();
+        Random random = new Random();
+
+        // 7자리 코드 생성(영어 대문자 + 숫자)
+        do {
+            accessCode.setLength(0); // Clear the StringBuilder
+            for (int i = 0; i < 7; i++) {
+                accessCode.append(characters.charAt(random.nextInt(characters.length())));
+            }
+        } while (consultRepository.existsByAccessCode(accessCode.toString()));
+
+        return accessCode.toString();
     }
 }

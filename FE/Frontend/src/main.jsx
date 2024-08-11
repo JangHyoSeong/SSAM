@@ -4,7 +4,8 @@ import "./main.scss";
 import App from "./App.jsx";
 import axios from "axios";
 
-axios.defaults.baseURL = "http://localhost:8081/v1";
+const apiUrl = import.meta.env.API_URL;
+axios.defaults.baseURL = `${apiUrl}/v1`;
 // axios.defaults.timeout = 5000;
 // axios.defaults.headers.common["Authorization"] = "Bearer AccessToken";
 // axios.defaults.headers.post["Content-Type"] = "application/json";

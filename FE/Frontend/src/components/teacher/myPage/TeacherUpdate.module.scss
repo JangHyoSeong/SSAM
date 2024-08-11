@@ -54,7 +54,7 @@
 }
 
 .infoForm {
-  width: 40vw;
+  width: 30vw;
   height: 65vh;
   border-top: 2px solid black;
   border-bottom: 2px solid black;
@@ -70,12 +70,12 @@ table {
     border: 1px solid black;
     text-align: left;
     font-size: 120%;
-    padding-left: 2%;
+    padding-right: 50px;
   }
 }
 
 .imgTd {
-  width: 33vw;
+  width: 60vw;
   height: 20vh;
 }
 
@@ -84,10 +84,20 @@ table {
 }
 
 .profileImg {
-  width: 10.5vw;
-  height: 25vh;
+  width: 150px; /* 가로 354px */
+  height: 200px; /* 세로 472px */
   margin-top: 2%;
   background-color: #e0e0e0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.profileImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .btn {
@@ -102,13 +112,14 @@ table {
   height: 3.7vh;
   font-size: 80%;
   margin: 2% 0.5%;
+  border: 2px solid #ee5252;
+  color: #ee5252;
   background-color: white;
-  border: 1px solid black;
   cursor: pointer;
 }
 
 .imgBtn:hover {
-  background-color: #5285ee;
+  background-color: #ee5252;
   color: white;
   border: none;
 }
@@ -125,8 +136,8 @@ table {
   height: 3.7vh;
   font-size: 80%;
   margin: 2% 0.5%;
-  background-color: white;
-  border: 1px solid black;
+  border: 2px solid #5285ee;
+  color: #5285ee;
   cursor: pointer;
 }
 
@@ -139,20 +150,61 @@ table {
 .formBtnArray {
   display: flex;
   justify-content: center;
+  margin-top: 2%;
 }
 
-.formBtn {
+.saveBtn {
   width: 5vw;
   height: 5vh;
   font-size: 120%;
   border-radius: 20px;
   margin: 2%;
   background-color: white;
+  border: 2px solid #5285ee;
+  color: #5285ee;
   cursor: pointer;
 }
 
-.formBtn:hover {
+.saveBtn:hover {
   background-color: #5285ee;
   color: white;
+}
+
+.deleteBtn {
+  width: 5vw;
+  height: 5vh;
+  font-size: 120%;
+  border-radius: 20px;
+  margin: 2%;
+  background-color: white;
+  border: 2px solid #ee5252;
+  color: #ee5252;
+  cursor: pointer;
+}
+
+.deleteBtn:hover {
   border: none;
+  background-color: #ee5252;
+  color: white;
+}
+
+.my-swal-popup {
+  height: 200px; /* 모달의 높이 설정 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px; /* 모달의 내부 여백 */
+  border-radius: 8px; /* 모달의 테두리 둥글게 */
+}
+
+.my-swal-confirm-button {
+  background-color: #5285ee; /* 확인 버튼 색상 */
+  color: white;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1rem;
+}
+
+.my-swal-confirm-button:hover {
+  background-color: #4076e4; /* 버튼에 마우스 올렸을 때 색상 */
 }

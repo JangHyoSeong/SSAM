@@ -49,7 +49,7 @@ const TeacherCalendar = ({ onDateSelect }) => {
         locale={koLocale} // 로케일을 한국어로 설정
         dayCellContent={(arg) => arg.dayNumberText.replace("일", "")} // 날짜 셀에서 '일' 제거
         fixedWeekCount={false} // 마지막 주 숨기기
-        height="auto"
+        height="100%"
       />
     </div>
   );

@@ -126,36 +126,73 @@
   align-items: center;
 }
 
-.approveButton,
-.editButton {
-  padding: 1vh 1vw;
-  margin-left: 1vw;
-  border: none;
-  border-radius: 25px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease; /* 부드러운 색상 전환 효과 */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
-}
 
 .approveButton {
-  background-color: #dce7fc;
-  color: black;
+  border-radius: 25px;
+  padding: 0.8vh 2vh;
+  margin: 0 0.5vw;
+  color: #5285ee;
+  border-color: #5285ee;
+  background-color: white;
+  cursor: pointer;
+  font-size: 16px;
+  border: 2px solid #5285ee;
 
   &:hover {
-    background-color: #b9d0fc;
-    color: black;
+    background-color: #5285ee;
+    color: white;
+    border-style: none;
   }
 }
 
-.editButton {
-  background-color: #fff;
-  color: black;
+.rejectButton {
+  border-radius: 25px;
+  padding: 0.8vh 2vh;
+  margin: 0 0.5vw;
+  color: #ee5252;
+  border-color: #ee5252;
+  background-color: white;
+  cursor: pointer;
+  font-size: 16px;
+  border: 2px solid #ee5252;
 
   &:hover {
-    background-color: #d9d9d9;
-    color: black;
+    border: none;
+    color: white;
+    background-color: #ee5252;
   }
 }
+
+// .approveButton,
+// .rejectButton {
+//   padding: 1vh 1vw;
+//   margin-left: 1vw;
+//   border: none;
+//   border-radius: 25px;
+//   cursor: pointer;
+//   transition: background-color 0.3s ease, color 0.3s ease; /* 부드러운 색상 전환 효과 */
+//   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+// }
+
+// .approveButton {
+//   background-color: #dce7fc;
+//   color: black;
+
+//   &:hover {
+//     background-color: #b9d0fc;
+//     color: black;
+//   }
+// }
+
+// .rejectButton {
+//   background-color: #fff;
+//   color: black;
+
+//   &:hover {
+//     background-color: #d9d9d9;
+//     color: black;
+//   }
+// }
 
 .statusButton {
   background-color: #dce7fc;
@@ -167,6 +204,7 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
   text-decoration: none;
+  font-size: 110%;
 
   &:hover {
     background-color: #b9d0fc;
@@ -201,4 +239,8 @@
   &:hover {
     background-color: #e4e4e4;
   }
+}
+
+.cancelStatus {
+  font-size: 110%;
 }

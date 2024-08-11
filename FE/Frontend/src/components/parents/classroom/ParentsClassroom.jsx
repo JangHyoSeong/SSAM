@@ -11,6 +11,7 @@ const ParentsClassroom = () => {
   const [notice, setNotice] = useState(""); // 알림 사항
   const [questions, setQuestions] = useState([]); // 문의사항 데이터 추가
   const [selectedStudentId, setSelectedStudentId] = useState(null); // 선택된 학생 ID
+  const apiUrl = import.meta.env.API_URL;
 
   // 학급 전체 데이터 불러오기
   useEffect(() => {
@@ -18,15 +19,12 @@ const ParentsClassroom = () => {
       try {
         const token = localStorage.getItem("USER_TOKEN");
         const { boardId } = await fetchApiUserInitial();
-        const response = await axios.get(
-          `http://localhost:8081/v1/classrooms/${boardId}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}/v1/classrooms/${boardId}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        });
         const classData = response.data;
         setBanner(classData.banner);
         setNotice(classData.notice);
@@ -41,6 +39,7 @@ const ParentsClassroom = () => {
 
   return (
     <div className={styles.classInfoContainer}>
+      {/* 간격띄우는 컨테이너 */}
       <div className={styles.imageContainer}>
         <img
           src={ClassImage}

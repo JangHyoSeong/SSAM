@@ -4,7 +4,6 @@ import Chatbot from "../common/chatbot/Chatbot.jsx";
 import SubNavbar from "../common/navigation/SubNavbar.jsx";
 import MainNavbar from "../common/navigation/MainNavbar.jsx";
 import Video from "../video/Video.jsx";
-// import { QuestionProvider } from "../store/QuestionStore";
 
 // Teacher components
 import TeacherJoin from "../components/teacher/join/TeacherJoin";
@@ -31,6 +30,7 @@ import ParentsReservationPage from "../components/parents/appointment/ParentsRes
 
 // Layout component
 import QuestionProviderLayout from "./layouts/QuestionProviderLayout.jsx";
+import ConsultationProviderLayout from "./layouts/ConsultationProviderLayout";
 
 // Webrtc components
 import WebrtcPage from "../webrtc/react-webrtc-component";
@@ -47,11 +47,11 @@ const AppRouter = () => {
     "/teacherjoin",
     "/studentlogin",
     "/studentjoin",
-    "/video/1234567",
+    "/video/123456",
   ];
   const showChatbot = !hideChatbotOnRoutes.includes(location.pathname);
 
-  const hideNavbarOnRoutes = ["/video/1234567"];
+  const hideNavbarOnRoutes = ["/video/123456"];
   const showNavbar = !hideNavbarOnRoutes.includes(location.pathname);
 
   return (
@@ -87,10 +87,7 @@ const AppRouter = () => {
               path="/teacherreservationmanagement"
               element={<TeacherReservationManagement />}
             />
-            <Route
-              path="/teacherconsultationlist"
-              element={<TeacherConsultationList />}
-            />
+
             <Route
               path="/teacherclassroom/student"
               element={<TeacherStudentDetail />}
@@ -98,11 +95,17 @@ const AppRouter = () => {
             <Route path="/teacherclassroom" element={<TeacherClassroom />} />
           </Route>
 
-          {/* 선생님 */}
+          {/* 선생님 layouts */}
           <Route element={<QuestionProviderLayout />}>
             <Route element={<RoleBasedRoute allowedRoles={["TEACHER"]} />}>
               <Route path="/teacherquestion" element={<TeacherQuestion />} />
             </Route>
+          </Route>
+          <Route element={<ConsultationProviderLayout />}>
+            <Route
+              path="/teacherconsultationlist"
+              element={<TeacherConsultationList />}
+            />
           </Route>
 
           {/* 학생 / 학부모 */}
@@ -120,7 +123,7 @@ const AppRouter = () => {
             />
           </Route>
 
-          {/* 학생 / 학부모 */}
+          {/* 학생 / 학부모 layouts */}
           <Route element={<QuestionProviderLayout />}>
             <Route element={<RoleBasedRoute allowedRoles={["STUDENT"]} />}>
               <Route path="/studentquestion" element={<ParentsQuestion />} />

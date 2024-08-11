@@ -1,5 +1,6 @@
 import axios from "axios";
 import { fetchApiUserInitial } from "../20-22 사용자정보/apiStubUserInitial";
+const apiUrl = import.meta.env.API_URL;
 
 // GET - 공통api: /classrooms/questions/{board_id}
 export const fetchQuestionData = async () => {
@@ -7,7 +8,7 @@ export const fetchQuestionData = async () => {
     const token = localStorage.getItem("USER_TOKEN");
     const { boardId } = await fetchApiUserInitial();
     const response = await axios.get(
-      `http://localhost:8081/v1/classrooms/questions/${boardId}`,
+      `${apiUrl}/v1/classrooms/questions/${boardId}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -30,7 +31,7 @@ export const fetchCreateQuestionData = async (content) => {
     const token = localStorage.getItem("USER_TOKEN");
     const { boardId } = await fetchApiUserInitial();
     const response = await axios.post(
-      `http://localhost:8081/v1/classrooms/questions/${boardId}`,
+      `${apiUrl}/v1/classrooms/questions/${boardId}`,
       { content }, // content를 key로 사용하고 value는 전달된 문자열로 설정
       {
         headers: {
@@ -54,7 +55,7 @@ export const fetchUpdateQuestionData = async (questionId, answer) => {
     const { boardId } = await fetchApiUserInitial();
     const response = await axios.put(
       // qustionId값이 지금 answer내용으로 들어옴
-      `http://localhost:8081/v1/classrooms/answers/${questionId}`,
+      `${apiUrl}/v1/classrooms/answers/${questionId}`,
       { answer, boardId }, // answer와 boardId를 JSON 형태로 전달
       {
         headers: {
@@ -76,7 +77,7 @@ export const fetchDeleteQuestionData = async (questionId) => {
   try {
     const token = localStorage.getItem("USER_TOKEN");
     const response = await axios.delete(
-      `http://localhost:8081/v1/classrooms/questions/${questionId}`,
+      `${apiUrl}/v1/classrooms/questions/${questionId}`,
       {
         headers: {
           "Content-Type": "application/json",

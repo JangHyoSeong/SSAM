@@ -23,8 +23,12 @@ public class ConsultRequestDto {
     private Appointment appointment;
     @NotNull
     private LocalDateTime actualDate;
+    private String runningTime;
     private String content;
     private String videoUrl;
     private String webrtcSessionId;
     private String accessCode;
+    private Integer attClassroom;
+    private Integer attGrade;
+    private String attSchool;
 }

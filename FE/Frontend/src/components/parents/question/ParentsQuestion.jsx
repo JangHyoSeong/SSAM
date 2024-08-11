@@ -12,7 +12,7 @@ const ParentsQuestion = () => {
   const [questionToDelete, setQuestionToDelete] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [isInputOpen, setIsInputOpen] = useState(false); // 슬라이드 입력창 상태 추가
+  const [isInputOpen, setIsInputOpen] = useState(false);
 
   console.log("ParentsQuestion", questions);
 
@@ -48,7 +48,7 @@ const ParentsQuestion = () => {
       setError(null);
       try {
         await addQuestion(newQuestion);
-        setIsInputOpen(false); // 슬라이드 입력창 닫기
+        setIsInputOpen(false);
         setNewQuestion("");
       } catch (err) {
         console.error("Failed to add question:", err);
@@ -112,11 +112,14 @@ const ParentsQuestion = () => {
       {sortedQuestions.map((item) => (
         <div key={item.questionId} className={styles.qaPair}>
           <div className={styles.questionBox}>
-            <div className={styles.textAndDate}>
-              <p>
-                <strong>궁금이</strong> {item.content}
-              </p>
-              <p className={styles.date}>{formatDate(item.contentDate)}</p>
+            <div className={styles.info}>
+              <div className={styles.authorAndDate}>
+                <p className={styles.author}>
+                  <strong>궁금이</strong>
+                </p>
+                <p className={styles.date}>{formatDate(item.contentDate)}</p>
+              </div>
+              <p className={styles.content}>{item.content}</p>
             </div>
             <FaTrash
               onClick={() => handleDeleteClick(item.questionId)}
@@ -125,11 +128,14 @@ const ParentsQuestion = () => {
           </div>
           {item.answer && (
             <div className={styles.answerBox}>
-              <div className={styles.textAndDate}>
-                <p>
-                  <strong>선생님</strong> {item.answer}
-                </p>
-                <p className={styles.date}>{formatDate(item.answerDate)}</p>
+              <div className={styles.info}>
+                <div className={styles.authorAndDate}>
+                  <p className={styles.author}>
+                    <strong>선생님</strong>
+                  </p>
+                  <p className={styles.date}>{formatDate(item.answerDate)}</p>
+                </div>
+                <p className={styles.content}>{item.answer}</p>
               </div>
             </div>
           )}

@@ -11,7 +11,6 @@ const TeacherQuestion = () => {
   const [questionToDelete, setQuestionToDelete] = useState(null);
   const [newAnswer, setNewAnswer] = useState("");
 
-  // 토큰 확인
   useEffect(() => {
     const token = localStorage.getItem("USER_TOKEN");
     if (!token) {
@@ -22,7 +21,7 @@ const TeacherQuestion = () => {
 
   const handleEditClick = (questionId, currentAnswer) => {
     setEditingQuestionId(questionId);
-    setNewAnswer(currentAnswer || ""); // 빈 문자열로 초기화
+    setNewAnswer(currentAnswer || "");
   };
 
   const handleSaveClick = async (questionId) => {
@@ -62,6 +61,15 @@ const TeacherQuestion = () => {
 
   return (
     <div className={styles.teacherQuestionContainer}>
+      {/* 헤더 추가 */}
+      <div className={styles.header}>
+        <h2>
+          다른 사용자의 <span className={styles.highlight}>익명성</span>을
+          유지하기 위해 질문자의 실명은{" "}
+          <span className={styles.highlight}>교사</span>에게만 표시됩니다.
+        </h2>
+      </div>
+
       {questions.map((item) => (
         <div key={item.questionId} className={styles.qaPair}>
           <div className={styles.boxContainer}>
@@ -72,7 +80,7 @@ const TeacherQuestion = () => {
               </div>
               <p className={styles.question}>{item.content}</p>
               <FaTrash
-                className={styles.icon}
+                className={styles.iconTrash}
                 onClick={() => handleDeleteClick(item.questionId)}
               />
             </div>
@@ -92,7 +100,6 @@ const TeacherQuestion = () => {
                   />
                 </>
               ) : (
-                // 편집
                 <>
                   <div className={styles.authorAndDate}>
                     <p className={styles.author}>선생님</p>

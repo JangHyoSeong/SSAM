@@ -4,7 +4,8 @@ import Chatbot from "../common/chatbot/Chatbot.jsx";
 import SubNavbar from "../common/navigation/SubNavbar.jsx";
 import MainNavbar from "../common/navigation/MainNavbar.jsx";
 import Video from "../video/Video.jsx";
-
+import STT from "../video/STT.jsx";
+import VideoSTT from "../video/Video-STT.jsx";
 // Teacher components
 import TeacherJoin from "../components/teacher/join/TeacherJoin";
 import TeacherLogin from "../components/teacher/login/TeacherLogin";
@@ -38,6 +39,8 @@ import WebrtcPage from "../webrtc/react-webrtc-component";
 // Import the HOC
 import RoleBasedRoute from "./RoleBasedRoute.jsx";
 
+import VideoEntry from "../video/VideoEntry.jsx"; // 상담 참가 입장 화면
+
 const AppRouter = () => {
   const location = useLocation();
 
@@ -47,11 +50,11 @@ const AppRouter = () => {
     "/teacherjoin",
     "/studentlogin",
     "/studentjoin",
-    "/video/123",
+    "/video/33344",
   ];
   const showChatbot = !hideChatbotOnRoutes.includes(location.pathname);
 
-  const hideNavbarOnRoutes = ["/video/123"];
+  const hideNavbarOnRoutes = ["/video/33344"];
   const showNavbar = !hideNavbarOnRoutes.includes(location.pathname);
 
   return (
@@ -133,8 +136,13 @@ const AppRouter = () => {
           {/* Video Route */}
           <Route path="/video/:accessCode" element={<Video />} />
 
+          <Route path="/stt" element={<STT />} />
+          <Route path="/video-stt/:accessCode" element={<VideoSTT />} />
           {/* WebRTC Route */}
           <Route path="/webrtc" element={<WebrtcPage />} />
+
+          {/* Test Page Route */}
+          <Route path="/video/entry" element={<VideoEntry />} />
         </Routes>
       </div>
 

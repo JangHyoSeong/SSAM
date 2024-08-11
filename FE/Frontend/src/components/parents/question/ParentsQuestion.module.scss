@@ -15,7 +15,7 @@
   border-radius: 8px;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 1vh; /* 아래 여백 추가 */
-  width: 100%; /* 부모의 너비를 전체로 설정 */
+  width: 900px; /* 부모의 너비를 전체로 설정 */
 }
 
 .header h2 {
@@ -76,18 +76,27 @@
   align-items: center; /* 중앙 정렬 추가 */
 }
 
-.questionBox, .answerBox {
+.questionBox,
+.answerBox {
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-radius: 25px;
-  border: 3px solid #DFD0E8;
-  background: #FFF;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-  padding: 1.5vh;
-  width: 900px; /* 고정 너비 설정 */
-  height: 10vh; /* 고정 높이 설정 */
-  text-align: center;
+  border: 3px solid #dfd0e8;
+  background: #fff;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  padding: 2.5vh;
+  width: 900px;
+  box-sizing: border-box;
+}
+
+.answerBox {
+  background-color: #f8edff; /* 답변 박스 색상 */
+  transition: background-color 0.3s; /* 배경색 전환 애니메이션 */
+}
+
+.answerBox:hover {
+  background-color: #ecd3fc; /* 마우스 오버 시 색상 변경 */
 }
 
 .questionBox {
@@ -95,7 +104,7 @@
 }
 
 .answerBox {
-  background-color: #F8EDFF; /* 답변 박스 색상 */
+  background-color: #f8edff; /* 답변 박스 색상 */
   transition: background-color 0.3s; /* 배경색 전환 애니메이션 */
 }
 
@@ -139,4 +148,143 @@
 
 .inputField:focus {
   outline: none;
+}
+
+.inquireContainer {
+  display: flex;
+  align-items: center;
+  width: 50px; /* 초기 너비를 아이콘 크기로 설정 */
+  overflow: hidden;
+  cursor: pointer;
+  transition: width 0.5s ease; /* 슬라이드 애니메이션 추가 */
+}
+
+.inquireContainer.open {
+  width: 900px; /* 입력창이 열릴 때 전체 너비 사용 */
+}
+
+.iconCircle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e1b0ff; /* 핑크색 배경 */
+  border: 3px solid #e1b0ff; /* 핑크색 테두리 */
+  border-radius: 50%; /* 동그라미 모양 */
+  width: 40px; /* 동그라미 크기 설정 */
+  height: 40px; /* 동그라미 크기 설정 */
+  margin-left: 0.5vw; /* 아이콘과 텍스트 사이의 간격 */
+  transition: background-color 0.3s ease; /* 배경색 전환 애니메이션 */
+}
+
+.slideContainer {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: flex-end; /* 오른쪽 끝에 배치 */
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  margin-left: 10px;
+  transition: opacity 0.5s ease; /* 슬라이드될 때 자연스럽게 나타나게 하는 애니메이션 */
+}
+
+.inputContainer textarea {
+  flex-grow: 1;
+  margin-right: 10px;
+  padding: 1.5vh; /* questionBox와 동일한 패딩 */
+  border-radius: 25px; /* questionBox와 동일한 border-radius */
+  border: 3px solid #dfd0e8; /* questionBox와 동일한 테두리 */
+  background: #fff; /* questionBox와 동일한 배경색 */
+  // box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25); /* questionBox와 동일한 그림자 */
+  height: 10vh; /* questionBox와 동일한 높이 */
+  resize: none; /* textarea 크기 조절 비활성화 */
+  font-size: 1rem;
+  text-align: center; /* 입력된 텍스트 중앙 정렬 */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* questionBox와 동일한 전환 효과 */
+}
+
+.inputContainer textarea:focus {
+  outline: none;
+  background-color: #f8f8f8; /* focus 시 약간 더 밝은 배경 */
+  // box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.3); /* focus 시 조금 더 강조된 그림자 */
+}
+
+.inputContainer button {
+  width: 40px;
+  height: 40px;
+  padding-top: 3.5px;
+  font-size: 15px;
+  background-color: #e1b0ff;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease; /* 색상 전환 애니메이션 추가 */
+}
+
+.inputContainer button:hover {
+  background-color: #d798fd; /* hover 시 배경색을 더 진한 색으로 변경 */
+  color: #fff;
+}
+
+.iconCircle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e1b0ff; /* 기본 배경색 */
+  border-radius: 25px;
+  width: 40px; /* 동그라미 크기 설정 */
+  height: 40px; /* 동그라미 크기 설정 */
+  border: none;
+
+  transition: background-color 0.3s ease, color 0.3s ease; /* 배경색 및 텍스트 색상 전환 애니메이션 */
+  cursor: pointer;
+}
+
+.iconCircle:hover {
+  background-color: #d798fd; /* hover 시 더 진한 배경색 */
+}
+
+.icon {
+  color: #fff; /* 기본 아이콘 색상 */
+  font-size: 15px;
+  transition: color 0.3s ease; /* 아이콘 색상 전환 애니메이션 */
+}
+
+.iconCircle:hover .icon {
+  color: #fff; /* hover 시 아이콘 색상 */
+}
+
+.trashicon {
+  cursor: pointer;
+  color: #000; /* 기본 아이콘 색상 */
+  transition: color 0.3s ease; /* 색상 전환 애니메이션 */
+}
+
+.trashicon:hover {
+  color: #e80000; /* hover 시 빨간색으로 변경 */
+}
+
+.info {
+  display: flex;
+  align-items: center; /* 세로 가운데 정렬 */
+}
+
+.authorAndDate {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 중앙 정렬 */
+  margin-right: 1.5rem; /* content와의 간격 추가 */
+}
+
+.content {
+  text-align: left;
+  flex: 1;
+}
+
+.author {
+  margin-bottom: -0.5rem; /* author와 date 사이의 간격 추가 */
 }

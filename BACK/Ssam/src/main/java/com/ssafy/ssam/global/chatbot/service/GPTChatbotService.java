@@ -68,7 +68,7 @@ public class GPTChatbotService {
         for(String prompt : prompts) {
             message.append(prompt).append("\n");
         }
-        System.out.println(message.toString());
+
         GPTRequest request =
                 GPTRequest.builder()
                         .model(model)

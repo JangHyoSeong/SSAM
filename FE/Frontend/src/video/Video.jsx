@@ -32,6 +32,15 @@ const VideoChatComponent = () => {
   const OV = useRef(new OpenVidu());
   const myUserName = useRef(`user_${Math.floor(Math.random() * 1000) + 1}`);
 
+  const chatContainerRef = useRef(null);
+
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [chatMessages]);
+
   // useEffect(() => {
   //   const intervalId = setInterval(() => {
   //     setTimeSub(new Date());
@@ -94,7 +103,7 @@ const VideoChatComponent = () => {
         videoSource: undefined,
         publishAudio: true,
         publishVideo: true,
-        resolution: "1280x660",
+        resolution: "960x400",
         frameRate: 30,
         insertMode: "APPEND",
         mirror: false,
@@ -119,8 +128,8 @@ const VideoChatComponent = () => {
       setCurrentVideoDevice(currentVideoDevice);
 
       // 현재 시간
-      const nowdate = new Date().toLocaleString();
-      setTimeSub(nowdate);
+      // const nowdate = new Date().toLocaleString();
+      // setTimeSub(nowdate);
 
       // 날짜, 시간 들고오기
       if (myToken && myToken.createdAt) {
@@ -285,121 +294,125 @@ const VideoChatComponent = () => {
       {session === null ? (
         <h1 className={styles.entering}>화상상담 입장 중...</h1>
       ) : (
-        <div className={styles.top}>
+        <div>
           <div className={styles.menubarArray}>
-            <div className={styles.menubar}>
-              <div className={styles.logoArray}>
-                <img src={whitelogo} className={styles.logo} alt="Logo" />
-              </div>
-              {/* <h3>Session: {sessionId}</h3> */}
+            <div className={styles.top}>
+              <div className={styles.menubar}>
+                <div className={styles.logoArray}>
+                  <img src={whitelogo} className={styles.logo} alt="Logo" />
+                </div>
+                {/* <h3>Session: {sessionId}</h3> */}
 
-              {/* 날짜, 시간 */}
-              <div className={styles.dayArray}>
-                <p>{formattedDate}</p>
-                {/* {timesub.toLocaleTimeString()} */}
-              </div>
+                {/* 날짜, 시간 */}
+                <div className={styles.dayArray}>
+                  <p>{formattedDate}</p>
+                  {/* {timesub.toLocaleTimeString()} */}
+                </div>
 
-              <div className={styles.iconArray}>
-                {/* 녹화 버튼 */}
-                <button className={styles.btnIcon} onClick={toggleRecording}>
-                  {isRecording ? (
-                    <img src={RECOn} className={styles.imgIcon} />
-                  ) : (
-                    <img src={RECOff} className={styles.imgIcon} />
-                  )}
-                </button>
+                <div className={styles.iconArray}>
+                  {/* 녹화 버튼 */}
+                  <button className={styles.btnIcon} onClick={toggleRecording}>
+                    {isRecording ? (
+                      <img src={RECOn} className={styles.imgIcon} />
+                    ) : (
+                      <img src={RECOff} className={styles.imgIcon} />
+                    )}
+                  </button>
 
-                {/* 화면 전환 버튼 */}
-                <button className={styles.btnIcon} onClick={switchCamera}>
-                  <img
-                    src={Conversion}
-                    className={styles.imgIcon}
-                    onClick={switchCamera}
-                  />
-                </button>
+                  {/* 화면 전환 버튼 */}
+                  <button className={styles.btnIcon} onClick={switchCamera}>
+                    <img
+                      src={Conversion}
+                      className={styles.imgIcon}
+                      onClick={switchCamera}
+                    />
+                  </button>
 
-                {/* 카메라 ON / Off 버튼 */}
-                <button className={styles.btnIcon} onClick={toggleCamera}>
-                  {isCameraOn ? (
-                    <img src={cameraOn} className={styles.imgIcon} />
-                  ) : (
-                    <img src={cameraOff} className={styles.imgIcon} />
-                  )}
-                </button>
+                  {/* 카메라 ON / Off 버튼 */}
+                  <button className={styles.btnIcon} onClick={toggleCamera}>
+                    {isCameraOn ? (
+                      <img src={cameraOn} className={styles.imgIcon} />
+                    ) : (
+                      <img src={cameraOff} className={styles.imgIcon} />
+                    )}
+                  </button>
 
-                {/* 마이크 ON / Off 버튼 */}
-                <button className={styles.btnIcon} onClick={toggleMic}>
-                  {isMicOn ? (
-                    <img src={mikeOn} className={styles.imgIcon} />
-                  ) : (
-                    <img src={mikeOff} className={styles.imgIcon} />
-                  )}
-                </button>
+                  {/* 마이크 ON / Off 버튼 */}
+                  <button className={styles.btnIcon} onClick={toggleMic}>
+                    {isMicOn ? (
+                      <img src={mikeOn} className={styles.imgIcon} />
+                    ) : (
+                      <img src={mikeOff} className={styles.imgIcon} />
+                    )}
+                  </button>
 
-                {/* 나가기 버튼 */}
-                <button
-                  className={`${styles.leaveSession} ${styles.btnIcon}`}
-                  onClick={leaveSession}
-                >
-                  <h1>X</h1>
-                </button>
+                  {/* 나가기 버튼 */}
+                  <button
+                    className={`${styles.leaveSession} ${styles.btnIcon}`}
+                    onClick={leaveSession}
+                  >
+                    <h1>X</h1>
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-
-          {/* 시간 */}
-          <div className={styles.timeArray}>
-            <div className={styles.time}></div>
+            {/* 시간 */}
+            <div className={styles.timeArray}>
+              <div className={styles.time}></div>
+            </div>
           </div>
 
           {/* 화면 */}
           <div className={styles.bottom}>
             <div className={styles.screen}>
-              {mainStreamManager !== null && (
-                <div className={styles.videoItem}>
-                  <UserVideoComponent streamManager={mainStreamManager} />
-                </div>
-              )}
-              {subscribers.map((sub) => (
-                <div
-                  key={sub.stream.connection.connectionId}
-                  className={styles.othervideoItem}
-                >
-                  <UserVideoComponent streamManager={sub} />
-                </div>
-              ))}
-            </div>
-
-            {/* 자막 */}
-            <div className={styles.subTitleArray}>
-              <div className={styles.subTitle}></div>
-            </div>
-
-            {/* 채팅 */}
-            <div className={styles.chatingArray}>
-              <div className={styles.chating}>
-                {chatMessages.map((msg, index) => (
+              <div className={styles.videoPosition}>
+                {mainStreamManager !== null && (
+                  <div className={styles.videoItem}>
+                    <UserVideoComponent streamManager={mainStreamManager} />
+                  </div>
+                )}
+                {subscribers.map((sub) => (
                   <div
-                    key={index}
-                    className={`chatMessage ${
-                      msg.connectionId === session.connection.connectionId
-                        ? "ownMessage"
-                        : "otherMessage"
-                    }`}
+                    key={sub.stream.connection.connectionId}
+                    className={styles.othervideoItem}
                   >
-                    <strong>{msg.from}:</strong> {msg.message}
+                    <UserVideoComponent streamManager={sub} />
                   </div>
                 ))}
               </div>
-              <div className={styles.chatInputArray}>
-                <input
-                  type="text"
-                  value={chatInput}
-                  className={styles.chatForm}
-                  onChange={(e) => setChatInput(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && sendChatMessage()}
-                  placeholder="채팅을 입력해주세요"
-                />
+              {/* 자막 */}
+              <div className={styles.subTitleArray}>
+                <div className={styles.subTitle}></div>
+              </div>
+            </div>
+
+            {/* 채팅 */}
+            <div className={styles.right}>
+              <div className={styles.chatingArray}>
+                <div className={styles.chatContainer}>
+                  <div className={styles.chating} ref={chatContainerRef}>
+                    {chatMessages.map((msg, index) => (
+                      <div
+                        key={index}
+                        className={`${styles.chatMessage} ${
+                          msg.connectionId === session.connection.connectionId
+                            ? styles.ownMessage
+                            : styles.otherMessage
+                        }`}
+                      >
+                        <strong>{msg.from}:</strong> {msg.message}
+                      </div>
+                    ))}
+                  </div>
+                  <input
+                    type="text"
+                    value={chatInput}
+                    className={styles.chatForm}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    onKeyPress={(e) => e.key === "Enter" && sendChatMessage()}
+                    placeholder="채팅을 입력해주세요"
+                  />
+                </div>
               </div>
             </div>
           </div>

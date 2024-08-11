@@ -1,45 +1,55 @@
+// Video Array
 .videoArray {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100vw;
   height: 100vh;
   background-color: #282c34;
 }
 
+// Entering
 .entering {
-  position: relative;
-  top: 45%;
-  text-align: center;
   color: white;
   font-size: 300%;
 }
 
-.top {
-  display: flex;
-}
-
+// Menubar Array
 .menubarArray {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 75vw;
+  width: 100%;
   height: 15vh;
 }
 
-.menubar {
+// Top
+.top {
   display: flex;
-  width: 71vw;
-  height: 10vh;
-  border-radius: 25px;
-  background-color: #0052e7;
-  margin-left: 2%;
+  justify-content: center;
+  align-items: center;
+  width: 75vw;
 }
 
+// Menubar
+.menubar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 71.5vw;
+  height: 10vh;
+  background-color: #0052e7;
+  border-radius: 25px;
+}
+
+// Logo Array
 .logoArray {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 15%;
   height: 100%;
-  margin: 0% 2%;
+  margin: 0 2%;
 }
 
 .logo {
@@ -47,23 +57,25 @@
   height: 8vh;
 }
 
-
+// Day Array
 .dayArray {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  margin: 0% 5% 0% 2%;
+  margin: 0 5% 0 2%;
   color: white;
   font-size: 150%;
   white-space: nowrap;
 }
 
+// Icon Array
 .iconArray {
   display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: space-evenly;
   width: 40vw;
+  gap: 10%;
 }
 
 .btnIcon {
@@ -76,12 +88,14 @@
   cursor: pointer;
 }
 
+// Leave Session
 .leaveSession h1 {
   color: red;
   font-size: 300%;
   cursor: pointer;
 }
 
+// Time Array
 .timeArray {
   display: flex;
   justify-content: center;
@@ -95,95 +109,116 @@
   align-items: center;
   width: 22vw;
   height: 10vh;
-  border-radius: 25px;
   background-color: #0052e7;
+  border-radius: 25px;
+
+  h1 {
+    font-size: 250%;
+    color: white;
+  }
 }
 
-.time h1 {
-  font-size: 250%;
-  color: white;
-}
-
+// Bottom
 .bottom {
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
+// Video
 .screen {
+  width: 75vw;
+  height: 75vh;
+}
+
+.videoPosition {
+  width: 100%;
+  height: 75%;
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
 }
 
 .othervideoItem {
-  position: fixed;
-  top: 15%;
-  left: 57.7%;
-}
-
-.othervideoItem {
+  position: absolute;
+  top: 31.2%;
+  left: 58.2%;
   width: 240px;
   height: 240px;
+
   video {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border: 2px solid white;
+    border-radius: 15px;
+    border: 1px solid white;
   }
 }
 
 .videoItem {
-  position: fixed;
-  top: 15%;
-  left: 3%;
-}
+  width: 95%;
 
-.videoItem {
-  width: 1080px;
-  height: 240px;
   video {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 15px;
+    border: 1px solid white;
   }
 }
 
+// Subtitle
 .subTitleArray {
-  position: fixed;
-  bottom: 2%;
-  left: 1%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 75vw;
+  height: 18.7vh;
 }
 
 .subTitle {
-  width: 71vw;
+  width: 71.2vw;
   height: 15vh;
   border: 5px solid white;
   border-radius: 25px;
-  margin-left: 2%;
 }
 
+// Right
+.right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 25vw;
+}
+
+// Chatting
 .chatingArray {
-  position: absolute;
-  top: 15%;
-  right: 1.5%;
-  width: 22vw;
-  height: 82.5vh;
-  border-radius: 25px;
-  background-color: white;
-  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 75vh;
+  overflow: hidden;
 }
 
 .chatingArray::-webkit-scrollbar {
   display: none;
 }
 
-.chating {
-  width: 90%;
-  position: relative;
-  bottom: -2%;
-  right: -5%;
+.chatContainer {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
+  width: 22vw;
+  height: 72vh;
+  background-color: white;
+  border-radius: 25px;
+}
+
+.chating {
+  flex-grow: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
 }
 
 .chatMessage {
@@ -202,39 +237,15 @@
   background-color: #f1f3f5;
 }
 
-.chatInputArray {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  bottom: 2.5%;
-  right: 1.5%;
-  width: 22%;
-  height: 10%;
-  border-radius: 0px 0px 25px 25px;
-  background-color: white;
-  border-top: 2px solid #dddddd;
-}
-
 .chatForm {
-  width: 20.5vw;
+  position: relative;
+  bottom: 2%;
+  right: -5%;
+  width: 20vw;
   height: 6vh;
+  border-radius: 100px;
   background-color: #eeeeee;
+  padding-left: 4%;
   font-size: 100%;
-  padding-left: 7.5%;
-  border-radius: 25px;
   border-style: none;
 }
-
-// .chatSend {
-//   position: absolute;
-//   bottom: 30%;
-//   right: 10%;
-//   border-style: none;
-//   background-color: transparent;
-//   cursor: pointer;
-// }
-
-// .chatSend:hover {
-//   color: blue;
-// }

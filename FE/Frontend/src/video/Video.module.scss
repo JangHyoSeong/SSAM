@@ -108,44 +108,44 @@
   display: flex;
 }
 
-// videoItem 화면
-// .myvideoItem {
-//   position: absolute;
-//   top: 15%;
-//   left: 4%;
-// }
+.screen {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
 
-// .youvideoItem {
-//   position: absolute;
-//   top: 15%;
-//   left: 39%;
-// }
+.othervideoItem {
+  position: absolute;
+  top: 15%;
+  left: 57.7%;
+}
 
-.youvideoItem {
-  width: 640px;
-  height: 480px;
+.othervideoItem {
+  width: 240px;
+  height: 240px;
   video {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border: 2px solid white;
   }
 }
 
-.myvideoItem {
-  width: 320px;
+.videoItem {
+  position: absolute;
+  top: 15%;
+  left: 3%;
+}
+
+.videoItem {
+  width: 1080px;
   height: 240px;
   video {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-}
-
-.screen {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
 }
 
 .subTitleArray {

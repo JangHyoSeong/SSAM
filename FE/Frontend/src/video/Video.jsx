@@ -26,6 +26,7 @@ const VideoChatComponent = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [isCameraOn, setIsCameraOn] = useState(true);
   const [isMicOn, setIsMicOn] = useState(true);
+  const [time, setTime] = useState({ minutes: 0, seconds: 0 }); // State for time
   const OV = useRef(new OpenVidu());
 
   const myUserName = useRef(`user_${Math.floor(Math.random() * 1000) + 1}`);
@@ -34,9 +35,24 @@ const VideoChatComponent = () => {
   useEffect(() => {
     window.addEventListener("beforeunload", onBeforeUnload);
     joinSession();
+
+    // 타이머 설정
+    const timerInterval = setInterval(() => {
+      setTime((prevTime) => {
+        const newSeconds = prevTime.seconds + 1;
+        const newMinutes =
+          newSeconds >= 60 ? prevTime.minutes + 1 : prevTime.minutes;
+        return {
+          minutes: newMinutes,
+          seconds: newSeconds >= 60 ? 0 : newSeconds,
+        };
+      });
+    }, 1000);
+
     return () => {
       window.removeEventListener("beforeunload", onBeforeUnload);
       leaveSession();
+      clearInterval(timerInterval); // 타이머 정리
     };
   }, []);
 
@@ -81,7 +97,7 @@ const VideoChatComponent = () => {
         videoSource: undefined,
         publishAudio: true,
         publishVideo: true,
-        resolution: "640x480",
+        resolution: "1280x330",
         frameRate: 30,
         insertMode: "APPEND",
         mirror: false,
@@ -256,6 +272,13 @@ const VideoChatComponent = () => {
   };
 
 
+  // 오늘 날짜 불러오기
+  const today = new Date();
+  const formattedDate = `${today.getFullYear()}년 ${String(
+    today.getMonth() + 1
+  ).padStart(2, "0")}월 ${String(today.getDate()).padStart(2, "0")}일`;
+
+
   return (
     <div className={styles.videoArray}>
       {session === null ? (
@@ -269,7 +292,7 @@ const VideoChatComponent = () => {
               </div>
               {/* <h3>Session: {sessionId}</h3> */}
               <div className={styles.dayArray}>
-                {/* <p>{formattedDate}</p> */}
+                <p>{formattedDate}</p>
               </div>
               <div className={styles.iconArray}>
                 {/* 녹화 버튼 */}
@@ -309,7 +332,7 @@ const VideoChatComponent = () => {
                 </button>
 
                 {/* 나가기 버튼 */}
-                <button className={styles.leaveSession} onClick={leaveSession}>
+                <button className={`${styles.leaveSession} ${styles.btnIcon}`} onClick={leaveSession}>
                   <h1>X</h1>
                 </button>
               </div>
@@ -318,25 +341,25 @@ const VideoChatComponent = () => {
 
           {/* 시간 */}
           <div className={styles.timeArray}>
-            {/* <div className={styles.time}>
+            <div className={styles.time}>
               <h1>{`${String(time.minutes).padStart(2, "0")}:${String(
                 time.seconds
               ).padStart(2, "0")}`}</h1>
-            </div> */}
+            </div>
           </div>
 
           {/* 화면 */}
           <div className={styles.bottom}>
             <div className={styles.screen}>
               {mainStreamManager !== null && (
-                <div className={styles.youvideoItem}>
+                <div className={styles.videoItem}>
                   <UserVideoComponent streamManager={mainStreamManager} />
                 </div>
               )}
               {subscribers.map((sub) => (
                 <div
                   key={sub.stream.connection.connectionId}
-                  className={styles.myvideoItem}
+                  className={styles.othervideoItem}
                 >
                   <UserVideoComponent streamManager={sub} />
                 </div>
@@ -347,7 +370,7 @@ const VideoChatComponent = () => {
             <div className={styles.subTitleArray}>
               <div className={styles.subTitle}></div>
             </div>
-            
+
             {/* 채팅 */}
             <div className={styles.chatingArray}>
               <div className={styles.chating}>

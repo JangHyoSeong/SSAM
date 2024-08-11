@@ -1,5 +1,6 @@
-package com.ssafy.ssam.global.chatbot.dto;
+package com.ssafy.ssam.global.chatbot.dto.response;
 
+import com.ssafy.ssam.global.chatbot.dto.Message;
 import lombok.*;
 
 import java.util.List;
@@ -27,8 +28,4 @@ public class GPTResponse {
 
     }
 
-    @Override
-    public String toString() {
-        return super.toString();
-    }
 }

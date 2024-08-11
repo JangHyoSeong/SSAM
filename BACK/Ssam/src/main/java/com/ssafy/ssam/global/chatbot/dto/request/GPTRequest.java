@@ -1,7 +1,8 @@
-package com.ssafy.ssam.global.chatbot.dto;
+package com.ssafy.ssam.global.chatbot.dto.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.ssafy.ssam.global.chatbot.dto.Message;
 import lombok.*;
 import java.util.List;
 

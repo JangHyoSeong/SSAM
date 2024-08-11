@@ -17,6 +17,7 @@ const apiUrl = import.meta.env.API_URL;
 const VideoChatComponent = () => {
   const { accessCode } = useParams();
   const [session, setSession] = useState(null);
+  const [token, setToken] = useState(null);
   const [mainStreamManager, setMainStreamManager] = useState(null);
   const [publisher, setPublisher] = useState(null);
   const [subscribers, setSubscribers] = useState([]);
@@ -26,14 +27,24 @@ const VideoChatComponent = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [isCameraOn, setIsCameraOn] = useState(true);
   const [isMicOn, setIsMicOn] = useState(true);
+  const [formattedDate, setFormattedDate] = useState("");
+  // const [timesub, setTimeSub] = useState("");
   const OV = useRef(new OpenVidu());
-
   const myUserName = useRef(`user_${Math.floor(Math.random() * 1000) + 1}`);
+
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     setTimeSub(new Date());
+  //   }, 1000);
+
+  //   return () => clearInterval(intervalId);
+  // }, []);
 
   // 컴포넌트가 마운트 될 때와 언마운트 될 때 이벤트 리스너 추가 및 제거
   useEffect(() => {
     window.addEventListener("beforeunload", onBeforeUnload);
     joinSession();
+
     return () => {
       window.removeEventListener("beforeunload", onBeforeUnload);
       leaveSession();
@@ -73,15 +84,17 @@ const VideoChatComponent = () => {
     });
 
     try {
-      const token = await getToken();
-      await mySession.connect(token, { clientData: myUserName.current });
+      const myToken = await getToken();
+      await mySession.connect(myToken.token, {
+        clientData: myUserName.current,
+      });
 
       let publisher = await OV.current.initPublisherAsync(undefined, {
         audioSource: undefined,
         videoSource: undefined,
         publishAudio: true,
         publishVideo: true,
-        resolution: "640x480",
+        resolution: "1280x660",
         frameRate: 30,
         insertMode: "APPEND",
         mirror: false,
@@ -99,11 +112,23 @@ const VideoChatComponent = () => {
       const currentVideoDevice = videoDevices.find(
         (device) => device.deviceId === currentVideoDeviceId
       );
-
+      setToken(myToken);
       setSession(mySession);
       setMainStreamManager(publisher);
       setPublisher(publisher);
       setCurrentVideoDevice(currentVideoDevice);
+
+      // 현재 시간
+      const nowdate = new Date().toLocaleString();
+      setTimeSub(nowdate);
+
+      // 날짜, 시간 들고오기
+      if (myToken && myToken.createdAt) {
+        const formatted = new Date(myToken.createdAt).toLocaleString();
+        setFormattedDate(formatted);
+      } else {
+        console.warn("Token or createdAt is undefined");
+      }
     } catch (error) {
       console.log(
         "There was an error connecting to the session:",
@@ -248,13 +273,12 @@ const VideoChatComponent = () => {
         accessCode: accessCode,
         userId: myUserName.current,
       });
-      return response.data.token;
+      return response.data;
     } catch (error) {
       console.error("Error getting token:", error);
       throw error;
     }
   };
-
 
   return (
     <div className={styles.videoArray}>
@@ -268,9 +292,13 @@ const VideoChatComponent = () => {
                 <img src={whitelogo} className={styles.logo} alt="Logo" />
               </div>
               {/* <h3>Session: {sessionId}</h3> */}
+
+              {/* 날짜, 시간 */}
               <div className={styles.dayArray}>
-                {/* <p>{formattedDate}</p> */}
+                <p>{formattedDate}</p>
+                {/* {timesub.toLocaleTimeString()} */}
               </div>
+
               <div className={styles.iconArray}>
                 {/* 녹화 버튼 */}
                 <button className={styles.btnIcon} onClick={toggleRecording}>
@@ -309,7 +337,10 @@ const VideoChatComponent = () => {
                 </button>
 
                 {/* 나가기 버튼 */}
-                <button className={styles.leaveSession} onClick={leaveSession}>
+                <button
+                  className={`${styles.leaveSession} ${styles.btnIcon}`}
+                  onClick={leaveSession}
+                >
                   <h1>X</h1>
                 </button>
               </div>
@@ -318,25 +349,21 @@ const VideoChatComponent = () => {
 
           {/* 시간 */}
           <div className={styles.timeArray}>
-            {/* <div className={styles.time}>
-              <h1>{`${String(time.minutes).padStart(2, "0")}:${String(
-                time.seconds
-              ).padStart(2, "0")}`}</h1>
-            </div> */}
+            <div className={styles.time}></div>
           </div>
 
           {/* 화면 */}
           <div className={styles.bottom}>
             <div className={styles.screen}>
               {mainStreamManager !== null && (
-                <div className={styles.youvideoItem}>
+                <div className={styles.videoItem}>
                   <UserVideoComponent streamManager={mainStreamManager} />
                 </div>
               )}
               {subscribers.map((sub) => (
                 <div
                   key={sub.stream.connection.connectionId}
-                  className={styles.myvideoItem}
+                  className={styles.othervideoItem}
                 >
                   <UserVideoComponent streamManager={sub} />
                 </div>
@@ -347,7 +374,7 @@ const VideoChatComponent = () => {
             <div className={styles.subTitleArray}>
               <div className={styles.subTitle}></div>
             </div>
-            
+
             {/* 채팅 */}
             <div className={styles.chatingArray}>
               <div className={styles.chating}>

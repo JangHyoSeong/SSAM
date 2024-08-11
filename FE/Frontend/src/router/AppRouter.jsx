@@ -38,6 +38,8 @@ import WebrtcPage from "../webrtc/react-webrtc-component";
 // Import the HOC
 import RoleBasedRoute from "./RoleBasedRoute.jsx";
 
+import VideoEntry from "../video/VideoEntry.jsx"; // 상담 참가 입장 화면
+
 const AppRouter = () => {
   const location = useLocation();
 
@@ -47,11 +49,11 @@ const AppRouter = () => {
     "/teacherjoin",
     "/studentlogin",
     "/studentjoin",
-    "/video/123",
+    "/video/15516",
   ];
   const showChatbot = !hideChatbotOnRoutes.includes(location.pathname);
 
-  const hideNavbarOnRoutes = ["/video/123"];
+  const hideNavbarOnRoutes = ["/video/15516"];
   const showNavbar = !hideNavbarOnRoutes.includes(location.pathname);
 
   return (
@@ -137,6 +139,9 @@ const AppRouter = () => {
 
           {/* WebRTC Route */}
           <Route path="/webrtc" element={<WebrtcPage />} />
+
+          {/* Test Page Route */}
+          <Route path="/video/entry" element={<VideoEntry />} />
         </Routes>
       </div>
 

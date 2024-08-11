@@ -18,38 +18,48 @@
   align-items: center;
 }
 
-.questionBox, .answerBox {
+.questionBox,
+.answerBox {
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-radius: 25px;
-  border: 3px solid #DFD0E8;
-  background: #FFF;
+  border: 3px solid #dfd0e8;
+  background: #fff;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   padding: 2.5vh;
-  width: 900px; /* 고정 너비 설정 */
-  box-sizing: border-box; /* 패딩과 보더를 포함한 크기 계산 */
+  width: 900px;
+  box-sizing: border-box;
 }
 
 .questionBox {
-  background-color: #fff; /* 질문 박스 색상 */
+  background-color: #fff;
 }
 
 .answerBox {
-  background-color: #F8EDFF; /* 답변 박스 색상 */
-  transition: background-color 0.3s; /* 배경색 전환 애니메이션 */
+  background-color: #f8edff;
+  transition: background-color 0.3s;
 }
 
 .answerBox:hover {
-  background-color: #ecd3fc; /* 마우스 오버 시 색상 */
+  background-color: #ecd3fc;
 }
 
 .icon {
   cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.icon:hover {
+  color: #007bff;
+}
+
+.iconTrash:hover {
+  color: #ea0000;
 }
 
 .answerBox.selected {
-  background-color: #ecd3fc; /* 선택된 답변 박스 색상 */
+  background-color: #ecd3fc;
 }
 
 .inputField {
@@ -68,7 +78,7 @@
 .authorAndDate {
   display: flex;
   flex-direction: column;
-  align-items: center; /* 왼쪽 정렬 */
+  align-items: center;
   text-align: center;
 }
 
@@ -83,31 +93,31 @@
 
 .question {
   flex: 1;
-  text-align: left; /* 왼쪽 정렬 */
-  margin-left: 2rem; /* 작성자와의 간격을 주기 위해 왼쪽 여백 추가 */
+  text-align: left;
+  margin-left: 2rem;
 }
 
 .answer {
   flex: 1;
-  text-align: left; /* 왼쪽 정렬 */
-  margin-left: 2rem; /* 작성자와의 간격을 주기 위해 왼쪽 여백 추가 */
+  text-align: left;
+  margin-left: 2rem;
 }
 
 .header {
   display: flex;
-  justify-content: center; /* 가로 중앙 정렬 */
-  align-items: center; /* 세로 중앙 정렬 */
+  justify-content: center;
+  align-items: center;
   background-color: #fff;
   padding: 1vh;
   border-radius: 8px;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 1vh; /* 아래 여백 추가 */
-  width: 1000px; /* 부모의 너비를 전체로 설정 */
+  margin-bottom: 1vh;
+  width: 1000px;
 }
 
 .header h2 {
   font-size: 20px;
-  text-align: center; /* 텍스트 중앙 정렬 */
+  text-align: center;
 }
 
 .header .highlight {

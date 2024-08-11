@@ -11,6 +11,7 @@ import mikeOn from "../assets/mikeOn.png";
 import mikeOff from "../assets/mikeOff.png";
 import cameraOn from "../assets/cameraOn.png";
 import cameraOff from "../assets/cameraOff.png";
+import Draggable from "react-draggable";
 
 const apiUrl = import.meta.env.API_URL;
 
@@ -31,7 +32,6 @@ const VideoChatComponent = () => {
   // const [timesub, setTimeSub] = useState("");
   const OV = useRef(new OpenVidu());
   const myUserName = useRef(`user_${Math.floor(Math.random() * 1000) + 1}`);
-
   const chatContainerRef = useRef(null);
 
   useEffect(() => {
@@ -372,12 +372,11 @@ const VideoChatComponent = () => {
                   </div>
                 )}
                 {subscribers.map((sub) => (
-                  <div
-                    key={sub.stream.connection.connectionId}
-                    className={styles.othervideoItem}
-                  >
-                    <UserVideoComponent streamManager={sub} />
-                  </div>
+                  <Draggable key={sub.stream.connection.connectionId}>
+                    <div className={styles.othervideoItem}>
+                      <UserVideoComponent streamManager={sub} />
+                    </div>
+                  </Draggable>
                 ))}
               </div>
               {/* 자막 */}

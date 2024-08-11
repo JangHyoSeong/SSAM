@@ -3,9 +3,6 @@ package com.ssafy.ssam.domain.consult.service;
 import com.ssafy.ssam.domain.classroom.repository.BoardRepository;
 import com.ssafy.ssam.domain.consult.dto.request.ConsultRequestDto;
 import com.ssafy.ssam.domain.consult.dto.request.SummaryRequestDto;
-import com.ssafy.ssam.domain.consult.dto.response.AppointmentResponseDto;
-import com.ssafy.ssam.domain.consult.dto.response.ConsultResponseDto;
-import com.ssafy.ssam.domain.consult.dto.response.ConsultSummaryDetailResponseDto;
 import com.ssafy.ssam.domain.consult.entity.Appointment;
 import com.ssafy.ssam.domain.consult.entity.AppointmentStatus;
 import com.ssafy.ssam.domain.consult.entity.Consult;
@@ -17,15 +14,13 @@ import com.ssafy.ssam.domain.user.entity.AlarmType;
 import com.ssafy.ssam.domain.user.service.AlarmService;
 import com.ssafy.ssam.domain.consult.repository.SummaryRepository;
 import com.ssafy.ssam.domain.user.entity.UserBoardRelation;
-import com.ssafy.ssam.domain.user.entity.UserBoardRelationStatus;
 import com.ssafy.ssam.domain.user.repository.UserBoardRelationRepository;
 import com.ssafy.ssam.global.amazonS3.service.S3TextService;
 import com.ssafy.ssam.global.auth.dto.CustomUserDetails;
 import com.ssafy.ssam.global.auth.entity.User;
 import com.ssafy.ssam.global.auth.repository.UserRepository;
 import com.ssafy.ssam.global.dto.CommonResponseDto;
-import com.ssafy.ssam.global.chatbot.service.GPTService;
-import com.ssafy.ssam.global.dto.CommonResponseDto;
+import com.ssafy.ssam.global.chatbot.service.GPTSummaryService;
 import com.ssafy.ssam.global.error.CustomException;
 import com.ssafy.ssam.global.error.ErrorCode;
 import lombok.Builder;
@@ -52,7 +47,7 @@ public class ConsultService {
     private final SummaryRepository summaryRepository;
     private final UserBoardRelationRepository userBoardRelationRepository;
     private final S3TextService s3TextService;
-    private final GPTService gptService;
+    private final GPTSummaryService gptSummaryService;
     private final BoardRepository boardRepository;
     private final AlarmService alarmService;
 
@@ -125,7 +120,7 @@ public class ConsultService {
         // 1)
         Appointment appointment = appointmentRepository.findByAppointmentId(consult.getAppointment().getAppointmentId()).orElseThrow(()->new CustomException(ErrorCode.AppointmentNotFoundException));
         // 2)
-        SummaryRequestDto summaryRequestDto = gptService.GPTsummaryConsult(talk, appointment.getTopic().toString());
+        SummaryRequestDto summaryRequestDto = gptSummaryService.GPTsummaryConsult(talk, appointment.getTopic().toString());
         Summary summary = Summary.toSummary(summaryRequestDto, consult);
         summaryRepository.save(summary);
 

@@ -43,8 +43,12 @@ public enum ErrorCode {
     // alarmException
     AlarmNotFoundException(HttpStatus.NOT_FOUND, "존재하지 않는 알람입니다"),
 
-    //S3Exception
-    FileNotFoundException(HttpStatus.NOT_FOUND, "아마존에는 해당 파일이 없습니다");
+    // S3Exception
+    FileNotFoundException(HttpStatus.NOT_FOUND, "아마존에는 해당 파일이 없습니다"),
+
+    // GPTException
+    GPTError(HttpStatus.BAD_REQUEST, "GPT 요청에서 에러가 발생했습니다"),
+    BoardDataNotFound(HttpStatus.BAD_REQUEST, "해당 학급에 입력된 정보가 없습니다");
 
 
     private final HttpStatus httpStatus;

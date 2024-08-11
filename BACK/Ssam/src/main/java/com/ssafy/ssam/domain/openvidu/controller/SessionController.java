@@ -268,7 +268,6 @@ public class SessionController {
                 .build();
 
             Recording recording = this.openVidu.startRecording(requestDto.getSessionId(), properties);
-            
             this.sessionRecordings.put(requestDto.getSessionId(), true);
             return ResponseEntity.ok(convertRecordingToDto(recording));
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {

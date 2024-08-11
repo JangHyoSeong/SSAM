@@ -8,7 +8,6 @@ const apiUrl = import.meta.env.API_URL;
 
 const VideoChatComponent = () => {
   const { accessCode } = useParams();
-  const [sessionId, setSessionId] = useState(null);
   const [session, setSession] = useState(null);
   const [mainStreamManager, setMainStreamManager] = useState(null);
   const [publisher, setPublisher] = useState(null);

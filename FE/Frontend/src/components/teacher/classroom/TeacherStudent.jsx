@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styles from "./TeacherStudent.module.scss";
 import { fetchStudentData } from "../../../apis/stub/35-43 학급/apiStubStudents";
 import { fetchStudentDetail } from "../../../apis/stub/47-49 학생관리/apiStudentDetail";
+import DefaultStudentImage from "../../../assets/student.png";
 
 const TeacherStudent = ({ onSelectStudent }) => {
   const [students, setStudents] = useState([]);
@@ -39,7 +40,7 @@ const TeacherStudent = ({ onSelectStudent }) => {
           onClick={() => handleStudentClick(student.studentId)}
         >
           <div className={styles.studentPhoto}>
-            {/* 학생 사진이 배경으로 설정됨 */}
+            <img src={student.profileImage || DefaultStudentImage} alt="학생" />
           </div>
           <div className={styles.studentName}>{student.name}</div>
         </div>

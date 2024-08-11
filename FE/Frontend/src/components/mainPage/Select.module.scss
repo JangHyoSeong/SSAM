@@ -49,7 +49,9 @@
 
 .selectArray {
   height: 100vh;
-  background-color: #5285ee;
+  // background: linear-gradient(135deg, #5589f0, #5285ee); /* 그라디언트 적용 */
+  overflow: hidden; /* 페이지 넘침 방지 */
+  background: #5285ee;
 }
 
 .mainTxt {
@@ -145,17 +147,21 @@
   position: absolute;
   width: 15%;
   padding: 20px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 2s ease-out, top 2s ease-out; /* 더 천천히 움직이도록 설정 */
+  transform: translateY(0); /* 초기 위치 설정 */
 
   &.round1 {
     top: 15%;
     left: 8%;
     animation: flyInFromLeft 1.1s ease-out;
+    width: 15%;
   }
 
   &.round2 {
     top: 20%;
     right: 3%;
+    width: 15%;
+
     animation: flyInFromRight 1.1s ease-out;
   }
 
@@ -165,4 +171,13 @@
     width: 20%;
     animation: flyInFromBottom 1.1s ease-out;
   }
+}
+
+/* 스크롤에 따른 변화 */
+.selectArray:focus-within .round1,
+.selectArray:focus-within .round2,
+.selectArray:focus-within .round3 {
+  transform: translateY(
+    calc(var(--scrollY) * 0.1px)
+  ); /* 40px 내외로 제한되도록 설정 */
 }

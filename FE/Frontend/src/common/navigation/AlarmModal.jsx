@@ -58,22 +58,22 @@ const AlarmModal = () => {
               </p>
               {post.alarmType === "QUESTION" && (
                 <a href={`${apiUrl}/teacherquestion`}>
-                  <p>Please check your inquiry</p>
+                  <p>문의사항을 확인해주세요</p>
                 </a>
               )}
               {post.alarmType === "ANSWER" && (
                 <a href={`${apiUrl}/studentquestion`}>
-                  <p>Please check your inquiry</p>
+                  <p>문의사항을 확인해주세요</p>
                 </a>
               )}
               {post.alarmType === "REGISTRATION" && (
                 <a href={`${apiUrl}/teacherauthorization`}>
-                  <p>Your approval request has been sent</p>
+                  <p>승인 요청을 보냈습니다</p>
                 </a>
               )}
               {post.alarmType === "ACCEPT" && (
                 <a href={`${apiUrl}/studentsubpage`}>
-                  <p>Your approval request has been accepted</p>
+                  <p>승인 요청이 수락되었습니다</p>
                 </a>
               )}
             </div>

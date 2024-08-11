@@ -3,12 +3,19 @@ import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { OpenVidu } from "openvidu-browser";
 import styles from "./Video.module.scss";
+import whitelogo from "../assets/whitelogo.png";
+import RECOn from "../assets/RECOn.png";
+import RECOff from "../assets/RECOff.png";
+import Conversion from "../assets/Conversion.png";
+import mikeOn from "../assets/mikeOn.png";
+import mikeOff from "../assets/mikeOff.png";
+import cameraOn from "../assets/cameraOn.png";
+import cameraOff from "../assets/cameraOff.png";
 
 const apiUrl = import.meta.env.API_URL;
 
 const VideoChatComponent = () => {
   const { accessCode } = useParams();
-  const [sessionId, setSessionId] = useState(null);
   const [session, setSession] = useState(null);
   const [mainStreamManager, setMainStreamManager] = useState(null);
   const [publisher, setPublisher] = useState(null);
@@ -17,7 +24,6 @@ const VideoChatComponent = () => {
   const [chatMessages, setChatMessages] = useState([]);
   const [chatInput, setChatInput] = useState("");
   const [isRecording, setIsRecording] = useState(false);
-  const [recordingId, setRecordingId] = useState(null);
   const [isCameraOn, setIsCameraOn] = useState(true);
   const [isMicOn, setIsMicOn] = useState(true);
   const OV = useRef(new OpenVidu());
@@ -70,7 +76,6 @@ const VideoChatComponent = () => {
       const token = await getToken();
       await mySession.connect(token, { clientData: myUserName.current });
 
-      setSessionId(mySession.sessionId);
       let publisher = await OV.current.initPublisherAsync(undefined, {
         audioSource: undefined,
         videoSource: undefined,
@@ -94,6 +99,7 @@ const VideoChatComponent = () => {
       const currentVideoDevice = videoDevices.find(
         (device) => device.deviceId === currentVideoDeviceId
       );
+
       setSession(mySession);
       setMainStreamManager(publisher);
       setPublisher(publisher);
@@ -174,7 +180,6 @@ const VideoChatComponent = () => {
             hasVideo: true,
           }
         );
-        setRecordingId(response.data.id);
         setIsRecording(true);
       } catch (error) {
         console.error("Error starting recording:", error);
@@ -185,7 +190,6 @@ const VideoChatComponent = () => {
           sessionId: session.sessionId,
         });
         setIsRecording(false);
-        setRecordingId(null);
       } catch (error) {
         console.error("Error stopping recording:", error);
       }
@@ -251,78 +255,100 @@ const VideoChatComponent = () => {
     }
   };
 
+
   return (
     <div className={styles.videoArray}>
       {session === null ? (
-        <div className="join-container d-flex align-items-center justify-content-center vh-100">
-          <div className="join-form-container bg-light p-5 rounded shadow">
-            <h2 className="text-center mb-4">Joining session...</h2>
-          </div>
-        </div>
+        <h1 className={styles.entering}>화상상담 입장 중...</h1>
       ) : (
         <div className={styles.top}>
           <div className={styles.menubarArray}>
             <div className={styles.menubar}>
-              <h3 className="m-0">Session: {sessionId}</h3>
-              <div>
-                <button
-                  className="btn btn-outline-light me-2"
-                  onClick={switchCamera}
-                >
-                  Switch Camera
+              <div className={styles.logoArray}>
+                <img src={whitelogo} className={styles.logo} alt="Logo" />
+              </div>
+              {/* <h3>Session: {sessionId}</h3> */}
+              <div className={styles.dayArray}>
+                {/* <p>{formattedDate}</p> */}
+              </div>
+              <div className={styles.iconArray}>
+                {/* 녹화 버튼 */}
+                <button className={styles.btnIcon} onClick={toggleRecording}>
+                  {isRecording ? (
+                    <img src={RECOn} className={styles.imgIcon} />
+                  ) : (
+                    <img src={RECOff} className={styles.imgIcon} />
+                  )}
                 </button>
-                <button
-                  className="btn btn-outline-light me-2"
-                  onClick={toggleRecording}
-                >
-                  {isRecording ? "Stop Recording" : "Start Recording"}
+
+                {/* 화면 전환 버튼 */}
+                <button className={styles.btnIcon} onClick={switchCamera}>
+                  <img
+                    src={Conversion}
+                    className={styles.imgIcon}
+                    onClick={switchCamera}
+                  />
                 </button>
-                <button
-                  className="btn btn-outline-light me-2"
-                  onClick={toggleCamera}
-                >
-                  {isCameraOn ? "Turn Off Camera" : "Turn On Camera"}
+
+                {/* 카메라 ON / Off 버튼 */}
+                <button className={styles.btnIcon} onClick={toggleCamera}>
+                  {isCameraOn ? (
+                    <img src={cameraOn} className={styles.imgIcon} />
+                  ) : (
+                    <img src={cameraOff} className={styles.imgIcon} />
+                  )}
                 </button>
-                <button
-                  className="btn btn-outline-light me-2"
-                  onClick={toggleMic}
-                >
-                  {isMicOn ? "Turn Off Mic" : "Turn On Mic"}
+
+                {/* 마이크 ON / Off 버튼 */}
+                <button className={styles.btnIcon} onClick={toggleMic}>
+                  {isMicOn ? (
+                    <img src={mikeOn} className={styles.imgIcon} />
+                  ) : (
+                    <img src={mikeOff} className={styles.imgIcon} />
+                  )}
                 </button>
-                <button className="btn btn-danger" onClick={leaveSession}>
-                  Leave Session
+
+                {/* 나가기 버튼 */}
+                <button className={styles.leaveSession} onClick={leaveSession}>
+                  <h1>X</h1>
                 </button>
               </div>
             </div>
           </div>
 
+          {/* 시간 */}
           <div className={styles.timeArray}>
-            <div className={styles.time}>
-              <h1>04 : 49</h1>
-            </div>
+            {/* <div className={styles.time}>
+              <h1>{`${String(time.minutes).padStart(2, "0")}:${String(
+                time.seconds
+              ).padStart(2, "0")}`}</h1>
+            </div> */}
           </div>
 
+          {/* 화면 */}
           <div className={styles.bottom}>
             <div className={styles.screen}>
               {mainStreamManager !== null && (
-                <div className={styles.videoItem}>
+                <div className={styles.youvideoItem}>
                   <UserVideoComponent streamManager={mainStreamManager} />
                 </div>
               )}
               {subscribers.map((sub) => (
                 <div
                   key={sub.stream.connection.connectionId}
-                  className={styles.videoItem}
+                  className={styles.myvideoItem}
                 >
                   <UserVideoComponent streamManager={sub} />
                 </div>
               ))}
             </div>
 
+            {/* 자막 */}
             <div className={styles.subTitleArray}>
               <div className={styles.subTitle}></div>
             </div>
-
+            
+            {/* 채팅 */}
             <div className={styles.chatingArray}>
               <div className={styles.chating}>
                 {chatMessages.map((msg, index) => (
@@ -338,18 +364,15 @@ const VideoChatComponent = () => {
                   </div>
                 ))}
               </div>
-              <div>
+              <div className={styles.chatInputArray}>
                 <input
                   type="text"
                   value={chatInput}
                   className={styles.chatForm}
                   onChange={(e) => setChatInput(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && sendChatMessage()}
-                  placeholder="Type a message..."
+                  placeholder="채팅을 입력해주세요"
                 />
-                <button className={styles.chatSend} onClick={sendChatMessage}>
-                  Send
-                </button>
               </div>
             </div>
           </div>
@@ -359,7 +382,6 @@ const VideoChatComponent = () => {
   );
 };
 
-// 유저 비디오 컴포넌트
 const UserVideoComponent = ({ streamManager }) => {
   const videoRef = useRef();
 

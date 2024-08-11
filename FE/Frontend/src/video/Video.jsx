@@ -17,7 +17,6 @@ const VideoChatComponent = () => {
   const [chatMessages, setChatMessages] = useState([]);
   const [chatInput, setChatInput] = useState("");
   const [isRecording, setIsRecording] = useState(false);
-  const [recordingId, setRecordingId] = useState(null);
   const [isCameraOn, setIsCameraOn] = useState(true);
   const [isMicOn, setIsMicOn] = useState(true);
   const OV = useRef(new OpenVidu());
@@ -93,7 +92,7 @@ const VideoChatComponent = () => {
       const currentVideoDevice = videoDevices.find(
         (device) => device.deviceId === currentVideoDeviceId
       );
-      console.warn(session.sessionId);
+
       setSession(mySession);
       setMainStreamManager(publisher);
       setPublisher(publisher);
@@ -168,13 +167,12 @@ const VideoChatComponent = () => {
         const response = await axios.post(
           `${apiUrl}/v1/video/recording/start`,
           {
-            accessCode: accessCode,
+            sessionId: session.sessionId,
             outputMode: "COMPOSED",
             hasAudio: true,
             hasVideo: true,
           }
         );
-        setRecordingId(response.data.id);
         setIsRecording(true);
       } catch (error) {
         console.error("Error starting recording:", error);
@@ -182,11 +180,9 @@ const VideoChatComponent = () => {
     } else {
       try {
         await axios.post(`${apiUrl}/v1/video/recording/stop`, {
-          recordingId: recordingId,
+          sessionId: session.sessionId,
         });
         setIsRecording(false);
-        setRecordingId(null);
-        console.warn(recordingId);
       } catch (error) {
         console.error("Error stopping recording:", error);
       }
@@ -264,7 +260,7 @@ const VideoChatComponent = () => {
         <div className={styles.top}>
           <div className={styles.menubarArray}>
             <div className={styles.menubar}>
-              <h3 className="m-0">Session: {sessionId}</h3>
+              <h3 className="m-0">Session: {session.sessionId}</h3>
               <div>
                 <button
                   className="btn btn-outline-light me-2"

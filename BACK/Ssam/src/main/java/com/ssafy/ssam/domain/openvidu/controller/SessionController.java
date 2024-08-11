@@ -279,10 +279,9 @@ public class SessionController {
     @PostMapping("/recording/stop")
     public ResponseEntity<RecordingDto> stopRecording(@RequestBody RecordingRequestDto requestDto) {
         try {
-        	System.out.println("MY RECODING ID ::: " + requestDto.getRecordingId());
-            Recording recording = this.openVidu.stopRecording(requestDto.getRecordingId());
-
-            this.sessionRecordings.remove(recording.getSessionId());
+        	System.out.println("STOP RECORDING AT SESSION ID ::: " + requestDto.getSessionId());
+            Recording recording = this.openVidu.stopRecording(requestDto.getSessionId());
+            this.sessionRecordings.remove(requestDto.getSessionId());
             return ResponseEntity.ok(convertRecordingToDto(recording));
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
             throw new RuntimeException("Error stopping recording", e);
@@ -292,7 +291,7 @@ public class SessionController {
     @DeleteMapping("/recording")
     public ResponseEntity<Void> deleteRecording(@RequestBody RecordingRequestDto requestDto) {
         try {
-            this.openVidu.deleteRecording(requestDto.getRecordingId());
+            this.openVidu.deleteRecording(requestDto.getSessionId());
             return ResponseEntity.ok().build();
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
             throw new RuntimeException("Error deleting recording", e);

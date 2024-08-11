@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaTrash, FaPen, FaPlus, FaMinus } from "react-icons/fa";
 import { useQuestions } from "../../../store/QuestionStore";
 import ParentsDeleteModal from "./ParentsDeleteModal";
 import styles from "./ParentsQuestion.module.scss";
+import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
 
 const ParentsQuestion = () => {
   const { questions, addQuestion, deleteQuestion } = useQuestions();
+  const [userId, setUserId] = useState(null); // 사용자 ID 상태 추가
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [newQuestion, setNewQuestion] = useState("");
@@ -14,7 +16,18 @@ const ParentsQuestion = () => {
   const [error, setError] = useState(null);
   const [isInputOpen, setIsInputOpen] = useState(false);
 
-  console.log("ParentsQuestion", questions);
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const { userId } = await fetchApiUserInitial();
+        setUserId(userId);
+      } catch (error) {
+        console.error("Failed to fetch user ID:", error);
+      }
+    };
+
+    fetchUserId();
+  }, []);
 
   const handleDeleteClick = (questionId) => {
     setIsDeleteModalOpen(true);
@@ -121,10 +134,12 @@ const ParentsQuestion = () => {
               </div>
               <p className={styles.content}>{item.content}</p>
             </div>
-            <FaTrash
-              onClick={() => handleDeleteClick(item.questionId)}
-              className={isLoading ? styles.disabledIcon : styles.trashicon}
-            />
+            {userId === item.studentId && ( // userId와 studentId가 같을 때만 FaTrash 아이콘을 렌더링
+              <FaTrash
+                onClick={() => handleDeleteClick(item.questionId)}
+                className={isLoading ? styles.disabledIcon : styles.trashicon}
+              />
+            )}
           </div>
           {item.answer && (
             <div className={styles.answerBox}>

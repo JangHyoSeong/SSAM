@@ -15,7 +15,7 @@
   border-radius: 8px;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 1vh; /* 아래 여백 추가 */
-  width: 100%; /* 부모의 너비를 전체로 설정 */
+  width: 900px; /* 부모의 너비를 전체로 설정 */
 }
 
 .header h2 {
@@ -230,10 +230,6 @@
   color: #fff;
 }
 
-.inputContainer button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
 .iconCircle {
   display: flex;
   align-items: center;

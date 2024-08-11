@@ -16,7 +16,6 @@ import lombok.Setter;
 public class RecordingRequestDto {
 	private String userId;
     private String sessionId;
-    private String recordingId;
     private Recording.OutputMode outputMode;
     private boolean hasAudio;
     private boolean hasVideo;

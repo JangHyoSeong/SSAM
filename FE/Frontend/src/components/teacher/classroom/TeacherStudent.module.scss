@@ -1,45 +1,50 @@
 .studentList {
   display: grid;
-  grid-template-columns: repeat(6, 1fr); /* 6열로 설정 */
-  // gap: 4vw; /* 각 학생 아이템 간의 간격 조정 */
-  width: 100%; /* 부모 요소의 너비를 채우도록 설정 */
+  grid-template-columns: repeat(6, 1fr); /* 6 columns */
+  gap: 2vw; /* Adjusted gap between student items */
+  width: 100%; /* Take up the full width of the parent */
 }
 
 .studentItem {
   display: flex;
   flex-direction: column;
   align-items: center;
+  cursor: pointer; /* Changes the cursor to a pointer on hover */
 }
 
 .studentPhoto {
-  margin-top: 4vh; /* 상단 여유 공간을 줄임 */
-  width: 10vw; /* 반응형 너비 */
-  height: 10vw; /* 반응형 높이, 너비와 같게 설정하여 원형 유지 */
-  max-width: 150px; /* 최대 너비 */
-  max-height: 150px; /* 최대 높이 */
-  border-radius: 50%;
-  border: 3px solid black;
-  background-color: #ffffff; /* 사진이 없을 때 배경 색상 */
+  margin-top: 2vh; /* Reduced top margin */
+  width: 10vw; /* Responsive width */
+  height: 10vw; /* Responsive height, matches width for circular shape */
+  max-width: 150px; /* Maximum width */
+  max-height: 150px; /* Maximum height */
+  border-radius: 50%; /* Circle shape */
+  border: 3px solid black; /* Border around the photo */
+  background-color: #ffffff; /* Background color when no image is available */
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url("../../../assets/student.png"); /* 학생 사진 배경 이미지 설정 */
-  background-size: cover; /* 배경 이미지 크기 조정 */
-  background-position: center; /* 배경 이미지 위치 조정 */
-  cursor: pointer;
+  overflow: hidden; /* Ensures the image stays within the circle */
+}
+
+.studentPhoto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the image covers the entire container */
+  border-radius: 50%; /* Makes sure the image is also circular */
 }
 
 .studentName {
-  margin-top: 1vh; /* 사진과 이름 간의 간격을 줄임 */
+  margin-top: 1vh; /* Reduced margin between the photo and the name */
   text-align: center;
   font-size: 23px;
 }
 
 .studentLink {
-  text-decoration: none; /* 링크 밑줄 제거 */
-  color: inherit; /* 부모 요소의 색상 상속 */
+  text-decoration: none; /* Removes underline from links */
+  color: inherit; /* Inherits the color from the parent element */
 
   &:hover {
-    color: #5285ee; /* 호버 시 색상 변경 */
+    color: #5285ee; /* Changes color on hover */
   }
 }

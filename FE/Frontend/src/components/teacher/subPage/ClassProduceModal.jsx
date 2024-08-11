@@ -7,7 +7,7 @@ const ClassProduceModal = () => {
   const [showModal, setShowModal] = useState(true);
   const [grade, setGrade] = useState("");
   const [classroom, setClassroom] = useState("");
-  const [showConfirmation, setShowConfirmation] = useState(false); // 새로운 상태 추가
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const classClose = () => {
     setShowModal(false);

@@ -2,13 +2,24 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import styles from "./EnterCode.module.scss";
 import ClassEnterModal from "./ClassEnterModal";
+import { useNavigate } from "react-router-dom";
 const apiUrl = import.meta.env.API_URL;
 
 const EnterCode = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isClassModalOpen, setIsClassModalOpen] = useState(false);
+  const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
 
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
+  const toggleClassModal = () => {
+    setIsClassModalOpen(!isClassModalOpen);
+  };
+
+  const toggleConsultationModal = () => {
+    setIsConsultationModalOpen(!isConsultationModalOpen);
+  };
+  const navigate = useNavigate(); // useNavigate 훅을 사용해 navigate 정의
+
+  const handleConsultationStart = () => {
+    navigate("/video/entry"); // 경로를 videoentry로 이동
   };
 
   const useProfile = () => {
@@ -44,29 +55,29 @@ const EnterCode = () => {
   return (
     <div className={styles.EnterArray}>
       <div className={styles.welcomeBox}>
-        <h2>
+        <h3>
           {profile.name}님<br /> 환영합니다
-        </h2>
+        </h3>
       </div>
       <div className={styles.codeBox}>
         <h3>
           선생님께 받은 초대코드로
           <br /> 학급을 등록하세요.
         </h3>
-        <button className={styles.classBtn} onClick={toggleModal}>
+        <button className={styles.classBtn} onClick={toggleClassModal}>
           초대코드 입력하기
         </button>
-        {isModalOpen && <ClassEnterModal />}
+        {isClassModalOpen && <ClassEnterModal />}
       </div>
-      {/* 클릭하면 상담코드로 이동하도록 수정 */}
+      {/* 클릭하면 videoentry 화면으로 이동하도록 수정 */}
       <div className={styles.codeBox}>
         <h3>예정된 상담이 있습니다.</h3>
-        <button className={styles.classBtn} onClick={toggleModal}>
+        <button className={styles.classBtn} onClick={handleConsultationStart}>
           상담 시작하기
         </button>
-        {isModalOpen && <ClassEnterModal />}
       </div>
     </div>
   );
 };
+
 export default EnterCode;

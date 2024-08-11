@@ -2,6 +2,8 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import styles from "./TeacherUpdate.module.scss";
+import Swal from "sweetalert2";
+
 const apiUrl = import.meta.env.API_URL;
 
 const useProfile = () => {
@@ -91,6 +93,16 @@ const TeacherUpdate = () => {
           "Content-Type": "multipart/form-data",
         },
       });
+      Swal.fire({
+        text: "변경사항이 성공적으로 저장되었습니다.",
+        icon: "success",
+        confirmButtonText: "확인",
+        customClass: {
+          popup: "my-swal-popup",
+          confirmButton: "my-swal-confirm-button",
+        },
+        width: "auto", // 기본 옵션에서 width 설정을 auto로 변경
+      });
 
       console.log("Profile updated successfully:", response.data);
     } catch (error) {
@@ -119,8 +131,8 @@ const TeacherUpdate = () => {
           <table className={styles.tableArray}>
             <tbody>
               <tr>
-                <th>사진</th>
-                <td className={styles.imgTd}>
+                <th style={{ borderTop: 'none' }}>사진</th>
+                <td className={styles.imgTd} style={{ borderTop: 'none' }}>
                   <div className={styles.profileImg}>
                     {profile.profileImage && (
                       <img
@@ -219,8 +231,8 @@ const TeacherUpdate = () => {
                 </td>
               </tr>
               <tr>
-                <th>휴대전화</th>
-                <td>
+                <th style={{ borderBottom: 'none' }}>휴대전화</th>
+                <td style={{ borderBottom: 'none' }}>
                   <input
                     type="text"
                     name="phone"
@@ -228,6 +240,7 @@ const TeacherUpdate = () => {
                     onChange={(e) =>
                       setProfileData({ ...profile, selfPhone: e.target.value })
                     }
+                    
                   />
                 </td>
               </tr>

@@ -47,14 +47,6 @@
   height: 8vh;
 }
 
-.btnIcon {
-  border-style: none;
-  background-color: transparent;
-}
-
-.imgIcon {
-  cursor: pointer;
-}
 
 .dayArray {
   display: flex;
@@ -69,23 +61,25 @@
 
 .iconArray {
   display: flex;
+  align-items: center;
   justify-content: space-evenly;
   width: 40vw;
 }
 
-.iconArray img {
-  width: 3.5vw;
+.btnIcon {
+  border-style: none;
+  background-color: transparent;
 }
 
-.leaveSession {
-  background-color: transparent;
-  border-style: none;
+.imgIcon {
+  width: 3.5vw;
+  cursor: pointer;
 }
 
 .leaveSession h1 {
-  cursor: pointer;
   color: red;
   font-size: 300%;
+  cursor: pointer;
 }
 
 .timeArray {
@@ -93,7 +87,6 @@
   justify-content: center;
   align-items: center;
   width: 25vw;
-  height: 15vh;
 }
 
 .time {
@@ -116,16 +109,43 @@
 }
 
 // videoItem 화면
-.myvideoItem {
-  position: absolute;
-  top: 15%;
-  left: 4%;
-}
+// .myvideoItem {
+//   position: absolute;
+//   top: 15%;
+//   left: 4%;
+// }
+
+// .youvideoItem {
+//   position: absolute;
+//   top: 15%;
+//   left: 39%;
+// }
 
 .youvideoItem {
-  position: absolute;
-  top: 15%;
-  left: 39%;
+  width: 640px;
+  height: 480px;
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.myvideoItem {
+  width: 320px;
+  height: 240px;
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.screen {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 
 .subTitleArray {

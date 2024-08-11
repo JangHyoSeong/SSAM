@@ -1,4 +1,3 @@
-// // 선생님 정보 수정 페이지 컴포넌트
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
@@ -50,6 +49,12 @@ const useProfile = () => {
 
 const TeacherUpdate = () => {
   const profile = useProfile();
+
+  // Function to handle Google Account linking
+  const handleLinkGoogleAccount = () => {
+    window.location.href = "http://localhost:8081/oauth2/authorization/google";
+  };
+
   return (
     <div className={styles.Container}>
       <div className={styles.menuNavbar}>
@@ -121,6 +126,14 @@ const TeacherUpdate = () => {
               취소
             </button>
           </div>
+          {/* Add Google Account Link Button Here */}
+          <button
+            type="button"
+            className={styles.googleLinkBtn}
+            onClick={handleLinkGoogleAccount}
+          >
+            구글 계정 연동
+          </button>
         </form>
       </div>
     </div>

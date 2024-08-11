@@ -1,12 +1,23 @@
 package com.ssafy.ssam.global.auth.entity;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.Set;
+
+@RequiredArgsConstructor
 @Getter
 public enum UserRole {
-    STUDENT,
-    TEACHER,
-    ADMIN;
+    STUDENT("ROLE_STUDENT"),
+    TEACHER("ROLE_TEACHER"),
+    ADMIN("ROLE_ADMIN"),
+    GUEST("ROLE_GUEST");
+
+    private final String key;
+    public Set<SimpleGrantedAuthority> getGrantedAuthorities() {
+        return Set.of(new SimpleGrantedAuthority(this.getKey()));
+    }
 //    STUDENT("STUDENT", "1"),
 //    TEACHER("TEACHER", "2"),
 //    ADMIN("ADMIN", "3");

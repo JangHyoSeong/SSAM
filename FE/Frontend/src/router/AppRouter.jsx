@@ -4,6 +4,7 @@ import Chatbot from "../common/chatbot/Chatbot.jsx";
 import SubNavbar from "../common/navigation/SubNavbar.jsx";
 import MainNavbar from "../common/navigation/MainNavbar.jsx";
 import Video from "../video/Video.jsx";
+import OAuthResponse from "../common/OAuthResponse.jsx";
 
 // Teacher components
 import TeacherJoin from "../components/teacher/join/TeacherJoin";
@@ -70,6 +71,7 @@ const AppRouter = () => {
           <Route path="/teacherjoin" element={<TeacherJoin />} />
           <Route path="/studentlogin" element={<ParentsLogin />} />
           <Route path="/studentjoin" element={<ParentsJoin />} />
+          <Route path="/auth/oauth-response/:token" element={<OAuthResponse />} />
 
           {/* 선생님 */}
           <Route element={<RoleBasedRoute allowedRoles={["TEACHER"]} />}>

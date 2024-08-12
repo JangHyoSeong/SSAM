@@ -3,7 +3,7 @@ import styles from "./Chatbot.module.scss";
 import chatbotImg from "../../assets/chatbot.png";
 import StudentChatModal from "./StudentChatModal"; // StudentChatModal만 사용
 
-const Chatbot = () => {
+const StudentChatbot = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const toggleModalVisibility = () => {
@@ -27,4 +27,4 @@ const Chatbot = () => {
   );
 };
 
-export default Chatbot;
+export default StudentChatbot;

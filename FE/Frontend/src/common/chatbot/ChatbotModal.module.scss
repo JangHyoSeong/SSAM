@@ -1,14 +1,3 @@
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px); /* 아래에서 위로 올라오는 효과 */
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0); /* 원래 위치로 이동 */
-  }
-}
-
 .modalContent {
   position: fixed;
   bottom: 5%;
@@ -20,7 +9,7 @@
   border-radius: 15px;
   margin-bottom: 2%;
   opacity: 0; /* 초기 투명도 */
-  animation: slideUp 0.4s ease-out forwards; /* 슬라이드 애니메이션 적용 */
+  // animation: slideUp 0.4s ease-out forwards; /* 슬라이드 애니메이션 적용 */
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
 }
 

@@ -15,5 +15,6 @@ public class BoardGetByPinResponseDTO {
     private Integer classroom;
     private String teacherName;
     private String teacherImage;
+    private String isDeleted;
 
 }

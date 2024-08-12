@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import PropTypes from "prop-types";
 import { FiCalendar } from "react-icons/fi";
 import useTeacherCalendarStore, {
@@ -27,10 +27,19 @@ const ParentsReservationList = ({ selectedDate }) => {
   const [consultationDescription, setConsultationDescription] = useState("");
   const [userId, setUserId] = useState(null);
 
+  // 상담 정보 새로고침 함수
+  const refreshConsultations = useCallback(async () => {
+    try {
+      await fetchReservations();
+    } catch (error) {
+      console.error("Failed to refresh consultations:", error);
+    }
+  }, [fetchReservations]);
+
   // 컴포넌트 마운트 시 예약 정보 가져오기
   useEffect(() => {
-    fetchReservations();
-  }, [fetchReservations]);
+    refreshConsultations();
+  }, [refreshConsultations]);
 
   // 사용자 ID 가져오기
   useEffect(() => {
@@ -67,16 +76,17 @@ const ParentsReservationList = ({ selectedDate }) => {
       ) {
         // 상담 취소 로직
         try {
+          console.log("Cancelling appointment:", consultation); // 디버깅용 로그
+          if (!consultation.appointmentId) {
+            console.error("appointmentId is missing");
+            return;
+          }
           await fetchApiCancelReservation(consultation.appointmentId);
-          const updatedConsultations = consultations.map((c, i) => {
-            if (i === index) {
-              return { ...c, status: "CANCEL", studentId: null };
-            }
-            return c;
-          });
-          setConsultations(updatedConsultations);
+          // 취소 성공 후 상담 정보 새로고침
+          await refreshConsultations();
         } catch (error) {
           console.error("상담 취소 실패:", error);
+          console.error("Error details:", error.response?.data);
         }
       } else {
         // 기존의 신청 로직
@@ -123,6 +133,17 @@ const ParentsReservationList = ({ selectedDate }) => {
       }
     };
 
+    // ConsultationButton에 대한 PropTypes 추가
+    ConsultationButton.propTypes = {
+      consultation: PropTypes.shape({
+        status: PropTypes.string.isRequired,
+        studentId: PropTypes.string,
+        appointmentId: PropTypes.string.isRequired,
+        time: PropTypes.string.isRequired,
+      }).isRequired,
+      index: PropTypes.number.isRequired,
+    };
+
     return (
       <button
         className={getButtonClasses()}
@@ -165,18 +186,9 @@ const ParentsReservationList = ({ selectedDate }) => {
           formattedEndTime
         );
 
-        // 상담 목록 업데이트
-        const updatedConsultations = consultations.map((consultation, i) => {
-          if (i === clickedIndex) {
-            return {
-              ...consultation,
-              status: "APPLY",
-              studentId: userId, // 예약한 학생 ID 설정
-            };
-          }
-          return consultation;
-        });
-        setConsultations(updatedConsultations);
+        // 예약 성공 후 상담 정보 새로고침
+        await refreshConsultations();
+
         setClickedIndex(null);
         setShowModal(true);
 
@@ -191,7 +203,7 @@ const ParentsReservationList = ({ selectedDate }) => {
 
   // 취소 버튼 핸들러
   const handleCancel = () => {
-    fetchReservations();
+    refreshConsultations();
   };
 
   return (

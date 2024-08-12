@@ -134,6 +134,7 @@ public class BoardService {
         Integer classroom = board.getClassroom();
         String teacherName = teacher.getName();
         String teacherImage = teacher.getImgUrl();
+        String isDeleted = board.getIsDeprecated() == 1 ? "true" : "false";
 
         return BoardGetByPinResponseDTO.builder()
                 .boardId(boardId)
@@ -142,6 +143,7 @@ public class BoardService {
                 .classroom(classroom)
                 .teacherName(teacherName)
                 .teacherImage(teacherImage)
+                .isDeleted(isDeleted)
                 .build();
     }
 

@@ -1,15 +1,10 @@
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
-}
-
 .inviteArray {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
 
+  // welcomeBox와 codeBox에 공통으로 적용되는 스타일
   .welcomeBox,
   .codeBox {
     display: flex;
@@ -19,30 +14,10 @@
     background-color: rgba(218, 233, 255, 0.9); // 약간의 투명도 추가
     border-radius: 15px;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    padding: 50px;
+    padding: 40px;
     margin-bottom: 10px;
     text-align: center;
     white-space: nowrap;
-  }
-
-  .inviteCodeBox {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    margin-top: 3%;
-    text-align: center;
-    // width: 38vw;
-    // height: 23vh;
-    background-color: #dae9ff;
-    border-radius: 15px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    opacity: 0;
-    animation: fadeIn 1s ease-in forwards;
-    z-index: 1;
-    padding-top: 1%;
-    // white-space: nowrap;
   }
 
   .codeBox h3 {
@@ -50,15 +25,35 @@
     margin: 0 0 10px 0;
   }
 
+  .coreBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: rgba(218, 233, 255, 0.9); // 약간의 투명도 추가
+    border-radius: 15px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    margin-bottom: 10px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .coreBox h3 {
+    font-size: 0.9em;
+    margin: 0 0 10px 0;
+  }
+
   .copyButton {
     display: flex;
+    flex-direction: column;
     gap: 5%;
     margin-top: 2%;
   }
 
   .copyButton button {
-    padding: 0% 3%;
-    font-size: 75%;
+    padding: 8px 15px; // 버튼 크기를 EnterCode.module.scss의 classBtn과 동일하게 수정
+    font-size: 0.8em; // 폰트 크기 조정
     border-style: none;
     border-radius: 5px;
     background-color: white;
@@ -71,22 +66,43 @@
   .btnArray {
     width: 100%;
     display: flex;
+    flex-direction: column; /* 버튼을 column으로 정렬 */
     justify-content: center;
     align-items: center;
-    margin-top: 2%;
-    gap: 2%;
+    margin-top: 30px;
+    gap: 10px; /* 버튼 사이의 간격을 설정 */
   }
 
   .pinBtn,
-  .deleteBtn,
-  .classBtn {
-    padding: 10px 20px;
-    border-radius: 25px;
-    font-size: 120%;
+  .deleteBtn {
+    width: 100%; /* 버튼의 크기를 동일하게 설정 */
+    padding: 8px 15px; /* 버튼 크기를 동일하게 유지 */
+    border-radius: 20px; /* 동일한 border-radius로 수정 */
+    font-size: 0.8em; /* 폰트 크기 조정 */
+    color: #5285ee;
+    border-color: #5285ee;
     background-color: white;
     border: 1px solid;
     cursor: pointer;
     transition: all 0.3s ease;
+  }
+
+  .classBtn {
+    width: 100%; /* 버튼의 크기를 동일하게 설정 */
+    padding: 8px 15px; /* 버튼 크기를 동일하게 유지 */
+    border-radius: 20px; /* 동일한 border-radius로 수정 */
+    font-size: 0.8em; /* 폰트 크기 조정 */
+    color: #5285ee;
+    border-color: #5285ee;
+    background-color: white;
+    border: 1px solid;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: #5285ee;
+      color: white;
+    }
   }
 
   .pinBtn {
@@ -108,150 +124,4 @@
       color: white;
     }
   }
-
-  .classBtn {
-    color: #5285ee;
-    border-color: #5285ee;
-
-    &:hover {
-      background-color: #5285ee;
-      color: white;
-    }
-  }
-
-  .inviteCodeBox h3 {
-    font-size: 0.9em;
-    margin: 0 0 10px 0;
-  }
 }
-
-// @keyframes fadeIn {
-//   to {
-//     opacity: 1;
-//   }
-// }
-
-// .inviteArray {
-//   // width: 100vw;
-//   // display: flex;
-//   // justify-content: center;
-//   // align-items: center;
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: space-between; // 세로 방향으로 컨텐츠 분산
-//   height: 100%; // 부모 컨테이너의 높이를 채움
-
-//   .welcomeBox,
-//   .inviteCodeBox {
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-//     flex-direction: column;
-//     margin-top: 3%;
-//     text-align: center;
-//     width: 38vw;
-//     height: 23vh;
-//     background-color: #dae9ff;
-//     border-radius: 25px;
-//     box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
-//     transition: transform 0.3s ease, box-shadow 0.3s ease;
-//     opacity: 0;
-//     animation: fadeIn 1s ease-in forwards;
-//     z-index: 1;
-//     padding-top: 1%;
-//   }
-
-//   .codeBox h3 {
-//     font-size: 0.9em;
-//     margin: 0 0 10px 0;
-//   }
-// }
-
-// .deleteBtn {
-//   margin: 4% 2%;
-//   padding: 1% 5%;
-//   border-radius: 25px;
-//   font-size: 100%;
-//   color: #ee5252;
-//   border-color: #ee5252;
-//   border: 2px solid #ee5252;
-//   background-color: white;
-//   cursor: pointer;
-// }
-
-// .deleteBtn:hover {
-//   border: none;
-//   color: white;
-//   background-color: #ee5252;
-//   border: 2px solid #ee5252;
-// }
-
-// .pinBtn {
-//   margin: 4% 2%;
-//   padding: 1% 5%;
-//   border-radius: 25px;
-//   font-size: 100%;
-//   color: #5285ee;
-//   border-color: #5285ee;
-//   background-color: white;
-//   border: 2px solid #5285ee;
-//   cursor: pointer;
-// }
-
-// .pinBtn:hover {
-//   border: none;
-//   background-color: #5285ee;
-//   color: white;
-//   border: 2px solid #5285ee;
-// }
-
-// .btn {
-//   display: flex;
-//   white-space: nowrap;
-// }
-
-// .copyButton {
-//   display: flex;
-//   gap: 5%;
-//   margin-top: 2%;
-// }
-
-// .copyButton button:hover {
-//   background-color: #f4f4f4;
-// }
-
-// .copyButton button {
-//   padding: 0% 3%;
-//   font-size: 75%;
-//   border-style: none;
-//   border-radius: 5px;
-//   background-color: white;
-// }
-
-// .btnArray {
-//   width: 100%;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   margin-top: 2%;
-//   gap: 2%;
-// }
-
-// .classBtn {
-//   margin: 4% 2%;
-//   padding: 1% 5%;
-//   border-radius: 25px;
-//   font-size: 100%;
-//   color: #5285ee;
-//   border-color: #5285ee;
-//   background-color: white;
-//   border: 2px solid #5285ee;
-//   cursor: pointer;
-// }
-
-// .classBtn:hover {
-//   border: none;
-//   background-color: #5285ee;
-//   color: white;
-//   border: 2px solid #5285ee;
-// }

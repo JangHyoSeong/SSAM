@@ -43,11 +43,11 @@ public class CustomOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         String providerId = oAuth2User.getAttribute("sub");
         String provider = ((OAuth2AuthenticationToken) authentication).getAuthorizedClientRegistrationId();
 
+
         // state 파라미터에서 원래 사용자 ID 추출
-        String state = request.getParameter("userId");
-        Integer userId = extractUserIdFromState(state);
-//        String userId = request.getParameter("userId");
-        System.out.println(userId);
+//        String state = request.getParameter("state");
+//        Integer userId = extractUserIdFromState(state);
+
         OAuthUser linkedOAuthUser = oAuthUserRepository.findByProviderAndProviderId(provider, providerId)
                 .orElse(null);
 
@@ -55,9 +55,9 @@ public class CustomOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             // 이미 연결된 계정이 있는 경우
             User user = linkedOAuthUser.getUser();
             loginUser(response, user);
-        } else if (userId != null) {
+        } else {
             // 현재 로그인된 사용자와 OAuth 계정 연결
-            User user = userRepository.findById(Integer.valueOf(userId))
+            User user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
 
             OAuthUser newOAuthUser = new OAuthUser();
@@ -70,20 +70,23 @@ public class CustomOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/account-linked")
                     .build().toUriString();
             response.sendRedirect(redirectUrl);
-        } else {
-            // 연결할 계정이 없는 경우
-            String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/login")
-                    .queryParam("error", "No linked account found")
-                    .build().toUriString();
-            response.sendRedirect(redirectUrl);
         }
+//        else {
+//            // 연결할 계정이 없는 경우
+//            String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/login")
+//                    .queryParam("error", "No linked account found")
+//                    .build().toUriString();
+//            response.sendRedirect(redirectUrl);
+//        }
     }
 
     private Integer extractUserIdFromState(String state) {
         try {
             if (state != null) {
                 // URL 디코딩 후 Base64 디코딩
+                System.out.println(state);
                 String decodedState = new String(Base64.getDecoder().decode(URLDecoder.decode(state, StandardCharsets.UTF_8)));
+                System.out.println(decodedState);
                 JsonNode jsonNode = new ObjectMapper().readTree(decodedState);
                 return jsonNode.get("userId").asInt();
             }

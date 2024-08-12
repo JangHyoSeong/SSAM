@@ -357,11 +357,13 @@ const VideoChatComponent = () => {
 
         if (response.data.category === "공격발언") {
           const currentTime = Date.now();
-          console.warn("공격발언이 감지되었습니다", response);
+          console.warn("공격발언이 감지되었습니다 1", response);
 
-          if (lastProfanityTime && currentTime - lastProfanityTime <= 3000) {
+          if (lastProfanityTime && currentTime - lastProfanityTime <= 5000) {
+            console.warn("공격발언이 감지되었습니다 2", response);
             profanityCountRef.current += 1;
           } else {
+            console.warn("공격발언 감지 시간 초과되었습니다", response);
             profanityCountRef.current = 1;
           }
 

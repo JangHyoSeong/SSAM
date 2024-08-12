@@ -83,9 +83,13 @@ const ConsultationItem = ({
             상담 하기
           </button>
         ) : status === "CANCEL" ? (
-          <span className={styles.cancelStatus}>취소됨</span>
+          <span className={styles.cancelStatus}>상담 취소</span>
+        ) : status === "DONE" ? (
+          <span className={styles.doneStatus} style={{ color: "orange" }}>
+            상담 완료
+          </span>
         ) : (
-          "예약불가"
+          <span className={styles.rejectStatus}>예약 불가</span>
         )}
       </div>
     </div>

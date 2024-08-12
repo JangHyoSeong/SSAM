@@ -209,7 +209,9 @@
   }
 }
 
-.cancelStatus {
+.cancelStatus,
+.doneStatus,
+.rejectStatus {
   font-size: 110%;
 }
 

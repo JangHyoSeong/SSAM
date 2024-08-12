@@ -13,7 +13,7 @@ model = None
 tokenizer = None
 device = None
 category_map = {
-    "0": "일반글",
+    "0": "일반발언",
     "1": "공격발언",
     "2": "혐오발언"
 }
@@ -58,10 +58,10 @@ def test_sentences(sentences):
     logits = np.array(F.softmax(logits.detach().cpu()))
     category = np.argmax(logits)
     return {
-        'Default': format(logits[0][0], ".4f"),
-        'Offensive': format(logits[0][1], ".4f"),
-        'Hate': format(logits[0][2],".4f"),
-        'Category': category_map[str(category)]
+        'normal': format(logits[0][0], ".4f"),
+        'offensive': format(logits[0][1], ".4f"),
+        'hate': format(logits[0][2],".4f"),
+        'category': category_map[str(category)]
     }
 
 @app.route('/predict', methods=['POST'])

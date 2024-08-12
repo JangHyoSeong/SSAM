@@ -54,10 +54,10 @@
 }
 
 .infoForm {
-  width: 40vw;
-  height: 65vh;
-  border-top: 2px solid black;
-  border-bottom: 2px solid black;
+  width: 40%;
+  height: 90%;
+  border: 2px solid black;
+  border-radius: 15px;
 }
 
 table {
@@ -74,6 +74,15 @@ table {
     white-space: nowrap;
   }
 }
+
+.tableArray th {
+  border-left: none;
+}
+
+.tableArray td {
+  border-right: none;
+}
+
 
 .imgTd {
   width: 33vw;

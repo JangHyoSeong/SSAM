@@ -1,40 +1,39 @@
 package com.ssafy.ssam.global.chatbot.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.ssafy.ssam.global.chatbot.dto.request.NoticeRequestDto;
+import com.ssafy.ssam.global.chatbot.dto.request.QuestionRequestDto;
+import com.ssafy.ssam.global.chatbot.dto.response.QuestionResponseDto;
+import com.ssafy.ssam.global.chatbot.service.GPTChatbotService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.ssafy.ssam.global.amazonS3.service.S3ImageService;
-import com.ssafy.ssam.global.chatbot.dto.ImageRequestDto;
-import com.ssafy.ssam.global.chatbot.service.CustomGPTService;
-import com.ssafy.ssam.global.chatbot.service.GPTService;
+import com.ssafy.ssam.global.chatbot.dto.request.ImageRequestDto;
 import com.ssafy.ssam.global.dto.CommonResponseDto;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/v1/gpt")
+@RequestMapping("/v1/chatbots")
 @RequiredArgsConstructor
 public class GPTController {
-    private static final Logger log = LoggerFactory.getLogger(GPTController.class);
-    private final S3ImageService s3ImageService;
-    private final GPTService gptService;
-    private final CustomGPTService customGPTService;
+    private final GPTChatbotService gptChatbotService;
+    
+    @PostMapping("/teachers/imageupload")
+    public ResponseEntity<CommonResponseDto> uploadImage(@Valid @RequestBody ImageRequestDto imageRequestDto) {
+        return ResponseEntity.ok(gptChatbotService.uploadNoticeAndImage(imageRequestDto));
+    }
 
-    @PostMapping("/teachers")
-    public ResponseEntity<CommonResponseDto> uploadImage(ImageRequestDto imageRequestDto) {
-        if(!imageRequestDto.getImage().isEmpty()) return ResponseEntity.ok(gptService.uploadImage(imageRequestDto));
-        else return ResponseEntity.ok(new CommonResponseDto("ok"));
+    @PostMapping("/teachers/noticeupload")
+    public ResponseEntity<CommonResponseDto> uploadNotice(@Valid @RequestBody NoticeRequestDto noticeRequestDto) {
+        return ResponseEntity.ok(gptChatbotService.uploadNotice(noticeRequestDto));
     }
-    
-    @PostMapping("/teachers2")
-    public ResponseEntity<CommonResponseDto> uploadImage2(ImageRequestDto imageRequestDto) {
-        if(!imageRequestDto.getImage().isEmpty()) return ResponseEntity.ok(customGPTService.uploadImage(imageRequestDto));
-        else return ResponseEntity.ok(new CommonResponseDto("ok"));
+
+    @GetMapping("/questions")
+    public ResponseEntity<QuestionResponseDto> askQuestion(@Valid @RequestBody QuestionRequestDto questionRequestDto) {
+        return ResponseEntity.ok(gptChatbotService.askQuestion(questionRequestDto));
     }
-    
 
 }

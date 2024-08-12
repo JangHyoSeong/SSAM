@@ -6,45 +6,49 @@ import styles from "./Video.module.scss";
 import whitelogo from "../assets/whitelogo.png";
 import RECOn from "../assets/RECOn.png";
 import RECOff from "../assets/RECOff.png";
-// import Conversion from "../assets/Conversion.png";
 import mikeOn from "../assets/mikeOn.png";
 import mikeOff from "../assets/mikeOff.png";
 import cameraOn from "../assets/cameraOn.png";
 import cameraOff from "../assets/cameraOff.png";
+import subtitleOn from "../assets/subtitleOn.png";
+import subtitleOff from "../assets/subtitleOff.png";
 import Draggable from "react-draggable";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 
 const apiUrl = import.meta.env.API_URL;
-
 const VideoChatComponent = () => {
-  const { accessCode } = useParams();
-  const [session, setSession] = useState(null);
-  const [token, setToken] = useState(null);
-  const [mainStreamManager, setMainStreamManager] = useState(null);
-  const [publisher, setPublisher] = useState(null);
-  const [subscribers, setSubscribers] = useState([]);
-  const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
-  const [chatMessages, setChatMessages] = useState([]);
-  const [chatInput, setChatInput] = useState("");
-  const [isRecording, setIsRecording] = useState(false);
-  const [isCameraOn, setIsCameraOn] = useState(true);
-  const [isMicOn, setIsMicOn] = useState(true);
-  const [formattedDate, setFormattedDate] = useState("");
-  const [sttMessages, setSTTMessages] = useState([]);
-  const [tmpMessage, setTmpMessage] = useState("");
-  const OV = useRef(new OpenVidu());
-  const myUserName = useRef(`user_${Math.floor(Math.random() * 1000) + 1}`);
-  const chatContainerRef = useRef(null);
-  const subtitleRef = useRef(null);
-  const lastTranscriptRef = useRef("");
-  const timeoutRef = useRef(null);
-  const [time, setTime] = useState({ minutes: 0, seconds: 0 });
-
-  const [profileData, setProfileData] = useState({name: "",});
+  const { accessCode } = useParams(); // URL에서 accessCode를 가져옴
+  const [session, setSession] = useState(null); // 세션 상태 관리
+  const [token, setToken] = useState(null); // 토큰 상태 관리
+  const [mainStreamManager, setMainStreamManager] = useState(null); // 주 스트림 관리
+  const [publisher, setPublisher] = useState(null); // 발행자 관리
+  const [subscribers, setSubscribers] = useState([]); // 구독자 관리
+  const [currentVideoDevice, setCurrentVideoDevice] = useState(null); // 현재 비디오 장치 관리
+  const [chatMessages, setChatMessages] = useState([]); // 채팅 메시지 관리
+  const [chatInput, setChatInput] = useState(""); // 채팅 입력 관리
+  const [isRecording, setIsRecording] = useState(false); // 녹화 상태 관리
+  const [isCameraOn, setIsCameraOn] = useState(true); // 카메라 상태 관리
+  const [isMicOn, setIsMicOn] = useState(true); // 마이크 상태 관리
+  const [formattedDate, setFormattedDate] = useState(""); // 포맷된 날짜 관리
+  const [sttMessages, setSTTMessages] = useState([]); // 음성 인식 메시지 관리
+  const [tmpMessage, setTmpMessage] = useState(""); // 임시 메시지 관리
+  const OV = useRef(new OpenVidu()); // OpenVidu 인스턴스 생성
+  const myUserName = useRef(""); // 사용자 이름 생성
+  const chatContainerRef = useRef(null); // 채팅 컨테이너 참조
+  const subtitleRef = useRef(null); // 자막 컨테이너 참조
+  const lastTranscriptRef = useRef(""); // 마지막 음성 인식 결과 참조
+  const timeoutRef = useRef(null); // 타임아웃 참조
+  const [time, setTime] = useState({ minutes: 0, seconds: 0 }); // 시간 상태 관리
+  const [profileData, setProfileData] = useState({ name: "" }); // 프로필 데이터 관리
+  const [showSubtitle, setShowSubtitle] = useState(true);
+  const toggleSubTitle = () => {
+    setShowSubtitle(!showSubtitle);
+  };
 
   useEffect(() => {
+    // 사용자 이름 GET
     const fetchData = async () => {
       const token = localStorage.getItem("USER_TOKEN");
       try {
@@ -55,7 +59,6 @@ const VideoChatComponent = () => {
             Authorization: `${token}`,
           },
         });
-
         const data = {
           name: response.data.name || "",
         };
@@ -65,7 +68,6 @@ const VideoChatComponent = () => {
         console.error("Failed to fetch profile data:", error);
       }
     };
-
     fetchData();
   }, []);
 
@@ -76,12 +78,8 @@ const VideoChatComponent = () => {
     }
   }, [chatMessages]);
 
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition,
-  } = useSpeechRecognition();
+  const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
+    useSpeechRecognition();
 
   useEffect(() => {
     // 타이머 설정
@@ -105,11 +103,11 @@ const VideoChatComponent = () => {
 
   useEffect(() => {
     if (transcript !== lastTranscriptRef.current) {
-      setTmpMessage(transcript);
+      setTmpMessage(transcript); // 음성 인식 메시지 상태 업데이트
       lastTranscriptRef.current = transcript;
 
       if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+        clearTimeout(timeoutRef.current); // 기존 타임아웃 초기화
       }
 
       timeoutRef.current = setTimeout(() => {
@@ -117,37 +115,41 @@ const VideoChatComponent = () => {
           transcript === lastTranscriptRef.current &&
           transcript.trim() !== ""
         ) {
-          sendSTTMessage(transcript);
-          resetTranscript();
+          sendSTTMessage(transcript); // 음성 인식 메시지를 전송
+          resetTranscript(); // 음성 인식 상태 초기화
         }
       }, 1000);
     }
   }, [transcript]);
 
   useEffect(() => {
+    // 페이지를 떠날 때 이벤트 리스너 추가
     window.addEventListener("beforeunload", onBeforeUnload);
-    joinSession();
+    joinSession(); // 세션에 참가
 
     return () => {
       window.removeEventListener("beforeunload", onBeforeUnload);
-      leaveSession();
-      SpeechRecognition.stopListening();
+      leaveSession(); // 세션을 떠남
+      SpeechRecognition.stopListening(); // 음성 인식 중지
       if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+        clearTimeout(timeoutRef.current); // 타임아웃 정리
       }
     };
   }, []);
 
   useEffect(() => {
     if (session && isMicOn) {
+      // 마이크가 켜져 있을 때 음성 인식 시작
       SpeechRecognition.startListening({ continuous: true, language: "ko-KR" });
     } else {
+      // 마이크가 꺼져 있을 때 음성 인식 중지
       SpeechRecognition.stopListening();
     }
   }, [session, isMicOn]);
 
   useEffect(() => {
     if (subtitleRef.current) {
+      // 새로운 자막 메시지가 추가되면 자막 컨테이너 스크롤을 아래로 이동
       subtitleRef.current.scrollTop = subtitleRef.current.scrollHeight;
     }
   }, [sttMessages]);
@@ -213,11 +215,11 @@ const VideoChatComponent = () => {
       const currentVideoDevice = videoDevices.find(
         (device) => device.deviceId === currentVideoDeviceId
       );
-      setToken(myToken);
-      setSession(mySession);
-      setMainStreamManager(publisher);
-      setPublisher(publisher);
-      setCurrentVideoDevice(currentVideoDevice);
+      setToken(myToken); // 토큰 상태 설정
+      setSession(mySession); // 세션 상태 설정
+      setMainStreamManager(publisher); // 주 스트림 설정
+      setPublisher(publisher); // 발행자 설정
+      setCurrentVideoDevice(currentVideoDevice); // 현재 비디오 장치 설정
 
       // 날짜, 시간 들고오기
       if (myToken && myToken.createdAt) {
@@ -255,39 +257,6 @@ const VideoChatComponent = () => {
     setMainStreamManager(null);
     setPublisher(null);
   };
-
-  // 카메라를 전환하는 함수
-  // const switchCamera = async () => {
-  //   try {
-  //     const devices = await OV.current.getDevices();
-  //     const videoDevices = devices.filter(
-  //       (device) => device.kind === "videoinput"
-  //     );
-
-  //     if (videoDevices && videoDevices.length > 1) {
-  //       const newVideoDevice = videoDevices.filter(
-  //         (device) => device.deviceId !== currentVideoDevice.deviceId
-  //       );
-
-  //       if (newVideoDevice.length > 0) {
-  //         const newPublisher = OV.current.initPublisher(undefined, {
-  //           videoSource: newVideoDevice[0].deviceId,
-  //           publishAudio: true,
-  //           publishVideo: true,
-  //           mirror: false,
-  //         });
-
-  //         await session.unpublish(mainStreamManager);
-  //         await session.publish(newPublisher);
-  //         setCurrentVideoDevice(newVideoDevice[0]);
-  //         setMainStreamManager(newPublisher);
-  //         setPublisher(newPublisher);
-  //       }
-  //     }
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // };
 
   // 녹화를 시작/중지하는 함수
   const toggleRecording = async () => {
@@ -458,14 +427,22 @@ const VideoChatComponent = () => {
                     )}
                   </button>
 
-                  {/* 화면 전환 버튼 */}
-                  {/* <button className={styles.btnIcon} onClick={switchCamera}>
-                    <img
-                      src={Conversion}
-                      className={styles.imgIcon}
-                      onClick={switchCamera}
-                    />
-                  </button> */}
+                  {/* 자막 On / Off */}
+                  <button className={styles.btnIcon} onClick={toggleSubTitle}>
+                    {showSubtitle ? (
+                      <img
+                        src={subtitleOff}
+                        className={styles.imgIcon}
+                        alt="subtitleOff"
+                      />
+                    ) : (
+                      <img
+                        src={subtitleOn}
+                        className={styles.imgIcon}
+                        alt="subtitleOn"
+                      />
+                    )}
+                  </button>
 
                   {/* 카메라 ON / Off 버튼 */}
                   <button className={styles.btnIcon} onClick={toggleCamera}>
@@ -541,11 +518,10 @@ const VideoChatComponent = () => {
               </div>
 
               {/* 자막 */}
-              <div className={styles.subTitleArray}>
+              {/* <div className={styles.subTitleArray}>
                 <div className={styles.subTitle} ref={subtitleRef}>
                   {sttMessages.map((msg, index) => (
                     <div key={index}>
-                      {/* <strong>{msg.from}:</strong> {msg.message} */}
                       <strong>{profileData.name}:</strong> {msg.message}
                     </div>
                   ))}
@@ -555,6 +531,24 @@ const VideoChatComponent = () => {
                     </div>
                   )}
                 </div>
+              </div> */}
+              <div>
+                {showSubtitle && (
+                  <div className={styles.subTitleArray}>
+                    <div className={styles.subTitle}>
+                      {sttMessages.map((msg, index) => (
+                        <div key={index}>
+                          <strong>{profileData.name}:</strong> {msg.message}
+                        </div>
+                      ))}
+                      {tmpMessage && (
+                        <div>
+                          <strong>{myUserName.current}:</strong> {tmpMessage}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 

@@ -12,8 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PredictionResultDto {
-    private String Default;
-    private String Offensive;
-    private String Hate;
-    private String Category;
+    private String normal;
+    private String offensive;
+    private String hate;
+    private String category;
 }

@@ -1,8 +1,12 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./InviteCode.module.scss";
 import ClassProduceModal from "./ClassProduceModal";
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
+import { FiCopy } from "react-icons/fi";
+import { FiCheck } from "react-icons/fi";
+
 const apiUrl = import.meta.env.API_URL; // API URL 가져오기
 import Swal from "sweetalert2"; // 알림을 위한 SweetAlert2 라이브러리 임포트
 
@@ -14,6 +18,12 @@ const InviteCode = () => {
   // 모달 토글 함수
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
+  };
+
+  const navigate = useNavigate(); // useNavigate 훅을 사용해 navigate 정의
+
+  const handleConsultationStart = () => {
+    navigate("/video/entry"); // 경로를 videoentry로 이동
   };
 
   // 사용자 프로필 정보를 불러오는 훅
@@ -149,36 +159,64 @@ const InviteCode = () => {
 
   return (
     <div className={styles.inviteArray}>
-      <div className={styles.inviteCodeBox}>
-        <h1>{profile.name}님 환영합니다</h1>
-        <div className={styles.btn}>
-          {classInfo && classInfo.pin ? (
-            <div>
-              <div className={styles.copyButton}>
-                <h3>초대 코드 {classInfo.pin}</h3>
-                <button onClick={() => copyToClipboard(classInfo.pin)}>
-                  {isCopied ? "복사 완료 ☑" : "코드 복사 ☐"}
-                </button>
-              </div>
-              <div className={styles.btnArray}>
-                <button className={styles.pinBtn} onClick={rePin}>
-                  PIN 재발급
-                </button>
-                <button className={styles.deleteBtn} onClick={classDelete}>
-                  학급 삭제
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div>
-              <h3>학급 만들기를 통해 초대코드를 생성하세요.</h3>
-              <button className={styles.classBtn} onClick={toggleModal}>
-                학급 생성
+      {/* Welcome Section */}
+      <div className={styles.welcomeBox}>
+        <h3>
+          {profile.name} 선생님
+          <br /> 환영합니다!
+        </h3>
+      </div>
+
+      {/* Invite Code Section */}
+      <div className={styles.coreBox}>
+        {classInfo && classInfo.pin ? (
+          <>
+            <div className={styles.copyButton}>
+              <span>
+                <h3>초대 코드</h3>
+              </span>
+              <button onClick={() => copyToClipboard(classInfo.pin)}>
+                <span>{classInfo.pin} </span>
+                {isCopied ? (
+                  <>
+                    <FiCheck /> 성공!
+                  </>
+                ) : (
+                  <>
+                    <FiCopy /> 복사
+                  </>
+                )}
               </button>
             </div>
-          )}
-        </div>
+            <div className={styles.btnArray}>
+              <button className={styles.pinBtn} onClick={rePin}>
+                PIN 재발급
+              </button>
+              <button className={styles.deleteBtn} onClick={classDelete}>
+                학급 삭제
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <h3>학급 만들기를 통해 초대코드를 생성하세요.</h3>
+            <button className={styles.classBtn} onClick={toggleModal}>
+              학급 생성
+            </button>
+          </>
+        )}
         {isModalOpen && <ClassProduceModal onClassCreated={updateClassInfo} />}
+      </div>
+
+      {/* Scheduled Consultation Section */}
+      <div className={styles.codeBox}>
+        <h3>
+          예정된 상담이
+          <br /> 있습니다.
+        </h3>
+        <button className={styles.classBtn} onClick={handleConsultationStart}>
+          상담 시작하기
+        </button>
       </div>
     </div>
   );

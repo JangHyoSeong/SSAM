@@ -176,10 +176,6 @@ const TeacherReservationList = ({ selectedDate }) => {
           </div>
         ))}
       </div>
-      {/* <div className={styles.actions}>
-        <button className={styles.modify}>수정</button>
-        <button className={styles.cancel}>취소</button>
-      </div> */}
     </div>
   );
 };

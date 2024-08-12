@@ -51,7 +51,7 @@ export const fetchApiRequestReservation = async (
   return response.data; // 응답 데이터 반환
 };
 
-// 선생님 - 상담 취소
+// 선생님, 학생 - 상담 취소
 export const fetchApiCancelReservation = async (appointmentId) => {
   const token = localStorage.getItem("USER_TOKEN");
   const response = await axios.put(

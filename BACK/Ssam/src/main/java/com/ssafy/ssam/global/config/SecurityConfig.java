@@ -1,5 +1,9 @@
 package com.ssafy.ssam.global.config;
 
+import com.ssafy.ssam.global.auth.handler.CustomOAuthSuccessHandler;
+//import com.ssafy.ssam.global.auth.handler.OAuth2LoginFailureHandler;
+//import com.ssafy.ssam.global.auth.handler.OAuth2LoginSuccessHandler;
+import com.ssafy.ssam.global.auth.service.CustomOAuth2UserService;
 import com.ssafy.ssam.global.error.CustomAccessDeniedHandler;
 import com.ssafy.ssam.global.error.CustomAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
@@ -22,7 +27,6 @@ import com.ssafy.ssam.global.auth.jwt.LoginFilter;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
-
 @Builder
 @RequiredArgsConstructor
 @Configuration
@@ -33,6 +37,10 @@ public class SecurityConfig {
     private final CorsFilter corsFilter;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
+//    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+//    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+    private final OAuth2UserService oAuth2UserService;
+    private final CustomOAuthSuccessHandler customOAuth2SuccessHandler;
 
     @Bean
     public static AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -45,7 +53,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, CustomOAuth2UserService customOAuth2UserService) throws Exception {
         return http
                 .cors(cors -> {})
                 .csrf(AbstractHttpConfigurer::disable)
@@ -58,11 +66,17 @@ public class SecurityConfig {
                         .requestMatchers("/v1/**").authenticated()
                         .requestMatchers("/v1/classrooms/answers/**", "/v1/classrooms/teachers/**", "/v1/consults/teachers/**").hasRole("TEACHER")
                         .anyRequest().permitAll())
+                .oauth2Login((oauth2) -> oauth2
+                        .defaultSuccessUrl("/v1/auth/google", true)
+                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
+                                .userService(customOAuth2UserService))
+                        .successHandler(customOAuth2SuccessHandler))
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .with(new Custom(authenticationManager(authenticationConfiguration), jwtUtil), Custom::getClass)
                 .build();
     }
+
     @RequiredArgsConstructor
     public static class Custom extends AbstractHttpConfigurer<Custom, HttpSecurity> {
         private final AuthenticationManager authenticationManager;
@@ -76,5 +90,4 @@ public class SecurityConfig {
             http.addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
         }
     }
-
 }

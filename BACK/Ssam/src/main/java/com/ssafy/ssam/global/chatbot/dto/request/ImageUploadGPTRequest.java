@@ -1,4 +1,4 @@
-package com.ssafy.ssam.global.chatbot.dto;
+package com.ssafy.ssam.global.chatbot.dto.request;
 
 
 import java.util.List;
@@ -18,7 +18,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class CustomGPTRequest {
+public class ImageUploadGPTRequest {
     private String model;
     private List<Message> messages;
     private float temperature;

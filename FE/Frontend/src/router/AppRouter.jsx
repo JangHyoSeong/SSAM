@@ -6,6 +6,8 @@ import MainNavbar from "../common/navigation/MainNavbar.jsx";
 import Video from "../video/Video.jsx";
 import STT from "../video/STT.jsx";
 import VideoSTT from "../video/Video-STT.jsx";
+import OAuthResponse from "../common/OAuthResponse.jsx";
+
 // Teacher components
 import TeacherJoin from "../components/teacher/join/TeacherJoin";
 import TeacherLogin from "../components/teacher/login/TeacherLogin";
@@ -50,11 +52,11 @@ const AppRouter = () => {
     "/teacherjoin",
     "/studentlogin",
     "/studentjoin",
-    "/video/33344",
+    "/video/123456",
   ];
   const showChatbot = !hideChatbotOnRoutes.includes(location.pathname);
 
-  const hideNavbarOnRoutes = ["/video/33344"];
+  const hideNavbarOnRoutes = ["/video/123456"];
   const showNavbar = !hideNavbarOnRoutes.includes(location.pathname);
 
   return (
@@ -73,6 +75,7 @@ const AppRouter = () => {
           <Route path="/teacherjoin" element={<TeacherJoin />} />
           <Route path="/studentlogin" element={<ParentsLogin />} />
           <Route path="/studentjoin" element={<ParentsJoin />} />
+          <Route path="/auth/oauth-response/:token" element={<OAuthResponse />} />
 
           {/* 선생님 */}
           <Route element={<RoleBasedRoute allowedRoles={["TEACHER"]} />}>

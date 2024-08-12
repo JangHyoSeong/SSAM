@@ -112,7 +112,7 @@ export const ConsultationProvider = ({ children }) => {
         approveConsultation,
         cancelConsultation,
         refreshConsultations: fetchConsultations,
-        sortConsultations, // 새로운 정렬 함수 추가
+        sortConsultations, // 정렬 함수 추가
       }}
     >
       {children}

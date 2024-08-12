@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 import { useConsultation } from "../../../store/ConsultationStore";
@@ -119,6 +119,7 @@ const TeacherConsultationList = () => {
   const [isCancelModalOpen, setCancelModalOpen] = useState(false);
   const [selectedConsultationId, setSelectedConsultationId] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc"); // 정렬 순서 상태 추가
+  const [activeFilters, setActiveFilters] = useState([]);
 
   const handleApprove = (appointmentId) => {
     setSelectedConsultationId(appointmentId);
@@ -155,6 +156,31 @@ const TeacherConsultationList = () => {
     sortConsultations("startTime", newOrder);
   };
 
+  // 필터 토글 함수 추가
+  const statusLabels = {
+    APPLY: "신청",
+    CANCEL: "취소",
+    ACCEPTED: "승인",
+    REJECT: "불가",
+    DONE: "완료",
+  };
+
+  const handleFilterToggle = (status) => {
+    setActiveFilters((prevFilters) =>
+      prevFilters.includes(status)
+        ? prevFilters.filter((f) => f !== status)
+        : [...prevFilters, status]
+    );
+  };
+
+  const filteredConsultations = useMemo(() => {
+    return activeFilters.length === 0
+      ? consultations
+      : consultations.filter((consultation) =>
+          activeFilters.includes(consultation.status)
+        );
+  }, [consultations, activeFilters]);
+
   if (loading) return <div></div>;
   if (error) return <div>에러: {error}</div>;
 
@@ -180,6 +206,19 @@ const TeacherConsultationList = () => {
         </NavLink>
       </nav>
       <section className={styles.consultationSection}>
+        <filter className={styles.filterContainer}>
+          {Object.entries(statusLabels).map(([status, label]) => (
+            <button
+              key={status}
+              className={`${styles.filterButton} ${
+                activeFilters.includes(status) ? styles.activeFilter : ""
+              }`}
+              onClick={() => handleFilterToggle(status)}
+            >
+              {label}
+            </button>
+          ))}
+        </filter>
         <header className={styles.headerRow}>
           <h3
             className={styles.cellHeader}
@@ -194,7 +233,7 @@ const TeacherConsultationList = () => {
           <h3 className={styles.cellHeaderLarge}>내용</h3>
           <h3 className={styles.cellHeaderButtons}>관리</h3>
         </header>
-        {consultations.map((consultation) => (
+        {filteredConsultations.map((consultation) => (
           <ConsultationItem
             key={consultation.appointmentId}
             {...consultation}

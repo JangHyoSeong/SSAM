@@ -20,16 +20,25 @@ public class ProfanityService {
     }
 
     public PredictionResultDto getPrediction(String message) {
+        System.out.println("Starting getPrediction method with message: " + message);
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        System.out.println("Headers set: " + headers);
 
         String requestBody = "{\"sentence\":\"" + message + "\"}";
+        System.out.println("Request body created: " + requestBody);
+
         HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
+        System.out.println("HttpEntity created: " + request);
 
         try {
-            return restTemplate.postForObject(pythonServiceUrl, request, PredictionResultDto.class);
+            System.out.println("Sending request to: " + pythonServiceUrl);
+            PredictionResultDto result = restTemplate.postForObject(pythonServiceUrl, request, PredictionResultDto.class);
+            System.out.println("Received response: " + result);
+            return result;
         } catch (Exception e) {
-            // 예외 처리: 로깅 또는 사용자 정의 예외 throw
+            System.out.println("Exception occurred: " + e.getMessage());
             e.printStackTrace();
             return new PredictionResultDto(); // 또는 null 반환 또는 사용자 정의 예외 throw
         }

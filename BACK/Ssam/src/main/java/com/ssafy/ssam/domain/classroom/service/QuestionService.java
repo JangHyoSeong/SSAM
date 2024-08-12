@@ -114,6 +114,7 @@ public class QuestionService {
         return new CommonResponseDto("ok");
     }
 
+    @Transactional
     public QuestionResponseDto putAnswer(Integer questionId, AnswerRequestDto answerRequestDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails details = (CustomUserDetails) authentication.getPrincipal();

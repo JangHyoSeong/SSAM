@@ -72,8 +72,10 @@ public class Question {
     }
     public static QuestionResponseDto toAnswerResponseDto(Question question) {
         return QuestionResponseDto.builder()
+                .questionId(question.getQuestionId())
                 .boardId(question.getBoard().getBoardId())
                 .studentId(question.getStudent().getUserId())
+                .studentName(question.getStudent().getName())
                 .content(question.getContent())
                 .answer(question.getAnswer())
                 .contentDate(question.getContentDate())

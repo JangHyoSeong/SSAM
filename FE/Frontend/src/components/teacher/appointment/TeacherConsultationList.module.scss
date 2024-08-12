@@ -126,7 +126,6 @@
   align-items: center;
 }
 
-
 .approveButton {
   border-radius: 25px;
   padding: 0.8vh 2vh;
@@ -162,37 +161,6 @@
     background-color: #ee5252;
   }
 }
-
-// .approveButton,
-// .rejectButton {
-//   padding: 1vh 1vw;
-//   margin-left: 1vw;
-//   border: none;
-//   border-radius: 25px;
-//   cursor: pointer;
-//   transition: background-color 0.3s ease, color 0.3s ease; /* 부드러운 색상 전환 효과 */
-//   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
-// }
-
-// .approveButton {
-//   background-color: #dce7fc;
-//   color: black;
-
-//   &:hover {
-//     background-color: #b9d0fc;
-//     color: black;
-//   }
-// }
-
-// .rejectButton {
-//   background-color: #fff;
-//   color: black;
-
-//   &:hover {
-//     background-color: #d9d9d9;
-//     color: black;
-//   }
-// }
 
 .statusButton {
   background-color: #dce7fc;
@@ -243,4 +211,36 @@
 
 .cancelStatus {
   font-size: 110%;
+}
+
+// 필터
+.filterContainer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filterButton {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  color: #333;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0.6;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &.activeFilter {
+    background-color: #5285ee;
+    color: white;
+    border-color: #5285ee;
+    opacity: 1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+  }
 }

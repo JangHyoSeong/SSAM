@@ -121,3 +121,45 @@
     }
   }
 }
+
+// 버튼 스타일을 그룹화
+.consultationButton {
+  @include radius(2rem);
+  padding: 0.5vh 1vh;
+  border: 1px solid #ddd;
+  box-shadow: 0 0.2vh 0.5vh rgba(1, 1, 1, 0.3);
+  cursor: pointer;
+  transition: background-color 0.1s ease, transform 0.1s ease;
+
+  &.clicked {
+    background-color: #dce7fc;
+    color: black;
+  }
+
+  &.available {
+    background-color: #fff;
+    color: black;
+
+    &:hover {
+      background-color: #dce7fc;
+      transform: scale(1.1);
+    }
+  }
+
+  &.unavailable {
+    background-color: #d9d9d9;
+    color: black;
+    cursor: not-allowed;
+  }
+
+  &.cancel {
+    background-color: #ff4d4f;
+    color: white;
+    border-color: #ff4d4f;
+
+    &:hover {
+      background-color: #ff7875;
+      transform: scale(1.1);
+    }
+  }
+}

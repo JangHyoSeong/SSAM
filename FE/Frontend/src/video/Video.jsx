@@ -47,8 +47,11 @@ const VideoChatComponent = () => {
   const toggleSubTitle = () => {
     setShowSubtitle(!showSubtitle);
   };
-  // 필터링 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-  const [profanityDetected, setProfanityDetected] = useState(false);
+
+  // 필터링 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+  const [profanityDetected, setProfanityDetected] = useState(false); // 공격적인 발언 감지
+  const [lastProfanityTime, setLastProfanityTime] = useState(null); // 마지막으로 공격적인 발언 감지
+  const profanityCountRef = useRef(0); // 공격적인 발언이 연속적으로 감지된 횟수
 
   useEffect(() => {
     // 사용자 이름 GET
@@ -343,17 +346,33 @@ const VideoChatComponent = () => {
         from: myUserName.current,
         connectionId: session.connection.connectionId,
       };
-      // 욕설 감지 API 호출 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+      // 욕설 감지 API 호출 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
       try {
         const response = await axios.post(`${apiUrl}/v1/profanity/check`, {
           message: text,
         });
 
         if (response.data.category === "공격발언") {
-          setProfanityDetected(true);
-          // 3초 후에 빨간 박스를 제거합니다.
-          setTimeout(() => setProfanityDetected(false), 3000);
+          const currentTime = Date.now();
           console.warn("공격발언이 감지되었습니다", response);
+
+          if (lastProfanityTime && currentTime - lastProfanityTime <= 3000) {
+            profanityCountRef.current += 1;
+          } else {
+            profanityCountRef.current = 1;
+          }
+
+          setLastProfanityTime(currentTime);
+
+          if (profanityCountRef.current >= 2) {
+            setProfanityDetected(true);
+            // 3초 후에 빨간 박스를 제거하고 카운트를 리셋합니다.
+            setTimeout(() => {
+              setProfanityDetected(false);
+              profanityCountRef.current = 0;
+              setLastProfanityTime(null);
+            }, 3000);
+          }
         }
       } catch (error) {
         console.error("비속어 확인 중 오류 발생:", error);
@@ -407,7 +426,7 @@ const VideoChatComponent = () => {
   };
 
   if (!browserSupportsSpeechRecognition) {
-    console.warn("브라우저는 음성 인식을 지원하지 않습니다.");
+    console.warn("음성 인식을 지원하지 않습니다.");
   }
 
   return (
@@ -416,7 +435,12 @@ const VideoChatComponent = () => {
         <h1 className={styles.entering}>화상상담 입장 중...</h1>
       ) : (
         <div className={styles.videoChatContainer}>
-          {profanityDetected && <div className={styles.profanityOverlay}></div>}
+          {/* 필터링 검출 후 경고창 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ */}
+          {profanityDetected && (
+            <div className={styles.profanityOverlay}>
+              <h1>부적절한 언어가 감지되었습니다!</h1>
+            </div>
+          )}
           <div className={styles.menubarArray}>
             <div className={styles.top}>
               <div className={styles.menubar}>

@@ -11,6 +11,9 @@
   padding: 2vh;
   background-color: white;
   overflow: hidden;
+  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.1);
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
 
   .fc {
     &-toolbar {

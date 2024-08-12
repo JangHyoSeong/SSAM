@@ -5,6 +5,7 @@ import { useConsultation } from "../../../store/ConsultationStore";
 import styles from "./TeacherConsultationList.module.scss";
 import ConsultationApproveModal from "./ConsultationApproveModal";
 import ConsultationCancelModal from "./ConsultationCancelModal";
+import Swal from "sweetalert2";
 
 // topic db랑 화면 매핑
 const topicDisplayMap = {
@@ -126,13 +127,49 @@ const TeacherConsultationList = () => {
   const [activeFilters, setActiveFilters] = useState([]);
 
   const handleApprove = (appointmentId) => {
-    setSelectedConsultationId(appointmentId);
-    setApproveModalOpen(true);
+    Swal.fire({
+      title: "상담을 승인하시겠습니까?",
+      // text: "이 작업은 되돌릴 수 없습니다!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "승인",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        approveConsultation(appointmentId);
+        Swal.fire({
+          title: "승인 완료!",
+          text: "상담이 승인되었습니다.",
+          icon: "success",
+          timer: 1500,
+        });
+      }
+    });
   };
 
   const handleCancel = (appointmentId) => {
-    setSelectedConsultationId(appointmentId);
-    setCancelModalOpen(true);
+    Swal.fire({
+      title: "상담을 거절하시겠습니까?",
+      text: "이 작업은 되돌릴 수 없습니다!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "거절",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        cancelConsultation(appointmentId);
+        Swal.fire({
+          title: "거절 완료!",
+          text: "상담이 거절되었습니다.",
+          icon: "success",
+          timer: 1500,
+        });
+      }
+    });
   };
 
   const closeApproveModal = () => {

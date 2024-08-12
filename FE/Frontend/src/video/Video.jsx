@@ -31,8 +31,6 @@ const VideoChatComponent = () => {
   const [isRecording, setIsRecording] = useState(false); // 녹화 상태 관리
   const [isCameraOn, setIsCameraOn] = useState(true); // 카메라 상태 관리
   const [isMicOn, setIsMicOn] = useState(true); // 마이크 상태 관리
-  const [sttMessages, setSTTMessages] = useState([]); // 음성 인식 메시지 관리
-  const [tmpMessage, setTmpMessage] = useState(""); // 임시 메시지 관리
   const OV = useRef(new OpenVidu()); // OpenVidu 인스턴스 생성
   const myUserName = useRef(""); // 사용자 이름 생성
   const chatContainerRef = useRef(null); // 채팅 컨테이너 참조
@@ -94,7 +92,7 @@ const VideoChatComponent = () => {
 
   useEffect(() => {
     if (transcript !== lastTranscriptRef.current) {
-      setTmpMessage(transcript); // 음성 인식 메시지 상태 업데이트
+      setMyTmpMessage(transcript); // 음성 인식 메시지 상태 업데이트
       lastTranscriptRef.current = transcript;
 
       if (timeoutRef.current) {
@@ -143,7 +141,7 @@ const VideoChatComponent = () => {
       // 새로운 자막 메시지가 추가되면 자막 컨테이너 스크롤을 아래로 이동
       subtitleRef.current.scrollTop = subtitleRef.current.scrollHeight;
     }
-  }, [sttMessages]);
+  }, [mySTTMessages]);
 
   // 페이지를 떠나기 전 세션을 떠나는 함수
   const onBeforeUnload = () => {
@@ -321,7 +319,7 @@ const VideoChatComponent = () => {
       } else {
         SpeechRecognition.stopListening();
         resetTranscript();
-        setTmpMessage("");
+        setMyTmpMessage("");
         lastTranscriptRef.current = "";
       }
     }
@@ -386,11 +384,11 @@ const VideoChatComponent = () => {
         data: JSON.stringify(messageData),
         type: "stt",
       });
-      setSTTMessages((prevMessages) => {
+      setMySTTMessages((prevMessages) => {
         const newMessages = [...prevMessages, messageData];
         return newMessages.slice(-5); // 최대 5개의 메시지만 유지
       });
-      setTmpMessage(""); // 임시 메시지 초기화
+      setMyTmpMessage(""); // 임시 메시지 초기화
     }
   };
 
@@ -406,8 +404,15 @@ const VideoChatComponent = () => {
 
       session.on("signal:stt", (event) => {
         const data = JSON.parse(event.data);
-        if (data.connectionId !== session.connection.connectionId) {
-          setSTTMessages((prevMessages) => {
+        if (data.connectionId === session.connection.connectionId) {
+          // 자신의 음성 메시지 처리
+          setMySTTMessages((prevMessages) => {
+            const newMessages = [...prevMessages, data];
+            return newMessages.slice(-5); // 최대 5개의 메시지만 유지
+          });
+        } else {
+          // 상대방의 음성 메시지 처리
+          setOtherSTTMessages((prevMessages) => {
             const newMessages = [...prevMessages, data];
             return newMessages.slice(-5); // 최대 5개의 메시지만 유지
           });
@@ -437,7 +442,7 @@ const VideoChatComponent = () => {
 
   useEffect(() => {
     if (transcript !== lastTranscriptRef.current) {
-      setMyTmpMessage(transcript); // 내 음성 인식 메시지 상태 업데이트
+      setMymyTmpMessage(transcript); // 내 음성 인식 메시지 상태 업데이트
       lastTranscriptRef.current = transcript;
 
       if (timeoutRef.current) {
@@ -455,6 +460,14 @@ const VideoChatComponent = () => {
       }, 1000);
     }
   }, [transcript]);
+
+  useEffect(() => {
+    console.log("mySTTMessages updated:", mySTTMessages);
+  }, [mySTTMessages]);
+
+  useEffect(() => {
+    console.log("otherSTTMessages updated:", otherSTTMessages);
+  }, [otherSTTMessages]);
 
   return (
     <div className={styles.videoArray}>
@@ -597,14 +610,14 @@ const VideoChatComponent = () => {
                 {/* {showSubtitle && (
                   <div className={styles.subTitleArray}>
                     <div className={styles.subTitle}>
-                      {sttMessages.map((msg, index) => (
+                      {mySTTMessages.map((msg, index) => (
                         <div key={index}>
                           <strong>{profileData.name} :</strong> {msg.message}
                         </div>
                       ))}
-                      {tmpMessage && (
+                      {myTmpMessage && (
                         <div>
-                          <strong>{myUserName.current} :</strong> {tmpMessage}
+                          <strong>{myUserName.current} :</strong> {myTmpMessage}
                         </div>
                       )}
                     </div>
@@ -614,18 +627,19 @@ const VideoChatComponent = () => {
                   <div className={styles.subTitleArray}>
                     <div className={styles.subTitle}>
                       <div className={styles.mySubtitle}>
-                        <strong>{profileData.name} :</strong>
                         {mySTTMessages.map((msg, index) => (
-                          <div key={index}>{msg.message}</div>
+                          <div key={index}>
+                            <strong>{profileData.name} : </strong> {msg.message}
+                          </div>
                         ))}
-                        {myTmpMessage && <div>{myTmpMessage}</div>}
                       </div>
+
                       <div className={styles.otherSubtitle}>
-                        <strong>상대방 :</strong>
                         {otherSTTMessages.map((msg, index) => (
-                          <div key={index}>{msg.message}</div>
+                          <div key={index}>
+                            <strong>상대방 : </strong> {msg.message}
+                          </div>
                         ))}
-                        {otherTmpMessage && <div>{otherTmpMessage}</div>}
                       </div>
                     </div>
                   </div>

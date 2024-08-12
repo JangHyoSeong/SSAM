@@ -35,7 +35,10 @@ public class ProfanityService {
         try {
             System.out.println("Sending request to: " + pythonServiceUrl);
             PredictionResultDto result = restTemplate.postForObject(pythonServiceUrl, request, PredictionResultDto.class);
-            System.out.println("Received response: " + result);
+            System.out.println("Received response: " + result.getCategory());
+            System.out.println("Received response: " + result.getDefault());
+            System.out.println("Received response: " + result.getHate());
+            System.out.println("Received response: " + result.getOffensive());
             return result;
         } catch (Exception e) {
             System.out.println("Exception occurred: " + e.getMessage());

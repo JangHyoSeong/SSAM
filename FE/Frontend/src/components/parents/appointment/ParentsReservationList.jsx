@@ -11,6 +11,7 @@ import {
   fetchApiCancelReservation,
 } from "../../../apis/stub/55-59 상담/apiStubReservation";
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
+import Swal from "sweetalert2";
 
 const ParentsReservationList = ({ selectedDate }) => {
   const {
@@ -74,20 +75,44 @@ const ParentsReservationList = ({ selectedDate }) => {
         consultation.status === "APPLY" &&
         consultation.studentId === userId
       ) {
-        // 상담 취소 로직
-        try {
-          console.log("Cancelling appointment:", consultation); // 디버깅용 로그
-          if (!consultation.appointmentId) {
-            console.error("appointmentId is missing");
-            return;
+        //
+        // 상담 취소 확인 모달
+        Swal.fire({
+          title: "상담을 취소하시겠습니까?",
+          text: "이 작업은 되돌릴 수 없습니다!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "네, 취소합니다",
+          cancelButtonText: "아니오",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            try {
+              console.log("Cancelling appointment:", consultation); // 디버깅용 로그
+              if (!consultation.appointmentId) {
+                console.error("appointmentId is missing");
+                return;
+              }
+              await fetchApiCancelReservation(consultation.appointmentId);
+              // 취소 성공 후 상담 정보 새로고침
+              await refreshConsultations();
+              Swal.fire({
+                title: "취소 완료!",
+                text: "상담이 취소되었습니다.",
+                icon: "success",
+              });
+            } catch (error) {
+              console.error("상담 취소 실패:", error);
+              console.error("Error details:", error.response?.data);
+              Swal.fire({
+                title: "오류 발생",
+                text: "상담 취소 중 문제가 발생했습니다. 다시 시도해주세요.",
+                icon: "error",
+              });
+            }
           }
-          await fetchApiCancelReservation(consultation.appointmentId);
-          // 취소 성공 후 상담 정보 새로고침
-          await refreshConsultations();
-        } catch (error) {
-          console.error("상담 취소 실패:", error);
-          console.error("Error details:", error.response?.data);
-        }
+        });
       } else {
         // 기존의 신청 로직
         const updatedConsultations = consultations.map((c, i) => {
@@ -202,9 +227,9 @@ const ParentsReservationList = ({ selectedDate }) => {
   };
 
   // 취소 버튼 핸들러
-  const handleCancel = () => {
-    refreshConsultations();
-  };
+  // const handleCancel = () => {
+  //   refreshConsultations();
+  // };
 
   return (
     <div className={styles.consultationList}>
@@ -255,9 +280,9 @@ const ParentsReservationList = ({ selectedDate }) => {
         >
           예약하기
         </button>
-        <button className={styles.cancel} onClick={handleCancel}>
+        {/* <button className={styles.cancel} onClick={handleCancel}>
           취소
-        </button>
+        </button> */}
       </div>
 
       <Modal show={showModal} onClose={() => setShowModal(false)} />

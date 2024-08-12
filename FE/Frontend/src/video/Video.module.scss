@@ -255,3 +255,14 @@
   font-size: 100%;
   border-style: none;
 }
+
+.profanityOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 0, 0, 0.3);
+  z-index: 1000;
+  pointer-events: none;
+}

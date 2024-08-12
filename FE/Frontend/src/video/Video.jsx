@@ -47,6 +47,8 @@ const VideoChatComponent = () => {
   const toggleSubTitle = () => {
     setShowSubtitle(!showSubtitle);
   };
+  // 필터링 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+  const [profanityDetected, setProfanityDetected] = useState(false);
 
   useEffect(() => {
     // 사용자 이름 GET
@@ -64,7 +66,7 @@ const VideoChatComponent = () => {
           name: response.data.name || "",
         };
         setProfileData(data);
-        console.log("Fetched Profile Data:", data);
+        console.log("가져온 프로필 데이터 : ", data);
       } catch (error) {
         console.error("Failed to fetch profile data:", error);
       }
@@ -334,13 +336,28 @@ const VideoChatComponent = () => {
     }
   };
 
-  const sendSTTMessage = (text) => {
+  const sendSTTMessage = async (text) => {
     if (text.trim() !== "" && session) {
       const messageData = {
         message: text,
         from: myUserName.current,
         connectionId: session.connection.connectionId,
       };
+      // 욕설 감지 API 호출 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+      try {
+        const response = await axios.post(`${apiUrl}/v1/profanity/check`, {
+          message: text,
+        });
+
+        if (response.data.category === "공격발언") {
+          setProfanityDetected(true);
+          // 3초 후에 빨간 박스를 제거합니다.
+          setTimeout(() => setProfanityDetected(false), 3000);
+          console.warn("공격발언이 감지되었습니다", response);
+        }
+      } catch (error) {
+        console.error("비속어 확인 중 오류 발생:", error);
+      }
       session.signal({
         data: JSON.stringify(messageData),
         type: "stt",
@@ -398,7 +415,8 @@ const VideoChatComponent = () => {
       {session === null ? (
         <h1 className={styles.entering}>화상상담 입장 중...</h1>
       ) : (
-        <div>
+        <div className={styles.videoChatContainer}>
+          {profanityDetected && <div className={styles.profanityOverlay}></div>}
           <div className={styles.menubarArray}>
             <div className={styles.top}>
               <div className={styles.menubar}>

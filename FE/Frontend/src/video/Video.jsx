@@ -53,8 +53,8 @@ const VideoChatComponent = () => {
 
   // 필터링 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
   const [profanityDetected, setProfanityDetected] = useState(false); // 공격적인 발언 감지
-  const [lastProfanityTime, setLastProfanityTime] = useState(null); // 마지막으로 공격적인 발언 감지
-  const profanityCountRef = useRef(0); // 공격적인 발언이 연속적으로 감지된 횟수
+  // const [lastProfanityTime, setLastProfanityTime] = useState(null); // 마지막으로 공격적인 발언 감지
+  // const profanityCountRef = useRef(0); // 공격적인 발언이 연속적으로 감지된 횟수
 
   useEffect(() => {
     // 사용자 이름 GET
@@ -355,30 +355,43 @@ const VideoChatComponent = () => {
           message: text,
         });
 
-        if (response.data.category === "공격발언") {
-          const currentTime = Date.now();
-          console.warn("공격발언이 감지되었습니다 1", response);
+        const messageData = {
+          text,
+          timestamp: new Date().toISOString(),
+          isProfanity: response.data.category === "공격발언",
+        };
 
-          if (lastProfanityTime && currentTime - lastProfanityTime <= 5000) {
-            console.warn("공격발언이 감지되었습니다 2", response);
-            profanityCountRef.current += 1;
-          } else {
-            console.warn("공격발언 감지 시간 초과되었습니다", response);
-            profanityCountRef.current = 1;
+        setMySTTMessages((prevMessages) => {
+          const newMessages = [...prevMessages, messageData];
+          const recentMessages = newMessages.slice(-5); // 최근 5개의 메시지만 유지
+
+          // 최근 메시지 중 연속된 공격 발언 확인
+          let consecutiveProfanityCount = 0;
+          for (let i = recentMessages.length - 1; i >= 0; i--) {
+            if (recentMessages[i].isProfanity) {
+              consecutiveProfanityCount++;
+              if (consecutiveProfanityCount >= 2) {
+                setProfanityDetected(true);
+                // 3초 후에 빨간 박스를 제거합니다.
+                setTimeout(() => {
+                  setProfanityDetected(false);
+                }, 3000);
+                break;
+              }
+            } else {
+              break; // 연속되지 않은 경우 중단
+            }
           }
 
-          setLastProfanityTime(currentTime);
+          return recentMessages;
+        });
 
-          if (profanityCountRef.current >= 2) {
-            setProfanityDetected(true);
-            // 3초 후에 빨간 박스를 제거하고 카운트를 리셋합니다.
-            setTimeout(() => {
-              setProfanityDetected(false);
-              profanityCountRef.current = 0;
-              setLastProfanityTime(null);
-            }, 3000);
-          }
-        }
+        session.signal({
+          data: JSON.stringify(messageData),
+          type: "stt",
+        });
+
+        setMyTmpMessage(""); // 임시 메시지 초기화
       } catch (error) {
         console.error("비속어 확인 중 오류 발생:", error);
       }
@@ -444,7 +457,7 @@ const VideoChatComponent = () => {
 
   useEffect(() => {
     if (transcript !== lastTranscriptRef.current) {
-      setMymyTmpMessage(transcript); // 내 음성 인식 메시지 상태 업데이트
+      setMySTTMessages(transcript); // 내 음성 인식 메시지 상태 업데이트
       lastTranscriptRef.current = transcript;
 
       if (timeoutRef.current) {

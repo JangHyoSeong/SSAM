@@ -1,16 +1,13 @@
 import { useState } from "react";
 import styles from "./Chatbot.module.scss";
 import chatbotImg from "../../assets/chatbot.png";
-import ChatbotStudyModal from "./ChatbotStudyModal";
-// import ChatbotChatModal from "./ChatbotChatModal";
+import StudentChatModal from "./StudentChatModal"; // StudentChatModal만 사용
 
 const Chatbot = () => {
-  const [isBoxVisible, setIsBoxVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const toggleBoxVisibility = () => {
-    setIsBoxVisible(!isBoxVisible);
-    if (isBoxVisible) setIsModalVisible(false);
+  const toggleModalVisibility = () => {
+    setIsModalVisible(!isModalVisible); // 클릭 시 모달의 가시성 토글
   };
 
   return (
@@ -18,16 +15,10 @@ const Chatbot = () => {
       <img
         src={chatbotImg}
         className={styles.ChatbotImg}
-        onClick={toggleBoxVisibility}
+        onClick={toggleModalVisibility}
       />
-      {isBoxVisible && (
-        <ChatbotStudyModal
-          isBoxVisible={isBoxVisible}
-          openModal={() => setIsModalVisible(true)} // 채팅 모달 열기
-        />
-      )}
       {isModalVisible && (
-        <ChatbotChatModal
+        <StudentChatModal
           isVisible={isModalVisible}
           closeModal={() => setIsModalVisible(false)} // 채팅 모달 닫기
         />

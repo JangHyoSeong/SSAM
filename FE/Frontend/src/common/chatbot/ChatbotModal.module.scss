@@ -1,17 +1,27 @@
-.modalContent {
-  position: fixed;
-  bottom: 2%;
-  right: 4%;
-  width: 20vw;
-  height: 60vh;
-  background-color: white;
-  border: 1px solid #aaaaaa;
-  border-radius: 20px;
-  margin-bottom: 2%;
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px); /* 아래에서 위로 올라오는 효과 */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0); /* 원래 위치로 이동 */
+  }
 }
 
-.modalContent hr {
+.modalContent {
+  position: fixed;
+  bottom: 5%;
+  right: 4%;
+  width: 23vw;
+  height: 70vh;
+  background-color: white;
   border: 1px solid #aaaaaa;
+  border-radius: 15px;
+  margin-bottom: 2%;
+  opacity: 0; /* 초기 투명도 */
+  animation: slideUp 0.4s ease-out forwards; /* 슬라이드 애니메이션 적용 */
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
 }
 
 .topArray {
@@ -19,41 +29,49 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  height: 5.8vh;
+  height: 6vh;
+  background-color: #f7f7f7; /* 상단에 연한 배경색 추가 */
+  border-radius: 15px 15px 0 0; /* 상단에 둥근 모서리 적용 */
+  padding: 0 10px;
 }
 
 .chatArray {
-  width: 20vw;
-  height: 45vh;
+  width: 100%;
+  height: 55vh; /* 높이를 줄여서 텍스트 입력과 메뉴를 위로 올림 */
   display: flex;
-  align-items: center;
   flex-direction: column;
-}
-
-.chatArray h4 {
-  margin: 1% 0%;
+  justify-content: flex-end; /* 채팅 내용이 하단에 정렬되도록 설정 */
+  align-items: center;
+  padding: 0 10px;
 }
 
 .chatContent {
-  width: 20vw;
-  height: 39.2vh;
+  width: 100%;
+  height: 100%;
   overflow-y: auto;
+  flex-grow: 1;
+  padding: 10px;
+  box-sizing: border-box; /* 패딩과 보더를 포함한 박스 크기 계산 */
 }
 
 .textInput {
-  width: 17vw;
-  height: 5vh;
-  background-color: transparent;
-  border: 2px solid #dddddd;
+  width: 95%;
+  height: 6vh;
+  background-color: #f9f9f9;
+  border: 1px solid #dddddd;
   border-radius: 25px;
+  padding-left: 15px;
+  box-sizing: border-box;
+  margin-top: 5px; /* 간격 조정 */
+  font-size: 0.9rem;
+  color: #333;
+  outline: none; /* 포커스 시 기본 테두리 제거 */
+  margin-bottom: 5px;
 }
 
-.studyTextInput {
-  padding-left: 16%;
-}
-
+.studyTextInput,
 .chatTextInput {
-  padding-left: 5%;
+  padding-left: 15%;
 }
 
 .inputFile {
@@ -62,25 +80,29 @@
 
 .uploadImg {
   position: absolute;
-  top: 77%;
-  left: 12%;
+  top: 81%; /* 위치 조정 */
+  left: 9%;
   width: 2vw;
-  height: 3.5vh;
+  height: 3vh;
   cursor: pointer;
 }
 
 .chatMenu {
-  width: 19.9vw;
-  height: 8.7vh;
-  border-radius: 0px 0px 20px 20px;
+  width: 100%;
+  height: 8vh; /* 높이를 약간 증가시켜 위로 올림 */
+  border-radius: 0 0 15px 15px; /* 하단 모서리 둥글게 */
   background-color: #f2f2f2;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  margin-top: 5px; /* 간격 조정 */
 }
 
 .imgBox {
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .img {
@@ -89,7 +111,7 @@
 
 .chatMenu p {
   font-size: 90%;
-  margin: -15% 12%;
+  margin-top: 5px; /* 텍스트와 이미지 간격 조정 */
 }
 
 .chatTxt {
@@ -101,4 +123,6 @@
   padding: 5px 10px;
   margin: 5px;
   border-radius: 25px;
+  align-self: flex-end; /* 메시지를 오른쪽에 정렬 */
+  max-width: 80%; /* 메시지가 너무 길지 않도록 제한 */
 }

@@ -12,9 +12,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @NoArgsConstructor
@@ -77,6 +80,9 @@ public class User {
     @NotNull
     @Column(nullable = false)
     private String password;
+
+    private String provider;
+    private String providerId;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserBoardRelation> boards = new ArrayList<>();
@@ -147,6 +153,10 @@ public class User {
                 .username(requestDto.getUsername())
                 .password(requestDto.getPassword())
                 .build();
+    }
+
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
 }

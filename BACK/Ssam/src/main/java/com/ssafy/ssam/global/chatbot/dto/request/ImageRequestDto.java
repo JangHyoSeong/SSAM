@@ -1,9 +1,10 @@
-package com.ssafy.ssam.global.chatbot.dto;
+package com.ssafy.ssam.global.chatbot.dto.request;
 
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDateTime;
 
 @Builder
 @Getter
@@ -12,7 +13,11 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class ImageRequestDto {
 
-    private String text;
+    private String content;
+    @NotNull
     private MultipartFile image;
-
+    @NotNull
+    private LocalDateTime startTime;
+    @NotNull
+    private LocalDateTime endTime;
 }

@@ -11,10 +11,7 @@ import mikeOn from "../assets/mikeOn.png";
 import mikeOff from "../assets/mikeOff.png";
 import cameraOn from "../assets/cameraOn.png";
 import cameraOff from "../assets/cameraOff.png";
-import Draggable from "react-draggable";
-import SpeechRecognition, {
-  useSpeechRecognition,
-} from "react-speech-recognition";
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 const apiUrl = import.meta.env.API_URL;
 
@@ -36,44 +33,16 @@ const VideoChatComponent = () => {
   const [tmpMessage, setTmpMessage] = useState("");
   const OV = useRef(new OpenVidu());
   const myUserName = useRef(`user_${Math.floor(Math.random() * 1000) + 1}`);
-  const chatContainerRef = useRef(null);
   const subtitleRef = useRef(null);
   const lastTranscriptRef = useRef("");
   const timeoutRef = useRef(null);
-  const [time, setTime] = useState({ minutes: 0, seconds: 0 });
-
-  useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
-    }
-  }, [chatMessages]);
 
   const {
     transcript,
     listening,
     resetTranscript,
-    browserSupportsSpeechRecognition,
+    browserSupportsSpeechRecognition
   } = useSpeechRecognition();
-
-  useEffect(() => {
-    // 타이머 설정
-    const timerInterval = setInterval(() => {
-      setTime((prevTime) => {
-        const newSeconds = prevTime.seconds + 1;
-        const newMinutes = newSeconds >= 60 ? prevTime.minutes + 1 : prevTime.minutes;
-        return {
-          minutes: newMinutes,
-          seconds: newSeconds >= 60 ? 0 : newSeconds,
-        };
-      });
-    }, 1000);
-  
-    // 컴포넌트 언마운트 시 정리
-    return () => {
-      clearInterval(timerInterval);
-    };
-  }, []);
 
   useEffect(() => {
     if (transcript !== lastTranscriptRef.current) {
@@ -85,10 +54,7 @@ const VideoChatComponent = () => {
       }
 
       timeoutRef.current = setTimeout(() => {
-        if (
-          transcript === lastTranscriptRef.current &&
-          transcript.trim() !== ""
-        ) {
+        if (transcript === lastTranscriptRef.current && transcript.trim() !== "") {
           sendSTTMessage(transcript);
           resetTranscript();
         }
@@ -112,7 +78,7 @@ const VideoChatComponent = () => {
 
   useEffect(() => {
     if (session && isMicOn) {
-      SpeechRecognition.startListening({ continuous: true, language: "ko-KR" });
+      SpeechRecognition.startListening({ continuous: true, language: 'ko-KR' });
     } else {
       SpeechRecognition.stopListening();
     }
@@ -124,16 +90,13 @@ const VideoChatComponent = () => {
     }
   }, [sttMessages]);
 
-  // 페이지를 떠나기 전 세션을 떠나는 함수
   const onBeforeUnload = () => {
     leaveSession();
   };
 
-  // 세션에 참가하는 함수
   const joinSession = async () => {
     const mySession = OV.current.initSession();
 
-    // 새로운 스트림이 생성될 때 이벤트 리스너
     mySession.on("streamCreated", (event) => {
       if (
         event.stream.connection.connectionId !==
@@ -144,14 +107,12 @@ const VideoChatComponent = () => {
       }
     });
 
-    // 스트림이 파괴될 때 이벤트 리스너
     mySession.on("streamDestroyed", (event) => {
       setSubscribers((subscribers) =>
         subscribers.filter((sub) => sub !== event.stream.streamManager)
       );
     });
 
-    // 예외가 발생할 때 이벤트 리스너
     mySession.on("exception", (exception) => {
       console.warn(exception);
     });
@@ -167,7 +128,7 @@ const VideoChatComponent = () => {
         videoSource: undefined,
         publishAudio: true,
         publishVideo: true,
-        resolution: "960x400",
+        resolution: "1280x660",
         frameRate: 30,
         insertMode: "APPEND",
         mirror: false,
@@ -191,7 +152,8 @@ const VideoChatComponent = () => {
       setPublisher(publisher);
       setCurrentVideoDevice(currentVideoDevice);
 
-      // 날짜, 시간 들고오기
+      const nowdate = new Date().toLocaleString();
+
       if (myToken && myToken.createdAt) {
         const formatted = new Date(myToken.createdAt).toLocaleString();
         setFormattedDate(formatted);
@@ -207,7 +169,6 @@ const VideoChatComponent = () => {
     }
   };
 
-  // 세션을 떠나는 함수
   const leaveSession = async () => {
     if (session) {
       try {
@@ -228,7 +189,6 @@ const VideoChatComponent = () => {
     setPublisher(null);
   };
 
-  // 카메라를 전환하는 함수
   const switchCamera = async () => {
     try {
       const devices = await OV.current.getDevices();
@@ -261,7 +221,6 @@ const VideoChatComponent = () => {
     }
   };
 
-  // 녹화를 시작/중지하는 함수
   const toggleRecording = async () => {
     if (!isRecording) {
       try {
@@ -290,7 +249,6 @@ const VideoChatComponent = () => {
     }
   };
 
-  // 카메라를 켜고 끄는 함수
   const toggleCamera = () => {
     if (publisher) {
       publisher.publishVideo(!isCameraOn);
@@ -298,16 +256,12 @@ const VideoChatComponent = () => {
     }
   };
 
-  // 마이크를 켜고 끄는 함수
   const toggleMic = () => {
     if (publisher) {
       publisher.publishAudio(!isMicOn);
       setIsMicOn(!isMicOn);
       if (!isMicOn) {
-        SpeechRecognition.startListening({
-          continuous: true,
-          language: "ko-KR",
-        });
+        SpeechRecognition.startListening({ continuous: true, language: 'ko-KR' });
       } else {
         SpeechRecognition.stopListening();
         resetTranscript();
@@ -317,7 +271,7 @@ const VideoChatComponent = () => {
     }
   };
 
-  // 채팅 메시지를 보내는 함수
+
   const sendChatMessage = () => {
     if (chatInput.trim() !== "" && session) {
       const messageData = {
@@ -347,13 +301,12 @@ const VideoChatComponent = () => {
       });
       setSTTMessages((prevMessages) => {
         const newMessages = [...prevMessages, messageData];
-        return newMessages.slice(-5); // 최대 5개의 메시지만 유지
+        return newMessages.slice(-5);  // 최대 5개의 메시지만 유지
       });
       setTmpMessage(""); // 임시 메시지 초기화
     }
   };
 
-  // 세션이 변경될 때 채팅 메시지를 수신하는 이벤트 리스너 추가
   useEffect(() => {
     if (session) {
       session.on("signal:chat", (event) => {
@@ -368,14 +321,13 @@ const VideoChatComponent = () => {
         if (data.connectionId !== session.connection.connectionId) {
           setSTTMessages((prevMessages) => {
             const newMessages = [...prevMessages, data];
-            return newMessages.slice(-5); // 최대 5개의 메시지만 유지
+            return newMessages.slice(-5);  // 최대 5개의 메시지만 유지
           });
         }
       });
     }
   }, [session]);
 
-  // 토큰을 가져오는 함수
   const getToken = async () => {
     try {
       const response = await axios.post(`${apiUrl}/v1/video/token`, {
@@ -398,164 +350,116 @@ const VideoChatComponent = () => {
       {session === null ? (
         <h1 className={styles.entering}>화상상담 입장 중...</h1>
       ) : (
-        <div>
+        <div className={styles.top}>
           <div className={styles.menubarArray}>
-            <div className={styles.top}>
-              <div className={styles.menubar}>
-                <div className={styles.logoArray}>
-                  <img src={whitelogo} className={styles.logo} alt="Logo" />
-                </div>
-                {/* <h3>Session: {sessionId}</h3> */}
-
-                {/* 날짜, 시간 */}
-                <div className={styles.dayArray}>
-                  <p>{formattedDate}</p>
-                </div>
-
-                <div className={styles.iconArray}>
-                  {/* 녹화 버튼 */}
-                  <button className={styles.btnIcon} onClick={toggleRecording}>
-                    {isRecording ? (
-                      <img
-                        src={RECOn}
-                        className={styles.imgIcon}
-                        alt="Recording On"
-                      />
-                    ) : (
-                      <img
-                        src={RECOff}
-                        className={styles.imgIcon}
-                        alt="Recording Off"
-                      />
-                    )}
-                  </button>
-
-                  {/* 화면 전환 버튼 */}
-                  <button className={styles.btnIcon} onClick={switchCamera}>
-                    <img
-                      src={Conversion}
-                      className={styles.imgIcon}
-                      onClick={switchCamera}
-                    />
-                  </button>
-
-                  {/* 카메라 ON / Off 버튼 */}
-                  <button className={styles.btnIcon} onClick={toggleCamera}>
-                    {isCameraOn ? (
-                      <img
-                        src={cameraOn}
-                        className={styles.imgIcon}
-                        alt="Camera On"
-                      />
-                    ) : (
-                      <img
-                        src={cameraOff}
-                        className={styles.imgIcon}
-                        alt="Camera Off"
-                      />
-                    )}
-                  </button>
-
-                  {/* 마이크 ON / Off 버튼 */}
-                  <button className={styles.btnIcon} onClick={toggleMic}>
-                    {isMicOn ? (
-                      <img
-                        src={mikeOn}
-                        className={styles.imgIcon}
-                        alt="Microphone On"
-                      />
-                    ) : (
-                      <img
-                        src={mikeOff}
-                        className={styles.imgIcon}
-                        alt="Microphone Off"
-                      />
-                    )}
-                  </button>
-
-                  {/* 나가기 버튼 */}
-                  <button
-                    className={`${styles.leaveSession} ${styles.btnIcon}`}
-                    onClick={leaveSession}
-                  >
-                    <h1>X</h1>
-                  </button>
-                </div>
+            <div className={styles.menubar}>
+              <div className={styles.logoArray}>
+                <img src={whitelogo} className={styles.logo} alt="Logo" />
               </div>
-            </div>
-
-            {/* 시간 */}
-            <div className={styles.timeArray}>
-              <div className={styles.time}>
-                <h1>{`${String(time.minutes).padStart(2, "0")}:${String(
-                  time.seconds
-                ).padStart(2, "0")}`}</h1>
+  
+              <div className={styles.dayArray}>
+                <p>{formattedDate}</p>
+              </div>
+  
+              <div className={styles.iconArray}>
+                <button className={styles.btnIcon} onClick={toggleRecording}>
+                  {isRecording ? (
+                    <img src={RECOn} className={styles.imgIcon} alt="Recording On" />
+                  ) : (
+                    <img src={RECOff} className={styles.imgIcon} alt="Recording Off" />
+                  )}
+                </button>
+  
+                <button className={styles.btnIcon} onClick={switchCamera}>
+                  <img
+                    src={Conversion}
+                    className={styles.imgIcon}
+                    alt="Switch Camera"
+                  />
+                </button>
+  
+                <button className={styles.btnIcon} onClick={toggleCamera}>
+                  {isCameraOn ? (
+                    <img src={cameraOn} className={styles.imgIcon} alt="Camera On" />
+                  ) : (
+                    <img src={cameraOff} className={styles.imgIcon} alt="Camera Off" />
+                  )}
+                </button>
+  
+                <button className={styles.btnIcon} onClick={toggleMic}>
+                  {isMicOn ? (
+                    <img src={mikeOn} className={styles.imgIcon} alt="Microphone On" />
+                  ) : (
+                    <img src={mikeOff} className={styles.imgIcon} alt="Microphone Off" />
+                  )}
+                </button>
+  
+                <button
+                  className={`${styles.leaveSession} ${styles.btnIcon}`}
+                  onClick={leaveSession}
+                >
+                  <h1>X</h1>
+                </button>
               </div>
             </div>
           </div>
-
-          {/* 화면 */}
+  
           <div className={styles.bottom}>
             <div className={styles.screen}>
-              <div className={styles.videoPosition}>
-                {mainStreamManager !== null && (
-                  <div className={styles.videoItem}>
-                    <UserVideoComponent streamManager={mainStreamManager} />
+              {mainStreamManager !== null && (
+                <div className={styles.videoItem}>
+                  <UserVideoComponent streamManager={mainStreamManager} />
+                </div>
+              )}
+              {subscribers.map((sub) => (
+                <div
+                  key={sub.stream.connection.connectionId}
+                  className={styles.othervideoItem}
+                >
+                  <UserVideoComponent streamManager={sub} />
+                </div>
+              ))}
+            </div>
+  
+            <div className={styles.subTitleArray}>
+              <div className={styles.subTitle} ref={subtitleRef}>
+                {sttMessages.map((msg, index) => (
+                  <div key={index}>
+                    <strong>{msg.from}:</strong> {msg.message}
+                  </div>
+                ))}
+                {tmpMessage && (
+                  <div>
+                    <strong>{myUserName.current}:</strong> {tmpMessage}
                   </div>
                 )}
-                {subscribers.map((sub) => (
-                  <Draggable key={sub.stream.connection.connectionId}>
-                    <div className={styles.othervideoItem}>
-                      <UserVideoComponent streamManager={sub} />
-                    </div>
-                  </Draggable>
-                ))}
-              </div>
-
-              {/* 자막 */}
-              <div className={styles.subTitleArray}>
-                <div className={styles.subTitle} ref={subtitleRef}>
-                  {sttMessages.map((msg, index) => (
-                    <div key={index}>
-                      <strong>{msg.from}:</strong> {msg.message}
-                    </div>
-                  ))}
-                  {tmpMessage && (
-                    <div>
-                      <strong>{myUserName.current}:</strong> {tmpMessage}
-                    </div>
-                  )}
-                </div>
               </div>
             </div>
-
-            {/* 채팅 */}
-            <div className={styles.right}>
-              <div className={styles.chatingArray}>
-                <div className={styles.chatContainer}>
-                  <div className={styles.chating} ref={chatContainerRef}>
-                    {chatMessages.map((msg, index) => (
-                      <div
-                        key={index}
-                        className={`${styles.chatMessage} ${
-                          msg.connectionId === session.connection.connectionId
-                            ? styles.ownMessage
-                            : styles.otherMessage
-                        }`}
-                      >
-                        <strong>{msg.from}:</strong> {msg.message}
-                      </div>
-                    ))}
+  
+            <div className={styles.chatingArray}>
+              <div className={styles.chating}>
+                {chatMessages.map((msg, index) => (
+                  <div
+                    key={index}
+                    className={`chatMessage ${
+                      msg.connectionId === session.connection.connectionId
+                        ? "ownMessage"
+                        : "otherMessage"
+                    }`}
+                  >
+                    <strong>{msg.from}:</strong> {msg.message}
                   </div>
-                  <input
-                    type="text"
-                    value={chatInput}
-                    className={styles.chatForm}
-                    onChange={(e) => setChatInput(e.target.value)}
-                    onKeyPress={(e) => e.key === "Enter" && sendChatMessage()}
-                    placeholder="채팅을 입력해주세요"
-                  />
-                </div>
+                ))}
+              </div>
+              <div className={styles.chatInputArray}>
+                <input
+                  type="text"
+                  value={chatInput}
+                  className={styles.chatForm}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && sendChatMessage()}
+                  placeholder="채팅을 입력해주세요"
+                />
               </div>
             </div>
           </div>
@@ -566,19 +470,19 @@ const VideoChatComponent = () => {
 };
 
 const UserVideoComponent = ({ streamManager }) => {
-  const videoRef = useRef();
-
-  useEffect(() => {
-    if (streamManager && videoRef.current) {
-      streamManager.addVideoElement(videoRef.current);
-    }
-  }, [streamManager]);
-
-  return (
-    <div>
-      <video autoPlay={true} ref={videoRef} />
-    </div>
-  );
-};
-
-export default VideoChatComponent;
+    const videoRef = useRef();
+  
+    useEffect(() => {
+      if (streamManager && videoRef.current) {
+        streamManager.addVideoElement(videoRef.current);
+      }
+    }, [streamManager]);
+  
+    return (
+      <div>
+        <video autoPlay={true} ref={videoRef} />
+      </div>
+    );
+  };
+  
+  export default VideoChatComponent;

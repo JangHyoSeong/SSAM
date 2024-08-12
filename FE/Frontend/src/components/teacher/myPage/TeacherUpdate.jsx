@@ -1,3 +1,4 @@
+// // 선생님 정보 수정 페이지 컴포넌트
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
@@ -118,6 +119,13 @@ const TeacherUpdate = () => {
     window.location.reload(); // 페이지 새로고침
   };
 
+  const profile = useProfile();
+
+  // Function to handle Google Account linking
+  const handleLinkGoogleAccount = () => {
+    window.location.href = "http://localhost:8081/oauth2/authorization/google";
+  };
+
   return (
     <div className={styles.Container}>
       <div className={styles.menuNavbar}>
@@ -131,8 +139,8 @@ const TeacherUpdate = () => {
           <table className={styles.tableArray}>
             <tbody>
               <tr>
-                <th>사진</th>
-                <td className={styles.imgTd}>
+                <th style={{ borderTop: 'none' }}>사진</th>
+                <td className={styles.imgTd} style={{ borderTop: 'none' }}>
                   <div className={styles.profileImg}>
                     {profile.profileImage && (
                       <img
@@ -231,8 +239,8 @@ const TeacherUpdate = () => {
                 </td>
               </tr>
               <tr>
-                <th>휴대전화</th>
-                <td>
+                <th style={{ borderBottom: 'none' }}>휴대전화</th>
+                <td style={{ borderBottom: 'none' }}>
                   <input
                     type="text"
                     name="phone"
@@ -240,6 +248,7 @@ const TeacherUpdate = () => {
                     onChange={(e) =>
                       setProfileData({ ...profile, selfPhone: e.target.value })
                     }
+
                   />
                 </td>
               </tr>
@@ -257,6 +266,14 @@ const TeacherUpdate = () => {
               취소
             </button>
           </div>
+          {/* Add Google Account Link Button Here */}
+          <button
+            type="button"
+            className={styles.googleLinkBtn}
+            onClick={handleLinkGoogleAccount}
+          >
+            구글 계정 연동
+          </button>
         </form>
       </div>
     </div>

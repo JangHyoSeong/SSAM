@@ -41,6 +41,11 @@ const TeacherLogin = () => {
     }
   };
 
+  // 구글 로그인 버튼 클릭 시 호출
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:8081/oauth2/authorization/google";
+  };
+
   return (
     <div className={styles.loginArray}>
       <h1 className={styles.loginTitle}>로그인</h1>
@@ -72,7 +77,11 @@ const TeacherLogin = () => {
               </NavLink>
               <p className={styles.searchId}>아이디 / 비밀번호 찾기</p>
             </div>
-            <button type="button" className={styles.googleBtn}>
+            <button
+              type="button"
+              className={styles.googleBtn}
+              onClick={handleGoogleLogin}
+            >
               <img src={google} className={styles.googleImg} alt="google" />
               <p>구글로 시작하세요</p>
             </button>

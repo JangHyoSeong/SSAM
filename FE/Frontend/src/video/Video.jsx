@@ -6,7 +6,7 @@ import styles from "./Video.module.scss";
 import whitelogo from "../assets/whitelogo.png";
 import RECOn from "../assets/RECOn.png";
 import RECOff from "../assets/RECOff.png";
-import Conversion from "../assets/Conversion.png";
+// import Conversion from "../assets/Conversion.png";
 import mikeOn from "../assets/mikeOn.png";
 import mikeOff from "../assets/mikeOff.png";
 import cameraOn from "../assets/cameraOn.png";
@@ -42,6 +42,33 @@ const VideoChatComponent = () => {
   const timeoutRef = useRef(null);
   const [time, setTime] = useState({ minutes: 0, seconds: 0 });
 
+  const [profileData, setProfileData] = useState({name: "",});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("USER_TOKEN");
+      try {
+        console.log("Fetching profile data with token:", token);
+        const response = await axios.get(`${apiUrl}/v1/users`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        });
+
+        const data = {
+          name: response.data.name || "",
+        };
+        setProfileData(data);
+        console.log("Fetched Profile Data:", data);
+      } catch (error) {
+        console.error("Failed to fetch profile data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
@@ -61,14 +88,15 @@ const VideoChatComponent = () => {
     const timerInterval = setInterval(() => {
       setTime((prevTime) => {
         const newSeconds = prevTime.seconds + 1;
-        const newMinutes = newSeconds >= 60 ? prevTime.minutes + 1 : prevTime.minutes;
+        const newMinutes =
+          newSeconds >= 60 ? prevTime.minutes + 1 : prevTime.minutes;
         return {
           minutes: newMinutes,
           seconds: newSeconds >= 60 ? 0 : newSeconds,
         };
       });
     }, 1000);
-  
+
     // 컴포넌트 언마운트 시 정리
     return () => {
       clearInterval(timerInterval);
@@ -229,37 +257,37 @@ const VideoChatComponent = () => {
   };
 
   // 카메라를 전환하는 함수
-  const switchCamera = async () => {
-    try {
-      const devices = await OV.current.getDevices();
-      const videoDevices = devices.filter(
-        (device) => device.kind === "videoinput"
-      );
+  // const switchCamera = async () => {
+  //   try {
+  //     const devices = await OV.current.getDevices();
+  //     const videoDevices = devices.filter(
+  //       (device) => device.kind === "videoinput"
+  //     );
 
-      if (videoDevices && videoDevices.length > 1) {
-        const newVideoDevice = videoDevices.filter(
-          (device) => device.deviceId !== currentVideoDevice.deviceId
-        );
+  //     if (videoDevices && videoDevices.length > 1) {
+  //       const newVideoDevice = videoDevices.filter(
+  //         (device) => device.deviceId !== currentVideoDevice.deviceId
+  //       );
 
-        if (newVideoDevice.length > 0) {
-          const newPublisher = OV.current.initPublisher(undefined, {
-            videoSource: newVideoDevice[0].deviceId,
-            publishAudio: true,
-            publishVideo: true,
-            mirror: false,
-          });
+  //       if (newVideoDevice.length > 0) {
+  //         const newPublisher = OV.current.initPublisher(undefined, {
+  //           videoSource: newVideoDevice[0].deviceId,
+  //           publishAudio: true,
+  //           publishVideo: true,
+  //           mirror: false,
+  //         });
 
-          await session.unpublish(mainStreamManager);
-          await session.publish(newPublisher);
-          setCurrentVideoDevice(newVideoDevice[0]);
-          setMainStreamManager(newPublisher);
-          setPublisher(newPublisher);
-        }
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  //         await session.unpublish(mainStreamManager);
+  //         await session.publish(newPublisher);
+  //         setCurrentVideoDevice(newVideoDevice[0]);
+  //         setMainStreamManager(newPublisher);
+  //         setPublisher(newPublisher);
+  //       }
+  //     }
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // };
 
   // 녹화를 시작/중지하는 함수
   const toggleRecording = async () => {
@@ -431,13 +459,13 @@ const VideoChatComponent = () => {
                   </button>
 
                   {/* 화면 전환 버튼 */}
-                  <button className={styles.btnIcon} onClick={switchCamera}>
+                  {/* <button className={styles.btnIcon} onClick={switchCamera}>
                     <img
                       src={Conversion}
                       className={styles.imgIcon}
                       onClick={switchCamera}
                     />
-                  </button>
+                  </button> */}
 
                   {/* 카메라 ON / Off 버튼 */}
                   <button className={styles.btnIcon} onClick={toggleCamera}>
@@ -517,7 +545,8 @@ const VideoChatComponent = () => {
                 <div className={styles.subTitle} ref={subtitleRef}>
                   {sttMessages.map((msg, index) => (
                     <div key={index}>
-                      <strong>{msg.from}:</strong> {msg.message}
+                      {/* <strong>{msg.from}:</strong> {msg.message} */}
+                      <strong>{profileData.name}:</strong> {msg.message}
                     </div>
                   ))}
                   {tmpMessage && (
@@ -543,7 +572,7 @@ const VideoChatComponent = () => {
                             : styles.otherMessage
                         }`}
                       >
-                        <strong>{msg.from}:</strong> {msg.message}
+                        <strong>{profileData.name}:</strong> {msg.message}
                       </div>
                     ))}
                   </div>

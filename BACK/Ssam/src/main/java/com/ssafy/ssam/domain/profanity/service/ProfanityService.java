@@ -12,7 +12,7 @@ import com.ssafy.ssam.domain.profanity.dto.PredictionResultDto;
 @Service
 public class ProfanityService {
     private final RestTemplate restTemplate;
-    private final String pythonServiceUrl = "http://localhost:8082/predict";
+    private final String pythonServiceUrl = "http://host.docker.internal:8082/predict";
 
     @Autowired
     public ProfanityService(RestTemplate restTemplate) {

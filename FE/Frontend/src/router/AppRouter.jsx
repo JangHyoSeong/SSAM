@@ -1,6 +1,7 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import MainPage from "../components/mainPage/MainPage";
 import Chatbot from "../common/chatbot/Chatbot.jsx";
+import StudentChatbot from "../common/chatbot/StudentChatbot.jsx"; // 학생용 챗봇 추가
 import SubNavbar from "../common/navigation/SubNavbar.jsx";
 import MainNavbar from "../common/navigation/MainNavbar.jsx";
 import Video from "../video/Video.jsx";
@@ -42,9 +43,13 @@ import WebrtcPage from "../webrtc/react-webrtc-component";
 import RoleBasedRoute from "./RoleBasedRoute.jsx";
 
 import VideoEntry from "../video/VideoEntry.jsx"; // 상담 참가 입장 화면
+import useUserInitialStore from "../store/UserInitialStore"; // 사용자 데이터 가져오기 위한 hook
 
 const AppRouter = () => {
   const location = useLocation();
+  const { userInitialData } = useUserInitialStore((state) => ({
+    userInitialData: state.userInitialData,
+  }));
 
   const hideChatbotOnRoutes = [
     "/",
@@ -75,7 +80,10 @@ const AppRouter = () => {
           <Route path="/teacherjoin" element={<TeacherJoin />} />
           <Route path="/studentlogin" element={<ParentsLogin />} />
           <Route path="/studentjoin" element={<ParentsJoin />} />
-          <Route path="/auth/oauth-response/:token" element={<OAuthResponse />} />
+          <Route
+            path="/auth/oauth-response/:token"
+            element={<OAuthResponse />}
+          />
 
           {/* 선생님 */}
           <Route element={<RoleBasedRoute allowedRoles={["TEACHER"]} />}>
@@ -144,13 +152,18 @@ const AppRouter = () => {
           {/* WebRTC Route */}
           <Route path="/webrtc" element={<WebrtcPage />} />
 
-          {/* Test Page Route */}
+          {/* VideoEntry Route */}
           <Route path="/video/entry" element={<VideoEntry />} />
         </Routes>
       </div>
 
       {/* Chatbot */}
-      {showChatbot && <Chatbot />}
+      {showChatbot && userInitialData && (
+        <>
+          {userInitialData.role === "TEACHER" && <Chatbot />}
+          {userInitialData.role === "STUDENT" && <StudentChatbot />}
+        </>
+      )}
     </div>
   );
 };

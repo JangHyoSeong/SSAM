@@ -8,15 +8,6 @@ import styles from "./TeacherReservationManagement.module.scss";
 const TeacherReservationManagement = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [availableCount, setAvailableCount] = useState(0);
-  // const { userData, error } = useApiStubReservationInfo();
-
-  // if (error) {
-  //   return <div>Error: {error.message}</div>;
-  // }
-
-  // if (!userData) {
-  //   return <div>Loading...</div>;
-  // }
 
   // 선택된 날짜를 설정하는 함수
   const handleDateSelect = (date) => {

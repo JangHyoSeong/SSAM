@@ -5,11 +5,11 @@
 .calendarContainer {
   width: 45%;
   max-width: 750px;
-  height: 760px;
+  height: 760px; // ParentsCalendar의 원래 높이 유지
   border: 0.2px solid rgb(220, 220, 220);
-  margin: 50px 0% 50px 0%;  
-  padding: 2vh; /* 상우하좌 */
-  background-color: white; 
+  margin: 50px 0% 50px 0%; // ParentsCalendar의 원래 마진 유지
+  padding: 2vh;
+  background-color: white;
   overflow: hidden;
 
   .fc {
@@ -18,18 +18,18 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1vh;
-      padding: 0 1vw; /* 좌우 여백 추가 */
+      padding: 0 1vw;
     }
 
     &-toolbar-title {
       font-size: 1.5rem;
       font-weight: 500;
-      color: #333; /* 제목 색상 */
+      color: #333;
     }
 
     &-day-header {
       padding: 1vh 0;
-      color: #666; /* 요일 헤더 색상 */
+      color: #666;
       background-color: #f8f9fa;
       font-weight: 500;
     }
@@ -37,21 +37,21 @@
     &-daygrid-day-number {
       font-size: 1rem;
       padding: 0.5vh;
-      color: #333; /* 날짜 숫자 색상 */
+      color: #333;
       font-weight: 500;
     }
 
     &-daygrid-event {
       font-size: 1rem;
       padding: 0.5vh 1vh;
-      background-color: #dce7fc; /* 이벤트 배경색 */
-      border-radius: 4px; /* 이벤트 둥근 모서리 */
-      color: #333; /* 이벤트 텍스트 색상 */
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 이벤트 그림자 */
+      background-color: #dce7fc;
+      border-radius: 4px;
+      color: #333;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
   }
-  
+
   .selected-date {
-    background-color: #d0e7ff !important; /* 하늘색 배경 */
+    background-color: #d0e7ff !important;
   }
 }

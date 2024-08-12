@@ -113,10 +113,12 @@ const TeacherConsultationList = () => {
     error,
     approveConsultation,
     cancelConsultation,
+    sortConsultations,
   } = useConsultation();
   const [isApproveModalOpen, setApproveModalOpen] = useState(false);
   const [isCancelModalOpen, setCancelModalOpen] = useState(false);
   const [selectedConsultationId, setSelectedConsultationId] = useState(null);
+  const [sortOrder, setSortOrder] = useState("asc"); // 정렬 순서 상태 추가
 
   const handleApprove = (appointmentId) => {
     setSelectedConsultationId(appointmentId);
@@ -146,6 +148,13 @@ const TeacherConsultationList = () => {
     setCancelModalOpen(false);
   };
 
+  // 날짜 정렬 함수 추가
+  const handleDateSort = () => {
+    const newOrder = sortOrder === "asc" ? "desc" : "asc";
+    setSortOrder(newOrder);
+    sortConsultations("startTime", newOrder);
+  };
+
   if (loading) return <div></div>;
   if (error) return <div>에러: {error}</div>;
 
@@ -172,7 +181,13 @@ const TeacherConsultationList = () => {
       </nav>
       <section className={styles.consultationSection}>
         <header className={styles.headerRow}>
-          <h3 className={styles.cellHeader}>날짜</h3>
+          <h3
+            className={styles.cellHeader}
+            onClick={handleDateSort}
+            style={{ cursor: "pointer" }}
+          >
+            날짜 {sortOrder === "asc" ? "▲" : "▼"}
+          </h3>
           <h3 className={styles.cellHeaderSmall}>시간</h3>
           <h3 className={styles.cellHeaderSmall}>이름</h3>
           <h3 className={styles.cellHeaderMedium}>주제</h3>
@@ -182,13 +197,7 @@ const TeacherConsultationList = () => {
         {consultations.map((consultation) => (
           <ConsultationItem
             key={consultation.appointmentId}
-            appointmentId={consultation.appointmentId}
-            startTime={consultation.startTime}
-            endTime={consultation.endTime}
-            studentName={consultation.studentName}
-            topic={consultation.topic}
-            description={consultation.description}
-            status={consultation.status}
+            {...consultation}
             onApprove={handleApprove}
             onCancel={handleCancel}
           />

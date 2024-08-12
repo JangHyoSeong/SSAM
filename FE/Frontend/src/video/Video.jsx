@@ -31,7 +31,6 @@ const VideoChatComponent = () => {
   const [isRecording, setIsRecording] = useState(false); // 녹화 상태 관리
   const [isCameraOn, setIsCameraOn] = useState(true); // 카메라 상태 관리
   const [isMicOn, setIsMicOn] = useState(true); // 마이크 상태 관리
-  const [formattedDate, setFormattedDate] = useState(""); // 포맷된 날짜 관리
   const [sttMessages, setSTTMessages] = useState([]); // 음성 인식 메시지 관리
   const [tmpMessage, setTmpMessage] = useState(""); // 임시 메시지 관리
   const OV = useRef(new OpenVidu()); // OpenVidu 인스턴스 생성
@@ -40,12 +39,16 @@ const VideoChatComponent = () => {
   const subtitleRef = useRef(null); // 자막 컨테이너 참조
   const lastTranscriptRef = useRef(""); // 마지막 음성 인식 결과 참조
   const timeoutRef = useRef(null); // 타임아웃 참조
-  const [time, setTime] = useState({ minutes: 0, seconds: 0 }); // 시간 상태 관리
+  const [formattedDate, setFormattedDate] = useState(""); // 포맷된 날짜 관리
   const [profileData, setProfileData] = useState({ name: "" }); // 프로필 데이터 관리
   const [showSubtitle, setShowSubtitle] = useState(true);
+  const [remainingTime, setRemainingTime] = useState("");
+  const [isTimerEnded, setIsTimerEnded] = useState(false);
   const toggleSubTitle = () => {
     setShowSubtitle(!showSubtitle);
   };
+  // 필터링 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+  const [profanityDetected, setProfanityDetected] = useState(false);
 
   useEffect(() => {
     // 사용자 이름 GET
@@ -63,7 +66,7 @@ const VideoChatComponent = () => {
           name: response.data.name || "",
         };
         setProfileData(data);
-        console.log("Fetched Profile Data:", data);
+        console.log("가져온 프로필 데이터 : ", data);
       } catch (error) {
         console.error("Failed to fetch profile data:", error);
       }
@@ -80,26 +83,6 @@ const VideoChatComponent = () => {
 
   const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
     useSpeechRecognition();
-
-  useEffect(() => {
-    // 타이머 설정
-    const timerInterval = setInterval(() => {
-      setTime((prevTime) => {
-        const newSeconds = prevTime.seconds + 1;
-        const newMinutes =
-          newSeconds >= 60 ? prevTime.minutes + 1 : prevTime.minutes;
-        return {
-          minutes: newMinutes,
-          seconds: newSeconds >= 60 ? 0 : newSeconds,
-        };
-      });
-    }, 1000);
-
-    // 컴포넌트 언마운트 시 정리
-    return () => {
-      clearInterval(timerInterval);
-    };
-  }, []);
 
   useEffect(() => {
     if (transcript !== lastTranscriptRef.current) {
@@ -223,11 +206,33 @@ const VideoChatComponent = () => {
 
       // 날짜, 시간 들고오기
       if (myToken && myToken.createdAt) {
-        const formatted = new Date(myToken.createdAt).toLocaleString();
+        const startTime = new Date(myToken.createdAt);
+        const formatted = startTime.toLocaleString();
         setFormattedDate(formatted);
-      } else {
-        console.warn("Token or createdAt is undefined");
-      }
+
+        // 시작 시간으로부터 20분 후의 종료 시간 계산
+        const endTime = new Date(startTime.getTime() + 20 * 60 * 1000);
+
+        const intervalId = setInterval(() => {
+          const now = new Date();
+          const remainingTime = endTime - now;
+
+          if (remainingTime > 0) {
+            const minutes = Math.floor(remainingTime / (60 * 1000));
+            const seconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
+            const remainingTimeString = `${minutes
+              .toString()
+              .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+            setRemainingTime(remainingTimeString);
+          } else {
+            clearInterval(intervalId);
+            setIsTimerEnded(true);
+          }
+        }, 1000);
+
+        // 컴포넌트가 언마운트될 때 인터벌을 정리
+        return () => clearInterval(intervalId);
+      } // 1초마다 업데이트
     } catch (error) {
       console.log(
         "There was an error connecting to the session:",
@@ -331,13 +336,28 @@ const VideoChatComponent = () => {
     }
   };
 
-  const sendSTTMessage = (text) => {
+  const sendSTTMessage = async (text) => {
     if (text.trim() !== "" && session) {
       const messageData = {
         message: text,
         from: myUserName.current,
         connectionId: session.connection.connectionId,
       };
+      // 욕설 감지 API 호출 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+      try {
+        const response = await axios.post(`${apiUrl}/v1/profanity/check`, {
+          message: text,
+        });
+
+        if (response.data.category === "공격발언") {
+          setProfanityDetected(true);
+          // 3초 후에 빨간 박스를 제거합니다.
+          setTimeout(() => setProfanityDetected(false), 3000);
+          console.warn("공격발언이 감지되었습니다", response);
+        }
+      } catch (error) {
+        console.error("비속어 확인 중 오류 발생:", error);
+      }
       session.signal({
         data: JSON.stringify(messageData),
         type: "stt",
@@ -395,7 +415,8 @@ const VideoChatComponent = () => {
       {session === null ? (
         <h1 className={styles.entering}>화상상담 입장 중...</h1>
       ) : (
-        <div>
+        <div className={styles.videoChatContainer}>
+          {profanityDetected && <div className={styles.profanityOverlay}></div>}
           <div className={styles.menubarArray}>
             <div className={styles.top}>
               <div className={styles.menubar}>
@@ -406,7 +427,7 @@ const VideoChatComponent = () => {
 
                 {/* 날짜, 시간 */}
                 <div className={styles.dayArray}>
-                  <p>{formattedDate}</p>
+                  <p>{formattedDate.slice(0, 11)}</p>
                 </div>
 
                 <div className={styles.iconArray}>
@@ -492,9 +513,12 @@ const VideoChatComponent = () => {
             {/* 시간 */}
             <div className={styles.timeArray}>
               <div className={styles.time}>
-                <h1>{`${String(time.minutes).padStart(2, "0")}:${String(
-                  time.seconds
-                ).padStart(2, "0")}`}</h1>
+                <p>시작 시간 : {formattedDate.slice(13, 20)}</p>
+                {!isTimerEnded ? (
+                  <p>남은 시간 : {remainingTime}</p>
+                ) : (
+                  <p>상담 시간 종료</p>
+                )}
               </div>
             </div>
           </div>
@@ -518,32 +542,18 @@ const VideoChatComponent = () => {
               </div>
 
               {/* 자막 */}
-              {/* <div className={styles.subTitleArray}>
-                <div className={styles.subTitle} ref={subtitleRef}>
-                  {sttMessages.map((msg, index) => (
-                    <div key={index}>
-                      <strong>{profileData.name}:</strong> {msg.message}
-                    </div>
-                  ))}
-                  {tmpMessage && (
-                    <div>
-                      <strong>{myUserName.current}:</strong> {tmpMessage}
-                    </div>
-                  )}
-                </div>
-              </div> */}
               <div>
                 {showSubtitle && (
                   <div className={styles.subTitleArray}>
                     <div className={styles.subTitle}>
                       {sttMessages.map((msg, index) => (
                         <div key={index}>
-                          <strong>{profileData.name}:</strong> {msg.message}
+                          <strong>{profileData.name} :</strong> {msg.message}
                         </div>
                       ))}
                       {tmpMessage && (
                         <div>
-                          <strong>{myUserName.current}:</strong> {tmpMessage}
+                          <strong>{myUserName.current} :</strong> {tmpMessage}
                         </div>
                       )}
                     </div>
@@ -566,7 +576,7 @@ const VideoChatComponent = () => {
                             : styles.otherMessage
                         }`}
                       >
-                        <strong>{profileData.name}:</strong> {msg.message}
+                        <strong>{profileData.name} :</strong> {msg.message}
                       </div>
                     ))}
                   </div>

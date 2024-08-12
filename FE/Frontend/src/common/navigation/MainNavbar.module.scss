@@ -38,6 +38,7 @@
   align-items: center;
   position: relative; // 수평 밑줄의 기준점
   gap: 10%; // 메뉴 항목 간 간격
+  margin-top: 20px;
 
   a {
     text-decoration: none;
@@ -65,7 +66,7 @@
   height: 4px;
   background-color: #5285ee;
   transition: all 0.5s ease; // 부드러운 이동 효과
-  bottom: 10px; // 수정: top 대신 bottom 사용하여 항상 메뉴 항목 아래에 위치하도록 함
+  bottom: 15px; // 수정: top 대신 bottom 사용하여 항상 메뉴 항목 아래에 위치하도록 함
   // left와 width는 JavaScript에서 동적으로 설정됨
 
   // // 물결 모양 밑줄 스타일

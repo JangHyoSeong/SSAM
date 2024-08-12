@@ -262,15 +262,14 @@ const TeacherUpdate = () => {
             >
               취소
             </button>
+            <button
+              type="button"
+              className={styles.googleLinkBtn}
+              onClick={handleLinkGoogleAccount}
+            >
+              구글 계정 연동
+            </button>
           </div>
-          {/* Add Google Account Link Button Here */}
-          <button
-            type="button"
-            className={styles.googleLinkBtn}
-            onClick={handleLinkGoogleAccount}
-          >
-            구글 계정 연동
-          </button>
         </form>
       </div>
     </div>

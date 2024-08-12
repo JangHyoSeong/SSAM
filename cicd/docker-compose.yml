@@ -8,9 +8,8 @@ services:
       - JENKINS_OPTS="--prefix=/jenkins"
       - JENKINS_ARGS="--prefix=/jenkins"
     ports:
-            - "8080:8080"
+      - "8080:8080"
     volumes:
-      # :z 옵션: SELinux 환경에서 볼륨 공유 문제 해결 (비 SELinux 시스템에서는 무시됨)
       - /home/ubuntu/jenkins_home:/var/jenkins_home:z
       - /home/ubuntu/jenkins_home/jenkins.war:/usr/share/jenkins/jenkins.war:z
       - /var/run/docker.sock:/var/run/docker.sock
@@ -24,6 +23,15 @@ services:
       - mysql_data:/var/lib/mysql
     ports:
       - "3306:3306"
+
+  python:
+    build: 
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "8082:5000"
+    volumes:
+      - /home/ubuntu/models:/app/models:z
 
 volumes:
   mysql_data:

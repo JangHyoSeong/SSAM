@@ -56,12 +56,13 @@ const EnterCode = () => {
     <div className={styles.EnterArray}>
       <div className={styles.welcomeBox}>
         <h3>
-          {profile.name}님<br /> 환영합니다
+          {profile.name} 님<br /> 환영합니다!
         </h3>
       </div>
       <div className={styles.codeBox}>
         <h3>
-          선생님께 받은 초대코드로
+          선생님께 받은
+          <br /> 초대코드로
           <br /> 학급을 등록하세요.
         </h3>
         <button className={styles.classBtn} onClick={toggleClassModal}>
@@ -71,7 +72,10 @@ const EnterCode = () => {
       </div>
       {/* 클릭하면 videoentry 화면으로 이동하도록 수정 */}
       <div className={styles.codeBox}>
-        <h3>예정된 상담이 있습니다.</h3>
+        <h3>
+          예정된 상담이
+          <br /> 있습니다.
+        </h3>
         <button className={styles.classBtn} onClick={handleConsultationStart}>
           상담 시작하기
         </button>

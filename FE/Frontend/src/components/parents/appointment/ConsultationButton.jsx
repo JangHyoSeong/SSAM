@@ -1,11 +1,14 @@
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import styles from "./ConsultationButton.module.scss";
 
 const ConsultationButton = ({ index, clickedIndex, onClick, isAvailable }) => {
+  // 클릭 함수
   const handleClick = () => {
     onClick(index);
   };
 
+  // 버튼 클래스 지정 함수
   const getButtonClasses = () => {
     if (!isAvailable) {
       return styles.unavailable;
@@ -16,13 +19,15 @@ const ConsultationButton = ({ index, clickedIndex, onClick, isAvailable }) => {
   const buttonText = isAvailable ? "신청가능" : "신청불가";
 
   return (
-    <button
-      className={getButtonClasses()}
-      onClick={handleClick}
-      disabled={!isAvailable}
-    >
-      {buttonText}
-    </button>
+    <>
+      <button
+        className={getButtonClasses()}
+        onClick={handleClick}
+        disabled={!isAvailable}
+      >
+        {buttonText}
+      </button>
+    </>
   );
 };
 

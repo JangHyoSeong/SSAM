@@ -55,9 +55,18 @@ const useTeacherCalendarStore = create((set) => ({
         console.log("Current consultations:", state.consultations);
         console.log("Current date:", state.currentDate);
 
+        // 예약 정보를 시간과 appointment_id로 정렬
+        const sortedReservations = response.data.sort((a, b) => {
+          if (a.startTime === b.startTime) {
+            return b.appointmentId - a.appointmentId; // appointment_id가 큰 것이 최신
+          }
+          return new Date(b.startTime) - new Date(a.startTime);
+        });
+
         const updatedConsultations = state.consultations.map((consultation) => {
           const [startTime, endTime] = consultation.time.split(" ~ ");
-          const matchingReservation = response.data.find((reservation) => {
+          // 동일한 시간대의 예약 중 첫 번째(최신) 항목 찾기
+          const matchingReservation = sortedReservations.find((reservation) => {
             const reservationDate = reservation.startTime.split("T")[0];
             const reservationStartTime = reservation.startTime
               .split("T")[1]
@@ -84,6 +93,9 @@ const useTeacherCalendarStore = create((set) => ({
             topic: matchingReservation ? matchingReservation.topic : null,
             description: matchingReservation
               ? matchingReservation.description
+              : null,
+            studentId: matchingReservation
+              ? matchingReservation.studentId
               : null,
           };
 

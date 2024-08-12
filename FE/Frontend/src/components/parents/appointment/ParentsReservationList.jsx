@@ -101,6 +101,7 @@ const ParentsReservationList = ({ selectedDate }) => {
                 title: "취소 완료!",
                 text: "상담이 취소되었습니다.",
                 icon: "success",
+                timer: 3000,
               });
             } catch (error) {
               console.error("상담 취소 실패:", error);
@@ -215,13 +216,27 @@ const ParentsReservationList = ({ selectedDate }) => {
         await refreshConsultations();
 
         setClickedIndex(null);
-        setShowModal(true);
+
+        // SweetAlert2를 사용한 성공 메시지
+        Swal.fire({
+          // position: "top-end",
+          icon: "success",
+          title: "상담이 예약되었습니다",
+          // showConfirmButton: false,
+          timer: 3000,
+        });
 
         // 입력 필드 초기화
         setConsultationDescription("");
         setSelectedTopic("");
       } catch (error) {
         console.error("예약 생성 실패:", error);
+        // 에러 발생 시 SweetAlert2를 사용한 에러 메시지
+        Swal.fire({
+          icon: "error",
+          title: "예약 실패",
+          text: "상담 예약 중 문제가 발생했습니다. 다시 시도해주세요.",
+        });
       }
     }
   };

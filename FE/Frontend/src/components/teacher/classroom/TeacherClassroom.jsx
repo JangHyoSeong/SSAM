@@ -9,7 +9,8 @@ import whiteshare from "../../../assets/whiteshare.png";
 import TeacherStudent from "./TeacherStudent";
 import TeacherStudentDetail from "./TeacherStudentDetail";
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
-import { fetchQuestionList } from "../../../apis/stub/28-31 문의사항/apiOnlyQuestion"; // 수정된 부분
+import { fetchQuestionList } from "../../../apis/stub/28-31 문의사항/apiOnlyQuestion";
+import { updateClassImage } from "../../../apis/stub/35-43 학급/apiBanner"; // 수정된 부분
 
 const TeacherClassroom = () => {
   const [banner, setBanner] = useState(""); // 학급 배너
@@ -97,9 +98,10 @@ const TeacherClassroom = () => {
   // 알림 버튼 클릭 핸들러
   const noticeEditClick = () => {
     setIsEditing(true);
+    setNoticeContent(notice); // 기존 공지사항을 편집할 때 편집 영역에 표시
   };
 
-  // 알림 변경 핸들러
+  // 공지사항 내용 변경 핸들러
   const noticeContentChange = (e) => {
     setNoticeContent(e.target.value);
   };
@@ -107,11 +109,29 @@ const TeacherClassroom = () => {
   // 배너 편집 클릭 핸들러
   const bannerEditInfoClick = () => {
     setIsEditingInfo(true);
+    setClassInfo(banner); // 기존 배너 정보를 편집할 때 편집 영역에 표시
   };
 
   // 배너 변경 핸들러
   const bannerInfoChange = (e) => {
     setClassInfo(e.target.value);
+  };
+
+  // 이미지 업로드 처리 함수
+  // TeacherClassroom.jsx
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0]; // 선택된 파일 객체를 가져옴
+    if (file) {
+      try {
+        await updateClassImage(file); // 파일 객체를 그대로 전달
+        // 이미지 URL을 업로드된 이미지로 업데이트
+        setUploadedImageUrl(URL.createObjectURL(file));
+      } catch (error) {
+        console.error("Failed to upload image:", error);
+      }
+    } else {
+      console.error("No file selected.");
+    }
   };
 
   return (
@@ -131,12 +151,17 @@ const TeacherClassroom = () => {
         </NavLink>
       </div>
       <div className={styles.imageContainer}>
-        <input type="file" id="file" className={styles.inputFileForm} />
+        <input
+          type="file"
+          id="file"
+          className={styles.inputFileForm}
+          onChange={handleImageUpload} // 파일 선택 시 이미지 업로드
+        />
         <label htmlFor="file">
           <img src={whiteshare} className={styles.inputFile} />
         </label>
         <img
-          src={uploadedImageUrl}
+          src={uploadedImageUrl || banner || ClassImage}
           alt="Class Management"
           className={styles.classImage}
         />

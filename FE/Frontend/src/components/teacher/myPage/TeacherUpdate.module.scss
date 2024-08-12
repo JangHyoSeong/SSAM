@@ -157,6 +157,7 @@ table {
 .formBtnArray {
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-top: 2%;
 }
 
@@ -182,7 +183,7 @@ table {
   height: 5vh;
   font-size: 120%;
   border-radius: 20px;
-  margin: 2%;
+  margin: 0% 5%  0% 2%;
   background-color: white;
   border: 2px solid #ee5252;
   color: #ee5252;
@@ -196,8 +197,7 @@ table {
 }
 
 .googleLinkBtn {
-  width: 100%;
-  margin-top: 20px;
+  width: 8.5vw;
   padding: 10px;
   background-color: #4285f4; /* Google Blue */
   color: white;

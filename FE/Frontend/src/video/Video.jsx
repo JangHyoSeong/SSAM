@@ -48,6 +48,11 @@ const VideoChatComponent = () => {
     setShowSubtitle(!showSubtitle);
   };
 
+  const [mySTTMessages, setMySTTMessages] = useState([]); // 내 음성 인식 메시지 관리
+  const [otherSTTMessages, setOtherSTTMessages] = useState([]); // 상대방 음성 인식 메시지 관리
+  const [myTmpMessage, setMyTmpMessage] = useState(""); // 내 임시 메시지 관리
+  const [otherTmpMessage, setOtherTmpMessage] = useState(""); // 상대방 임시 메시지 관리
+
   // 필터링 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
   const [profanityDetected, setProfanityDetected] = useState(false); // 공격적인 발언 감지
   const [lastProfanityTime, setLastProfanityTime] = useState(null); // 마지막으로 공격적인 발언 감지
@@ -406,6 +411,7 @@ const VideoChatComponent = () => {
             const newMessages = [...prevMessages, data];
             return newMessages.slice(-5); // 최대 5개의 메시지만 유지
           });
+          setOtherTmpMessage(data.message);
         }
       });
     }
@@ -428,6 +434,27 @@ const VideoChatComponent = () => {
   if (!browserSupportsSpeechRecognition) {
     console.warn("음성 인식을 지원하지 않습니다.");
   }
+
+  useEffect(() => {
+    if (transcript !== lastTranscriptRef.current) {
+      setMyTmpMessage(transcript); // 내 음성 인식 메시지 상태 업데이트
+      lastTranscriptRef.current = transcript;
+
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
+      timeoutRef.current = setTimeout(() => {
+        if (
+          transcript === lastTranscriptRef.current &&
+          transcript.trim() !== ""
+        ) {
+          sendSTTMessage(transcript);
+          resetTranscript();
+        }
+      }, 1000);
+    }
+  }, [transcript]);
 
   return (
     <div className={styles.videoArray}>
@@ -567,7 +594,7 @@ const VideoChatComponent = () => {
 
               {/* 자막 */}
               <div>
-                {showSubtitle && (
+                {/* {showSubtitle && (
                   <div className={styles.subTitleArray}>
                     <div className={styles.subTitle}>
                       {sttMessages.map((msg, index) => (
@@ -580,6 +607,26 @@ const VideoChatComponent = () => {
                           <strong>{myUserName.current} :</strong> {tmpMessage}
                         </div>
                       )}
+                    </div>
+                  </div>
+                )} */}
+                {showSubtitle && (
+                  <div className={styles.subTitleArray}>
+                    <div className={styles.subTitle}>
+                      <div className={styles.mySubtitle}>
+                        <strong>{profileData.name} :</strong>
+                        {mySTTMessages.map((msg, index) => (
+                          <div key={index}>{msg.message}</div>
+                        ))}
+                        {myTmpMessage && <div>{myTmpMessage}</div>}
+                      </div>
+                      <div className={styles.otherSubtitle}>
+                        <strong>상대방 :</strong>
+                        {otherSTTMessages.map((msg, index) => (
+                          <div key={index}>{msg.message}</div>
+                        ))}
+                        {otherTmpMessage && <div>{otherTmpMessage}</div>}
+                      </div>
                     </div>
                   </div>
                 )}

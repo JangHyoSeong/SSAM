@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import styles from "./TeacherUpdate.module.scss";
 import Swal from "sweetalert2";
+import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial"
 
 const apiUrl = import.meta.env.API_URL;
 
@@ -119,12 +120,27 @@ const TeacherUpdate = () => {
     window.location.reload(); // 페이지 새로고침
   };
 
-  const profile = useProfile();
+  const handleLinkGoogleAccount = async () => {
+    try {
+      const userData = await fetchApiUserInitial();
+      const currentUserId = userData.userId;
+      
+      if (!currentUserId) {
+        return;
+      }
+  
+      // state를 JSON 문자열로 변환한 후 Base64로 인코딩
+      const state = btoa(JSON.stringify({ userId: currentUserId }));
 
-  // Function to handle Google Account linking
-  const handleLinkGoogleAccount = () => {
-    window.location.href = "http://localhost:8081/oauth2/authorization/google";
+      window.location.href = `http://localhost:8081/oauth2/authorization/google?userId=${state}`;
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
   };
+  // Function to handle Google Account linking
+  // const handleLinkGoogleAccount = () => {
+  //   window.location.href = "http://localhost:8081/oauth2/authorization/google";
+  // };
 
   return (
     <div className={styles.Container}>

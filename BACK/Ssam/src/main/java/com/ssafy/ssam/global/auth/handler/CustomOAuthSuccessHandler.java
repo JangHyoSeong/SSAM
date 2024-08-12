@@ -1,5 +1,7 @@
 package com.ssafy.ssam.global.auth.handler;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.ssam.global.auth.dto.CustomUserDetails;
 import com.ssafy.ssam.global.auth.entity.OAuthUser;
 import com.ssafy.ssam.global.auth.entity.User;
@@ -12,6 +14,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.CustomEntityDirtinessStrategy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -21,6 +24,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 @RequiredArgsConstructor
 @Component
@@ -36,23 +42,22 @@ public class CustomOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         String email = oAuth2User.getAttribute("email");
         String providerId = oAuth2User.getAttribute("sub");
         String provider = ((OAuth2AuthenticationToken) authentication).getAuthorizedClientRegistrationId();
-        System.out.println("providerId" + providerId);
-        System.out.println("provider" + provider);
+
+        // state 파라미터에서 원래 사용자 ID 추출
+        String state = request.getParameter("userId");
+        Integer userId = extractUserIdFromState(state);
+//        String userId = request.getParameter("userId");
+        System.out.println(userId);
         OAuthUser linkedOAuthUser = oAuthUserRepository.findByProviderAndProviderId(provider, providerId)
                 .orElse(null);
 
-        Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = currentAuth.getPrincipal();
-
         if (linkedOAuthUser != null) {
-            // 연결된 유저가 있는 경우
-            System.out.println("있다");
+            // 이미 연결된 계정이 있는 경우
             User user = linkedOAuthUser.getUser();
             loginUser(response, user);
-        } else {
-
-
-            User user = userRepository.findByEmail(email)
+        } else if (userId != null) {
+            // 현재 로그인된 사용자와 OAuth 계정 연결
+            User user = userRepository.findById(Integer.valueOf(userId))
                     .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
 
             OAuthUser newOAuthUser = new OAuthUser();
@@ -62,90 +67,37 @@ public class CustomOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             newOAuthUser.setUser(user);
             oAuthUserRepository.save(newOAuthUser);
 
-            String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/")
+            String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/account-linked")
+                    .build().toUriString();
+            response.sendRedirect(redirectUrl);
+        } else {
+            // 연결할 계정이 없는 경우
+            String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/login")
+                    .queryParam("error", "No linked account found")
                     .build().toUriString();
             response.sendRedirect(redirectUrl);
         }
     }
 
-    private void loginUser(HttpServletResponse response, User user) throws IOException {
-        System.out.println(user.getUsername());
-        String token = jwtUtil.createJwt(user.getUsername(), user.getRole().name(), user.getUserId(), null, 3600000L);
-        response.addHeader("Authorization", "Bearer " + token);
-
-        // 프론트엔드 페이지로 리다이렉트 (토큰을 쿼리 파라미터로 전달)
-        String redirectUrl = "http://localhost:3000" + "/auth/oauth-response/" + token;
-        response.sendRedirect(redirectUrl);
+    private Integer extractUserIdFromState(String state) {
+        try {
+            if (state != null) {
+                // URL 디코딩 후 Base64 디코딩
+                String decodedState = new String(Base64.getDecoder().decode(URLDecoder.decode(state, StandardCharsets.UTF_8)));
+                JsonNode jsonNode = new ObjectMapper().readTree(decodedState);
+                return jsonNode.get("userId").asInt();
+            }
+        } catch (Exception e) {
+            logger.error("Error decoding state: ", e);
+        }
+        return null;
     }
 
-
-//    @Override
-//    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-//
-//        Object principal = authentication.getPrincipal();
-//        String username;
-//        Integer userId = null;
-//        Integer boardId = null;
-//
-//        if (principal instanceof CustomOAuth2User) {
-//            CustomOAuth2User customOAuth2User = (CustomOAuth2User) principal;
-//            username = customOAuth2User.getUsername();
-//            // CustomUserDetails 사용 시 추가 정보 가져오기
-//            if (authentication.getPrincipal() instanceof CustomUserDetails) {
-//                CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-//                userId = customUserDetails.getUserId();
-//                boardId = customUserDetails.getBoardId();
-//            }
-//        } else if (principal instanceof DefaultOidcUser) {
-//            DefaultOidcUser oidcUser = (DefaultOidcUser) principal;
-//            username = oidcUser.getEmail(); // 또는 다른 적절한 메서드 사용
-//            // OIDC 사용자에 대해 추가 정보 설정
-//            // userId = ...
-//            // boardId = ...
-//        } else {
-//            throw new IllegalStateException("Unexpected user type: " + principal.getClass().getName());
-//        }
-//
-//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-//        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-//        GrantedAuthority auth = iterator.next();
-//        String role = auth.getAuthority();
-//
-//        String token = jwtUtil.createJwt(username, role, userId, boardId, Duration.ofHours(4).toMillis());
-//        String redirectUrl = "http://localhost:3000" + "/auth/oauth-response/" + token;
-//        response.addCookie(createCookie("Authorization", token));
-//        response.sendRedirect(redirectUrl);
-//    }
-//
-////    @Override
-////    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-////
-////        CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-////        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-////
-////        String username = customOAuth2User.getUsername();
-////        Integer userId = customUserDetails.getUserId();
-////        Integer boardId = customUserDetails.getBoardId();
-////
-////        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-////        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-////        GrantedAuthority auth = iterator.next();
-////        String role = auth.getAuthority();
-////
-////        String token = jwtUtil.createJwt(username, role, userId, boardId, Duration.ofHours(4).toMillis());
-////        String redirectUrl = "http://localhost:3000" + "/auth/oauth-response/" + token;
-////        response.addCookie(createCookie("Authorization", token));
-////        response.sendRedirect("http://localhost:3000/");
-////    }
-//
-//    private Cookie createCookie(String key, String value) {
-//        Cookie cookie = new Cookie(key, value);
-//        cookie.setMaxAge(60*60*60);
-////        cookie.setSecure(true);
-//        cookie.setPath("/");
-//        cookie.setHttpOnly(true);
-//
-//        return cookie;
-//    }
+    private void loginUser(HttpServletResponse response, User user) throws IOException {
+        String token = jwtUtil.createJwt(user.getUsername(), user.getRole().name(), user.getUserId(), null, 3600000L);
+        String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/auth/oauth-response/" + token)
+                .build().toUriString();
+        response.sendRedirect(redirectUrl);
+    }
 
 }

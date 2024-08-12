@@ -81,8 +81,8 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private String provider;
-    private String providerId;
+    @Column(unique = true, nullable = false)
+    private String oAuth2Id;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserBoardRelation> boards = new ArrayList<>();

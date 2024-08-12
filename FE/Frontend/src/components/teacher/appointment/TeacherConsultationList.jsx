@@ -210,7 +210,7 @@ const TeacherConsultationList = () => {
         </NavLink>
       </nav>
       <section className={styles.consultationSection}>
-        <filter className={styles.filterContainer}>
+        <div className={styles.filterContainer}>
           {Object.entries(statusLabels).map(([status, label]) => (
             <button
               key={status}
@@ -222,7 +222,7 @@ const TeacherConsultationList = () => {
               {label}
             </button>
           ))}
-        </filter>
+        </div>
         <header className={styles.headerRow}>
           <h3
             className={styles.cellHeader}

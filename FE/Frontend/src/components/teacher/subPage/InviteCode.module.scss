@@ -5,116 +5,253 @@
 }
 
 .inviteArray {
-  width: 100vw;
   display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.inviteCodeBox {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
-  margin-top: 3%;
-  text-align: center;
-  width: 38vw;
-  height: 23vh;
-  background-color: #dae9ff;
-  border-radius: 25px;
-  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  opacity: 0;
-  animation: fadeIn 1s ease-in forwards;
-  z-index: 1;
-  padding-top: 1%;
+  justify-content: space-between;
+  height: 100%;
+
+  .welcomeBox,
+  .codeBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: rgba(218, 233, 255, 0.9); // 약간의 투명도 추가
+    border-radius: 15px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 50px;
+    margin-bottom: 10px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .inviteCodeBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 3%;
+    text-align: center;
+    // width: 38vw;
+    // height: 23vh;
+    background-color: #dae9ff;
+    border-radius: 15px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0;
+    animation: fadeIn 1s ease-in forwards;
+    z-index: 1;
+    padding-top: 1%;
+    // white-space: nowrap;
+  }
+
+  .codeBox h3 {
+    font-size: 0.9em;
+    margin: 0 0 10px 0;
+  }
+
+  .copyButton {
+    display: flex;
+    gap: 5%;
+    margin-top: 2%;
+  }
+
+  .copyButton button {
+    padding: 0% 3%;
+    font-size: 75%;
+    border-style: none;
+    border-radius: 5px;
+    background-color: white;
+  }
+
+  .copyButton button:hover {
+    background-color: #f4f4f4;
+  }
+
+  .btnArray {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2%;
+    gap: 2%;
+  }
+
+  .pinBtn,
+  .deleteBtn,
+  .classBtn {
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 120%;
+    background-color: white;
+    border: 1px solid;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .pinBtn {
+    color: #5285ee;
+    border-color: #5285ee;
+
+    &:hover {
+      background-color: #5285ee;
+      color: white;
+    }
+  }
+
+  .deleteBtn {
+    color: #ee5252;
+    border-color: #ee5252;
+
+    &:hover {
+      background-color: #ee5252;
+      color: white;
+    }
+  }
+
+  .classBtn {
+    color: #5285ee;
+    border-color: #5285ee;
+
+    &:hover {
+      background-color: #5285ee;
+      color: white;
+    }
+  }
+
+  .inviteCodeBox h3 {
+    font-size: 0.9em;
+    margin: 0 0 10px 0;
+  }
 }
 
-.deleteBtn {
-  margin: 4% 2%;
-  padding: 1% 5%;
-  border-radius: 25px;
-  font-size: 100%;
-  color: #ee5252;
-  border-color: #ee5252;
-  border: 2px solid #ee5252;
-  background-color: white;
-  cursor: pointer;
-}
+// @keyframes fadeIn {
+//   to {
+//     opacity: 1;
+//   }
+// }
 
-.deleteBtn:hover {
-  border: none;
-  color: white;
-  background-color: #ee5252;
-  border: 2px solid #ee5252;
-}
+// .inviteArray {
+//   // width: 100vw;
+//   // display: flex;
+//   // justify-content: center;
+//   // align-items: center;
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: space-between; // 세로 방향으로 컨텐츠 분산
+//   height: 100%; // 부모 컨테이너의 높이를 채움
 
-.pinBtn {
-  margin: 4% 2%;
-  padding: 1% 5%;
-  border-radius: 25px;
-  font-size: 100%;
-  color: #5285ee;
-  border-color: #5285ee;
-  background-color: white;
-  border: 2px solid #5285ee;
-  cursor: pointer;
-}
+//   .welcomeBox,
+//   .inviteCodeBox {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     flex-direction: column;
+//     margin-top: 3%;
+//     text-align: center;
+//     width: 38vw;
+//     height: 23vh;
+//     background-color: #dae9ff;
+//     border-radius: 25px;
+//     box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
+//     transition: transform 0.3s ease, box-shadow 0.3s ease;
+//     opacity: 0;
+//     animation: fadeIn 1s ease-in forwards;
+//     z-index: 1;
+//     padding-top: 1%;
+//   }
 
-.pinBtn:hover {
-  border: none;
-  background-color: #5285ee;
-  color: white;
-  border: 2px solid #5285ee;
-}
+//   .codeBox h3 {
+//     font-size: 0.9em;
+//     margin: 0 0 10px 0;
+//   }
+// }
 
-.btn {
-  display: flex;
-  white-space: nowrap;
-}
+// .deleteBtn {
+//   margin: 4% 2%;
+//   padding: 1% 5%;
+//   border-radius: 25px;
+//   font-size: 100%;
+//   color: #ee5252;
+//   border-color: #ee5252;
+//   border: 2px solid #ee5252;
+//   background-color: white;
+//   cursor: pointer;
+// }
 
-.copyButton {
-  display: flex;
-  gap: 5%;
-  margin-top: 2%;
-}
+// .deleteBtn:hover {
+//   border: none;
+//   color: white;
+//   background-color: #ee5252;
+//   border: 2px solid #ee5252;
+// }
 
-.copyButton button:hover {
-  background-color: #f4f4f4;
-}
+// .pinBtn {
+//   margin: 4% 2%;
+//   padding: 1% 5%;
+//   border-radius: 25px;
+//   font-size: 100%;
+//   color: #5285ee;
+//   border-color: #5285ee;
+//   background-color: white;
+//   border: 2px solid #5285ee;
+//   cursor: pointer;
+// }
 
-.copyButton button {
-  padding: 0% 3%;
-  font-size: 75%;
-  border-style: none;
-  border-radius: 5px;
-  background-color: white;
-}
+// .pinBtn:hover {
+//   border: none;
+//   background-color: #5285ee;
+//   color: white;
+//   border: 2px solid #5285ee;
+// }
 
-.btnArray {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 2%;
-  gap: 2%;
-}
+// .btn {
+//   display: flex;
+//   white-space: nowrap;
+// }
 
-.classBtn {
-  margin: 4% 2%;
-  padding: 1% 5%;
-  border-radius: 25px;
-  font-size: 100%;
-  color: #5285ee;
-  border-color: #5285ee;
-  background-color: white;
-  border: 2px solid #5285ee;
-  cursor: pointer;
-}
+// .copyButton {
+//   display: flex;
+//   gap: 5%;
+//   margin-top: 2%;
+// }
 
-.classBtn:hover {
-  border: none;
-  background-color: #5285ee;
-  color: white;
-  border: 2px solid #5285ee;
-}
+// .copyButton button:hover {
+//   background-color: #f4f4f4;
+// }
+
+// .copyButton button {
+//   padding: 0% 3%;
+//   font-size: 75%;
+//   border-style: none;
+//   border-radius: 5px;
+//   background-color: white;
+// }
+
+// .btnArray {
+//   width: 100%;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   margin-top: 2%;
+//   gap: 2%;
+// }
+
+// .classBtn {
+//   margin: 4% 2%;
+//   padding: 1% 5%;
+//   border-radius: 25px;
+//   font-size: 100%;
+//   color: #5285ee;
+//   border-color: #5285ee;
+//   background-color: white;
+//   border: 2px solid #5285ee;
+//   cursor: pointer;
+// }
+
+// .classBtn:hover {
+//   border: none;
+//   background-color: #5285ee;
+//   color: white;
+//   border: 2px solid #5285ee;
+// }

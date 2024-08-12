@@ -15,11 +15,10 @@ const TeacherSubpage = () => {
           />
         </div>
         {/* InviteCode 컴포넌트를 포함하는 컨테이너 */}
-        {/* <div className={styles.inviteCodeContainer}>
+        <div className={styles.inviteCodeContainer}>
           <InviteCode />
-        </div> */}
+        </div>
       </div>
-      <InviteCode />
       <TeacherSelect />
     </>
   );

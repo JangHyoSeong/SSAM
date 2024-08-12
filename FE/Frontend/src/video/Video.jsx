@@ -31,8 +31,6 @@ const VideoChatComponent = () => {
   const [isRecording, setIsRecording] = useState(false); // 녹화 상태 관리
   const [isCameraOn, setIsCameraOn] = useState(true); // 카메라 상태 관리
   const [isMicOn, setIsMicOn] = useState(true); // 마이크 상태 관리
-  const [sttMessages, setSTTMessages] = useState([]); // 음성 인식 메시지 관리
-  const [tmpMessage, setTmpMessage] = useState(""); // 임시 메시지 관리
   const OV = useRef(new OpenVidu()); // OpenVidu 인스턴스 생성
   const myUserName = useRef(""); // 사용자 이름 생성
   const chatContainerRef = useRef(null); // 채팅 컨테이너 참조
@@ -47,8 +45,16 @@ const VideoChatComponent = () => {
   const toggleSubTitle = () => {
     setShowSubtitle(!showSubtitle);
   };
-  // 필터링 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-  const [profanityDetected, setProfanityDetected] = useState(false);
+
+  const [mySTTMessages, setMySTTMessages] = useState([]); // 내 음성 인식 메시지 관리
+  const [otherSTTMessages, setOtherSTTMessages] = useState([]); // 상대방 음성 인식 메시지 관리
+  const [myTmpMessage, setMyTmpMessage] = useState(""); // 내 임시 메시지 관리
+  const [otherTmpMessage, setOtherTmpMessage] = useState(""); // 상대방 임시 메시지 관리
+
+  // 필터링 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+  const [profanityDetected, setProfanityDetected] = useState(false); // 공격적인 발언 감지
+  const [lastProfanityTime, setLastProfanityTime] = useState(null); // 마지막으로 공격적인 발언 감지
+  const profanityCountRef = useRef(0); // 공격적인 발언이 연속적으로 감지된 횟수
 
   useEffect(() => {
     // 사용자 이름 GET
@@ -86,7 +92,7 @@ const VideoChatComponent = () => {
 
   useEffect(() => {
     if (transcript !== lastTranscriptRef.current) {
-      setTmpMessage(transcript); // 음성 인식 메시지 상태 업데이트
+      setMyTmpMessage(transcript); // 음성 인식 메시지 상태 업데이트
       lastTranscriptRef.current = transcript;
 
       if (timeoutRef.current) {
@@ -135,7 +141,7 @@ const VideoChatComponent = () => {
       // 새로운 자막 메시지가 추가되면 자막 컨테이너 스크롤을 아래로 이동
       subtitleRef.current.scrollTop = subtitleRef.current.scrollHeight;
     }
-  }, [sttMessages]);
+  }, [mySTTMessages]);
 
   // 페이지를 떠나기 전 세션을 떠나는 함수
   const onBeforeUnload = () => {
@@ -313,7 +319,7 @@ const VideoChatComponent = () => {
       } else {
         SpeechRecognition.stopListening();
         resetTranscript();
-        setTmpMessage("");
+        setMyTmpMessage("");
         lastTranscriptRef.current = "";
       }
     }
@@ -343,17 +349,35 @@ const VideoChatComponent = () => {
         from: myUserName.current,
         connectionId: session.connection.connectionId,
       };
-      // 욕설 감지 API 호출 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+      // 욕설 감지 API 호출 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
       try {
         const response = await axios.post(`${apiUrl}/v1/profanity/check`, {
           message: text,
         });
 
         if (response.data.category === "공격발언") {
-          setProfanityDetected(true);
-          // 3초 후에 빨간 박스를 제거합니다.
-          setTimeout(() => setProfanityDetected(false), 3000);
-          console.warn("공격발언이 감지되었습니다", response);
+          const currentTime = Date.now();
+          console.warn("공격발언이 감지되었습니다 1", response);
+
+          if (lastProfanityTime && currentTime - lastProfanityTime <= 5000) {
+            console.warn("공격발언이 감지되었습니다 2", response);
+            profanityCountRef.current += 1;
+          } else {
+            console.warn("공격발언 감지 시간 초과되었습니다", response);
+            profanityCountRef.current = 1;
+          }
+
+          setLastProfanityTime(currentTime);
+
+          if (profanityCountRef.current >= 2) {
+            setProfanityDetected(true);
+            // 3초 후에 빨간 박스를 제거하고 카운트를 리셋합니다.
+            setTimeout(() => {
+              setProfanityDetected(false);
+              profanityCountRef.current = 0;
+              setLastProfanityTime(null);
+            }, 3000);
+          }
         }
       } catch (error) {
         console.error("비속어 확인 중 오류 발생:", error);
@@ -362,11 +386,11 @@ const VideoChatComponent = () => {
         data: JSON.stringify(messageData),
         type: "stt",
       });
-      setSTTMessages((prevMessages) => {
+      setMySTTMessages((prevMessages) => {
         const newMessages = [...prevMessages, messageData];
         return newMessages.slice(-5); // 최대 5개의 메시지만 유지
       });
-      setTmpMessage(""); // 임시 메시지 초기화
+      setMyTmpMessage(""); // 임시 메시지 초기화
     }
   };
 
@@ -382,11 +406,19 @@ const VideoChatComponent = () => {
 
       session.on("signal:stt", (event) => {
         const data = JSON.parse(event.data);
-        if (data.connectionId !== session.connection.connectionId) {
-          setSTTMessages((prevMessages) => {
+        if (data.connectionId === session.connection.connectionId) {
+          // 자신의 음성 메시지 처리
+          setMySTTMessages((prevMessages) => {
             const newMessages = [...prevMessages, data];
             return newMessages.slice(-5); // 최대 5개의 메시지만 유지
           });
+        } else {
+          // 상대방의 음성 메시지 처리
+          setOtherSTTMessages((prevMessages) => {
+            const newMessages = [...prevMessages, data];
+            return newMessages.slice(-5); // 최대 5개의 메시지만 유지
+          });
+          setOtherTmpMessage(data.message);
         }
       });
     }
@@ -407,8 +439,37 @@ const VideoChatComponent = () => {
   };
 
   if (!browserSupportsSpeechRecognition) {
-    console.warn("Browser doesn't support speech recognition.");
+    console.warn("음성 인식을 지원하지 않습니다.");
   }
+
+  useEffect(() => {
+    if (transcript !== lastTranscriptRef.current) {
+      setMymyTmpMessage(transcript); // 내 음성 인식 메시지 상태 업데이트
+      lastTranscriptRef.current = transcript;
+
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
+      timeoutRef.current = setTimeout(() => {
+        if (
+          transcript === lastTranscriptRef.current &&
+          transcript.trim() !== ""
+        ) {
+          sendSTTMessage(transcript);
+          resetTranscript();
+        }
+      }, 1000);
+    }
+  }, [transcript]);
+
+  useEffect(() => {
+    console.log("mySTTMessages updated:", mySTTMessages);
+  }, [mySTTMessages]);
+
+  useEffect(() => {
+    console.log("otherSTTMessages updated:", otherSTTMessages);
+  }, [otherSTTMessages]);
 
   return (
     <div className={styles.videoArray}>
@@ -416,7 +477,12 @@ const VideoChatComponent = () => {
         <h1 className={styles.entering}>화상상담 입장 중...</h1>
       ) : (
         <div className={styles.videoChatContainer}>
-          {profanityDetected && <div className={styles.profanityOverlay}></div>}
+          {/* 필터링 검출 후 경고창 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ */}
+          {profanityDetected && (
+            <div className={styles.profanityOverlay}>
+              <h1>부적절한 언어가 감지되었습니다!</h1>
+            </div>
+          )}
           <div className={styles.menubarArray}>
             <div className={styles.top}>
               <div className={styles.menubar}>
@@ -543,19 +609,40 @@ const VideoChatComponent = () => {
 
               {/* 자막 */}
               <div>
-                {showSubtitle && (
+                {/* {showSubtitle && (
                   <div className={styles.subTitleArray}>
                     <div className={styles.subTitle}>
-                      {sttMessages.map((msg, index) => (
+                      {mySTTMessages.map((msg, index) => (
                         <div key={index}>
                           <strong>{profileData.name} :</strong> {msg.message}
                         </div>
                       ))}
-                      {tmpMessage && (
+                      {myTmpMessage && (
                         <div>
-                          <strong>{myUserName.current} :</strong> {tmpMessage}
+                          <strong>{myUserName.current} :</strong> {myTmpMessage}
                         </div>
                       )}
+                    </div>
+                  </div>
+                )} */}
+                {showSubtitle && (
+                  <div className={styles.subTitleArray}>
+                    <div className={styles.subTitle}>
+                      <div className={styles.mySubtitle}>
+                        {mySTTMessages.map((msg, index) => (
+                          <div key={index}>
+                            <strong>{profileData.name} : </strong> {msg.message}
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className={styles.otherSubtitle}>
+                        {otherSTTMessages.map((msg, index) => (
+                          <div key={index}>
+                            <strong>상대방 : </strong> {msg.message}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 )}

@@ -407,7 +407,7 @@ const VideoChatComponent = () => {
   };
 
   if (!browserSupportsSpeechRecognition) {
-    console.warn("Browser doesn't support speech recognition.");
+    console.warn("브라우저는 음성 인식을 지원하지 않습니다.");
   }
 
   return (

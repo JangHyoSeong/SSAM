@@ -6,7 +6,10 @@ import useTeacherCalendarStore, {
 } from "../../../store/TeacherCalendarStore";
 import Modal from "./Modal";
 import styles from "./ParentsReservationList.module.scss";
-import { fetchApiRequestReservation } from "../../../apis/stub/55-59 상담/apiStubReservation";
+import {
+  fetchApiRequestReservation,
+  fetchApiCancelReservation,
+} from "../../../apis/stub/55-59 상담/apiStubReservation";
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
 
 const ParentsReservationList = ({ selectedDate }) => {
@@ -57,15 +60,35 @@ const ParentsReservationList = ({ selectedDate }) => {
   // 상담 버튼 컴포넌트
   const ConsultationButton = ({ consultation, index }) => {
     // 버튼 클릭 핸들러
-    const handleClick = () => {
-      const updatedConsultations = consultations.map((c, i) => {
-        if (i === index) {
-          return { ...c, status: isAvailable(c.status) ? null : c.status };
+    const handleClick = async () => {
+      if (
+        consultation.status === "APPLY" &&
+        consultation.studentId === userId
+      ) {
+        // 상담 취소 로직
+        try {
+          await fetchApiCancelReservation(consultation.appointmentId);
+          const updatedConsultations = consultations.map((c, i) => {
+            if (i === index) {
+              return { ...c, status: "CANCEL", studentId: null };
+            }
+            return c;
+          });
+          setConsultations(updatedConsultations);
+        } catch (error) {
+          console.error("상담 취소 실패:", error);
         }
-        return c;
-      });
-      setConsultations(updatedConsultations);
-      setClickedIndex(index);
+      } else {
+        // 기존의 신청 로직
+        const updatedConsultations = consultations.map((c, i) => {
+          if (i === index) {
+            return { ...c, status: isAvailable(c.status) ? null : c.status };
+          }
+          return c;
+        });
+        setConsultations(updatedConsultations);
+        setClickedIndex(index);
+      }
     };
 
     // 버튼 클래스 결정 함수

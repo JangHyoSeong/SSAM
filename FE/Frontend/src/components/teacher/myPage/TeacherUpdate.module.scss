@@ -195,6 +195,22 @@ table {
   color: white;
 }
 
+.googleLinkBtn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #4285f4; /* Google Blue */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.googleLinkBtn:hover {
+  background-color: #357ae8;
+}
+
 .my-swal-popup {
   height: 200px; /* 모달의 높이 설정 */
   display: flex;

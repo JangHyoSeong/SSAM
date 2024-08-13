@@ -416,11 +416,11 @@ const VideoChatComponent = () => {
         <h1 className={styles.entering}>화상상담 입장 중...</h1>
       ) : (
         <div className={styles.videoChatContainer}>
-          {/* {profanityDetected &&  */}
-          <div className={styles.profanityOverlay}>
-            <h1>부적절한 언어가 감지되었습니다</h1>
-          </div>
-          {/* } */}
+          {profanityDetected && (
+            <div className={styles.profanityOverlay}>
+              <h1>부적절한 언어가 감지되었습니다</h1>
+            </div>
+          )}
           <div className={styles.menubarArray}>
             <div className={styles.top}>
               <div className={styles.menubar}>

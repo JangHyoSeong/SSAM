@@ -3,6 +3,7 @@ package com.ssafy.ssam.domain.consult.service;
 import com.ssafy.ssam.domain.classroom.repository.BoardRepository;
 import com.ssafy.ssam.domain.consult.dto.request.ConsultRequestDto;
 import com.ssafy.ssam.domain.consult.dto.request.SummaryRequestDto;
+import com.ssafy.ssam.domain.consult.dto.response.UpcomingConsultResponseDTO;
 import com.ssafy.ssam.domain.consult.entity.Appointment;
 import com.ssafy.ssam.domain.consult.entity.AppointmentStatus;
 import com.ssafy.ssam.domain.consult.entity.Consult;
@@ -18,6 +19,7 @@ import com.ssafy.ssam.domain.user.repository.UserBoardRelationRepository;
 import com.ssafy.ssam.global.amazonS3.service.S3TextService;
 import com.ssafy.ssam.global.auth.dto.CustomUserDetails;
 import com.ssafy.ssam.global.auth.entity.User;
+import com.ssafy.ssam.global.auth.entity.UserRole;
 import com.ssafy.ssam.global.auth.repository.UserRepository;
 import com.ssafy.ssam.global.dto.CommonResponseDto;
 import com.ssafy.ssam.global.chatbot.service.GPTSummaryService;
@@ -26,6 +28,7 @@ import com.ssafy.ssam.global.error.ErrorCode;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cglib.core.Local;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -77,16 +80,17 @@ public class ConsultService {
         return new CommonResponseDto("Consult Created");
     }
     // 학생기준
-    public CommonResponseDto startConsult(Integer consultId) {
+    public CommonResponseDto startConsult(String accessCode, String sessionId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        
         User student = userRepository.findByUserId(userDetails.getUserId())
                 .orElseThrow(()->new CustomException(ErrorCode.UserNotFoundException));
         UserBoardRelation relation = userBoardRelationRepository.findByBoardIdAndStatus(userDetails.getBoardId())
                 .orElseThrow(()->new CustomException(ErrorCode.NotFoundStudentInBoardException));
 
         // 1. consult 1) 시작시간 2) att 설정
-        Consult consult = consultRepository.findByConsultId(consultId).orElseThrow(()->new CustomException(ErrorCode.ConsultNotFountException));
+        Consult consult = consultRepository.findByAccessCode(accessCode).orElseThrow(()->new CustomException(ErrorCode.ConsultNotFountException));
         if(!consult.getAppointment().getStudent().getUserId().equals(student.getUserId())) {
             throw new CustomException(ErrorCode.IllegalArgument);
         }
@@ -96,7 +100,7 @@ public class ConsultService {
         consult.setAttSchool(relation.getUser().getSchool().getSchoolId());
         consult.setAttGrade(relation.getBoard().getGrade());
         consult.setAttClassroom(relation.getBoard().getClassroom());
-
+        consult.setWebrtcSessionId(sessionId);
         // 2. appointment 설정
         Appointment appointment = appointmentRepository.findByAppointmentId(consult.getAppointment().getAppointmentId()).orElseThrow(()->new CustomException(ErrorCode.AppointmentNotFoundException));
         appointment.setStatus(AppointmentStatus.DONE);
@@ -104,11 +108,11 @@ public class ConsultService {
         return new CommonResponseDto("start consult");
     }
     // 학생기준
-    public CommonResponseDto endConsult(Integer consultId) {
+    public CommonResponseDto endConsult(String accessCode) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         // 1. consult 종료시간 기준으로 1) runningtime 수정, 2) S3에서 대화 가져오기 3) content 입력
-        Consult consult = consultRepository.findByConsultId(consultId).orElseThrow(()->new CustomException(ErrorCode.ConsultNotFountException));
+        Consult consult = consultRepository.findByAccessCode(accessCode).orElseThrow(()->new CustomException(ErrorCode.ConsultNotFountException));
         // 1)
         consult.setRunningTime((int)Duration.between(consult.getActualDate(), LocalDateTime.now()).toMinutes());
         // 2)
@@ -127,6 +131,32 @@ public class ConsultService {
         return new CommonResponseDto("end consult");
     }
 
+    // 가장 가까운 상담 하나를 리턴하는 메서드
+    public UpcomingConsultResponseDTO getUpcomingConsult () {
+        CustomUserDetails userDetails = findCustomUserDetails();
+
+        Integer userId = userDetails.getUserId();
+        LocalDateTime nowDateTime = LocalDateTime.now();
+
+        Consult consult = null;
+        if (userDetails.getRole().equals(UserRole.TEACHER)) {
+            consult = consultRepository.findUpcomingConsultForTeacher(userId, nowDateTime)
+                    .orElse(null);
+        }
+        else {
+            consult = consultRepository.findUpcomingConsultForStudent(userId, nowDateTime)
+                    .orElse(null);
+        }
+        if (consult == null) {
+            return new UpcomingConsultResponseDTO().builder().build();
+        } else {
+            return new UpcomingConsultResponseDTO().builder()
+                    .consultId(consult.getConsultId())
+                    .accessCode(consult.getAccessCode())
+                    .build();
+        }
+    }
+
     // 상담 AccessCode 생성
     public String createConsultAccessCode() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -142,5 +172,11 @@ public class ConsultService {
         } while (consultRepository.existsByAccessCode(accessCode.toString()));
 
         return accessCode.toString();
+    }
+
+    // CustomUserDetail을 반환하는 함수
+    public CustomUserDetails findCustomUserDetails() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (CustomUserDetails) authentication.getPrincipal();
     }
 }

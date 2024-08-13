@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.ssam.domain.consult.entity.Consult;
 import com.ssafy.ssam.domain.consult.repository.ConsultRepository;
+import com.ssafy.ssam.domain.consult.service.ConsultService;
 import com.ssafy.ssam.domain.openvidu.dto.OpenViduSessionDto;
 import com.ssafy.ssam.domain.openvidu.dto.RecordingDto;
 import com.ssafy.ssam.domain.openvidu.dto.RecordingRequestDto;
@@ -64,6 +65,8 @@ public class SessionController {
 
     @Autowired
     private ConsultRepository consultRepository; // ConsultRepository 주입
+    @Autowired
+    private ConsultService consultService; // ConsultRepository 주입
     
     public SessionController(@Value("${openvidu.secret:JddU_RuEn5Iqc}") String secret, 
                              @Value("${openvidu.url:https://i11e201.p.ssafy.io:8443/}") String openviduUrl) {
@@ -111,7 +114,8 @@ public class SessionController {
                 .build();
 
             sessionUserMapping.computeIfAbsent(accessCode, k -> new ConcurrentHashMap<>()).put(userId, responseDto);
-
+            
+            consultService.startConsult(accessCode);
             return ResponseEntity.ok(responseDto);
         } catch (Exception e) {
             throw new RuntimeException("Error generating token", e);

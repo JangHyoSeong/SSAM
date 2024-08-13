@@ -167,6 +167,18 @@ const InviteCode = () => {
         </h3>
       </div>
 
+      
+      {/* Scheduled Consultation Section */}
+      <div className={styles.codeBox}>
+        <h3>
+          예정된 상담이
+          <br /> 있습니다.
+        </h3>
+        <button className={styles.classBtn} onClick={handleConsultationStart}>
+          상담 시작하기
+        </button>
+      </div>
+
       {/* Invite Code Section */}
       <div className={styles.coreBox}>
         {classInfo && classInfo.pin ? (
@@ -199,24 +211,13 @@ const InviteCode = () => {
           </>
         ) : (
           <>
-            <h3>학급 만들기를 통해 <br></br>초대코드를 생성하세요.</h3>
+            <h3>학급 만들기를 통해 초대코드를 생성하세요.</h3>
             <button className={styles.classBtn} onClick={toggleModal}>
               학급 생성
             </button>
           </>
         )}
         {isModalOpen && <ClassProduceModal onClassCreated={updateClassInfo} />}
-      </div>
-
-      {/* Scheduled Consultation Section */}
-      <div className={styles.codeBox}>
-        <h3>
-          예정된 상담이
-          <br /> 있습니다.
-        </h3>
-        <button className={styles.classBtn} onClick={handleConsultationStart}>
-          상담 시작하기
-        </button>
       </div>
     </div>
   );

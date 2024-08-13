@@ -132,28 +132,26 @@
   position: absolute;
   top: 31.2%;
   left: 58.2%;
+  width: 15%; /* Changed from fixed pixels to percentage */
+  height: auto; /* Auto height to maintain aspect ratio */
 }
 
-.othervideoItem {
-  width: 240px;
-  height: 240px;
-  video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 15px;
-  }
+.othervideoItem video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px;
 }
 
-.videoItem {
-  width: 95%;
-  video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 15px;
-    border: 1px solid white;
-  }
+.videoItem video {
+  position: absolute;
+  top: 31.5%;
+  left: 2%;
+  width: 72%;
+  height: 54%;
+  object-fit: cover;
+  border-radius: 15px;
+  border: 1px solid white;
 }
 
 .subBtn {
@@ -218,6 +216,7 @@
   background-color: #f1f3f5;
   align-self: flex-start;
 }
+
 .chatContainer {
   display: flex;
   flex-direction: column;

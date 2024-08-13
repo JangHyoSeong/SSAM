@@ -114,7 +114,9 @@ public class SessionController {
                 .build();
 
             sessionUserMapping.computeIfAbsent(accessCode, k -> new ConcurrentHashMap<>()).put(userId, responseDto);
-            if(!accessCode.contains("test")) consultService.startConsult(accessCode, session.getSessionId());
+            if(!accessCode.contains("test")) {
+            	consultService.startConsult(accessCode, session.getSessionId());
+            }
             
             return ResponseEntity.ok(responseDto);
         } catch (Exception e) {

@@ -33,7 +33,7 @@
     background-color: rgba(218, 233, 255, 0.9); // 약간의 투명도 추가
     border-radius: 15px;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    padding: 40px;
+    padding: 15px;
     margin-bottom: 10px;
     text-align: center;
     white-space: nowrap;
@@ -42,6 +42,7 @@
   .coreBox h3 {
     font-size: 0.9em;
     margin: 0 0 10px 0;
+    font-size: 20px;
   }
 
   .copyButton {

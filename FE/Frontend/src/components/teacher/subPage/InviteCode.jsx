@@ -167,6 +167,18 @@ const InviteCode = () => {
         </h3>
       </div>
 
+      
+      {/* Scheduled Consultation Section */}
+      <div className={styles.codeBox}>
+        <h3>
+          예정된 상담이
+          <br /> 있습니다.
+        </h3>
+        <button className={styles.classBtn} onClick={handleConsultationStart}>
+          상담 시작하기
+        </button>
+      </div>
+
       {/* Invite Code Section */}
       <div className={styles.coreBox}>
         {classInfo && classInfo.pin ? (
@@ -206,17 +218,6 @@ const InviteCode = () => {
           </>
         )}
         {isModalOpen && <ClassProduceModal onClassCreated={updateClassInfo} />}
-      </div>
-
-      {/* Scheduled Consultation Section */}
-      <div className={styles.codeBox}>
-        <h3>
-          예정된 상담이
-          <br /> 있습니다.
-        </h3>
-        <button className={styles.classBtn} onClick={handleConsultationStart}>
-          상담 시작하기
-        </button>
       </div>
     </div>
   );

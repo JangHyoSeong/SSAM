@@ -121,7 +121,7 @@ public class ConsultService {
         // 1)
         consult.setRunningTime((int)Duration.between(consult.getActualDate(), LocalDateTime.now()).toMinutes());
         // 2)
-        String talk = s3TextService.readText(consult.getWebrtcSessionId());
+        String talk = "dummy 데이터"; //s3TextService.readText(consult.getWebrtcSessionId());
         // 3)
         consult.setContent(talk);
 

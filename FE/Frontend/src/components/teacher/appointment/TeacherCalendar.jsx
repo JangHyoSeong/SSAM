@@ -7,11 +7,14 @@ import styles from "./TeacherCalendar.module.scss";
 import { useState, useEffect, useRef } from "react";
 import { fetchApiReservationList } from "../../../apis/stub/55-59 상담/apiStubReservation";
 
+// TeacherCalendar 컴포넌트: 교사용 상담 일정 달력을 표시합니다.
 const TeacherCalendar = ({ onDateSelect }) => {
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [consultations, setConsultations] = useState([]);
-  const calendarRef = useRef(null);
+  // 상태 관리
+  const [selectedDate, setSelectedDate] = useState(null); // 선택된 날짜
+  const [consultations, setConsultations] = useState([]); // 상담 데이터
+  const calendarRef = useRef(null); // 달력 참조
 
+  // 컴포넌트 마운트 시 상담 데이터를 가져옵니다.
   useEffect(() => {
     const fetchConsultations = async () => {
       try {
@@ -25,11 +28,13 @@ const TeacherCalendar = ({ onDateSelect }) => {
     fetchConsultations();
   }, []);
 
+  // 날짜 클릭 핸들러: 선택된 날짜를 업데이트하고 부모 컴포넌트에 알립니다.
   const handleDateClick = (info) => {
     setSelectedDate(info.dateStr);
     onDateSelect(info.dateStr);
   };
 
+  // 선택된 날짜에 스타일을 적용합니다.
   useEffect(() => {
     if (calendarRef.current) {
       const calendarApi = calendarRef.current.getApi();
@@ -43,7 +48,9 @@ const TeacherCalendar = ({ onDateSelect }) => {
     }
   }, [selectedDate]);
 
+  // 특정 날짜의 상담 수를 계산합니다.
   const getConsultationsCounts = (date) => {
+    // 해당 날짜의 상담만 필터링
     const filteredConsultations = consultations.filter((consultation) => {
       const consultDate = new Date(consultation.startTime);
       consultDate.setHours(0, 0, 0, 0);
@@ -52,14 +59,17 @@ const TeacherCalendar = ({ onDateSelect }) => {
       return consultDate.getTime() === targetDate.getTime();
     });
 
+    // APPLY, ACCEPTED, DONE 상태의 상담 수 계산
     const validStatusCount = filteredConsultations.filter((consultation) =>
       ["APPLY", "ACCEPTED", "DONE"].includes(consultation.status)
     ).length;
 
+    // REJECT 상태의 상담 수 계산
     const rejectCount = filteredConsultations.filter(
       (consultation) => consultation.status === "REJECT"
     ).length;
 
+    // 전체 가능 상담 수(7)에서 REJECT 수를 뺀 값
     const totalNonRejectedCount = 7 - rejectCount;
 
     return { validStatusCount, totalNonRejectedCount };
@@ -81,6 +91,7 @@ const TeacherCalendar = ({ onDateSelect }) => {
         }}
         locale={koLocale}
         timeZone="Asia/Seoul"
+        // 각 날짜 셀의 내용을 커스터마이즈합니다.
         dayCellContent={(arg) => {
           const { validStatusCount, totalNonRejectedCount } =
             getConsultationsCounts(arg.date);
@@ -102,6 +113,7 @@ const TeacherCalendar = ({ onDateSelect }) => {
   );
 };
 
+// props 타입 검사
 TeacherCalendar.propTypes = {
   onDateSelect: PropTypes.func.isRequired,
 };

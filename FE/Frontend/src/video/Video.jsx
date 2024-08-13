@@ -32,23 +32,24 @@ const VideoChatComponent = () => {
   const [isCameraOn, setIsCameraOn] = useState(true); // 카메라 상태 관리
   const [isMicOn, setIsMicOn] = useState(true); // 마이크 상태 관리
   const [sttMessages, setSTTMessages] = useState([]); // 음성 인식 메시지 관리
-  const [tmpMessage, setTmpMessage] = useState(""); // 임시 메시지 관리
+  // const [tmpMessage, setTmpMessage] = useState(""); // 임시 메시지 관리
   const OV = useRef(new OpenVidu()); // OpenVidu 인스턴스 생성
-  const myUserName = useRef(""); // 사용자 이름 생성
+  const myUserName = useRef(`user_${Math.floor(Math.random() * 1000) + 1}`); // 사용자 이름 생성
   const chatContainerRef = useRef(null); // 채팅 컨테이너 참조
   const subtitleRef = useRef(null); // 자막 컨테이너 참조
   const lastTranscriptRef = useRef(""); // 마지막 음성 인식 결과 참조
   const timeoutRef = useRef(null); // 타임아웃 참조
   const [formattedDate, setFormattedDate] = useState(""); // 포맷된 날짜 관리
   const [profileData, setProfileData] = useState({ name: "" }); // 프로필 데이터 관리
-  const [showSubtitle, setShowSubtitle] = useState(true);
-  const [remainingTime, setRemainingTime] = useState("");
-  const [isTimerEnded, setIsTimerEnded] = useState(false);
+  const [showSubtitle, setShowSubtitle] = useState(true); // subtitle 표시 여부를 관리하는 상태 변수
+  const [remainingTime, setRemainingTime] = useState(""); // 남은 시간을 관리하는 상태 변수
+  const [isTimerEnded, setIsTimerEnded] = useState(false); // 타이머 종료 여부를 관리하는 상태 변수
+  const [profanityDetected, setProfanityDetected] = useState(false); // 필터링
+  const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
+    useSpeechRecognition();
   const toggleSubTitle = () => {
     setShowSubtitle(!showSubtitle);
   };
-  // 필터링 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-  const [profanityDetected, setProfanityDetected] = useState(false);
 
   useEffect(() => {
     // 사용자 이름 GET
@@ -81,12 +82,8 @@ const VideoChatComponent = () => {
     }
   }, [chatMessages]);
 
-  const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
-    useSpeechRecognition();
-
   useEffect(() => {
     if (transcript !== lastTranscriptRef.current) {
-      setTmpMessage(transcript); // 음성 인식 메시지 상태 업데이트
       lastTranscriptRef.current = transcript;
 
       if (timeoutRef.current) {
@@ -313,7 +310,6 @@ const VideoChatComponent = () => {
       } else {
         SpeechRecognition.stopListening();
         resetTranscript();
-        setTmpMessage("");
         lastTranscriptRef.current = "";
       }
     }
@@ -349,27 +345,46 @@ const VideoChatComponent = () => {
           message: text,
         });
 
+        let consecutiveOffensiveCount = 0;
+
         if (response.data.category === "공격발언") {
-          setProfanityDetected(true);
-          // 1초 후에 빨간 박스를 제거합니다.
-          setTimeout(() => setProfanityDetected(false), 1000);
-          console.warn("공격발언이 감지되었습니다", response);
+          consecutiveOffensiveCount = 1;
+          console.warn("공격발언이 1회 감지되었습니다");
         }
+
+        setSTTMessages((prevMessages) => {
+          const newMessages = [...prevMessages, messageData];
+          const lastFiveMessages = newMessages.slice(-5); // 최대 5개의 메시지만 유지
+
+          // 이전 상태의 마지막 메시지 (있다면) 확인
+          if (
+            prevMessages.length > 0 &&
+            prevMessages[prevMessages.length - 1].category === "공격발언"
+          ) {
+            consecutiveOffensiveCount++;
+            console.warn("공격발언이 2회 감지되었습니다");
+          }
+
+          // 두 개 이상의 연속된 공격적 메시지가 감지되면
+          if (consecutiveOffensiveCount >= 2) {
+            setProfanityDetected(true);
+            // 1초 후에 빨간 박스를 제거합니다.
+            setTimeout(() => setProfanityDetected(false), 1000);
+            console.warn("연속된 공격발언이 감지되었습니다");
+          }
+
+          return lastFiveMessages;
+        });
+
+        session.signal({
+          data: JSON.stringify(messageData),
+          type: "stt",
+        });
       } catch (error) {
         console.error("비속어 확인 중 오류 발생:", error);
       }
-      session.signal({
-        data: JSON.stringify(messageData),
-        type: "stt",
-      });
-      setSTTMessages((prevMessages) => {
-        const newMessages = [...prevMessages, messageData];
-        return newMessages.slice(-5); // 최대 5개의 메시지만 유지
-      });
-      setTmpMessage(""); // 임시 메시지 초기화
     }
   };
-
   // 세션이 변경될 때 채팅 메시지를 수신하는 이벤트 리스너 추가
   useEffect(() => {
     if (session) {
@@ -552,14 +567,16 @@ const VideoChatComponent = () => {
                     <div className={styles.subTitle}>
                       {sttMessages.map((msg, index) => (
                         <div key={index}>
-                          <strong>{profileData.name} :</strong> {msg.message}
+                          <strong>
+                            {msg.connectionId ===
+                            session.connection.connectionId
+                              ? profileData.name
+                              : "상대방"}
+                            :
+                          </strong>
+                          {msg.message}
                         </div>
                       ))}
-                      {tmpMessage && (
-                        <div>
-                          <strong>{myUserName.current} :</strong> {tmpMessage}
-                        </div>
-                      )}
                     </div>
                   </div>
                 )}
@@ -580,7 +597,13 @@ const VideoChatComponent = () => {
                             : styles.otherMessage
                         }`}
                       >
-                        <strong>{profileData.name} :</strong> {msg.message}
+                        <strong>
+                          {msg.connectionId === session.connection.connectionId
+                            ? profileData.name
+                            : "상대방"}
+                          :
+                        </strong>{" "}
+                        {msg.message}
                       </div>
                     ))}
                   </div>

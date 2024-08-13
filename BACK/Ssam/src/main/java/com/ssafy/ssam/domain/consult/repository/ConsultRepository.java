@@ -45,7 +45,7 @@ public interface ConsultRepository extends JpaRepository<Consult, Integer> {
             "WHERE a.student.userId = :userId " +
             "AND a.startTime > :currentDateTime " +
             "ORDER BY a.startTime ASC")
-    Optional<Consult> findUpcomingConsultForStudent(
+    Optional<List<Consult>> findUpcomingConsultForStudent(
             @Param("userId") Integer userId,
             @Param("currentDateTime") LocalDateTime currentDateTime);
 
@@ -55,7 +55,7 @@ public interface ConsultRepository extends JpaRepository<Consult, Integer> {
             "WHERE a.teacher.userId = :userId " +
             "AND a.startTime > :currentDateTime " +
             "ORDER BY a.startTime ASC")
-    Optional<Consult> findUpcomingConsultForTeacher(
+    Optional<List<Consult>> findUpcomingConsultForTeacher(
             @Param("userId") Integer userId,
             @Param("currentDateTime") LocalDateTime currentDateTime);
 }

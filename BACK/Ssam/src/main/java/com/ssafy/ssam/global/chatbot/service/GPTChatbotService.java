@@ -54,7 +54,7 @@ public class GPTChatbotService {
     private final ChatbotRepository chatbotRepository;
 
     // 학생이 질문하기
-    public QuestionResponseDto askQuestion(QuestionRequestDto questionRequestDto) {
+    public QuestionResponseDto askQuestion(String question) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
@@ -67,24 +67,23 @@ public class GPTChatbotService {
                         (LocalDateTime.now(), board.getBoardId())
                 .orElseThrow(()->new CustomException(ErrorCode.BoardDataNotFound));
 
-        StringBuilder message = new StringBuilder(AnswerPrompt).append("\n");
+        StringBuilder message = new StringBuilder(AnswerPrompt).append("\n----------\n");
         for(String prompt : prompts) {
-            message.append(prompt).append("\n------------------------------------------------------------\n");
+            message.append(prompt).append("\n----------\n");
         }
 
-        System.out.println(message);
         GPTRequest request =
                 GPTRequest.builder()
                         .model(model)
                         .messages(new ArrayList<>())
-                        .temperature(0.5F)
+                        .temperature(0.6F)
                         .maxTokens(2000)
-                        .topP(0.3F)
-                        .frequencyPenalty(0.8F)
-                        .presencePenalty(0.5F)
+                        .topP(0.4F)
+                        .frequencyPenalty(0.2F)
+                        .presencePenalty(0.15F)
                         .build();
         request.getMessages().add(new Message("system", message.toString()));
-        request.getMessages().add(new Message("user",questionRequestDto.getContent()));
+        request.getMessages().add(new Message("user", question));
 
         GPTResponse chatGPTResponse = restTemplate.postForObject(apiUrl, request, GPTResponse.class);
 

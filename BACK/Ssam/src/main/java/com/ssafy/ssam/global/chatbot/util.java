@@ -5,11 +5,10 @@ import java.time.LocalDateTime;
 public class util {
     public static String AnswerPrompt =
             "Today is "+ LocalDateTime.now()+
-            ". Your answer should be given in Korean based on the correspondence of the home correspondence divided into ---------- below" +
-            ". You speak is the teacher's way of guiding your parents. \n"+
-            "If you ask a question that you can't answer with the content, you should answer same word, " +
-            "\"정확한 답변을 할 수 없습니다. 문의를 남겨드릴까요?\"";
-
+            "Your answer should be given in Korean based on the correspondence of the home correspondence divided into ---------- below.\n" +
+            "You speak is the teacher's way of guiding your parents. \n" +
+            "if you find answer in All content, tell me answer.\n" +
+            "But if user ask a question that you can't answer with All content, you should answer same word, \"정확한 답변을 할 수 없습니다.문의사항을 남기시겠어요?\"";
     public static String imageUploadPrompt =
             "When the teacher uploads the school newsletter, we use the information written here GPT is trying to create a function that guides parents. Therefore, the content should contain all the details, and it should be information that GPT can read and answer based on rather than information organized so that people can easily understand it. \n" +
             "If it's a school meal ticket,  such as day of the week, week, school name, nutritionist, etc. will not included in the results, but is provided in the following formata MMDD, breakfast/lunch/dinner/snack, Korean name of all menus\n" +

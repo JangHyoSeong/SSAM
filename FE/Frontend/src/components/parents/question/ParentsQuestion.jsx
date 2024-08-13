@@ -4,9 +4,10 @@ import { useQuestions } from "../../../store/QuestionStore";
 import ParentsDeleteModal from "./ParentsDeleteModal";
 import styles from "./ParentsQuestion.module.scss";
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
+import LoadingSpinner from "../../../common/ModernLoading";
 
 const ParentsQuestion = () => {
-  const { questions, addQuestion, deleteQuestion } = useQuestions();
+  const { questions, addQuestion, deleteQuestion, loading } = useQuestions();
   const [userId, setUserId] = useState(null); // 사용자 ID 상태 추가
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -80,6 +81,15 @@ const ParentsQuestion = () => {
   const sortedQuestions = [...questions].sort(
     (a, b) => b.questionId - a.questionId
   );
+
+  // 로딩 상태 처리 수정
+  if (loading) {
+    return (
+      <div className={styles.loadingContainer}>
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
     <div className={styles.parentsQuestionContainer}>

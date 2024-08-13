@@ -555,12 +555,12 @@ const VideoChatComponent = () => {
 
           {/* 화면 */}
           <div className={styles.bottom}>
-            <div
-              className={`${styles.screen} ${
-                !showSubtitle ? styles.fullHeight : ""
-              }`}
-            >
-              <div className={styles.videoPosition}>
+            <div className={styles.screen}>
+              <div
+                className={`${styles.videoPosition} ${
+                  !showSubtitle ? styles.fullHeight : ""
+                }`}
+              >
                 {mainStreamManager !== null && (
                   <div className={styles.videoItem}>
                     <UserVideoComponent streamManager={mainStreamManager} />
@@ -585,8 +585,9 @@ const VideoChatComponent = () => {
                           <strong>
                             {msg.connectionId ===
                             session.connection.connectionId
-                              ? (profileData.name == ""?
-                              "익명" : profileData.name)
+                              ? profileData.name == ""
+                                ? "익명"
+                                : profileData.name
                               : "상대방"}{" "}
                             :{" "}
                           </strong>

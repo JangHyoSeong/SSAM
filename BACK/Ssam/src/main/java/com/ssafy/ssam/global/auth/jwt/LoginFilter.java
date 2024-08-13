@@ -23,6 +23,7 @@ import java.util.Iterator;
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         String username = obtainUsername(request);
@@ -36,8 +37,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
-
-        //특정한 유저 확인
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         String username = customUserDetails.getUsername();
         Integer userId = customUserDetails.getUserId();
@@ -53,8 +52,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         log.info("boardId: {}", boardId);
         log.info("role : {}", role);
         log.info("token: {}", token);
+
+        // 세션에 사용자 ID 저장
+        request.getSession().setAttribute("CURRENT_USER_ID", userId);
+        log.info("User ID saved in session: {}", userId);
+
         response.addHeader("Authorization", "Bearer " + token);
     }
+
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

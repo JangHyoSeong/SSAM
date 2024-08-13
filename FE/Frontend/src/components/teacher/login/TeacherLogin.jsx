@@ -8,6 +8,8 @@ import round3 from "../../../assets/round3.png";
 import google from "../../../assets/google.png";
 // import naver from "../../../assets/naver.png";
 // import kakao from "../../../assets/kakao.png";
+import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial"
+import { useEffect } from "react";
 
 const TeacherLogin = () => {
   const { username, password, handleChange, setLoggedIn } = useLoginStore(
@@ -40,11 +42,28 @@ const TeacherLogin = () => {
       }
     }
   };
-
-  // 구글 로그인 버튼 클릭 시 호출
-  const handleGoogleLogin = () => {
+    const handleGoogleLogin = () => {
     window.location.href = "http://localhost:8081/oauth2/authorization/google";
   };
+
+  // const handleGoogleLogin = async () => {
+  //   try {
+  //     const userData = await fetchApiUserInitial();
+  //     const currentUserId = userData.userId;
+      
+  //     if (!currentUserId) {
+  //       return;
+  //     }
+  
+  //     // state를 JSON 문자열로 변환한 후 Base64로 인코딩
+  //     // const state = btoa(JSON.stringify({ userId: currentUserId }));
+  //     console.log(`Redirecting to: http://localhost:8081/oauth2/authorization/google?userId=${currentUserId}`);
+
+  //     // window.location.href = `http://localhost:8081/oauth2/authorization/google?userId=${currentUserId}`;
+  //   } catch (error) {
+  //     console.error('Error fetching user data:', error);
+  //   }
+  // };
 
   return (
     <div className={styles.loginArray}>

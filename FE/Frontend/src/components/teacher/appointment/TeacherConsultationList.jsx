@@ -30,12 +30,23 @@ const ConsultationItem = ({
   topic,
   description = "", // 기본값을 빈 문자열로 설정
   status,
+  accessCode,
   onApprove,
   onCancel,
 }) => {
+  // 비디오 링크
   const handleConsult = () => {
-    // 비디오 링크
-    window.open("https://www.naver.com", "_blank");
+    if (accessCode) {
+      window.open("http://localhost:3000/video/CRHDNAP", "_blank");
+    } else {
+      console.error("Access code not found for this consultation");
+      // 사용자에게 오류 메시지 표시
+      Swal.fire({
+        icon: "error",
+        title: "오류",
+        text: "상담 링크를 열 수 없습니다. 관리자에게 문의해주세요.",
+      });
+    }
   };
 
   // 날짜 포맷 함수
@@ -108,6 +119,7 @@ ConsultationItem.propTypes = {
   topic: PropTypes.string.isRequired,
   description: PropTypes.string,
   status: PropTypes.string.isRequired,
+  accessCode: PropTypes.string,
   onApprove: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
 };
@@ -232,7 +244,6 @@ const TeacherConsultationList = () => {
       <nav className={styles.classNavbar}>
         <NavLink
           to="/teacherreservationmanagement"
-          ConsultationItem
           className={({ isActive }) =>
             isActive ? `${styles.navItem} ${styles.active}` : styles.navItem
           }
@@ -285,6 +296,7 @@ const TeacherConsultationList = () => {
           <ConsultationItem
             key={consultation.appointmentId}
             {...consultation}
+            accessCode={consultation.accessCode}
             onApprove={handleApprove}
             onCancel={handleCancel}
           />

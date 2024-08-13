@@ -68,6 +68,7 @@ public class ConsultService {
                 .accessCode(accessCode)
                 .build();
         Consult consult = Consult.toConsult(requestDto);
+        consultRepository.save(consult);
 
         // consult accesscode를 담은 알람을 생성
         AlarmCreateRequestDto studentAlarmCreateRequestDto

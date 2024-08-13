@@ -2,6 +2,7 @@ package com.ssafy.ssam.domain.openvidu.dto;
 
 import java.time.LocalDateTime;
 
+import io.openvidu.java.client.Session;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,4 +29,15 @@ public class OpenViduSessionDto {
     private boolean recording;
     private String mediaMode;
     private String recordingMode;
+
+    public static OpenViduSessionDto convertSessionToDto(Session session) {
+        return OpenViduSessionDto.builder()
+                .sessionId(session.getSessionId())
+                .createdAt(session.createdAt())
+                .customSessionId(session.getProperties().customSessionId())
+                .recording(session.isBeingRecorded())
+                .mediaMode(session.getProperties().mediaMode().name())
+                .recordingMode(session.getProperties().recordingMode().name())
+                .build();
+    }
 }

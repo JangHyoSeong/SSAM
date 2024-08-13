@@ -17,13 +17,15 @@ import com.ssafy.ssam.global.error.CustomException;
 import com.ssafy.ssam.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -42,9 +44,10 @@ public class GPTChatbotService {
     private final UserRepository userRepository;
     @Value("${gpt.model}")
     private String model;
-
     @Value("${gpt.api.url}")
     private String apiUrl;
+    @Value("${gpt.api.key}")
+    private String apiKey;
 
     private final RestTemplate restTemplate;
     private final S3ImageService s3ImageService;
@@ -112,74 +115,71 @@ public class GPTChatbotService {
 
     // 이미지 + 요청인 경우
     public CommonResponseDto uploadNoticeAndImage(ImageRequestDto imageRequestDto) {
-        //이미지 입력 전 prompt 입력
-        GPTImageNotice(imageRequestDto.getContent());
-        //이미지 입력 후 요약 내용 얻기
-        String output = uploadImage(imageRequestDto.getImage());
+        //이미지 입력 후 url 얻기
+        String imageUrl = S3Imageupload(imageRequestDto.getImage());
+        //이미지 결과 return
+        String output = convertImageToText(imageUrl);
         //요약한 내용 DB에 저장
         uploadNotice(NoticeRequestDto.builder()
-                .content(output+"\n"+imageRequestDto.getContent())
+                .content(output)
+                .startTime(imageRequestDto.getStartTime())
+                .endTime(imageRequestDto.getEndTime())
+                .build());
+        //안내 내용 저장
+        uploadNotice(NoticeRequestDto.builder()
+                .content(imageRequestDto.getContent())
                 .startTime(imageRequestDto.getStartTime())
                 .endTime(imageRequestDto.getEndTime())
                 .build());
         return new CommonResponseDto("교사 요청 사진 업로드 완");
     }
 
+    public String S3Imageupload(MultipartFile image) {
+        return s3ImageService.upload(image, "gptnotice");
 
-    // GPT에게 이미지 prompt 전달
-    public void GPTImageNotice(String text) {
-        GPTRequest request =
-                GPTRequest.builder()
-                        .model(model)
-                        .messages(new ArrayList<>())
-                        .temperature(0.5F)
-                        .maxTokens(5000)
-                        .topP(0.3F)
-                        .frequencyPenalty(0.8F)
-                        .presencePenalty(0.5F)
-                        .build();
-        request.getMessages().add(new Message("system", imageUploadPrompt(text)));
-        GPTResponse chatGPTResponse = restTemplate.postForObject(apiUrl, request, GPTResponse.class);
     }
-    // GPT에게 이미지 전달
-    public String uploadImage(MultipartFile image) {
-        String dataUrl = null;
-        try{
-            dataUrl = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(image.getBytes());
-        } catch(Exception e) {
+    public String convertImageToText(String imageUrl){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(apiKey);
+        headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
+
+        JSONObject requestBody = new JSONObject()
+                .put("model", model)
+                .put("messages", generateMessage(imageUrl))
+                .put("temperature", 0.5F)
+                .put("maxTokens",4000)
+                .put("topP", 0.3F)
+                .put("frequencyPenalty",0.8F)
+                .put("presencePenalty",0.5F);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody.toString(), headers);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(apiUrl, HttpMethod.POST, requestEntity, String.class);
+
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            JSONObject responseJson = new JSONObject(responseEntity.getBody());
+            JSONArray choices = responseJson.getJSONArray("choices");
+            if (!choices.isEmpty()) {
+                return choices.getJSONObject(0).getJSONObject("message").getString("content");
+            } else {
+                throw new CustomException(ErrorCode.GPTError);
+            }
+        } else {
             throw new CustomException(ErrorCode.GPTError);
         }
+    }
 
-        List<ImageUploadGPTRequest.Content> contents = new ArrayList<>();
-        ImageUploadGPTRequest.Content content = new ImageUploadGPTRequest.Content();
-        content.setType("image_url");
-        content.setImage_url(ImageUploadGPTRequest.ImageUrl.builder().url(dataUrl).build());
-
-//        CustomGPTRequest.Content text = new CustomGPTRequest.Content();
-//        text.setType("text");
-//        text.setText(prompt);
-
-        contents.add(content);
-//        contents.add(text);
-
-        ImageUploadGPTRequest.Message message = ImageUploadGPTRequest.Message.builder()
-                .role("user")
-                .content(contents)
-                .build();
-
-        ImageUploadGPTRequest request = ImageUploadGPTRequest.builder()
-                .model(model)
-                .messages(List.of(message))
-                .temperature(0.5F)
-                .maxTokens(1000)
-                .topP(0.3F)
-                .frequencyPenalty(0.8F)
-                .presencePenalty(0.5F)
-                .build();
-
-        GPTResponse chatGPTResponse = restTemplate.postForObject(apiUrl, request, GPTResponse.class);
-        String imageUrl = s3ImageService.upload(image, "gptnotice");
-
-        return chatGPTResponse.getChoices().get(0).getMessage().getContent();
+    private static JSONArray generateMessage(String imageUrl) {
+        JSONObject message = new JSONObject()
+                .put("role", "user")
+                .put("content", new JSONArray()
+                        .put(new JSONObject()
+                                .put("type", "text")
+                                .put("text", imageUploadPrompt))
+                        .put(new JSONObject()
+                                .put("type", "image_url")
+                                .put("image_url", new JSONObject()
+                                        .put("url", imageUrl)))
+                );
+        return new JSONArray().put(message);
     }
 }

@@ -6,13 +6,14 @@ public class util {
     public static String AnswerPrompt =
             "Today is "+ LocalDateTime.now()+
             ".\n The answer must be in Korean, remove and send computerized text such as /n or **\n" +
-            "If you ask a question that you can't answer with the content, you should answer, " +
+            "If you ask a question that you can't answer with the content, you should answer same word, " +
             "\"정확한 답변을 할 수 없습니다. 문의를 남겨드릴까요?\"";
 
-    public static String imageUploadPrompt(String ask) {
-        return "Give me all possible information in the picture without a summary in Korean." +
-                "And the person who wrote this photo needs to know more about";
-    }
+    public static String imageUploadPrompt =
+            "When the teacher uploads the school newsletter, we use the information written here GPT is trying to create a function that guides parents. Therefore, the content should contain all the details, and it should be information that GPT can read and answer based on rather than information organized so that people can easily understand it. \n" +
+                "If it's a school meal ticket,  such as day of the week, school name, nutritionist, etc. will not included in the results, but is provided in the following formata MMDD, breakfast/lunch/dinner/snack, Korean name of all menus\n" +
+                "Please give all the contents of the image in Korean without a summary";
+
     public static String summaryPrompt(String topic) {
         return "When making a reservation, refer to the topic of "+topic+" entered by parents and classify the conversation received by STT\n" +
                         "Teachers should be able to see this file and see at a glance the important elements of the conversation they had with their parents. The output includes a lot of parents' concerns or mentioning a specific person, and includes minimal information about their daily lives.\n" +

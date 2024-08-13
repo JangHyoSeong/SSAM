@@ -29,4 +29,19 @@ public class RecordingDto {
     private Long createdAt;
 
     // Getters
+    public static RecordingDto convertRecordingToDto(Recording recording) {
+        return RecordingDto.builder()
+                .id(recording.getId())
+                .sessionId(recording.getSessionId())
+                .name(recording.getName())
+                .outputMode(recording.getOutputMode())
+                .hasAudio(recording.hasAudio())
+                .hasVideo(recording.hasVideo())
+                .duration(recording.getDuration())
+                .size(recording.getSize())
+                .status(recording.getStatus())
+                .url(recording.getUrl())
+                .createdAt(recording.getCreatedAt())
+                .build();
+    }
 }

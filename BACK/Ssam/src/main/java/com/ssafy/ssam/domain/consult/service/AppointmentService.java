@@ -4,6 +4,7 @@ import com.ssafy.ssam.domain.consult.dto.request.AppointmentRequestDto;
 import com.ssafy.ssam.domain.consult.dto.response.AppointmentResponseDto;
 import com.ssafy.ssam.domain.consult.entity.Appointment;
 import com.ssafy.ssam.domain.consult.entity.AppointmentStatus;
+import com.ssafy.ssam.domain.consult.entity.Consult;
 import com.ssafy.ssam.domain.consult.repository.AppointmentRepository;
 import com.ssafy.ssam.domain.consult.repository.ConsultRepository;
 import com.ssafy.ssam.domain.consult.repository.SummaryRepository;
@@ -52,8 +53,15 @@ public class AppointmentService {
                 .orElse(new ArrayList<>());
 
         List<AppointmentResponseDto> appointmentResponseDtos = new ArrayList<>();
+        Consult consult = null;
         for (Appointment appointment : appointments) {
-            appointmentResponseDtos.add(Appointment.toAppointmentDto(appointment));
+            AppointmentResponseDto responseDto = Appointment.toAppointmentDto(appointment);
+            consult = consultRepository.findByAppointment(appointment).orElse(null);
+            if (consult != null) {
+                responseDto.setAccessCode(consult.getAccessCode());
+                responseDto.setConsultId(consult.getConsultId());
+            }
+            appointmentResponseDtos.add(responseDto);
         }
 
         return appointmentResponseDtos;

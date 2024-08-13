@@ -98,8 +98,11 @@ public class UserInfoService {
         else relation = userBoardRelationRepository.findByUserAndStatus(user, UserBoardRelationStatus.ACCEPTED);
         for(UserBoardRelation r : relation) if(r.getBoard().getIsDeprecated() == 0) board = r.getBoard();
 
-        Optional<UserBoardRelation> relation2 = userBoardRelationRepository.findByBoardIdAndStatus(board.getBoardId());
-        Integer teacherId = relation2.get().getUser().getUserId();
+        Integer teacherId = null;
+        if(board != null) {
+        	Optional<UserBoardRelation> tempRelation = userBoardRelationRepository.findByBoardIdAndStatus(board.getBoardId());
+        	 teacherId = tempRelation.get().getUser().getUserId();
+        }
         
 
         //Optional<UserBoardRelation> relation = Optional.of(userBoardRelationRepository.findTeacherByStudentId(user.getUserId()).orElse(null));
@@ -108,7 +111,7 @@ public class UserInfoService {
                 .userId(user.getUserId())
                 .username(user.getUsername())
                 .name(user.getName())
-                .boardId(board.getBoardId())
+                .boardId(board == null? null : board.getBoardId())
                 .role(String.valueOf(user.getRole()))
                 .school(Optional.ofNullable(user.getSchool()).map(School::getName).orElse(null))
                 .teacherId(teacherId)

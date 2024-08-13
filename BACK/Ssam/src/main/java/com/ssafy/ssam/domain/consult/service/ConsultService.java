@@ -77,16 +77,17 @@ public class ConsultService {
         return new CommonResponseDto("Consult Created");
     }
     // 학생기준
-    public CommonResponseDto startConsult(Integer consultId) {
+    public CommonResponseDto startConsult(String accessCode, String sessionId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        
         User student = userRepository.findByUserId(userDetails.getUserId())
                 .orElseThrow(()->new CustomException(ErrorCode.UserNotFoundException));
         UserBoardRelation relation = userBoardRelationRepository.findByBoardIdAndStatus(userDetails.getBoardId())
                 .orElseThrow(()->new CustomException(ErrorCode.NotFoundStudentInBoardException));
 
         // 1. consult 1) 시작시간 2) att 설정
-        Consult consult = consultRepository.findByConsultId(consultId).orElseThrow(()->new CustomException(ErrorCode.ConsultNotFountException));
+        Consult consult = consultRepository.findByAccessCode(accessCode).orElseThrow(()->new CustomException(ErrorCode.ConsultNotFountException));
         if(!consult.getAppointment().getStudent().getUserId().equals(student.getUserId())) {
             throw new CustomException(ErrorCode.IllegalArgument);
         }
@@ -96,7 +97,7 @@ public class ConsultService {
         consult.setAttSchool(relation.getUser().getSchool().getSchoolId());
         consult.setAttGrade(relation.getBoard().getGrade());
         consult.setAttClassroom(relation.getBoard().getClassroom());
-
+        consult.setWebrtcSessionId(sessionId);
         // 2. appointment 설정
         Appointment appointment = appointmentRepository.findByAppointmentId(consult.getAppointment().getAppointmentId()).orElseThrow(()->new CustomException(ErrorCode.AppointmentNotFoundException));
         appointment.setStatus(AppointmentStatus.DONE);
@@ -104,11 +105,11 @@ public class ConsultService {
         return new CommonResponseDto("start consult");
     }
     // 학생기준
-    public CommonResponseDto endConsult(Integer consultId) {
+    public CommonResponseDto endConsult(String accessCode) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         // 1. consult 종료시간 기준으로 1) runningtime 수정, 2) S3에서 대화 가져오기 3) content 입력
-        Consult consult = consultRepository.findByConsultId(consultId).orElseThrow(()->new CustomException(ErrorCode.ConsultNotFountException));
+        Consult consult = consultRepository.findByAccessCode(accessCode).orElseThrow(()->new CustomException(ErrorCode.ConsultNotFountException));
         // 1)
         consult.setRunningTime((int)Duration.between(consult.getActualDate(), LocalDateTime.now()).toMinutes());
         // 2)

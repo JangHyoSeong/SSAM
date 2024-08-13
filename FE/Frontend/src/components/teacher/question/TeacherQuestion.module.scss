@@ -125,3 +125,17 @@
   font-size: 24px;
   font-weight: bold;
 }
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  width: 100%;
+}
+
+.noQuestions {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-top: 2rem;
+}

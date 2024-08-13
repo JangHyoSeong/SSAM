@@ -26,6 +26,8 @@ public interface ConsultRepository extends JpaRepository<Consult, Integer> {
     // 약속을 컨설트로 변환하는 jpa
     List<Consult> findByAppointmentIn(List<Appointment> appointments);
 
+    Optional<Consult> findByAppointment(Appointment appointment);
+
 
     @Query("SELECT new com.ssafy.ssam.domain.consult.dto.response.ConsultSummaryDetailResponseDto(c.consultId, c.actualDate, c.runningTime, c.content, " +
             "c.attSchool, c.attGrade, c.attClassroom, " +

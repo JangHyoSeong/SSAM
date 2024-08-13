@@ -92,24 +92,26 @@ public class UserInfoService {
         User user = userRepository.findByUserId(userDetails.getUserId())
                 .orElseThrow(() -> new CustomException(ErrorCode.Unauthorized));
         
-        Board board = null;
-        List<UserBoardRelation> relation;
-        if(user.getRole() == UserRole.TEACHER) relation = userBoardRelationRepository.findByUserAndStatus(user, UserBoardRelationStatus.OWNER);
-        else relation = userBoardRelationRepository.findByUserAndStatus(user, UserBoardRelationStatus.ACCEPTED);
-        for(UserBoardRelation r : relation) if(r.getBoard().getIsDeprecated() == 0) board = r.getBoard();
-        Optional<UserBoardRelation> relation2 = userBoardRelationRepository.findByBoardIdAndStatus(board.getBoardId());
+//        Board board = null;
+//        List<UserBoardRelation> relation;
+//        if(user.getRole() == UserRole.TEACHER) relation = userBoardRelationRepository.findByUserAndStatus(user, UserBoardRelationStatus.OWNER);
+//        else relation = userBoardRelationRepository.findByUserAndStatus(user, UserBoardRelationStatus.ACCEPTED);
+//        for(UserBoardRelation r : relation) if(r.getBoard().getIsDeprecated() == 0) board = r.getBoard();
+//
+//        Optional<UserBoardRelation> relation2 = userBoardRelationRepository.findByBoardIdAndStatus(board.getBoardId());
+//        Integer teacherId = relation2.get().getUser().getUserId();
         
 
-        //Optional<UserBoardRelation> relation = Optional.of(userBoardRelationRepository.findTeacherByStudentId(user.getUserId()).orElse(null));
+        Optional<UserBoardRelation> relation = Optional.of(userBoardRelationRepository.findTeacherByStudentId(user.getUserId()).orElse(null));
         
         return UserInitialInfoResponseDTO.builder()
                 .userId(user.getUserId())
                 .username(user.getUsername())
                 .name(user.getName())
-                .boardId(board == null? null: board.getBoardId())
+                .boardId(relation.isEmpty()? null: relation.get().getBoard().getBoardId())
                 .role(String.valueOf(user.getRole()))
                 .school(Optional.ofNullable(user.getSchool()).map(School::getName).orElse(null))
-                .teacherId(relation2.isEmpty()? null: relation2.get().getUser().getUserId())
+                .teacherId(relation.isEmpty()? null: relation.get().getUser().getUserId())
                 .build();
     }
 

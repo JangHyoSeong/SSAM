@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import styles from "./TeacherUpdate.module.scss";
 import Swal from "sweetalert2";
+import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial"
 
 const apiUrl = import.meta.env.API_URL;
 
@@ -66,18 +67,14 @@ const TeacherUpdate = () => {
     const formData = new FormData();
     formData.append("school", profile.school || "");
     formData.append("selfPhone", profile.selfPhone || "");
+    formData.append("otherPhone", profile.otherPhone || "");
 
     if (profile.profileImage instanceof File) {
       formData.append("profileImage", profile.profileImage);
-    } else if (
-      typeof profile.profileImage === "string" &&
-      profile.profileImage
-    ) {
-      console.log(
-        "Profile image is a string (URL), skipping form data append."
-      );
-    } else {
-      formData.append("profileImage", "");
+    } else if (profile.profileImage === "") {
+      formData.append("profileImage", new Blob([null], { type: "image/jpeg" }));
+      // 또는
+      // formData.append("profileImage", null);
     }
 
     console.log("FormData to be sent:");
@@ -102,7 +99,7 @@ const TeacherUpdate = () => {
           popup: "my-swal-popup",
           confirmButton: "my-swal-confirm-button",
         },
-        width: "auto", // 기본 옵션에서 width 설정을 auto로 변경
+        width: "auto",
       });
 
       console.log("Profile updated successfully:", response.data);
@@ -118,8 +115,6 @@ const TeacherUpdate = () => {
   const handleCancel = () => {
     window.location.reload(); // 페이지 새로고침
   };
-
-  const profile = useProfile();
 
   // Function to handle Google Account linking
   const handleLinkGoogleAccount = () => {
@@ -139,8 +134,8 @@ const TeacherUpdate = () => {
           <table className={styles.tableArray}>
             <tbody>
               <tr>
-                <th style={{ borderTop: 'none' }}>사진</th>
-                <td className={styles.imgTd} style={{ borderTop: 'none' }}>
+                <th style={{ borderTop: "none" }}>사진</th>
+                <td className={styles.imgTd} style={{ borderTop: "none" }}>
                   <div className={styles.profileImg}>
                     {profile.profileImage && (
                       <img
@@ -239,8 +234,8 @@ const TeacherUpdate = () => {
                 </td>
               </tr>
               <tr>
-                <th style={{ borderBottom: 'none' }}>휴대전화</th>
-                <td style={{ borderBottom: 'none' }}>
+                <th style={{ borderBottom: "none" }}>휴대전화</th>
+                <td style={{ borderBottom: "none" }}>
                   <input
                     type="text"
                     name="phone"
@@ -248,7 +243,6 @@ const TeacherUpdate = () => {
                     onChange={(e) =>
                       setProfileData({ ...profile, selfPhone: e.target.value })
                     }
-
                   />
                 </td>
               </tr>
@@ -265,15 +259,14 @@ const TeacherUpdate = () => {
             >
               취소
             </button>
+            <button
+              type="button"
+              className={styles.googleLinkBtn}
+              onClick={handleLinkGoogleAccount}
+            >
+              구글 계정 연동
+            </button>
           </div>
-          {/* Add Google Account Link Button Here */}
-          <button
-            type="button"
-            className={styles.googleLinkBtn}
-            onClick={handleLinkGoogleAccount}
-          >
-            구글 계정 연동
-          </button>
         </form>
       </div>
     </div>

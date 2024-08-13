@@ -4,15 +4,11 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import koLocale from "@fullcalendar/core/locales/ko";
 import styles from "./TeacherCalendar.module.scss";
-import useTeacherCalendarStore from "../../../store/TeacherCalendarStore";
 import { useState, useEffect, useRef } from "react";
 
 const TeacherCalendar = ({ onDateSelect }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const calendarRef = useRef(null);
-  const getAvailableCount = useTeacherCalendarStore(
-    (state) => state.getAvailableCount
-  );
 
   const handleDateClick = (info) => {
     setSelectedDate(info.dateStr);

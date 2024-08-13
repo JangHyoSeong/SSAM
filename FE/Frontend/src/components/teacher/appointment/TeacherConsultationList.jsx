@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 import { useConsultation } from "../../../store/ConsultationStore";
 import styles from "./TeacherConsultationList.module.scss";
 import ConsultationApproveModal from "./ConsultationApproveModal";
 import ConsultationCancelModal from "./ConsultationCancelModal";
+import Swal from "sweetalert2";
 
 // topic db랑 화면 매핑
 const topicDisplayMap = {
@@ -37,7 +38,7 @@ const ConsultationItem = ({
     window.open("https://www.naver.com", "_blank");
   };
 
-  // 상담일자 커스터마이징
+  // 날짜 포맷 함수
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
@@ -46,22 +47,24 @@ const ConsultationItem = ({
     )}-${String(date.getDate()).padStart(2, "0")}`;
   };
 
-  const formatTime = (dateString) => {
-    const date = new Date(dateString);
-    return `${String(date.getHours()).padStart(2, "0")}:${String(
-      date.getMinutes()
-    ).padStart(2, "0")}`;
+  // 시간 포맷 함수
+  const formatTime = (startDate, endDate) => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const timeOptions = { hour: "2-digit", minute: "2-digit", hour12: false };
+    return `${start.toLocaleTimeString(
+      "ko-KR",
+      timeOptions
+    )} ~ ${end.toLocaleTimeString("ko-KR", timeOptions)}`;
   };
 
   return (
     <div className={styles.consultationRow}>
-      <div className={styles.cell}>{formatDate(startTime)}</div>
-      <div className={styles.cellSmall}>{`${formatTime(
-        startTime
-      )} ~ ${formatTime(endTime)}`}</div>
+      <div className={styles.cellDate}>{formatDate(startTime)}</div>
+      <div className={styles.cellTime}>{formatTime(startTime, endTime)}</div>
       <div className={styles.cellSmall}>{studentName}</div>
       <div className={styles.cellMedium}>{getTopicDisplay(topic)}</div>
-      <div className={styles.cellLarge}>{description || "설명 없음"}</div>
+      <div className={styles.cellDescription}>{description || "설명 없음"}</div>
       <div className={styles.cellButtons}>
         {status === "APPLY" ? (
           <>
@@ -83,9 +86,13 @@ const ConsultationItem = ({
             상담 하기
           </button>
         ) : status === "CANCEL" ? (
-          <span className={styles.cancelStatus}>취소됨</span>
+          <span className={styles.cancelStatus}>상담 취소</span>
+        ) : status === "DONE" ? (
+          <span className={styles.doneStatus} style={{ color: "orange" }}>
+            상담 완료
+          </span>
         ) : (
-          "예약불가"
+          <span className={styles.rejectStatus}>예약 불가</span>
         )}
       </div>
     </div>
@@ -113,19 +120,58 @@ const TeacherConsultationList = () => {
     error,
     approveConsultation,
     cancelConsultation,
+    sortConsultations,
   } = useConsultation();
   const [isApproveModalOpen, setApproveModalOpen] = useState(false);
   const [isCancelModalOpen, setCancelModalOpen] = useState(false);
   const [selectedConsultationId, setSelectedConsultationId] = useState(null);
+  const [sortOrder, setSortOrder] = useState("asc"); // 정렬 순서 상태 추가
+  const [activeFilters, setActiveFilters] = useState([]);
 
   const handleApprove = (appointmentId) => {
-    setSelectedConsultationId(appointmentId);
-    setApproveModalOpen(true);
+    Swal.fire({
+      title: "상담을 승인하시겠습니까?",
+      // text: "이 작업은 되돌릴 수 없습니다!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "승인",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        approveConsultation(appointmentId);
+        Swal.fire({
+          title: "승인 완료!",
+          text: "상담이 승인되었습니다.",
+          icon: "success",
+          timer: 1500,
+        });
+      }
+    });
   };
 
   const handleCancel = (appointmentId) => {
-    setSelectedConsultationId(appointmentId);
-    setCancelModalOpen(true);
+    Swal.fire({
+      title: "상담을 거절하시겠습니까?",
+      text: "이 작업은 되돌릴 수 없습니다!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "거절",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        cancelConsultation(appointmentId);
+        Swal.fire({
+          title: "거절 완료!",
+          text: "상담이 거절되었습니다.",
+          icon: "success",
+          timer: 1500,
+        });
+      }
+    });
   };
 
   const closeApproveModal = () => {
@@ -145,6 +191,38 @@ const TeacherConsultationList = () => {
     await cancelConsultation(selectedConsultationId);
     setCancelModalOpen(false);
   };
+
+  // 날짜 정렬 함수 추가
+  const handleDateSort = () => {
+    const newOrder = sortOrder === "asc" ? "desc" : "asc";
+    setSortOrder(newOrder);
+    sortConsultations("startTime", newOrder);
+  };
+
+  // 필터 토글 함수 추가
+  const statusLabels = {
+    APPLY: "신청",
+    CANCEL: "취소",
+    ACCEPTED: "승인",
+    REJECT: "불가",
+    DONE: "완료",
+  };
+
+  const handleFilterToggle = (status) => {
+    setActiveFilters((prevFilters) =>
+      prevFilters.includes(status)
+        ? prevFilters.filter((f) => f !== status)
+        : [...prevFilters, status]
+    );
+  };
+
+  const filteredConsultations = useMemo(() => {
+    return activeFilters.length === 0
+      ? consultations
+      : consultations.filter((consultation) =>
+          activeFilters.includes(consultation.status)
+        );
+  }, [consultations, activeFilters]);
 
   if (loading) return <div></div>;
   if (error) return <div>에러: {error}</div>;
@@ -171,24 +249,42 @@ const TeacherConsultationList = () => {
         </NavLink>
       </nav>
       <section className={styles.consultationSection}>
+        <div className={styles.filterContainer}>
+          {Object.entries(statusLabels).map(([status, label]) => (
+            <button
+              key={status}
+              className={`${styles.filterButton} ${
+                activeFilters.includes(status) ? styles.activeFilter : ""
+              }`}
+              onClick={() => handleFilterToggle(status)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
         <header className={styles.headerRow}>
-          <h3 className={styles.cellHeader}>날짜</h3>
-          <h3 className={styles.cellHeaderSmall}>시간</h3>
+          <h3
+            className={styles.cellHeaderDate}
+            onClick={handleDateSort}
+            style={{ cursor: "pointer" }}
+          >
+            날짜 {sortOrder === "asc" ? "▲" : "▼"}
+          </h3>
+          <h3 className={styles.cellHeaderTime}>시간</h3>
           <h3 className={styles.cellHeaderSmall}>이름</h3>
-          <h3 className={styles.cellHeaderMedium}>주제</h3>
-          <h3 className={styles.cellHeaderLarge}>내용</h3>
+          <h3
+            className={styles.cellHeaderMedium}
+            style={{ paddingRight: "20px" }}
+          >
+            주제
+          </h3>
+          <h3 className={styles.cellHeaderDescription}>내용</h3>
           <h3 className={styles.cellHeaderButtons}>관리</h3>
         </header>
-        {consultations.map((consultation) => (
+        {filteredConsultations.map((consultation) => (
           <ConsultationItem
             key={consultation.appointmentId}
-            appointmentId={consultation.appointmentId}
-            startTime={consultation.startTime}
-            endTime={consultation.endTime}
-            studentName={consultation.studentName}
-            topic={consultation.topic}
-            description={consultation.description}
-            status={consultation.status}
+            {...consultation}
             onApprove={handleApprove}
             onCancel={handleCancel}
           />

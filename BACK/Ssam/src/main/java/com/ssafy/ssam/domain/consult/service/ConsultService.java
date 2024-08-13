@@ -3,6 +3,7 @@ package com.ssafy.ssam.domain.consult.service;
 import com.ssafy.ssam.domain.classroom.repository.BoardRepository;
 import com.ssafy.ssam.domain.consult.dto.request.ConsultRequestDto;
 import com.ssafy.ssam.domain.consult.dto.request.SummaryRequestDto;
+import com.ssafy.ssam.domain.consult.dto.response.UpcomingConsultResponseDTO;
 import com.ssafy.ssam.domain.consult.entity.Appointment;
 import com.ssafy.ssam.domain.consult.entity.AppointmentStatus;
 import com.ssafy.ssam.domain.consult.entity.Consult;
@@ -18,6 +19,7 @@ import com.ssafy.ssam.domain.user.repository.UserBoardRelationRepository;
 import com.ssafy.ssam.global.amazonS3.service.S3TextService;
 import com.ssafy.ssam.global.auth.dto.CustomUserDetails;
 import com.ssafy.ssam.global.auth.entity.User;
+import com.ssafy.ssam.global.auth.entity.UserRole;
 import com.ssafy.ssam.global.auth.repository.UserRepository;
 import com.ssafy.ssam.global.dto.CommonResponseDto;
 import com.ssafy.ssam.global.chatbot.service.GPTSummaryService;
@@ -26,6 +28,7 @@ import com.ssafy.ssam.global.error.ErrorCode;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cglib.core.Local;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -128,6 +131,32 @@ public class ConsultService {
         return new CommonResponseDto("end consult");
     }
 
+    // 가장 가까운 상담 하나를 리턴하는 메서드
+    public UpcomingConsultResponseDTO getUpcomingConsult () {
+        CustomUserDetails userDetails = findCustomUserDetails();
+
+        Integer userId = userDetails.getUserId();
+        LocalDateTime nowDateTime = LocalDateTime.now();
+
+        Consult consult = null;
+        if (userDetails.getRole().equals(UserRole.TEACHER)) {
+            consult = consultRepository.findUpcomingConsultForTeacher(userId, nowDateTime)
+                    .orElse(null);
+        }
+        else {
+            consult = consultRepository.findUpcomingConsultForStudent(userId, nowDateTime)
+                    .orElse(null);
+        }
+        if (consult == null) {
+            return new UpcomingConsultResponseDTO().builder().build();
+        } else {
+            return new UpcomingConsultResponseDTO().builder()
+                    .consultId(consult.getConsultId())
+                    .accessCode(consult.getAccessCode())
+                    .build();
+        }
+    }
+
     // 상담 AccessCode 생성
     public String createConsultAccessCode() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -143,5 +172,11 @@ public class ConsultService {
         } while (consultRepository.existsByAccessCode(accessCode.toString()));
 
         return accessCode.toString();
+    }
+
+    // CustomUserDetail을 반환하는 함수
+    public CustomUserDetails findCustomUserDetails() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (CustomUserDetails) authentication.getPrincipal();
     }
 }

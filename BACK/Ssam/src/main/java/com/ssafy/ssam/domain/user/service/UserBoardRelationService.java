@@ -138,8 +138,10 @@ public class UserBoardRelationService {
     private List<ConsultSummaryDTO> consultSummaryListToDTO (List<Consult> consults) {
         return consults.stream()
                 .map(consult -> ConsultSummaryDTO.builder()
+                                .consultId(consult.getConsultId())
                                 .date(consult.getActualDate().toLocalDate())
                                 .runningTime(consult.getRunningTime())
+                                .consultType(consult.getAppointment().getTopic().toString())
                                 .build()
                 )
                 .collect(Collectors.toList());

@@ -28,7 +28,11 @@ export const QuestionProvider = ({ children }) => {
       }
       setBoardId(boardId);
       const data = await fetchQuestionData(boardId);
-      setQuestions(Array.isArray(data) ? data : [data]); // 응답이 배열인지 확인
+      // 날짜를 기준으로 내림차순 정렬
+      const sortedData = Array.isArray(data)
+        ? data.sort((a, b) => new Date(b.contentDate) - new Date(a.contentDate))
+        : [data];
+      setQuestions(sortedData);
     } catch (error) {
       console.error("Failed to fetch question data:", error);
     } finally {
@@ -43,7 +47,7 @@ export const QuestionProvider = ({ children }) => {
   const addQuestion = async (newContent) => {
     try {
       const newQuestion = await fetchCreateQuestionData(newContent);
-      setQuestions([...questions, newQuestion]);
+      setQuestions([newQuestion, ...questions]); // 새 질문을 배열의 맨 앞에 추가
     } catch (error) {
       console.error("Failed to create question:", error);
     }
@@ -57,12 +61,12 @@ export const QuestionProvider = ({ children }) => {
       );
       // 로컬 상태 업데이트
       setQuestions(
-        questions.map((question) =>
-          question.questionId === questionId ? updatedQuestion : question
-        )
+        questions
+          .map((question) =>
+            question.questionId === questionId ? updatedQuestion : question
+          )
+          .sort((a, b) => new Date(b.contentDate) - new Date(a.contentDate)) // 업데이트 후 재정렬
       );
-      // 서버에서 최신 데이터 다시 가져오기
-      await fetchQuestions();
     } catch (error) {
       console.error("Failed to update question:", error);
     }
@@ -74,7 +78,6 @@ export const QuestionProvider = ({ children }) => {
       setQuestions(
         questions.filter((question) => question.questionId !== questionId)
       );
-      await fetchQuestions();
     } catch (error) {
       console.error("Failed to delete question:", error);
     }
@@ -85,7 +88,7 @@ export const QuestionProvider = ({ children }) => {
       value={{
         questions,
         boardId,
-        loading, // 로딩 상태 제공
+        loading,
         addQuestion,
         updateQuestion,
         deleteQuestion,

@@ -7,8 +7,8 @@ const apiUrl = import.meta.env.API_URL;
 // 선생님 - 상담확인
 export const fetchApiReservationList = async () => {
   const token = localStorage.getItem("USER_TOKEN");
-  const { userId } = await fetchApiUserInitial();
-  const response = await axios.get(`${apiUrl}/v1/consults/${userId}`, {
+  const { teacherId } = await fetchApiUserInitial();
+  const response = await axios.get(`${apiUrl}/v1/consults/${teacherId}`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: token,

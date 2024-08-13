@@ -13,8 +13,6 @@ import com.ssafy.ssam.global.dto.CommonResponseDto;
 
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/v1/chatbots")
 @RequiredArgsConstructor
@@ -22,7 +20,7 @@ public class GPTController {
     private final GPTChatbotService gptChatbotService;
     
     @PostMapping("/teachers/imageupload")
-    public ResponseEntity<CommonResponseDto> uploadImage(@Valid @RequestBody ImageRequestDto imageRequestDto) {
+    public ResponseEntity<CommonResponseDto> uploadImage(@Valid @ModelAttribute ImageRequestDto imageRequestDto) {
         return ResponseEntity.ok(gptChatbotService.uploadNoticeAndImage(imageRequestDto));
     }
 
@@ -32,8 +30,8 @@ public class GPTController {
     }
 
     @GetMapping("/questions")
-    public ResponseEntity<QuestionResponseDto> askQuestion(@Valid @RequestBody QuestionRequestDto questionRequestDto) {
-        return ResponseEntity.ok(gptChatbotService.askQuestion(questionRequestDto));
+    public ResponseEntity<QuestionResponseDto> askQuestion(@Valid @RequestParam("question") String question) {
+        return ResponseEntity.ok(gptChatbotService.askQuestion(question));
     }
 
 }

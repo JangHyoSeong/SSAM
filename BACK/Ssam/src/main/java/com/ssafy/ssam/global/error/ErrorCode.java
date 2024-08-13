@@ -1,5 +1,6 @@
 package com.ssafy.ssam.global.error;
 
+import com.ssafy.ssam.domain.openvidu.dto.RecordingDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,8 @@ public enum ErrorCode {
     ConsultNotFountException(HttpStatus.NOT_FOUND, "존재하지 않는 상담입니다"),
     UnavailableDate(HttpStatus.BAD_REQUEST, "예약이 불가능한 날짜입니다."),
     BadApproveRequest(HttpStatus.BAD_REQUEST, "승인 대기 중인 상담만 승인 가능합니다"),
-
+    
+    
     // boardException
     BoardNotFoundException(HttpStatus.NOT_FOUND, "존재하지 않는 학급입니다."),
     InvalidClassroomData(HttpStatus.BAD_REQUEST, "학급 생성에 필요한 정보가 기입되지 않았습니다"),
@@ -47,11 +49,16 @@ public enum ErrorCode {
 
     // S3Exception
     FileNotFoundException(HttpStatus.NOT_FOUND, "아마존에는 해당 파일이 없습니다"),
+    AmazonError(HttpStatus.BAD_REQUEST, "아마존 요청에서 에러가 발생했습니다"),
 
     // GPTException
     GPTError(HttpStatus.BAD_REQUEST, "GPT 요청에서 에러가 발생했습니다"),
-    BoardDataNotFound(HttpStatus.BAD_REQUEST, "해당 학급에 입력된 정보가 없습니다");
+    BoardDataNotFound(HttpStatus.BAD_REQUEST, "해당 학급에 입력된 정보가 없습니다"),
 
+    // Openvidu Exception
+    FetchError(HttpStatus.BAD_REQUEST,"패치요청에서 에러가 발생했습니다"),
+    SessionError(HttpStatus.BAD_REQUEST, "세션요청에서 에러가 발생했습니다"),
+    RecordError(HttpStatus.BAD_REQUEST, "기록에 에러가 발생했습니다");
 
     private final HttpStatus httpStatus;
     private String errorMessage;

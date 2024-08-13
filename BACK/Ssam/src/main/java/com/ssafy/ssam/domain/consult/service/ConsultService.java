@@ -2,6 +2,7 @@ package com.ssafy.ssam.domain.consult.service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.security.core.Authentication;
@@ -11,12 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.ssam.domain.classroom.repository.BoardRepository;
 import com.ssafy.ssam.domain.consult.dto.request.ConsultRequestDto;
-import com.ssafy.ssam.domain.consult.dto.request.SummaryRequestDto;
 import com.ssafy.ssam.domain.consult.dto.response.UpcomingConsultResponseDTO;
 import com.ssafy.ssam.domain.consult.entity.Appointment;
 import com.ssafy.ssam.domain.consult.entity.AppointmentStatus;
 import com.ssafy.ssam.domain.consult.entity.Consult;
-import com.ssafy.ssam.domain.consult.entity.Summary;
 import com.ssafy.ssam.domain.consult.repository.AppointmentRepository;
 import com.ssafy.ssam.domain.consult.repository.ConsultRepository;
 import com.ssafy.ssam.domain.consult.repository.SummaryRepository;
@@ -85,24 +84,32 @@ public class ConsultService {
     public CommonResponseDto startConsult(String accessCode, String sessionId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        
-        User student = userRepository.findByUserId(userDetails.getUserId())
+
+        User user = userRepository.findByUserId(userDetails.getUserId())
                 .orElseThrow(()->new CustomException(ErrorCode.UserNotFoundException));
         UserBoardRelation relation = userBoardRelationRepository.findByBoardIdAndStatus(userDetails.getBoardId())
                 .orElseThrow(()->new CustomException(ErrorCode.NotFoundStudentInBoardException));
 
         // 1. consult 1) 시작시간 2) att 설정
         Consult consult = consultRepository.findByAccessCode(accessCode).orElseThrow(()->new CustomException(ErrorCode.ConsultNotFountException));
-        if(!consult.getAppointment().getStudent().getUserId().equals(student.getUserId())) {
-            throw new CustomException(ErrorCode.IllegalArgument);
-        }
+
+
+        if(!consult.getAppointment().getStudent().getUserId().equals(user.getUserId())
+        	&&
+        	!consult.getAppointment().getTeacher().getUserId().equals(user.getUserId())
+        	) { throw new CustomException(ErrorCode.IllegalArgument); }
+        // 1. consult 1) 시작시간 2) att 설정 3) sessionId 4) url
         // 1)
         consult.setActualDate(LocalDateTime.now());
         // 2)
         consult.setAttSchool(relation.getUser().getSchool().getSchoolId());
         consult.setAttGrade(relation.getBoard().getGrade());
         consult.setAttClassroom(relation.getBoard().getClassroom());
+        // 3)
         consult.setWebrtcSessionId(sessionId);
+        // 4)
+        consult.setVideoUrl("https://.s3..amazonaws.com/recordings/"+sessionId+"/"+sessionId+".webm");
+
         // 2. appointment 설정
         Appointment appointment = appointmentRepository.findByAppointmentId(consult.getAppointment().getAppointmentId()).orElseThrow(()->new CustomException(ErrorCode.AppointmentNotFoundException));
         appointment.setStatus(AppointmentStatus.DONE);
@@ -114,21 +121,10 @@ public class ConsultService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         // 1. consult 종료시간 기준으로 1) runningtime 수정, 2) S3에서 대화 가져오기 3) content 입력
+        // 2)랑 3)은 SummaryService로 이관
         Consult consult = consultRepository.findByAccessCode(accessCode).orElseThrow(()->new CustomException(ErrorCode.ConsultNotFountException));
-        // 1)
         consult.setRunningTime((int)Duration.between(consult.getActualDate(), LocalDateTime.now()).toMinutes());
-        // 2)
-        String talk = s3TextService.readText(consult.getWebrtcSessionId());
-        // 3)
-        consult.setContent(talk);
-
-        // 2. GPT 입력 1) 연결된 예약찾아서 주제 가져오기 2) 주제, 대화기반 chatGpt 요약
-        // 1)
-        Appointment appointment = appointmentRepository.findByAppointmentId(consult.getAppointment().getAppointmentId()).orElseThrow(()->new CustomException(ErrorCode.AppointmentNotFoundException));
-        // 2)
-        SummaryRequestDto summaryRequestDto = gptSummaryService.GPTsummaryConsult(talk, appointment.getTopic().toString());
-        Summary summary = Summary.toSummary(summaryRequestDto, consult);
-        summaryRepository.save(summary);
+        
 
         return new CommonResponseDto("end consult");
     }
@@ -140,21 +136,21 @@ public class ConsultService {
         Integer userId = userDetails.getUserId();
         LocalDateTime nowDateTime = LocalDateTime.now();
 
-        Consult consult = null;
+        List<Consult> consults = null;
         if (userDetails.getRole().equals(UserRole.TEACHER)) {
-            consult = consultRepository.findUpcomingConsultForTeacher(userId, nowDateTime)
+            consults = consultRepository.findUpcomingConsultForTeacher(userId, nowDateTime)
                     .orElse(null);
         }
         else {
-            consult = consultRepository.findUpcomingConsultForStudent(userId, nowDateTime)
+            consults = consultRepository.findUpcomingConsultForStudent(userId, nowDateTime)
                     .orElse(null);
         }
-        if (consult == null) {
+        if (consults == null) {
             return new UpcomingConsultResponseDTO().builder().build();
         } else {
             return new UpcomingConsultResponseDTO().builder()
-                    .consultId(consult.getConsultId())
-                    .accessCode(consult.getAccessCode())
+                    .consultId(consults.get(0).getConsultId())
+                    .accessCode(consults.get(0).getAccessCode())
                     .build();
         }
     }

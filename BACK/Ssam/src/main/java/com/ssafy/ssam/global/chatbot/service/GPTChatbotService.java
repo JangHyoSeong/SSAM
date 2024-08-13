@@ -17,13 +17,15 @@ import com.ssafy.ssam.global.error.CustomException;
 import com.ssafy.ssam.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -42,16 +44,17 @@ public class GPTChatbotService {
     private final UserRepository userRepository;
     @Value("${gpt.model}")
     private String model;
-
     @Value("${gpt.api.url}")
     private String apiUrl;
+    @Value("${gpt.api.key}")
+    private String apiKey;
 
     private final RestTemplate restTemplate;
     private final S3ImageService s3ImageService;
     private final ChatbotRepository chatbotRepository;
 
     // 학생이 질문하기
-    public QuestionResponseDto askQuestion(QuestionRequestDto questionRequestDto) {
+    public QuestionResponseDto askQuestion(String question) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
@@ -64,23 +67,23 @@ public class GPTChatbotService {
                         (LocalDateTime.now(), board.getBoardId())
                 .orElseThrow(()->new CustomException(ErrorCode.BoardDataNotFound));
 
-        StringBuilder message = new StringBuilder(AnswerPrompt).append("\n");
+        StringBuilder message = new StringBuilder(AnswerPrompt).append("\n----------\n");
         for(String prompt : prompts) {
-            message.append(prompt).append("\n");
+            message.append(prompt).append("\n----------\n");
         }
 
         GPTRequest request =
                 GPTRequest.builder()
                         .model(model)
                         .messages(new ArrayList<>())
-                        .temperature(0.5F)
+                        .temperature(0.6F)
                         .maxTokens(2000)
-                        .topP(0.3F)
-                        .frequencyPenalty(0.8F)
-                        .presencePenalty(0.5F)
+                        .topP(0.4F)
+                        .frequencyPenalty(0.2F)
+                        .presencePenalty(0.15F)
                         .build();
         request.getMessages().add(new Message("system", message.toString()));
-        request.getMessages().add(new Message("user",questionRequestDto.getContent()));
+        request.getMessages().add(new Message("user", question));
 
         GPTResponse chatGPTResponse = restTemplate.postForObject(apiUrl, request, GPTResponse.class);
 
@@ -112,74 +115,89 @@ public class GPTChatbotService {
 
     // 이미지 + 요청인 경우
     public CommonResponseDto uploadNoticeAndImage(ImageRequestDto imageRequestDto) {
-        //이미지 입력 전 prompt 입력
-        GPTImageNotice(imageRequestDto.getContent());
-        //이미지 입력 후 요약 내용 얻기
-        String output = uploadImage(imageRequestDto.getImage());
-        //요약한 내용 DB에 저장
-        uploadNotice(NoticeRequestDto.builder()
-                .content(output+"\n"+imageRequestDto.getContent())
-                .startTime(imageRequestDto.getStartTime())
-                .endTime(imageRequestDto.getEndTime())
-                .build());
-        return new CommonResponseDto("교사 요청 사진 업로드 완");
-    }
-
-
-    // GPT에게 이미지 prompt 전달
-    public void GPTImageNotice(String text) {
-        GPTRequest request =
-                GPTRequest.builder()
-                        .model(model)
-                        .messages(new ArrayList<>())
-                        .temperature(0.5F)
-                        .maxTokens(5000)
-                        .topP(0.3F)
-                        .frequencyPenalty(0.8F)
-                        .presencePenalty(0.5F)
-                        .build();
-        request.getMessages().add(new Message("system", imageUploadPrompt(text)));
-        GPTResponse chatGPTResponse = restTemplate.postForObject(apiUrl, request, GPTResponse.class);
-    }
-    // GPT에게 이미지 전달
-    public String uploadImage(MultipartFile image) {
+        //이미지 입력 후 url 얻기
         String dataUrl = null;
         try{
-            dataUrl = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(image.getBytes());
+            dataUrl = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(imageRequestDto.getImage().getBytes());
         } catch(Exception e) {
             throw new CustomException(ErrorCode.GPTError);
         }
 
-        List<ImageUploadGPTRequest.Content> contents = new ArrayList<>();
-        ImageUploadGPTRequest.Content content = new ImageUploadGPTRequest.Content();
-        content.setType("image_url");
-        content.setImage_url(ImageUploadGPTRequest.ImageUrl.builder().url(dataUrl).build());
+        //이미지 결과 return
+        String output = convertImageToText(dataUrl);
+        //요약한 내용 DB에 저장
+        uploadNotice(NoticeRequestDto.builder()
+                .content(output)
+                .startTime(imageRequestDto.getStartTime())
+                .endTime(imageRequestDto.getEndTime())
+                .build());
+        //안내 내용 저장
+        if(imageRequestDto.getContent() != null) {
+            uploadNotice(NoticeRequestDto.builder()
+                    .content(imageRequestDto.getContent())
+                    .startTime(imageRequestDto.getStartTime())
+                    .endTime(imageRequestDto.getEndTime())
+                    .build());
+        }
+        return new CommonResponseDto("교사 요청 사진 업로드 완");
+    }
 
-//        CustomGPTRequest.Content text = new CustomGPTRequest.Content();
-//        text.setType("text");
-//        text.setText(prompt);
+    public String S3Imageupload(MultipartFile image) {
+        return s3ImageService.upload(image, "gptnotice");
 
-        contents.add(content);
-//        contents.add(text);
+    }
+    public String convertImageToText(String imageUrl){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(apiKey);
+        headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
 
-        ImageUploadGPTRequest.Message message = ImageUploadGPTRequest.Message.builder()
-                .role("user")
-                .content(contents)
-                .build();
+        JSONObject requestBody = new JSONObject()
+                .put("model", model)
+                .put("messages", generateMessage(imageUrl))
+                .put("temperature", 0.3F)
+                .put("max_tokens",10000)
+                .put("top_p", 0.15F)
+                .put("frequency_penalty",0.2F)
+                .put("presence_penalty",0.1F);
 
-        ImageUploadGPTRequest request = ImageUploadGPTRequest.builder()
-                .model(model)
-                .messages(List.of(message))
-                .temperature(0.5F)
-                .maxTokens(1000)
-                .topP(0.3F)
-                .frequencyPenalty(0.8F)
-                .presencePenalty(0.5F)
-                .build();
+        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody.toString(), headers);
+        RestTemplate restTemplate1 = new RestTemplate();
+        ResponseEntity<String> responseEntity = restTemplate1.exchange(apiUrl, HttpMethod.POST, requestEntity, String.class);
 
-        GPTResponse chatGPTResponse = restTemplate.postForObject(apiUrl, request, GPTResponse.class);
-        String imageUrl = s3ImageService.upload(image, "gptnotice");
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            JSONObject responseJson = new JSONObject(responseEntity.getBody());
+            JSONArray choices = responseJson.getJSONArray("choices");
+            if (!choices.isEmpty()) {
+                return choices.getJSONObject(0).getJSONObject("message").getString("content");
+            } else {
+                throw new CustomException(ErrorCode.GPTError);
+            }
+        } else {
+            throw new CustomException(ErrorCode.GPTError);
+        }
+    }
 
-        return chatGPTResponse.getChoices().get(0).getMessage().getContent();
+    private static JSONArray generateMessage(String imageUrl) {
+        JSONArray messages = new JSONArray();
+
+        JSONObject message1 = new JSONObject()
+                .put("role", "system")
+                .put("content", new JSONArray()
+                        .put(new JSONObject()
+                                .put("type", "text")
+                                .put("text", imageUploadPrompt))
+                );
+        JSONObject message2 = new JSONObject()
+                .put("role", "user")
+                .put("content", new JSONArray()
+                        .put(new JSONObject()
+                                .put("type", "image_url")
+                                .put("image_url", new JSONObject()
+                                        .put("url", imageUrl)))
+                );
+
+        messages.put(message1);
+        messages.put(message2);
+        return messages;
     }
 }

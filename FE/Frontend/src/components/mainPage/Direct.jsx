@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./Direct.module.scss";
 import directimg from "../../assets/directimg.png";
 

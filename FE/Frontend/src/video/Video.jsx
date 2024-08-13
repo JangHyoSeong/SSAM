@@ -254,6 +254,7 @@ const VideoChatComponent = () => {
       } catch (error) {
         console.error("Error deleting token:", error);
       }
+      window.location.replace("/"); // 선생님과 학생을 각각 이동시키도록 수정해야함
       session.disconnect();
     }
     setSession(null);

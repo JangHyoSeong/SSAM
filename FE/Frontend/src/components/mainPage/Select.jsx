@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import styles from "./Select.module.scss";
 import teacher from "../../assets/teacher.png";
 import parents from "../../assets/parents.png";

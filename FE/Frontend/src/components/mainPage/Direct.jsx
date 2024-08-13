@@ -18,7 +18,7 @@ const Direct = () => {
     };
   }, []);
 
-  const isVisible = scrollValue >= 1100 && scrollValue <= 1600;
+  const isVisible = scrollValue >= 1100 && scrollValue <= 2000;
 
   const txtArrayStyle = {
     opacity: isVisible ? 1 : 0,

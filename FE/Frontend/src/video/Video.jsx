@@ -32,11 +32,7 @@ const VideoChatComponent = () => {
   const [isCameraOn, setIsCameraOn] = useState(true); // 카메라 상태 관리
   const [isMicOn, setIsMicOn] = useState(true); // 마이크 상태 관리
   const [sttMessages, setSTTMessages] = useState([]); // 음성 인식 메시지 관리
-<<<<<<< HEAD
-  const [tmpMessage, setTmpMessage] = useState(""); // 임시 메시지 관리
-=======
   // const [tmpMessage, setTmpMessage] = useState(""); // 임시 메시지 관리
->>>>>>> KDH
   const OV = useRef(new OpenVidu()); // OpenVidu 인스턴스 생성
   const myUserName = useRef(`user_${Math.floor(Math.random() * 1000) + 1}`); // 사용자 이름 생성
   const chatContainerRef = useRef(null); // 채팅 컨테이너 참조
@@ -54,11 +50,6 @@ const VideoChatComponent = () => {
   const toggleSubTitle = () => {
     setShowSubtitle(!showSubtitle);
   };
-<<<<<<< HEAD
-  // 필터링 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-  const [profanityDetected, setProfanityDetected] = useState(false);
-=======
->>>>>>> KDH
 
   useEffect(() => {
     // 사용자 이름 GET
@@ -91,15 +82,9 @@ const VideoChatComponent = () => {
     }
   }, [chatMessages]);
 
-  const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
-    useSpeechRecognition();
-
   useEffect(() => {
     if (transcript !== lastTranscriptRef.current) {
-<<<<<<< HEAD
-      setTmpMessage(transcript); // 음성 인식 메시지 상태 업데이트
-=======
->>>>>>> KDH
+      // setTmpMessage(transcript); // 음성 인식 메시지 상태 업데이트
       lastTranscriptRef.current = transcript;
 
       if (timeoutRef.current) {
@@ -326,10 +311,7 @@ const VideoChatComponent = () => {
       } else {
         SpeechRecognition.stopListening();
         resetTranscript();
-<<<<<<< HEAD
-        setTmpMessage("");
-=======
->>>>>>> KDH
+        // setTmpMessage("");
         lastTranscriptRef.current = "";
       }
     }
@@ -368,13 +350,6 @@ const VideoChatComponent = () => {
         let consecutiveOffensiveCount = 0;
 
         if (response.data.category === "공격발언") {
-<<<<<<< HEAD
-          setProfanityDetected(true);
-          // 1초 후에 빨간 박스를 제거합니다.
-          setTimeout(() => setProfanityDetected(false), 1000);
-          console.warn("공격발언이 감지되었습니다", response);
-        }
-=======
           consecutiveOffensiveCount = 1;
           console.warn("공격발언이 1회 감지되었습니다");
         }
@@ -407,7 +382,6 @@ const VideoChatComponent = () => {
           data: JSON.stringify(messageData),
           type: "stt",
         });
->>>>>>> KDH
       } catch (error) {
         console.error("비속어 확인 중 오류 발생:", error);
       }
@@ -639,7 +613,7 @@ const VideoChatComponent = () => {
                             ? profileData.name
                             : "상대방"}
                           :
-                        </strong>{" "}
+                        </strong>
                         {msg.message}
                       </div>
                     ))}

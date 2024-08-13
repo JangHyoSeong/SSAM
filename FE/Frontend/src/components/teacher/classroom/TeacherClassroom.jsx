@@ -10,7 +10,8 @@ import TeacherStudent from "./TeacherStudent";
 import TeacherStudentDetail from "./TeacherStudentDetail";
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
 import { fetchQuestionList } from "../../../apis/stub/28-31 문의사항/apiOnlyQuestion";
-import { updateClassImage } from "../../../apis/stub/35-43 학급/apiBanner"; // 수정된 부분
+import { updateClassImage } from "../../../apis/stub/35-43 학급/apiBanner";
+import LoadingSpinner from "../../../common/ModernLoading"; // LoadingSpinner 컴포넌트 임포트
 
 const TeacherClassroom = () => {
   const [banner, setBanner] = useState(""); // 학급 배너
@@ -20,7 +21,8 @@ const TeacherClassroom = () => {
   const [classInfo, setClassInfo] = useState(""); // 배너 정보 내용
   const [isEditingInfo, setIsEditingInfo] = useState(false); // 배너 정보 편집 상태
   const [selectedStudentId, setSelectedStudentId] = useState(null); // 선택된 학생 ID
-  const [uploadedImageUrl, setUploadedImageUrl] = useState(ClassImage); // 업로드된 이미지 URL
+  const [uploadedImageUrl, setUploadedImageUrl] = useState(null); // 업로드된 이미지 URL
+  const [isImageLoading, setIsImageLoading] = useState(true); // 이미지 로딩 상태
   const [questions, setQuestions] = useState([]); // 문의사항 데이터 추가
   const noticeTextRef = useRef(null); // 공지사항 텍스트 영역 참조
   const bannerTextRef = useRef(null); // 배너 정보 텍스트 영역 참조
@@ -38,14 +40,18 @@ const TeacherClassroom = () => {
             Authorization: `${token}`,
           },
         });
+
         setBanner(response.data.banner); // 학급 배너 상태 업데이트
         setNotice(response.data.notice); // 알림 사항 상태 업데이트
+        setUploadedImageUrl(response.data.bannerImg); // 배너 이미지 URL 설정
+        setIsImageLoading(false); // 이미지 로딩 완료 상태로 설정
 
         const questionResponse = await fetchQuestionList(); // 문의사항 데이터 가져오기
         setQuestions(questionResponse.slice(0, 3)); // 문의사항 데이터 최대 3개 가져오기
         console.log("문의사항 데이터:", questionResponse); // 문의사항 데이터 콘솔 출력
       } catch (error) {
         console.error("데이터 불러오기 실패", error);
+        setIsImageLoading(false); // 오류 발생 시 로딩 상태 해제
       }
     };
     classInfoData();
@@ -118,16 +124,18 @@ const TeacherClassroom = () => {
   };
 
   // 이미지 업로드 처리 함수
-  // TeacherClassroom.jsx
   const handleImageUpload = async (e) => {
     const file = e.target.files[0]; // 선택된 파일 객체를 가져옴
     if (file) {
       try {
+        setIsImageLoading(true); // 이미지 업로드 시작 시 로딩 상태로 설정
         await updateClassImage(file); // 파일 객체를 그대로 전달
         // 이미지 URL을 업로드된 이미지로 업데이트
         setUploadedImageUrl(URL.createObjectURL(file));
+        setIsImageLoading(false); // 이미지 로딩 완료 상태로 설정
       } catch (error) {
         console.error("Failed to upload image:", error);
+        setIsImageLoading(false); // 오류 발생 시 로딩 상태 해제
       }
     } else {
       console.error("No file selected.");
@@ -160,11 +168,17 @@ const TeacherClassroom = () => {
         <label htmlFor="file">
           <img src={whiteshare} className={styles.inputFile} />
         </label>
-        <img
-          src={uploadedImageUrl || banner || ClassImage}
-          alt="Class Management"
-          className={styles.classImage}
-        />
+        {isImageLoading ? (
+          <div className={styles.loadingContainer}>
+            <LoadingSpinner /> {/* 로딩 스피너 표시 */}
+          </div>
+        ) : (
+          <img
+            src={uploadedImageUrl || ClassImage} // bannerImg URL 우선 적용
+            alt="Class Management"
+            className={styles.classImage}
+          />
+        )}
       </div>
       <div className={styles.infoBoxes}>
         <div className={styles.noticeBox}>

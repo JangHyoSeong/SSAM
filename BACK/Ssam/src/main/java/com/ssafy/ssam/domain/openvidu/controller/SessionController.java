@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import com.ssafy.ssam.domain.consult.service.ConsultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -50,15 +51,15 @@ import io.openvidu.java.client.Session;
 @RestController
 @RequestMapping("/v1/video")
 public class SessionController {
-	
-	/* openVidu: OpenVidu object as entrypoint of the SDK
-	 * mapSessions: Collection to pair session names and OpenVidu Session objects
-	 * mapSessionNamesTokens: Collection to pair session names and tokens (the inner Map pairs tokens and role associated)
-	 * sessionRecordings: Collection to pair session names and recording objects
-	 * OPENVIDU_URL: URL where our OpenVidu server is listening
-	 * SECRET: Secret shared with our OpenVidu server
-	 */
-	private final OpenVidu openVidu;
+
+    /* openVidu: OpenVidu object as entrypoint of the SDK
+     * mapSessions: Collection to pair session names and OpenVidu Session objects
+     * mapSessionNamesTokens: Collection to pair session names and tokens (the inner Map pairs tokens and role associated)
+     * sessionRecordings: Collection to pair session names and recording objects
+     * OPENVIDU_URL: URL where our OpenVidu server is listening
+     * SECRET: Secret shared with our OpenVidu server
+     */
+    private final OpenVidu openVidu;
     private final Map<String, Session> mapSessions = new ConcurrentHashMap<>();
     private final Map<String, Map<String, OpenViduSessionDto>> sessionUserMapping = new ConcurrentHashMap<>();
     private final Map<String, Boolean> sessionRecordings = new ConcurrentHashMap<>();
@@ -67,7 +68,7 @@ public class SessionController {
     private ConsultRepository consultRepository; // ConsultRepository 주입
     @Autowired
     private ConsultService consultService; // ConsultRepository 주입
-    
+
     public SessionController(@Value("${openvidu.secret:JddU_RuEn5Iqc}") String secret, 
                              @Value("${openvidu.url:https://i11e201.p.ssafy.io:8443/}") String openviduUrl) {
         this.openVidu = new OpenVidu(openviduUrl, secret);
@@ -77,10 +78,14 @@ public class SessionController {
     public ResponseEntity<OpenViduSessionDto> getToken(@RequestBody OpenViduSessionDto requestDto) {
         String accessCode = requestDto.getAccessCode();
         String userId = requestDto.getUserId();
-        
+
+
+
+
+
         // AccessCode로 Consult 엔티티 조회
 //        Optional<Consult> consults = consultRepository.findByAccessCode(accessCode);
-//        
+//
 //        if (consults.isEmpty()) {
 //        	System.out.println("OMG NOT FOUND!!!!");
 //            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -88,10 +93,10 @@ public class SessionController {
 
         String serverData = "{\"userId\":\"" + userId + "\"}";
         ConnectionProperties connectionProperties = new ConnectionProperties.Builder()
-            .type(ConnectionType.WEBRTC)
-            .role(OpenViduRole.PUBLISHER)
-            .data(serverData)
-            .build();
+                .type(ConnectionType.WEBRTC)
+                .role(OpenViduRole.PUBLISHER)
+                .data(serverData)
+                .build();
 
         try {
             Session session = mapSessions.computeIfAbsent(accessCode, k -> {
@@ -104,31 +109,31 @@ public class SessionController {
             Connection c = session.createConnection(connectionProperties);
             System.out.println("SESSION ID::::: " + session.getSessionId());
             OpenViduSessionDto responseDto = OpenViduSessionDto.builder()
-            	.userId(userId)
-            	.accessCode(accessCode)
-                .sessionId(session.getSessionId())
-                .token(c.getToken())
-                .connectionId(c.getConnectionId())
-                .createdAt(c.createdAt())
-                .serverData(serverData)
-                .build();
+                    .userId(userId)
+                    .accessCode(accessCode)
+                    .sessionId(session.getSessionId())
+                    .token(c.getToken())
+                    .connectionId(c.getConnectionId())
+                    .createdAt(c.createdAt())
+                    .serverData(serverData)
+                    .build();
 
             sessionUserMapping.computeIfAbsent(accessCode, k -> new ConcurrentHashMap<>()).put(userId, responseDto);
             if(!accessCode.contains("test")) {
             	consultService.startConsult(accessCode, session.getSessionId());
             }
-            
+
             return ResponseEntity.ok(responseDto);
         } catch (Exception e) {
             throw new RuntimeException("Error generating token", e);
         }
     }
-    
+
     @DeleteMapping("/token")
-    public ResponseEntity<CommonResponseDto> deleteToken(@RequestBody OpenViduSessionDto requestDto) {        
+    public ResponseEntity<CommonResponseDto> deleteToken(@RequestBody OpenViduSessionDto requestDto) {
         String accessCode = requestDto.getAccessCode();
         String userId = requestDto.getUserId();
-        
+
         Map<String, OpenViduSessionDto> sessionUsers = sessionUserMapping.get(accessCode);
         if (sessionUsers != null) {
             sessionUsers.remove(userId);
@@ -143,7 +148,7 @@ public class SessionController {
 
     @DeleteMapping("/session")
     public ResponseEntity<CommonResponseDto> deleteSession(@RequestBody OpenViduSessionDto requestDto) {
-    	String accessCode = requestDto.getAccessCode();
+        String accessCode = requestDto.getAccessCode();
 
         Session session = mapSessions.remove(accessCode);
         if (session != null) {
@@ -162,7 +167,7 @@ public class SessionController {
     @PostMapping("/info")
     public ResponseEntity<OpenViduSessionDto> fetchInfo(@RequestBody OpenViduSessionDto requestDto) {
         String accessCode = requestDto.getAccessCode();
-        
+
         Session session = mapSessions.get(accessCode);
         if (session != null) {
             try {
@@ -180,8 +185,8 @@ public class SessionController {
         try {
             openVidu.fetch();
             List<OpenViduSessionDto> sessionDtos = openVidu.getActiveSessions().stream()
-                .map(this::convertSessionToDto)
-                .collect(Collectors.toList());
+                    .map(this::convertSessionToDto)
+                    .collect(Collectors.toList());
 
             return ResponseEntity.ok(sessionDtos);
         } catch (Exception e) {
@@ -225,18 +230,18 @@ public class SessionController {
 
     private OpenViduSessionDto convertSessionToDto(Session session) {
         return OpenViduSessionDto.builder()
-            .sessionId(session.getSessionId())
-            .createdAt(session.createdAt())
-            .customSessionId(session.getProperties().customSessionId())
-            .recording(session.isBeingRecorded())
-            .mediaMode(session.getProperties().mediaMode().name())
-            .recordingMode(session.getProperties().recordingMode().name())
-            .build();
+                .sessionId(session.getSessionId())
+                .createdAt(session.createdAt())
+                .customSessionId(session.getProperties().customSessionId())
+                .recording(session.isBeingRecorded())
+                .mediaMode(session.getProperties().mediaMode().name())
+                .recordingMode(session.getProperties().recordingMode().name())
+                .build();
     }
 
-	/*******************/
-	/** Recording API **/
-	/*******************/
+    /*******************/
+    /** Recording API **/
+    /*******************/
 
     /*
     @RequestMapping(value = "/recording/start", method = RequestMethod.POST)
@@ -263,16 +268,16 @@ public class SessionController {
 		}
 	}*/
 
-    
+
     @PostMapping("/recording/start")
     public ResponseEntity<RecordingDto> startRecording(@RequestBody RecordingRequestDto requestDto) {
         try {
-        	System.out.println("START RECORDING AT SESSION ID ::: " + requestDto.getSessionId());
+            System.out.println("START RECORDING AT SESSION ID ::: " + requestDto.getSessionId());
             RecordingProperties properties = new RecordingProperties.Builder()
-                .outputMode(requestDto.getOutputMode())
-                .hasAudio(requestDto.isHasAudio())
-                .hasVideo(false)
-                .build();
+                    .outputMode(requestDto.getOutputMode())
+                    .hasAudio(requestDto.isHasAudio())
+                    .hasVideo(false)
+                    .build();
 
             Recording recording = this.openVidu.startRecording(requestDto.getSessionId(), properties);
             this.sessionRecordings.put(requestDto.getSessionId(), true);
@@ -285,7 +290,7 @@ public class SessionController {
     @PostMapping("/recording/stop")
     public ResponseEntity<RecordingDto> stopRecording(@RequestBody RecordingRequestDto requestDto) {
         try {
-        	System.out.println("STOP RECORDING AT SESSION ID ::: " + requestDto.getSessionId());
+            System.out.println("STOP RECORDING AT SESSION ID ::: " + requestDto.getSessionId());
             Recording recording = this.openVidu.stopRecording(requestDto.getSessionId());
             this.sessionRecordings.remove(requestDto.getSessionId());
             return ResponseEntity.ok(convertRecordingToDto(recording));
@@ -319,8 +324,8 @@ public class SessionController {
         try {
             List<Recording> recordings = this.openVidu.listRecordings();
             List<RecordingDto> recordingDtos = recordings.stream()
-                .map(this::convertRecordingToDto)
-                .collect(Collectors.toList());
+                    .map(this::convertRecordingToDto)
+                    .collect(Collectors.toList());
             return ResponseEntity.ok(recordingDtos);
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
             throw new RuntimeException("Error listing recordings", e);
@@ -329,18 +334,18 @@ public class SessionController {
 
     private RecordingDto convertRecordingToDto(Recording recording) {
         return RecordingDto.builder()
-            .id(recording.getId())
-            .sessionId(recording.getSessionId())
-            .name(recording.getName())
-            .outputMode(recording.getOutputMode())
-            .hasAudio(recording.hasAudio())
-            .hasVideo(recording.hasVideo())
-            .duration(recording.getDuration())
-            .size(recording.getSize())
-            .status(recording.getStatus())
-            .url(recording.getUrl())
-            .createdAt(recording.getCreatedAt())
-            .build();
+                .id(recording.getId())
+                .sessionId(recording.getSessionId())
+                .name(recording.getName())
+                .outputMode(recording.getOutputMode())
+                .hasAudio(recording.hasAudio())
+                .hasVideo(recording.hasVideo())
+                .duration(recording.getDuration())
+                .size(recording.getSize())
+                .status(recording.getStatus())
+                .url(recording.getUrl())
+                .createdAt(recording.getCreatedAt())
+                .build();
     }
 
 }

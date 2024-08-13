@@ -115,7 +115,7 @@ public class SessionController {
 
             sessionUserMapping.computeIfAbsent(accessCode, k -> new ConcurrentHashMap<>()).put(userId, responseDto);
             
-            consultService.startConsult(accessCode);
+            consultService.startConsult(accessCode, session.getSessionId());
             return ResponseEntity.ok(responseDto);
         } catch (Exception e) {
             throw new RuntimeException("Error generating token", e);
@@ -135,6 +135,7 @@ public class SessionController {
                 sessionUserMapping.remove(accessCode);
             }
         }
+        consultService.endConsult(accessCode);
         return ResponseEntity.ok(new CommonResponseDto("Token successfully deleted"));
     }
 

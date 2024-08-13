@@ -179,7 +179,7 @@ const VideoChatComponent = () => {
         publishAudio: true,
         publishVideo: true,
         // resolution: "960x400",
-        resolution: '16:9',
+        resolution: "16:9",
         frameRate: 30,
         insertMode: "APPEND",
         mirror: false,
@@ -409,11 +409,21 @@ const VideoChatComponent = () => {
 
   // 토큰을 가져오는 함수
   const getToken = async () => {
+    const token = localStorage.getItem("USER_TOKEN");
     try {
-      const response = await axios.post(`${apiUrl}/v1/video/token`, {
-        accessCode: accessCode,
-        userId: myUserName.current,
-      });
+      const response = await axios.post(
+        `${apiUrl}/v1/video/token`,
+        {
+          accessCode: accessCode,
+          userId: myUserName.current,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+        }
+      );
       console.warn(response.data);
       return response.data;
     } catch (error) {
@@ -545,7 +555,11 @@ const VideoChatComponent = () => {
 
           {/* 화면 */}
           <div className={styles.bottom}>
-          <div className={`${styles.screen} ${!showSubtitle ? styles.fullHeight : ''}`}>
+            <div
+              className={`${styles.screen} ${
+                !showSubtitle ? styles.fullHeight : ""
+              }`}
+            >
               <div className={styles.videoPosition}>
                 {mainStreamManager !== null && (
                   <div className={styles.videoItem}>

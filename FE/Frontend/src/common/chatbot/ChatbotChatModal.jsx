@@ -1,6 +1,5 @@
 import { useState } from "react";
 import styles from "./ChatbotModal.module.scss";
-// import SSAM from "../../assets/SSAM.png";
 import book from "../../assets/book.png";
 import chat from "../../assets/chatblue.png";
 

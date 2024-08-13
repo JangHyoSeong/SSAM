@@ -6,8 +6,7 @@ import round1 from "../../../assets/round1.png";
 import round2 from "../../../assets/round2.png";
 import round3 from "../../../assets/round3.png";
 import google from "../../../assets/google.png";
-// import naver from "../../../assets/naver.png";
-// import kakao from "../../../assets/kakao.png";
+import Swal from "sweetalert2";
 
 const ParentsLogin = () => {
   const { username, password, handleChange, setLoggedIn } = useLoginStore(
@@ -19,7 +18,6 @@ const ParentsLogin = () => {
     })
   );
 
-  // 폼이 제출될 때 호출된다.
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -34,7 +32,11 @@ const ParentsLogin = () => {
     } catch (error) {
       console.error("axios 실패", error);
       if (error.response && error.response.status === 401) {
-        alert("로그인 실패: 아이디 또는 비밀번호가 잘못되었습니다.");
+        Swal.fire({
+          icon: "error",
+          title: "로그인 실패",
+          text: "아이디 또는 비밀번호가 잘못되었습니다.",
+        });
       } else {
         alert(
           "로그인 실패: " + (error.response?.data?.message || error.message)
@@ -78,14 +80,6 @@ const ParentsLogin = () => {
               <img src={google} className={styles.googleImg} alt="google" />
               <p>구글로 시작하세요</p>
             </button>
-            {/* <button type="button" className={styles.naverBtn}>
-              <img src={naver} className={styles.naverImg} alt="naver" />
-              <p>네이버로 시작하세요</p>
-            </button>
-            <button type="button" className={styles.kakaoBtn}>
-              <img src={kakao} className={styles.kakaoImg} alt="kakao" />
-              <p>카카오로 시작하세요</p>
-            </button> */}
           </form>
         </div>
       </div>

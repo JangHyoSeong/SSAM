@@ -172,7 +172,6 @@ const InviteCode = () => {
 
   return (
     <div className={styles.inviteArray}>
-      {/* Welcome Section */}
       <div className={styles.welcomeBox}>
         <h3>
           {profile.name} 선생님

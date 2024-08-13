@@ -28,4 +28,7 @@ public class AppointmentResponseDto {
     private LocalDateTime endTime;
     @NotNull(message = "상태는 Null 일 수 없습니다!")
     private AppointmentStatus status;
+
+    private String accessCode;
+    private Integer consultId;
 }

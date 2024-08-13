@@ -2,6 +2,7 @@ package com.ssafy.ssam.domain.consult.service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.security.core.Authentication;
@@ -135,21 +136,21 @@ public class ConsultService {
         Integer userId = userDetails.getUserId();
         LocalDateTime nowDateTime = LocalDateTime.now();
 
-        Consult consult = null;
+        List<Consult> consults = null;
         if (userDetails.getRole().equals(UserRole.TEACHER)) {
-            consult = consultRepository.findUpcomingConsultForTeacher(userId, nowDateTime)
+            consults = consultRepository.findUpcomingConsultForTeacher(userId, nowDateTime)
                     .orElse(null);
         }
         else {
-            consult = consultRepository.findUpcomingConsultForStudent(userId, nowDateTime)
+            consults = consultRepository.findUpcomingConsultForStudent(userId, nowDateTime)
                     .orElse(null);
         }
-        if (consult == null) {
+        if (consults == null) {
             return new UpcomingConsultResponseDTO().builder().build();
         } else {
             return new UpcomingConsultResponseDTO().builder()
-                    .consultId(consult.getConsultId())
-                    .accessCode(consult.getAccessCode())
+                    .consultId(consults.get(0).getConsultId())
+                    .accessCode(consults.get(0).getAccessCode())
                     .build();
         }
     }

@@ -16,9 +16,11 @@ export const QuestionProvider = ({ children }) => {
   // Context를 통해 넘겨주기 위해 상태관리해야함
   const [questions, setQuestions] = useState([]);
   const [boardId, setBoardId] = useState(null);
+  const [loading, setLoading] = useState(true); // 로딩 상태 추가
   const token = localStorage.getItem("USER_TOKEN");
 
   const fetchQuestions = async () => {
+    setLoading(true); // 로딩 시작
     try {
       const { boardId } = await fetchApiUserInitial();
       if (!boardId) {
@@ -29,6 +31,8 @@ export const QuestionProvider = ({ children }) => {
       setQuestions(Array.isArray(data) ? data : [data]); // 응답이 배열인지 확인
     } catch (error) {
       console.error("Failed to fetch question data:", error);
+    } finally {
+      setLoading(false); // 로딩 종료
     }
   };
 
@@ -81,6 +85,7 @@ export const QuestionProvider = ({ children }) => {
       value={{
         questions,
         boardId,
+        loading, // 로딩 상태 제공
         addQuestion,
         updateQuestion,
         deleteQuestion,

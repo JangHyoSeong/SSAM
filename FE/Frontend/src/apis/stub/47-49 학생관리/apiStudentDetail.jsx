@@ -12,5 +12,6 @@ export const fetchStudentDetail = async (studentId) => {
       },
     })
     .then(console.log(studentId));
+  console.log(response);
   return response.data;
 };

@@ -2,31 +2,33 @@ package com.ssafy.ssam.domain.openvidu.controller;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import com.ssafy.ssam.domain.consult.service.ConsultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.ssam.domain.consult.entity.Consult;
 import com.ssafy.ssam.domain.consult.repository.ConsultRepository;
 import com.ssafy.ssam.domain.consult.service.ConsultService;
 import com.ssafy.ssam.domain.openvidu.dto.OpenViduSessionDto;
 import com.ssafy.ssam.domain.openvidu.dto.RecordingDto;
 import com.ssafy.ssam.domain.openvidu.dto.RecordingRequestDto;
+import com.ssafy.ssam.global.auth.dto.CustomUserDetails;
+import com.ssafy.ssam.global.auth.entity.User;
+import com.ssafy.ssam.global.auth.repository.UserRepository;
 import com.ssafy.ssam.global.dto.CommonResponseDto;
+import com.ssafy.ssam.global.error.CustomException;
+import com.ssafy.ssam.global.error.ErrorCode;
 
 import io.openvidu.java.client.Connection;
 import io.openvidu.java.client.ConnectionProperties;
@@ -59,11 +61,15 @@ public class SessionController {
      * OPENVIDU_URL: URL where our OpenVidu server is listening
      * SECRET: Secret shared with our OpenVidu server
      */
+	
     private final OpenVidu openVidu;
     private final Map<String, Session> mapSessions = new ConcurrentHashMap<>();
     private final Map<String, Map<String, OpenViduSessionDto>> sessionUserMapping = new ConcurrentHashMap<>();
     private final Map<String, Boolean> sessionRecordings = new ConcurrentHashMap<>();
 
+    @Autowired
+    private UserRepository userRepository;
+    
     @Autowired
     private ConsultRepository consultRepository; // ConsultRepository 주입
     @Autowired
@@ -79,9 +85,15 @@ public class SessionController {
         String accessCode = requestDto.getAccessCode();
         String userId = requestDto.getUserId();
 
+        if(!accessCode.contains("test")) {
+        	 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-
-
+             User user = userRepository.findByUserId(userDetails.getUserId())
+                     .orElseThrow(()->new CustomException(ErrorCode.UserNotFoundException));
+        	
+        }
+       
 
         // AccessCode로 Consult 엔티티 조회
 //        Optional<Consult> consults = consultRepository.findByAccessCode(accessCode);

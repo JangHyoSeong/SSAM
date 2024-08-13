@@ -57,22 +57,22 @@ const AlarmModal = () => {
                 {post.alarmTime.split("T")[0]} {post.alarmTime.split("T")[1]}
               </p>
               {post.alarmType === "QUESTION" && (
-                <a href={`${apiUrl}/teacherquestion`}>
+                <a href={`/teacherquestion`}>
                   <p>문의사항을 확인해주세요</p>
                 </a>
               )}
               {post.alarmType === "ANSWER" && (
-                <a href={`${apiUrl}/studentquestion`}>
+                <a href={`/studentquestion`}>
                   <p>문의사항을 확인해주세요</p>
                 </a>
               )}
               {post.alarmType === "REGISTRATION" && (
-                <a href={`${apiUrl}/teacherauthorization`}>
+                <a href={`/teacherauthorization`}>
                   <p>승인 요청을 보냈습니다</p>
                 </a>
               )}
               {post.alarmType === "ACCEPT" && (
-                <a href={`${apiUrl}/studentsubpage`}>
+                <a href={`/studentsubpage`}>
                   <p>승인 요청이 수락되었습니다</p>
                 </a>
               )}

@@ -145,10 +145,10 @@
 
 .videoItem video {
   position: absolute;
-  top: 30%;
+  top: 31.5%;
   left: 2%;
   width: 72%;
-  height: 56%;
+  height: 54%;
   object-fit: cover;
   border-radius: 15px;
   border: 1px solid white;
@@ -216,6 +216,7 @@
   background-color: #f1f3f5;
   align-self: flex-start;
 }
+
 .chatContainer {
   display: flex;
   flex-direction: column;

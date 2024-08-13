@@ -545,7 +545,7 @@ const VideoChatComponent = () => {
 
           {/* 화면 */}
           <div className={styles.bottom}>
-            <div className={styles.screen}>
+          <div className={`${styles.screen} ${!showSubtitle ? styles.fullHeight : ''}`}>
               <div className={styles.videoPosition}>
                 {mainStreamManager !== null && (
                   <div className={styles.videoItem}>

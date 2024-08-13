@@ -6,12 +6,14 @@ import book from "../../assets/bookblue.png";
 import chat from "../../assets/chat.png";
 import upload from "../../assets/upload.png";
 import { NoticeChatbot } from "../../apis/stub/78-80 챗봇/apiTeacherChatBot"; // 경로에 맞게 수정하세요
+import { FamilyChatbot } from "../../apis/stub/78-80 챗봇/apiTeacherFamilyChatBot";
 
 const ChatbotStudyModal = ({ openModal }) => {
   const [inputText, setInputText] = useState("");
   const [messages, setMessages] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   // 한국 시간으로 변환하고, 포맷을 yyyy-MM-ddTHH:mm:ss로 변환하는 함수
   const formatDateToKST = (date) => {
@@ -31,12 +33,24 @@ const ChatbotStudyModal = ({ openModal }) => {
   const handleKeyDown = async (event) => {
     if (event.key === "Enter" && inputText.trim() && startDate && endDate) {
       try {
-        // 한국 시간으로 변환한 startTime과 endTime을 body에 포함하여 API 요청
-        const response = await NoticeChatbot(
-          inputText,
-          formatDateToKST(startDate),
-          formatDateToKST(endDate)
-        );
+        let response;
+
+        if (selectedFile) {
+          // 파일이 선택된 경우
+          response = await FamilyChatbot(
+            inputText,
+            formatDateToKST(startDate),
+            formatDateToKST(endDate),
+            selectedFile
+          );
+        } else {
+          // 파일이 선택되지 않은 경우
+          response = await NoticeChatbot(
+            inputText,
+            formatDateToKST(startDate),
+            formatDateToKST(endDate)
+          );
+        }
 
         setMessages((prevMessages) => [
           ...prevMessages,
@@ -47,7 +61,12 @@ const ChatbotStudyModal = ({ openModal }) => {
       }
 
       setInputText(""); // 입력 필드를 초기화
+      setSelectedFile(null); // 파일 선택 필드를 초기화
     }
+  };
+
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
   };
 
   return (
@@ -88,7 +107,12 @@ const ChatbotStudyModal = ({ openModal }) => {
             />
           </div>
         </div>
-        <input id="file" type="file" className={styles.inputFile} />
+        <input
+          id="file"
+          type="file"
+          className={styles.inputFile}
+          onChange={handleFileChange}
+        />
         <label htmlFor="file">
           <img src={upload} className={styles.uploadImg} alt="Upload" />
         </label>

@@ -77,7 +77,7 @@ public class SessionController {
     public ResponseEntity<OpenViduSessionDto> getToken(@RequestBody OpenViduSessionDto requestDto) {
         String accessCode = requestDto.getAccessCode();
         String userId = requestDto.getUserId();
-
+        
         // AccessCode로 Consult 엔티티 조회
 //        Optional<Consult> consults = consultRepository.findByAccessCode(accessCode);
 //        
@@ -114,8 +114,8 @@ public class SessionController {
                 .build();
 
             sessionUserMapping.computeIfAbsent(accessCode, k -> new ConcurrentHashMap<>()).put(userId, responseDto);
+            if(!accessCode.contains("test")) consultService.startConsult(accessCode, session.getSessionId());
             
-            consultService.startConsult(accessCode, session.getSessionId());
             return ResponseEntity.ok(responseDto);
         } catch (Exception e) {
             throw new RuntimeException("Error generating token", e);
@@ -135,7 +135,7 @@ public class SessionController {
                 sessionUserMapping.remove(accessCode);
             }
         }
-        consultService.endConsult(accessCode);
+        if(!accessCode.contains("test"))  consultService.endConsult(accessCode);
         return ResponseEntity.ok(new CommonResponseDto("Token successfully deleted"));
     }
 

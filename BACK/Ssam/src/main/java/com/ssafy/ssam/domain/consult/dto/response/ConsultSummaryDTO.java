@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class ConsultSummaryDTO {
 
+    private Integer consultId;
     private LocalDate date;
     private Integer runningTime;
     private String consultType;

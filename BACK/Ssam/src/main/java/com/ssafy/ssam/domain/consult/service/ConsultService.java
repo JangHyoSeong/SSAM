@@ -87,8 +87,6 @@ public class ConsultService {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
         User user = userRepository.findByUserId(userDetails.getUserId())
-
-        User student = userRepository.findByUserId(userDetails.getUserId())
                 .orElseThrow(()->new CustomException(ErrorCode.UserNotFoundException));
         UserBoardRelation relation = userBoardRelationRepository.findByBoardIdAndStatus(userDetails.getBoardId())
                 .orElseThrow(()->new CustomException(ErrorCode.NotFoundStudentInBoardException));
@@ -102,10 +100,6 @@ public class ConsultService {
         	!consult.getAppointment().getTeacher().getUserId().equals(user.getUserId())
         	) { throw new CustomException(ErrorCode.IllegalArgument); }
         // 1. consult 1) 시작시간 2) att 설정 3) sessionId 4) url
-        Consult consult = consultRepository.findByAccessCode(accessCode).orElseThrow(()->new CustomException(ErrorCode.ConsultNotFountException));
-        if(!consult.getAppointment().getStudent().getUserId().equals(student.getUserId())) {
-            throw new CustomException(ErrorCode.IllegalArgument);
-        }
         // 1)
         consult.setActualDate(LocalDateTime.now());
         // 2)

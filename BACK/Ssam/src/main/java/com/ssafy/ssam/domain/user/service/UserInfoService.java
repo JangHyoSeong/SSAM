@@ -91,25 +91,27 @@ public class UserInfoService {
 
         User user = userRepository.findByUserId(userDetails.getUserId())
                 .orElseThrow(() -> new CustomException(ErrorCode.Unauthorized));
+        
+//        Board board = null;
+//        List<UserBoardRelation> relation;
+//        if(user.getRole() == UserRole.TEACHER) relation = userBoardRelationRepository.findByUserAndStatus(user, UserBoardRelationStatus.OWNER);
+//        else relation = userBoardRelationRepository.findByUserAndStatus(user, UserBoardRelationStatus.ACCEPTED);
+//        for(UserBoardRelation r : relation) if(r.getBoard().getIsDeprecated() == 0) board = r.getBoard();
+//
+//        Optional<UserBoardRelation> relation2 = userBoardRelationRepository.findByBoardIdAndStatus(board.getBoardId());
+//        Integer teacherId = relation2.get().getUser().getUserId();
+        
 
-        UserBoardRelation relation = userBoardRelationRepository.findByBoardIdAndStatus(userDetails.getBoardId())
-                .orElse(null);
-
-        Integer teacherId = null;
-        if (relation != null) {
-            teacherId = relation.getUser().getUserId();
-        }
-
-        List<UserBoardRelation> relations = userBoardRelationRepository.findByBoardBoardIdAndStatus(userDetails.getBoardId(), UserBoardRelationStatus.ACCEPTED);
-
+        Optional<UserBoardRelation> relation = Optional.of(userBoardRelationRepository.findTeacherByStudentId(user.getUserId()).orElse(null));
+        
         return UserInitialInfoResponseDTO.builder()
                 .userId(user.getUserId())
                 .username(user.getUsername())
                 .name(user.getName())
-                .boardId(userDetails.getBoardId())
+                .boardId(relation.get().getBoard().getBoardId())
                 .role(String.valueOf(user.getRole()))
                 .school(Optional.ofNullable(user.getSchool()).map(School::getName).orElse(null))
-                .teacherId(teacherId)
+                .teacherId(relation.get().getUser().getUserId())
                 .build();
     }
 

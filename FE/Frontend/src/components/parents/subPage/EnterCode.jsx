@@ -1,76 +1,97 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
+import axios from "axios";
 import styles from "./EnterCode.module.scss";
 import ClassEnterModal from "./ClassEnterModal";
 import { useNavigate } from "react-router-dom";
+import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
+
 const apiUrl = import.meta.env.API_URL;
 
 const EnterCode = () => {
   const [isClassModalOpen, setIsClassModalOpen] = useState(false);
-  const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
+  const [boardId, setBoardId] = useState(null);
+  const [profileData, setProfileData] = useState({
+    name: "",
+    school: "",
+  });
+  const [classroomData, setClassroomData] = useState({
+    grade: "",
+    classroom: "",
+  });
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userData = await fetchApiUserInitial();
+        setBoardId(userData.boardId);
+        setProfileData({
+          name: userData.name,
+          school: userData.school,
+        });
+
+        if (userData.boardId) {
+          const classroomResponse = await axios.get(
+            `${apiUrl}/v1/classrooms/${userData.boardId}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: localStorage.getItem("USER_TOKEN"),
+              },
+            }
+          );
+          setClassroomData({
+            grade: classroomResponse.data.grade,
+            classroom: classroomResponse.data.classroom,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const toggleClassModal = () => {
     setIsClassModalOpen(!isClassModalOpen);
   };
 
-  const toggleConsultationModal = () => {
-    setIsConsultationModalOpen(!isConsultationModalOpen);
-  };
-  const navigate = useNavigate(); // useNavigate 훅을 사용해 navigate 정의
-
   const handleConsultationStart = () => {
-    navigate("/video/entry"); // 경로를 videoentry로 이동
+    navigate("/video/entry");
   };
-
-  const useProfile = () => {
-    const [profileData, setProfileData] = useState({
-      name: "",
-    });
-
-    // 유저 닉네임
-    useEffect(() => {
-      const fetchData = async () => {
-        const token = localStorage.getItem("USER_TOKEN");
-        try {
-          const response = await axios.get(`${apiUrl}/v1/users`, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: token,
-            },
-          });
-          setProfileData({
-            name: response.data.name,
-          });
-        } catch (error) {
-          console.error("Failed to fetch profile data:", error);
-        }
-      };
-      fetchData();
-    }, []);
-    return profileData;
-  };
-
-  const profile = useProfile();
 
   return (
     <div className={styles.EnterArray}>
       <div className={styles.welcomeBox}>
         <h3>
-          {profile.name} 님<br /> 환영합니다!
+          {profileData.name} 님<br /> 환영합니다!
         </h3>
       </div>
-      <div className={styles.codeBox}>
-        <h3>
-          선생님께 받은
-          <br /> 초대코드로
-          <br /> 학급을 등록하세요.
-        </h3>
-        <button className={styles.classBtn} onClick={toggleClassModal}>
-          초대코드 입력하기
-        </button>
-        {isClassModalOpen && <ClassEnterModal />}
-      </div>
-      {/* 클릭하면 videoentry 화면으로 이동하도록 수정 */}
+
+      {!boardId ? (
+        <div className={styles.codeBox}>
+          <h3>
+            선생님께 받은
+            <br /> 초대코드로
+            <br /> 학급을 등록하세요.
+          </h3>
+          <button className={styles.classBtn} onClick={toggleClassModal}>
+            초대코드 입력하기
+          </button>
+          {isClassModalOpen && <ClassEnterModal />}
+        </div>
+      ) : (
+        <div className={styles.codeBox}>
+          {profileData.school && <h3>{profileData.school}</h3>}
+          {classroomData.grade && classroomData.classroom && (
+            <h3>
+              {classroomData.grade}학년 {classroomData.classroom}반
+            </h3>
+          )}
+        </div>
+      )}
+
       <div className={styles.codeBox}>
         <h3>
           예정된 상담이

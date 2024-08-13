@@ -11,12 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.ssam.domain.classroom.repository.BoardRepository;
 import com.ssafy.ssam.domain.consult.dto.request.ConsultRequestDto;
-import com.ssafy.ssam.domain.consult.dto.request.SummaryRequestDto;
 import com.ssafy.ssam.domain.consult.dto.response.UpcomingConsultResponseDTO;
 import com.ssafy.ssam.domain.consult.entity.Appointment;
 import com.ssafy.ssam.domain.consult.entity.AppointmentStatus;
 import com.ssafy.ssam.domain.consult.entity.Consult;
-import com.ssafy.ssam.domain.consult.entity.Summary;
 import com.ssafy.ssam.domain.consult.repository.AppointmentRepository;
 import com.ssafy.ssam.domain.consult.repository.ConsultRepository;
 import com.ssafy.ssam.domain.consult.repository.SummaryRepository;
@@ -122,21 +120,10 @@ public class ConsultService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         // 1. consult 종료시간 기준으로 1) runningtime 수정, 2) S3에서 대화 가져오기 3) content 입력
+        // 2)랑 3)은 SummaryService로 이관
         Consult consult = consultRepository.findByAccessCode(accessCode).orElseThrow(()->new CustomException(ErrorCode.ConsultNotFountException));
-        // 1)
         consult.setRunningTime((int)Duration.between(consult.getActualDate(), LocalDateTime.now()).toMinutes());
-        // 2)
-        String talk = "dummy 데이터"; //s3TextService.readText(consult.getWebrtcSessionId());
-        // 3)
-        consult.setContent(talk);
-
-        // 2. GPT 입력 1) 연결된 예약찾아서 주제 가져오기 2) 주제, 대화기반 chatGpt 요약
-        // 1)
-        Appointment appointment = appointmentRepository.findByAppointmentId(consult.getAppointment().getAppointmentId()).orElseThrow(()->new CustomException(ErrorCode.AppointmentNotFoundException));
-        // 2)
-        SummaryRequestDto summaryRequestDto = gptSummaryService.GPTsummaryConsult(talk, appointment.getTopic().toString());
-        Summary summary = Summary.toSummary(summaryRequestDto, consult);
-        summaryRepository.save(summary);
+        
 
         return new CommonResponseDto("end consult");
     }

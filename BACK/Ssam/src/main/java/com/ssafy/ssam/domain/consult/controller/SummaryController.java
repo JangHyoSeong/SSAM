@@ -20,7 +20,6 @@ public class SummaryController {
 
     @GetMapping("/teachers/{consultId}")
     public ResponseEntity<ConsultSummaryDetailResponseDto> getConsult(@PathVariable Integer consultId) {
-//        log.info("getConsults consultId: {}", consultId);
         return ResponseEntity.ok(summaryService.getConsultsAndSummaryDetails(consultId));
     }
 }

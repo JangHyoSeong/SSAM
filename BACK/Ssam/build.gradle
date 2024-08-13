@@ -21,6 +21,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -57,6 +58,9 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     implementation 'org.json:json:20230227'
+    
+    // https://docs.komoran.kr/firststep/installation.html
+	implementation 'com.github.shin285:KOMORAN:3.3.9'
 }
 
 tasks.named('test') {

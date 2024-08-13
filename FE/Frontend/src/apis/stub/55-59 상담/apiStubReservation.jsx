@@ -14,7 +14,7 @@ export const fetchApiReservationList = async () => {
       Authorization: token,
     },
   });
-  console.log(response.data);
+  console.log("상담확인", response.data);
   return response.data; // 응답 데이터 반환
 };
 

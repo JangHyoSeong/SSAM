@@ -5,6 +5,7 @@ import { useConsultation } from "../../../store/ConsultationStore";
 import styles from "./TeacherConsultationList.module.scss";
 import ConsultationApproveModal from "./ConsultationApproveModal";
 import ConsultationCancelModal from "./ConsultationCancelModal";
+import LoadingSpinner from "../../../common/ModernLoading";
 import Swal from "sweetalert2";
 
 // topic db랑 화면 매핑
@@ -236,7 +237,7 @@ const TeacherConsultationList = () => {
         );
   }, [consultations, activeFilters]);
 
-  if (loading) return <div></div>;
+  if (loading) return <LoadingSpinner />;
   if (error) return <div>에러: {error}</div>;
 
   return (

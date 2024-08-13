@@ -322,17 +322,35 @@ const VideoChatComponent = () => {
     if (chatInput.trim() !== "" && session) {
       const messageData = {
         message: chatInput,
-        from: myUserName.current,
+        from: profileData.name, // .current 대신 .name 사용
         connectionId: session.connection.connectionId,
       };
       session.signal({
         data: JSON.stringify(messageData),
         type: "chat",
       });
-      setChatMessages((prevMessages) => [...prevMessages, messageData]);
       setChatInput("");
     }
   };
+
+  // 세션이 변경될 때 채팅 메시지를 수신하는 이벤트 리스너 추가
+  useEffect(() => {
+    if (session) {
+      session.on("signal:chat", (event) => {
+        const data = JSON.parse(event.data);
+        setChatMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            ...data,
+            from:
+              data.connectionId === session.connection.connectionId
+                ? data.from // 본인 메시지의 경우 원래 이름 유지
+                : "상대방", // 다른 사람의 메시지는 '상대방'으로 표시
+          },
+        ]);
+      });
+    }
+  }, [session]);
 
   const sendSTTMessage = async (text) => {
     if (text.trim() !== "" && session) {
@@ -385,38 +403,8 @@ const VideoChatComponent = () => {
       } catch (error) {
         console.error("비속어 확인 중 오류 발생:", error);
       }
-      session.signal({
-        data: JSON.stringify(messageData),
-        type: "stt",
-      });
-      setSTTMessages((prevMessages) => {
-        const newMessages = [...prevMessages, messageData];
-        return newMessages.slice(-5); // 최대 5개의 메시지만 유지
-      });
-      setTmpMessage(""); // 임시 메시지 초기화
     }
   };
-  // 세션이 변경될 때 채팅 메시지를 수신하는 이벤트 리스너 추가
-  useEffect(() => {
-    if (session) {
-      session.on("signal:chat", (event) => {
-        const data = JSON.parse(event.data);
-        if (data.connectionId !== session.connection.connectionId) {
-          setChatMessages((prevMessages) => [...prevMessages, data]);
-        }
-      });
-
-      session.on("signal:stt", (event) => {
-        const data = JSON.parse(event.data);
-        if (data.connectionId !== session.connection.connectionId) {
-          setSTTMessages((prevMessages) => {
-            const newMessages = [...prevMessages, data];
-            return newMessages.slice(-5); // 최대 5개의 메시지만 유지
-          });
-        }
-      });
-    }
-  }, [session]);
 
   // 토큰을 가져오는 함수
   const getToken = async () => {
@@ -425,6 +413,7 @@ const VideoChatComponent = () => {
         accessCode: accessCode,
         userId: myUserName.current,
       });
+      console.warn(response.data);
       return response.data;
     } catch (error) {
       console.error("Error getting token:", error);
@@ -582,8 +571,8 @@ const VideoChatComponent = () => {
                             {msg.connectionId ===
                             session.connection.connectionId
                               ? profileData.name
-                              : "상대방"}
-                            :
+                              : "상대방"}{" "}
+                            :{" "}
                           </strong>
                           {msg.message}
                         </div>
@@ -611,8 +600,8 @@ const VideoChatComponent = () => {
                         <strong>
                           {msg.connectionId === session.connection.connectionId
                             ? profileData.name
-                            : "상대방"}
-                          :
+                            : "상대방"}{" "}
+                          :{" "}
                         </strong>
                         {msg.message}
                       </div>

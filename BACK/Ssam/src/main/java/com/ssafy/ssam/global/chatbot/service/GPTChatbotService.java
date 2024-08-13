@@ -69,9 +69,10 @@ public class GPTChatbotService {
 
         StringBuilder message = new StringBuilder(AnswerPrompt).append("\n");
         for(String prompt : prompts) {
-            message.append(prompt).append("\n");
+            message.append(prompt).append("\n------------------------------------------------------------\n");
         }
 
+        System.out.println(message);
         GPTRequest request =
                 GPTRequest.builder()
                         .model(model)
@@ -116,9 +117,15 @@ public class GPTChatbotService {
     // 이미지 + 요청인 경우
     public CommonResponseDto uploadNoticeAndImage(ImageRequestDto imageRequestDto) {
         //이미지 입력 후 url 얻기
-        String imageUrl = S3Imageupload(imageRequestDto.getImage());
+        String dataUrl = null;
+        try{
+            dataUrl = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(imageRequestDto.getImage().getBytes());
+        } catch(Exception e) {
+            throw new CustomException(ErrorCode.GPTError);
+        }
+
         //이미지 결과 return
-        String output = convertImageToText(imageUrl);
+        String output = convertImageToText(dataUrl);
         //요약한 내용 DB에 저장
         uploadNotice(NoticeRequestDto.builder()
                 .content(output)
@@ -126,11 +133,13 @@ public class GPTChatbotService {
                 .endTime(imageRequestDto.getEndTime())
                 .build());
         //안내 내용 저장
-        uploadNotice(NoticeRequestDto.builder()
-                .content(imageRequestDto.getContent())
-                .startTime(imageRequestDto.getStartTime())
-                .endTime(imageRequestDto.getEndTime())
-                .build());
+        if(imageRequestDto.getContent() != null) {
+            uploadNotice(NoticeRequestDto.builder()
+                    .content(imageRequestDto.getContent())
+                    .startTime(imageRequestDto.getStartTime())
+                    .endTime(imageRequestDto.getEndTime())
+                    .build());
+        }
         return new CommonResponseDto("교사 요청 사진 업로드 완");
     }
 
@@ -146,14 +155,15 @@ public class GPTChatbotService {
         JSONObject requestBody = new JSONObject()
                 .put("model", model)
                 .put("messages", generateMessage(imageUrl))
-                .put("temperature", 0.5F)
-                .put("maxTokens",4000)
-                .put("topP", 0.3F)
-                .put("frequencyPenalty",0.8F)
-                .put("presencePenalty",0.5F);
+                .put("temperature", 0.3F)
+                .put("max_tokens",10000)
+                .put("top_p", 0.15F)
+                .put("frequency_penalty",0.2F)
+                .put("presence_penalty",0.1F);
 
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody.toString(), headers);
-        ResponseEntity<String> responseEntity = restTemplate.exchange(apiUrl, HttpMethod.POST, requestEntity, String.class);
+        RestTemplate restTemplate1 = new RestTemplate();
+        ResponseEntity<String> responseEntity = restTemplate1.exchange(apiUrl, HttpMethod.POST, requestEntity, String.class);
 
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
             JSONObject responseJson = new JSONObject(responseEntity.getBody());
@@ -169,17 +179,26 @@ public class GPTChatbotService {
     }
 
     private static JSONArray generateMessage(String imageUrl) {
-        JSONObject message = new JSONObject()
-                .put("role", "user")
+        JSONArray messages = new JSONArray();
+
+        JSONObject message1 = new JSONObject()
+                .put("role", "system")
                 .put("content", new JSONArray()
                         .put(new JSONObject()
                                 .put("type", "text")
                                 .put("text", imageUploadPrompt))
+                );
+        JSONObject message2 = new JSONObject()
+                .put("role", "user")
+                .put("content", new JSONArray()
                         .put(new JSONObject()
                                 .put("type", "image_url")
                                 .put("image_url", new JSONObject()
                                         .put("url", imageUrl)))
                 );
-        return new JSONArray().put(message);
+
+        messages.put(message1);
+        messages.put(message2);
+        return messages;
     }
 }

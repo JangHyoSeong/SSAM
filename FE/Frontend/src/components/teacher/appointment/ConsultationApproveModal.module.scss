@@ -11,7 +11,7 @@
 }
 
 .modalContent {
-  border: 10px solid #D0E0FE;
+  border: 10px solid #d0e0fe;
   width: 25%;
   height: 35%;
   background: white;
@@ -26,7 +26,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #D0E0FE;
+  background-color: #d0e0fe;
 }
 
 .content {
@@ -66,62 +66,3 @@
     background-color: #dfdfdf;
   }
 }
-
-// .modalOverlay {
-//   position: fixed;
-//   top: 0;
-//   left: 0;
-//   width: 100%;
-//   height: 100%;
-//   background-color: rgba(0, 0, 0, 0.5);
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   z-index: 1000;
-// }
-
-// .modalContent {
-//   width: 270px;
-//   height: 150px;
-//   background: white;
-//   padding: 2rem;
-//   border-radius: 8px; /* 더 부드러운 모서리 */
-//   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
-//   text-align: center;
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: center;
-//   align-items: center;
-// }
-
-// .buttonContainer {
-//   display: flex;
-//   justify-content: center;
-//   margin-top: 1.5rem; /* 버튼을 아래로 내리기 위해 값을 증가 */
-  
-//   button {
-//     padding: 0.5rem 1rem;
-//     border: none;
-//     border-radius: 25px;
-//     cursor: pointer;
-//     transition: background-color 0.3s ease;
-//     margin: 0 1rem;
-//     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
-//   }
-// }
-
-// .approveButton {
-//   background-color: #dce7fc;
-
-//   &:hover {
-//     background-color: #b9d0fc;
-//   }
-// }
-
-// .closeButton {
-//   background-color: #ffffff;
-
-//   &:hover {
-//     background-color: #e4e4e4;
-//   }
-// }

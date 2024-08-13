@@ -55,13 +55,15 @@
 
 .imageContainer {
   width: 100%;
+  height: 600px;
   display: flex;
   justify-content: center;
 }
 
 .classImage {
-  max-width: 100%;
-  height: auto;
+  width: 100%;
+  height: 600px;
+  object-fit: cover; /* 이미지 비율을 무시하고 컨테이너를 채우도록 설정 */
 }
 
 .infoBoxes {
@@ -95,19 +97,19 @@
 
 .noticeBox h2 {
   position: absolute;
-  top: 1vh; /* 원하는 위치 조정 */
-  left: 1vw; /* 원하는 위치 조정 */
-  width: calc(100% - 2vw); /* 여백을 고려하여 너비 설정 */
+  top: 1vh;
+  left: 1vw;
+  width: calc(100% - 2vw);
   border-bottom: 2px solid #dce7fc;
-  margin: 0; /* 제목의 기본 마진 제거 */
-  padding-bottom: 1vh; /* 하단 패딩 추가 */
+  margin: 0;
+  padding-bottom: 1vh;
 }
 
 .noticeBox p {
   position: absolute;
-  top: 9.3vh; /* 원하는 위치 조정 */
-  left: 2.3vw; /* 원하는 위치 조정 */
-  width: calc(100% - 3vw); /* 여백을 고려하여 너비 설정 */
+  top: 9.3vh;
+  left: 2.3vw;
+  width: calc(100% - 3vw);
   white-space: pre-wrap;
 }
 
@@ -146,19 +148,19 @@
 
 .classInfoBox h2 {
   position: absolute;
-  top: 1vh; /* 원하는 위치 조정 */
-  left: 1vw; /* 원하는 위치 조정 */
-  width: calc(100% - 2vw); /* 여백을 고려하여 너비 설정 */
+  top: 1vh;
+  left: 1vw;
+  width: calc(100% - 2vw);
   border-bottom: 2px solid white;
-  margin: 0; /* 제목의 기본 마진 제거 */
-  padding-bottom: 1vh; /* 하단 패딩 추가 */
+  margin: 0;
+  padding-bottom: 1vh;
 }
 
 .classInfoBox p {
   position: absolute;
-  top: 9.3vh; /* 원하는 위치 조정 */
-  left: 2.3vw; /* 원하는 위치 조정 */
-  width: calc(100% - 3vw); /* 여백을 고려하여 너비 설정 */
+  top: 9.3vh;
+  left: 2.3vw;
+  width: calc(100% - 3vw);
   white-space: pre-wrap;
 }
 
@@ -191,18 +193,18 @@
 
 .inquiryBox {
   border: 3px solid #dce7fc;
-  position: relative; /* 제목을 왼쪽 상단에 위치시키기 위해 position 속성 추가 */
-  text-align: left; /* 박스 전체 내용 좌측 정렬 */
+  position: relative;
+  text-align: left;
 }
 
 .inquiryBox h2 {
   position: absolute;
-  top: 1vh; /* 원하는 위치 조정 */
-  left: 1vw; /* 원하는 위치 조정 */
-  width: calc(100% - 2vw); /* 여백을 고려하여 너비 설정 */
+  top: 1vh;
+  left: 1vw;
+  width: calc(100% - 2vw);
   border-bottom: 2px solid #dce7fc;
-  margin: 0; /* 제목의 기본 마진 제거 */
-  padding-bottom: 1vh; /* 하단 패딩 추가 */
+  margin: 0;
+  padding-bottom: 1vh;
 }
 
 .inquiryBox .inquiryItem {
@@ -212,7 +214,7 @@
 }
 
 .inquiryBox .inquiryItem:hover {
-  color: #5285ee; /* 호버 시 글자 색 변경 */
+  color: #5285ee;
 }
 
 .headerSeparator {

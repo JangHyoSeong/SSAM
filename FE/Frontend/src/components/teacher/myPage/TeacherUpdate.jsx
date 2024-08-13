@@ -66,18 +66,14 @@ const TeacherUpdate = () => {
     const formData = new FormData();
     formData.append("school", profile.school || "");
     formData.append("selfPhone", profile.selfPhone || "");
+    formData.append("otherPhone", profile.otherPhone || "");
 
     if (profile.profileImage instanceof File) {
       formData.append("profileImage", profile.profileImage);
-    } else if (
-      typeof profile.profileImage === "string" &&
-      profile.profileImage
-    ) {
-      console.log(
-        "Profile image is a string (URL), skipping form data append."
-      );
-    } else {
-      formData.append("profileImage", "");
+    } else if (profile.profileImage === "") {
+      formData.append("profileImage", new Blob([null], { type: "image/jpeg" }));
+      // 또는
+      // formData.append("profileImage", null);
     }
 
     console.log("FormData to be sent:");
@@ -102,7 +98,7 @@ const TeacherUpdate = () => {
           popup: "my-swal-popup",
           confirmButton: "my-swal-confirm-button",
         },
-        width: "auto", // 기본 옵션에서 width 설정을 auto로 변경
+        width: "auto",
       });
 
       console.log("Profile updated successfully:", response.data);

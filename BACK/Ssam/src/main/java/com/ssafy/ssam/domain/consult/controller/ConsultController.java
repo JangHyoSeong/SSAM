@@ -1,22 +1,11 @@
 package com.ssafy.ssam.domain.consult.controller;
 
-import com.ssafy.ssam.domain.consult.dto.request.AppointmentRequestDto;
-import com.ssafy.ssam.domain.consult.dto.response.AppointmentResponseDto;
-import com.ssafy.ssam.domain.consult.dto.response.ConsultResponseDto;
-import com.ssafy.ssam.domain.consult.dto.response.ConsultSummaryDetailResponseDto;
+import com.ssafy.ssam.domain.consult.dto.response.UpcomingConsultResponseDTO;
 import com.ssafy.ssam.domain.consult.service.ConsultService;
-import com.ssafy.ssam.domain.consult.service.SummaryService;
-import com.ssafy.ssam.global.amazonS3.service.S3TextService;
-import com.ssafy.ssam.global.dto.CommonResponseDto;
-import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,6 +13,13 @@ import java.util.List;
 @RequestMapping("/v1/consults")
 public class ConsultController {
     private final ConsultService consultService;
+
+    // 유저 기준 가장 최근의 상담 하나 불러오는 컨트롤러
+    @GetMapping("/check")
+    public ResponseEntity<UpcomingConsultResponseDTO> getUpcomingConsult() {
+        return ResponseEntity.ok(consultService.getUpcomingConsult());
+    }
+
 
 //    @GetMapping("/test")
 //    public ResponseEntity<CommonResponseDto> test() {

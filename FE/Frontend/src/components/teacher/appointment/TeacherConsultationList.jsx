@@ -37,7 +37,7 @@ const ConsultationItem = ({
   // 비디오 링크
   const handleConsult = () => {
     if (accessCode) {
-      window.open("http://localhost:3000/video/CRHDNAP", "_blank");
+      window.open(`http://localhost:3000/video/${accessCode}`, "_blank");
     } else {
       console.error("Access code not found for this consultation");
       // 사용자에게 오류 메시지 표시

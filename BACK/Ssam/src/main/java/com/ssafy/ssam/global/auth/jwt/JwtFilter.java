@@ -1,8 +1,6 @@
 package com.ssafy.ssam.global.auth.jwt;
 
 import com.ssafy.ssam.global.auth.dto.CustomUserDetails;
-import com.ssafy.ssam.global.error.CustomException;
-import com.ssafy.ssam.global.error.ErrorCode;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,10 +24,9 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String authorization = request.getHeader("Authorization");
-        System.out.println(authorization);
+
         try{
             if(authorization == null || !authorization.startsWith("Bearer ")) {
-                System.out.println("Token null");
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -39,7 +36,6 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = authorization.split(" ")[1];
 
             if(jwtUtil.isExpired(token)) {
-                System.out.println("Token expired");
                 filterChain.doFilter(request, response);
                 return;
             }

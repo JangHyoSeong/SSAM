@@ -5,7 +5,6 @@ import com.ssafy.ssam.domain.user.entity.UserBoardRelation;
 import com.ssafy.ssam.domain.consult.entity.Appointment;
 import com.ssafy.ssam.domain.user.entity.Alarm;
 import com.ssafy.ssam.domain.classroom.entity.Question;
-//import com.ssafy.ssam.domain.user.converter.UserRoleConverter;
 import com.ssafy.ssam.domain.user.dto.response.UserDto;
 import com.ssafy.ssam.global.auth.dto.request.JoinRequestDto;
 import jakarta.persistence.*;
@@ -55,7 +54,6 @@ public class User {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-//    @Convert(converter = UserRoleConverter.class)
     @Column(nullable = false)
     private UserRole role;
 
@@ -81,9 +79,6 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(unique = true, nullable = false)
-    private String oAuth2Id;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserBoardRelation> boards = new ArrayList<>();
 
@@ -98,13 +93,6 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Alarm> alarms = new ArrayList<>();
-
-//    @OneToMany(mappedBy = "student", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-//    private List<Manage> followings = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-//    private List<Manage> followers = new ArrayList<>();
-
 
     public UserDto toUserDto(User userEntity) {
         return UserDto.builder()

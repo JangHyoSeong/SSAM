@@ -13,6 +13,7 @@ import com.ssafy.ssam.global.error.ErrorCode;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.CustomEntityDirtinessStrategy;
 import org.springframework.security.core.Authentication;
@@ -35,72 +36,33 @@ public class CustomOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
     private final OAuthUserRepository oAuthUserRepository;
+    private final HttpSession httpSession;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+
+        // 유저의 social login 정보를 가져옴
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-        String email = oAuth2User.getAttribute("email");
         String providerId = oAuth2User.getAttribute("sub");
         String provider = ((OAuth2AuthenticationToken) authentication).getAuthorizedClientRegistrationId();
 
-
-        // state 파라미터에서 원래 사용자 ID 추출
-//        String state = request.getParameter("state");
-//        Integer userId = extractUserIdFromState(state);
-
+        // 기존의 OAuthUser 엔티티가 있는지 검색
         OAuthUser linkedOAuthUser = oAuthUserRepository.findByProviderAndProviderId(provider, providerId)
                 .orElse(null);
 
+        // 있다면 로그인 시작
         if (linkedOAuthUser != null) {
-            // 이미 연결된 계정이 있는 경우
             User user = linkedOAuthUser.getUser();
             loginUser(response, user);
-        } else {
-            // 현재 로그인된 사용자와 OAuth 계정 연결
-            User user = userRepository.findByEmail(email)
-                    .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
-
-            OAuthUser newOAuthUser = new OAuthUser();
-            newOAuthUser.setEmail(email);
-            newOAuthUser.setProvider(provider);
-            newOAuthUser.setProviderId(providerId);
-            newOAuthUser.setUser(user);
-            oAuthUserRepository.save(newOAuthUser);
-
-            String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/account-linked")
-                    .build().toUriString();
-            response.sendRedirect(redirectUrl);
         }
-//        else {
-//            // 연결할 계정이 없는 경우
-//            String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/login")
-//                    .queryParam("error", "No linked account found")
-//                    .build().toUriString();
-//            response.sendRedirect(redirectUrl);
-//        }
-    }
 
-    private Integer extractUserIdFromState(String state) {
-        try {
-            if (state != null) {
-                // URL 디코딩 후 Base64 디코딩
-                System.out.println(state);
-                String decodedState = new String(Base64.getDecoder().decode(URLDecoder.decode(state, StandardCharsets.UTF_8)));
-                System.out.println(decodedState);
-                JsonNode jsonNode = new ObjectMapper().readTree(decodedState);
-                return jsonNode.get("userId").asInt();
-            }
-        } catch (Exception e) {
-            logger.error("Error decoding state: ", e);
-        }
-        return null;
     }
 
     private void loginUser(HttpServletResponse response, User user) throws IOException {
+        // 로그인 구현. 토큰을 queryparameter에 보냄
         String token = jwtUtil.createJwt(user.getUsername(), user.getRole().name(), user.getUserId(), null, 3600000L);
         String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/auth/oauth-response/" + token)
                 .build().toUriString();
         response.sendRedirect(redirectUrl);
     }
-
 }

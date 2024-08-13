@@ -120,28 +120,10 @@ const TeacherUpdate = () => {
     window.location.reload(); // 페이지 새로고침
   };
 
-  const handleLinkGoogleAccount  = async () => {
-    try {
-      const userData = await fetchApiUserInitial();
-      const currentUserId = userData.userId;
-
-      if (!currentUserId) {
-        return;
-      }
-
-      // const state = btoa(JSON.stringify({ userId: currentUserId }));
-      const state = encodeURIComponent(JSON.stringify({ userId: currentUserId }));
-
-      window.location.href = `http://localhost:8081/oauth2/authorization/google?state=${state}`;
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-      // 에러 처리: 사용자에게 오류 메시지를 표시하거나 다른 처리를 수행할 수 있습니다.
-    }
-  };
   // Function to handle Google Account linking
-  // const handleLinkGoogleAccount = () => {
-  //   window.location.href = "http://localhost:8081/oauth2/authorization/google";
-  // };
+  const handleLinkGoogleAccount = () => {
+    window.location.href = "http://localhost:8081/oauth2/authorization/google";
+  };
 
   return (
     <div className={styles.Container}>

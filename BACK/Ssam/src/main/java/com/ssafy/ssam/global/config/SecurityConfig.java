@@ -1,8 +1,6 @@
 package com.ssafy.ssam.global.config;
 
 import com.ssafy.ssam.global.auth.handler.CustomOAuthSuccessHandler;
-//import com.ssafy.ssam.global.auth.handler.OAuth2LoginFailureHandler;
-//import com.ssafy.ssam.global.auth.handler.OAuth2LoginSuccessHandler;
 import com.ssafy.ssam.global.auth.service.CustomOAuth2UserService;
 import com.ssafy.ssam.global.error.CustomAccessDeniedHandler;
 import com.ssafy.ssam.global.error.CustomAuthenticationEntryPoint;
@@ -15,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
@@ -37,9 +34,7 @@ public class SecurityConfig {
     private final CorsFilter corsFilter;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
-//    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
-//    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
-    private final OAuth2UserService oAuth2UserService;
+    private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomOAuthSuccessHandler customOAuth2SuccessHandler;
 
     @Bean
@@ -53,7 +48,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, CustomOAuth2UserService customOAuth2UserService) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .cors(cors -> {})
                 .csrf(AbstractHttpConfigurer::disable)
@@ -62,17 +57,18 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/v1/auth/**", "/v1/schools", "/v1/video/**", "/v1/gpt/**").permitAll()
+                        .requestMatchers("/v1/auth/**", "/v1/schools", "/v1/video/**", "/v1/gpt/**", "/oauth2/authorization/**").permitAll()
                         .requestMatchers("/v1/**").authenticated()
                         .requestMatchers("/v1/classrooms/answers/**", "/v1/classrooms/teachers/**", "/v1/consults/teachers/**").hasRole("TEACHER")
                         .anyRequest().permitAll())
-                .oauth2Login((oauth2) -> oauth2
-                        .defaultSuccessUrl("/v1/auth/google", true)
-                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
-                                .userService(customOAuth2UserService))
-                        .successHandler(customOAuth2SuccessHandler))
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(customOAuth2UserService)
+                        )
+                        .successHandler(customOAuth2SuccessHandler)
+                )
                 .with(new Custom(authenticationManager(authenticationConfiguration), jwtUtil), Custom::getClass)
                 .build();
     }

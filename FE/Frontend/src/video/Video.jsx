@@ -364,7 +364,7 @@ const VideoChatComponent = () => {
         const response = await axios.post(`${apiUrl}/v1/profanity/check`, {
           message: text,
         });
-
+        console.warn(response.data);
         let consecutiveOffensiveCount = 0;
 
         if (response.data.category === "공격발언") {
@@ -570,7 +570,8 @@ const VideoChatComponent = () => {
                           <strong>
                             {msg.connectionId ===
                             session.connection.connectionId
-                              ? profileData.name
+                              ? (profileData.name == ""?
+                              "익명" : profileData.name)
                               : "상대방"}{" "}
                             :{" "}
                           </strong>

@@ -199,7 +199,7 @@ const InviteCode = () => {
           </>
         ) : (
           <>
-            <h3>학급 만들기를 통해 초대코드를 생성하세요.</h3>
+            <h3>학급 만들기를 통해 <br></br>초대코드를 생성하세요.</h3>
             <button className={styles.classBtn} onClick={toggleModal}>
               학급 생성
             </button>

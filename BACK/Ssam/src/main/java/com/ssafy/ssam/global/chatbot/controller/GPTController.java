@@ -30,8 +30,8 @@ public class GPTController {
     }
 
     @GetMapping("/questions")
-    public ResponseEntity<QuestionResponseDto> askQuestion(@Valid @RequestBody QuestionRequestDto questionRequestDto) {
-        return ResponseEntity.ok(gptChatbotService.askQuestion(questionRequestDto));
+    public ResponseEntity<QuestionResponseDto> askQuestion(@Valid @RequestParam("question") String question) {
+        return ResponseEntity.ok(gptChatbotService.askQuestion(question));
     }
 
 }

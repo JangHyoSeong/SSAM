@@ -3,9 +3,10 @@ import { FaTrash, FaEdit, FaSave } from "react-icons/fa";
 import { useQuestions } from "../../../store/QuestionStore";
 import TeacherDeleteModal from "./TeacherDeleteModal";
 import styles from "./TeacherQuestion.module.scss";
+import LoadingSpinner from "../../../common/ModernLoading";
 
 const TeacherQuestion = () => {
-  const { questions, updateQuestion, deleteQuestion } = useQuestions();
+  const { questions, updateQuestion, deleteQuestion, loading } = useQuestions();
   const [editingQuestionId, setEditingQuestionId] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [questionToDelete, setQuestionToDelete] = useState(null);
@@ -58,6 +59,20 @@ const TeacherQuestion = () => {
     if (!dateString) return "";
     return dateString.split("T")[0];
   };
+
+  // 로딩 상태 처리 수정
+  if (loading) {
+    return (
+      <div className={styles.loadingContainer}>
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  // 질문이 없을 때 처리
+  if (questions.length === 0) {
+    return <div className={styles.noQuestions}>질문이 없습니다.</div>;
+  }
 
   return (
     <div className={styles.teacherQuestionContainer}>

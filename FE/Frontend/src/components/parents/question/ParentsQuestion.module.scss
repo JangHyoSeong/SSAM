@@ -288,3 +288,11 @@
 .author {
   margin-bottom: -0.5rem; /* author와 date 사이의 간격 추가 */
 }
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  width: 100%;
+}

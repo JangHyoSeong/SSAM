@@ -1,14 +1,15 @@
 import { useState, useMemo } from "react";
 import PropTypes from "prop-types";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useConsultation } from "../../../store/ConsultationStore";
 import styles from "./TeacherConsultationList.module.scss";
 import ConsultationApproveModal from "./ConsultationApproveModal";
 import ConsultationCancelModal from "./ConsultationCancelModal";
 import LoadingSpinner from "../../../common/ModernLoading";
 import Swal from "sweetalert2";
+import { fetchApiReservationSummary } from "../apis/stub/72-75 상담요약/apiStubReservationSummary";
 
-// topic db랑 화면 매핑
+// Topic display mapping
 const topicDisplayMap = {
   FRIEND: "교우 관계",
   BULLYING: "학교 폭력",
@@ -22,52 +23,46 @@ const getTopicDisplay = (topic) => {
   return topicDisplayMap[topic] || topic;
 };
 
-// ConsultationItem 컴포넌트
+// Utility functions
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+};
+
+const formatTime = (startDate, endDate) => {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const timeOptions = { hour: "2-digit", minute: "2-digit", hour12: false };
+  return `${start.toLocaleTimeString("ko-KR", timeOptions)} ~ ${end.toLocaleTimeString("ko-KR", timeOptions)}`;
+};
+
+// ConsultationItem component
 const ConsultationItem = ({
   appointmentId,
   startTime,
   endTime,
   studentName,
   topic,
-  description = "", // 기본값을 빈 문자열로 설정
+  description = "",
   status,
   accessCode,
   onApprove,
   onCancel,
 }) => {
-  // 비디오 링크
-  const handleConsult = () => {
-    if (accessCode) {
-      window.open(`https://i11e201.p.ssafy.io/video/${accessCode}`);
-    } else {
-      console.error("Access code not found for this consultation");
-      // 사용자에게 오류 메시지 표시
+  const navigate = useNavigate();
+
+  const handleConsult = async () => {
+    try {
+      const data = await fetchApiReservationSummary();
+      navigate(`/video/${data.accessCode}`);
+    } catch (err) {
+      console.error("API 요청 에러:", err);
       Swal.fire({
         icon: "error",
         title: "오류",
         text: "상담 링크를 열 수 없습니다. 관리자에게 문의해주세요.",
       });
     }
-  };
-
-  // 날짜 포맷 함수
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-      2,
-      "0"
-    )}-${String(date.getDate()).padStart(2, "0")}`;
-  };
-
-  // 시간 포맷 함수
-  const formatTime = (startDate, endDate) => {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    const timeOptions = { hour: "2-digit", minute: "2-digit", hour12: false };
-    return `${start.toLocaleTimeString(
-      "ko-KR",
-      timeOptions
-    )} ~ ${end.toLocaleTimeString("ko-KR", timeOptions)}`;
   };
 
   return (
@@ -80,29 +75,15 @@ const ConsultationItem = ({
       <div className={styles.cellButtons}>
         {status === "APPLY" ? (
           <>
-            <button
-              className={styles.approveButton}
-              onClick={() => onApprove(appointmentId)}
-            >
-              승인
-            </button>
-            <button
-              className={styles.rejectButton}
-              onClick={() => onCancel(appointmentId)}
-            >
-              거절
-            </button>
+            <button className={styles.approveButton} onClick={() => onApprove(appointmentId)}>승인</button>
+            <button className={styles.rejectButton} onClick={() => onCancel(appointmentId)}>거절</button>
           </>
         ) : status === "ACCEPTED" ? (
-          <button className={styles.statusButton} onClick={handleConsult}>
-            상담 하기
-          </button>
+          <button className={styles.statusButton} onClick={handleConsult}>상담 하기</button>
         ) : status === "CANCEL" ? (
           <span className={styles.cancelStatus}>상담 취소</span>
         ) : status === "DONE" ? (
-          <span className={styles.doneStatus} style={{ color: "orange" }}>
-            상담 완료
-          </span>
+          <span className={styles.doneStatus} style={{ color: "orange" }}>상담 완료</span>
         ) : (
           <span className={styles.rejectStatus}>예약 불가</span>
         )}
@@ -111,7 +92,6 @@ const ConsultationItem = ({
   );
 };
 
-// propTypes
 ConsultationItem.propTypes = {
   appointmentId: PropTypes.number.isRequired,
   startTime: PropTypes.string.isRequired,
@@ -125,20 +105,13 @@ ConsultationItem.propTypes = {
   onCancel: PropTypes.func.isRequired,
 };
 
-// TeacherConsultationList 컴포넌트
+// TeacherConsultationList component
 const TeacherConsultationList = () => {
-  const {
-    consultations,
-    loading,
-    error,
-    approveConsultation,
-    cancelConsultation,
-    sortConsultations,
-  } = useConsultation();
+  const { consultations, loading, error, approveConsultation, cancelConsultation, sortConsultations } = useConsultation();
   const [isApproveModalOpen, setApproveModalOpen] = useState(false);
   const [isCancelModalOpen, setCancelModalOpen] = useState(false);
   const [selectedConsultationId, setSelectedConsultationId] = useState(null);
-  const [sortOrder, setSortOrder] = useState("asc"); // 정렬 순서 상태 추가
+  const [sortOrder, setSortOrder] = useState("asc");
   const [activeFilters, setActiveFilters] = useState([]);
 
   const handleApprove = (appointmentId) => {
@@ -160,12 +133,10 @@ const TeacherConsultationList = () => {
               icon: "success",
               timer: 1500,
             }).then(() => {
-              // 승인 완료 메시지가 표시된 후 페이지 새로고침
               window.location.reload();
             });
           })
           .catch((error) => {
-            // 에러 처리
             Swal.fire({
               title: "오류 발생",
               text: "승인 처리 중 문제가 발생했습니다.",
@@ -200,13 +171,8 @@ const TeacherConsultationList = () => {
     });
   };
 
-  const closeApproveModal = () => {
-    setApproveModalOpen(false);
-  };
-
-  const closeCancelModal = () => {
-    setCancelModalOpen(false);
-  };
+  const closeApproveModal = () => setApproveModalOpen(false);
+  const closeCancelModal = () => setCancelModalOpen(false);
 
   const confirmApprove = async () => {
     await approveConsultation(selectedConsultationId);
@@ -218,14 +184,12 @@ const TeacherConsultationList = () => {
     setCancelModalOpen(false);
   };
 
-  // 날짜 정렬 함수 추가
   const handleDateSort = () => {
     const newOrder = sortOrder === "asc" ? "desc" : "asc";
     setSortOrder(newOrder);
     sortConsultations("startTime", newOrder);
   };
 
-  // 필터 토글 함수 추가
   const statusLabels = {
     APPLY: "신청",
     CANCEL: "취소",
@@ -245,9 +209,7 @@ const TeacherConsultationList = () => {
   const filteredConsultations = useMemo(() => {
     return activeFilters.length === 0
       ? consultations
-      : consultations.filter((consultation) =>
-          activeFilters.includes(consultation.status)
-        );
+      : consultations.filter((consultation) => activeFilters.includes(consultation.status));
   }, [consultations, activeFilters]);
 
   if (loading) return <LoadingSpinner />;
@@ -256,20 +218,10 @@ const TeacherConsultationList = () => {
   return (
     <div className={styles.consultationlistContainer}>
       <nav className={styles.classNavbar}>
-        <NavLink
-          to="/teacherreservationmanagement"
-          className={({ isActive }) =>
-            isActive ? `${styles.navItem} ${styles.active}` : styles.navItem
-          }
-        >
+        <NavLink to="/teacherreservationmanagement" className={({ isActive }) => isActive ? `${styles.navItem} ${styles.active}` : styles.navItem}>
           예약 관리
         </NavLink>
-        <NavLink
-          to="/teacherconsultationlist"
-          className={({ isActive }) =>
-            isActive ? `${styles.navItem} ${styles.active}` : styles.navItem
-          }
-        >
+        <NavLink to="/teacherconsultationlist" className={({ isActive }) => isActive ? `${styles.navItem} ${styles.active}` : styles.navItem}>
           상담 목록
         </NavLink>
       </nav>
@@ -278,9 +230,7 @@ const TeacherConsultationList = () => {
           {Object.entries(statusLabels).map(([status, label]) => (
             <button
               key={status}
-              className={`${styles.filterButton} ${
-                activeFilters.includes(status) ? styles.activeFilter : ""
-              }`}
+              className={`${styles.filterButton} ${activeFilters.includes(status) ? styles.activeFilter : ""}`}
               onClick={() => handleFilterToggle(status)}
             >
               {label}
@@ -288,21 +238,12 @@ const TeacherConsultationList = () => {
           ))}
         </div>
         <header className={styles.headerRow}>
-          <h3
-            className={styles.cellHeaderDate}
-            onClick={handleDateSort}
-            style={{ cursor: "pointer" }}
-          >
+          <h3 className={styles.cellHeaderDate} onClick={handleDateSort} style={{ cursor: "pointer" }}>
             날짜 {sortOrder === "asc" ? "▲" : "▼"}
           </h3>
           <h3 className={styles.cellHeaderTime}>시간</h3>
           <h3 className={styles.cellHeaderSmall}>이름</h3>
-          <h3
-            className={styles.cellHeaderMedium}
-            style={{ paddingRight: "20px" }}
-          >
-            주제
-          </h3>
+          <h3 className={styles.cellHeaderMedium} style={{ paddingRight: "20px" }}>주제</h3>
           <h3 className={styles.cellHeaderDescription}>내용</h3>
           <h3 className={styles.cellHeaderButtons}>관리</h3>
         </header>
@@ -310,7 +251,6 @@ const TeacherConsultationList = () => {
           <ConsultationItem
             key={consultation.appointmentId}
             {...consultation}
-            accessCode={consultation.accessCode}
             onApprove={handleApprove}
             onCancel={handleCancel}
           />

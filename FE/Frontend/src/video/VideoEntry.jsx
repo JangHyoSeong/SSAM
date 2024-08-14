@@ -22,7 +22,6 @@ const VideoEntry = () => {
     try {
       const data = await fetchApiReservationSummary();
       setConsultData(data);
-      console.log("상담 데이터:", data);
       // 상담 페이지로 이동
       navigate(`/video/${data.accessCode}`);
     } catch (err) {

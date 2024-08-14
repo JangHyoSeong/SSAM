@@ -137,7 +137,7 @@ public class ConsultService {
         LocalDateTime nowDateTime = LocalDateTime.now();
 
         List<Consult> consults = null;
-        if (userDetails.getRole().equals(UserRole.TEACHER)) {
+        if (userDetails.getRole().equals(UserRole.TEACHER.toString())) {
             consults = consultRepository.findUpcomingConsultForTeacher(userId, nowDateTime, AppointmentStatus.ACCEPTED)
                     .orElse(null);
         }

@@ -102,7 +102,7 @@ public class ConsultService {
         // 1)
         consult.setActualDate(LocalDateTime.now());
         // 2)
-        consult.setAttSchool(relation.getUser().getSchool().getSchoolId());
+        //consult.setAttSchool(relation.getUser().getSchool().getSchoolId());
         consult.setAttGrade(relation.getBoard().getGrade());
         consult.setAttClassroom(relation.getBoard().getClassroom());
         // 3)

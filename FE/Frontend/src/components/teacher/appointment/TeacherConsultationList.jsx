@@ -7,7 +7,7 @@ import ConsultationApproveModal from "./ConsultationApproveModal";
 import ConsultationCancelModal from "./ConsultationCancelModal";
 import LoadingSpinner from "../../../common/ModernLoading";
 import Swal from "sweetalert2";
-import { fetchApiReservationSummary } from "../apis/stub/72-75 상담요약/apiStubReservationSummary";
+import { fetchApiReservationSummary } from "../../../apis/stub/72-75 상담요약/apiStubReservationSummary";
 
 // Topic display mapping
 const topicDisplayMap = {

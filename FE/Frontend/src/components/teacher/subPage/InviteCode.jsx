@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-// api
+// api!!
 import axios from "axios";
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
 import { fetchApiReservationList } from "../../../apis/stub/55-59 상담/apiStubReservation";

@@ -222,7 +222,7 @@ const InviteCode = () => {
         </h3>
         {hasAcceptedConsultation && (
           <button className={styles.classBtn} onClick={handleConsultationStart}>
-            상담 시작하기
+            <p>상담 시작하기</p>
           </button>
         )}
       </div>

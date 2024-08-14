@@ -1,97 +1,20 @@
-// // Video.jsx
-// import { useState, useEffect } from 'react';
-// import { useParams } from 'react-router-dom';
-// import { useVideoChat } from './useVideoChat';
-// import { useSTT } from './useSTT';
-// import { useProfile } from './useProfile';
-// import MenuBar from './MenuBar';
-// import VideoScreen from './VideoScreen';
-// import ChatBox from './ChatBox';
-// import SubtitleBox from './SubtitleBox';
-// import styles from './Video.module.scss';
-
-// const Video = () => {
-//   const { accessCode } = useParams();
-//   const [state, setState] = useState({
-//     session: null,
-//     mainStreamManager: null,
-//     publisher: null,
-//     subscribers: [],
-//     chatMessages: [],
-//     sttMessages: [],
-//     isRecording: false,
-//     isCameraOn: true,
-//     isMicOn: true,
-//     showSubtitle: true,
-//     formattedDate: '',
-//     remainingTime: '',
-//     isTimerEnded: false,
-//     profanityDetected: false
-//   });
-
-//   const updateState = (newState) => {
-//     setState(prevState => ({ ...prevState, ...newState }));
-//   };
-
-//   const { joinSession, leaveSession, toggleRecording, toggleCamera, toggleMic } = useVideoChat(state, updateState, accessCode);
-//   const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSTT(state, updateState);
-//   const { profileData } = useProfile();
-
-//   useEffect(() => {
-//     joinSession();
-//     return () => leaveSession();
-//   }, []);
-
-//   if (state.session === null) {
-//     return <h1 className={styles.entering}>화상상담 입장 중...</h1>;
-//   }
-
-//   return (
-//     <div className={styles.videoArray}>
-//       {state.profanityDetected && (
-//         <div className={styles.profanityOverlay}>
-//           <h1>부적절한 언어가 감지되었습니다</h1>
-//         </div>
-//       )}
-//       <MenuBar
-//         state={state}
-//         toggleRecording={toggleRecording}
-//         toggleCamera={toggleCamera}
-//         toggleMic={toggleMic}
-//         leaveSession={leaveSession}
-//         updateState={updateState}
-//       />
-//       <div className={styles.bottom}>
-//         <VideoScreen state={state} />
-//         {state.showSubtitle && <SubtitleBox sttMessages={state.sttMessages} profileData={profileData} />}
-//         <ChatBox state={state} updateState={updateState} profileData={profileData} />
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Video;
-
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { OpenVidu } from "openvidu-browser";
 import styles from "./Video.module.scss";
-import whitelogo from "../assets/whitelogo.png";
-import RECOn from "../assets/RECOn.png";
-import RECOff from "../assets/RECOff.png";
-import mikeOn from "../assets/mikeOn.png";
-import mikeOff from "../assets/mikeOff.png";
-import cameraOn from "../assets/cameraOn.png";
-import cameraOff from "../assets/cameraOff.png";
-import subtitleOn from "../assets/subtitleOn.png";
-import subtitleOff from "../assets/subtitleOff.png";
 import Draggable from "react-draggable";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 
+// 분리된 컴포넌트 목록
+import ChatComponent from "./ChatComponent";
+import MenuBarComponent from "./MenuBarComponent";
+import SubtitleComponent from "./SubtitleComponent";
+
 const apiUrl = import.meta.env.API_URL;
+
 const VideoChatComponent = () => {
   const { accessCode } = useParams(); // URL에서 accessCode를 가져옴
   const [session, setSession] = useState(null); // 세션 상태 관리
@@ -100,16 +23,12 @@ const VideoChatComponent = () => {
   const [publisher, setPublisher] = useState(null); // 발행자 관리
   const [subscribers, setSubscribers] = useState([]); // 구독자 관리
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null); // 현재 비디오 장치 관리
-  const [chatMessages, setChatMessages] = useState([]); // 채팅 메시지 관리
-  const [chatInput, setChatInput] = useState(""); // 채팅 입력 관리
   const [isRecording, setIsRecording] = useState(false); // 녹화 상태 관리
   const [isCameraOn, setIsCameraOn] = useState(true); // 카메라 상태 관리
   const [isMicOn, setIsMicOn] = useState(true); // 마이크 상태 관리
   const [sttMessages, setSTTMessages] = useState([]); // 음성 인식 메시지 관리
-  // const [tmpMessage, setTmpMessage] = useState(""); // 임시 메시지 관리
   const OV = useRef(new OpenVidu()); // OpenVidu 인스턴스 생성
   const myUserName = useRef(`user_${Math.floor(Math.random() * 1000) + 1}`); // 사용자 이름 생성
-  const chatContainerRef = useRef(null); // 채팅 컨테이너 참조
   const subtitleRef = useRef(null); // 자막 컨테이너 참조
   const lastTranscriptRef = useRef(""); // 마지막 음성 인식 결과 참조
   const timeoutRef = useRef(null); // 타임아웃 참조
@@ -125,8 +44,8 @@ const VideoChatComponent = () => {
     setShowSubtitle(!showSubtitle);
   };
 
+  // 사용자 이름 GET
   useEffect(() => {
-    // 사용자 이름 GET
     const fetchData = async () => {
       const token = localStorage.getItem("USER_TOKEN");
       try {
@@ -150,21 +69,12 @@ const VideoChatComponent = () => {
   }, []);
 
   useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
-    }
-  }, [chatMessages]);
-
-  useEffect(() => {
     if (transcript !== lastTranscriptRef.current) {
       // setTmpMessage(transcript); // 음성 인식 메시지 상태 업데이트
       lastTranscriptRef.current = transcript;
-
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current); // 기존 타임아웃 초기화
       }
-
       timeoutRef.current = setTimeout(() => {
         if (
           transcript === lastTranscriptRef.current &&
@@ -181,7 +91,6 @@ const VideoChatComponent = () => {
     // 페이지를 떠날 때 이벤트 리스너 추가
     window.addEventListener("beforeunload", onBeforeUnload);
     joinSession(); // 세션에 참가
-
     return () => {
       window.removeEventListener("beforeunload", onBeforeUnload);
       leaveSession(); // 세션을 떠남
@@ -202,12 +111,68 @@ const VideoChatComponent = () => {
     }
   }, [session, isMicOn]);
 
+  // 새로운 자막 컨테이너 스크롤을 아래로 이동
   useEffect(() => {
     if (subtitleRef.current) {
-      // 새로운 자막 메시지가 추가되면 자막 컨테이너 스크롤을 아래로 이동
       subtitleRef.current.scrollTop = subtitleRef.current.scrollHeight;
     }
   }, [sttMessages]);
+
+  // 녹화를 시작/중지하는 함수
+  const toggleRecording = async () => {
+    if (!isRecording) {
+      try {
+        const response = await axios.post(
+          `${apiUrl}/v1/video/recording/start`,
+          {
+            sessionId: session.sessionId,
+            outputMode: "COMPOSED",
+            hasAudio: true,
+            hasVideo: true,
+          }
+        );
+        setIsRecording(true);
+      } catch (error) {
+        console.error("Error starting recording:", error);
+      }
+    } else {
+      try {
+        await axios.post(`${apiUrl}/v1/video/recording/stop`, {
+          sessionId: session.sessionId,
+        });
+        setIsRecording(false);
+      } catch (error) {
+        console.error("Error stopping recording:", error);
+      }
+    }
+  };
+
+  // 카메라를 켜고 끄는 함수
+  const toggleCamera = () => {
+    if (publisher) {
+      publisher.publishVideo(!isCameraOn);
+      setIsCameraOn(!isCameraOn);
+    }
+  };
+
+  // 마이크를 켜고 끄는 함수
+  const toggleMic = () => {
+    if (publisher) {
+      publisher.publishAudio(!isMicOn);
+      setIsMicOn(!isMicOn);
+      if (!isMicOn) {
+        SpeechRecognition.startListening({
+          continuous: true,
+          language: "ko-KR",
+        });
+      } else {
+        SpeechRecognition.stopListening();
+        resetTranscript();
+        // setTmpMessage("");
+        lastTranscriptRef.current = "";
+      }
+    }
+  };
 
   // 페이지를 떠나기 전 세션을 떠나는 함수
   const onBeforeUnload = () => {
@@ -217,7 +182,6 @@ const VideoChatComponent = () => {
   // 세션에 참가하는 함수
   const joinSession = async () => {
     const mySession = OV.current.initSession();
-
     // 새로운 스트림이 생성될 때 이벤트 리스너
     mySession.on("streamCreated", (event) => {
       if (
@@ -252,7 +216,6 @@ const VideoChatComponent = () => {
         videoSource: undefined,
         publishAudio: true,
         publishVideo: true,
-        // resolution: "960x400",
         resolution: "16:9",
         frameRate: 30,
         insertMode: "APPEND",
@@ -354,97 +317,6 @@ const VideoChatComponent = () => {
     setPublisher(null);
   };
 
-  // 녹화를 시작/중지하는 함수
-  const toggleRecording = async () => {
-    if (!isRecording) {
-      try {
-        const response = await axios.post(
-          `${apiUrl}/v1/video/recording/start`,
-          {
-            sessionId: session.sessionId,
-            outputMode: "COMPOSED",
-            hasAudio: true,
-            hasVideo: true,
-          }
-        );
-        setIsRecording(true);
-      } catch (error) {
-        console.error("Error starting recording:", error);
-      }
-    } else {
-      try {
-        await axios.post(`${apiUrl}/v1/video/recording/stop`, {
-          sessionId: session.sessionId,
-        });
-        setIsRecording(false);
-      } catch (error) {
-        console.error("Error stopping recording:", error);
-      }
-    }
-  };
-
-  // 카메라를 켜고 끄는 함수
-  const toggleCamera = () => {
-    if (publisher) {
-      publisher.publishVideo(!isCameraOn);
-      setIsCameraOn(!isCameraOn);
-    }
-  };
-
-  // 마이크를 켜고 끄는 함수
-  const toggleMic = () => {
-    if (publisher) {
-      publisher.publishAudio(!isMicOn);
-      setIsMicOn(!isMicOn);
-      if (!isMicOn) {
-        SpeechRecognition.startListening({
-          continuous: true,
-          language: "ko-KR",
-        });
-      } else {
-        SpeechRecognition.stopListening();
-        resetTranscript();
-        // setTmpMessage("");
-        lastTranscriptRef.current = "";
-      }
-    }
-  };
-
-  // 채팅 메시지를 보내는 함수
-  const sendChatMessage = () => {
-    if (chatInput.trim() !== "" && session) {
-      const messageData = {
-        message: chatInput,
-        from: profileData.name, // .current 대신 .name 사용
-        connectionId: session.connection.connectionId,
-      };
-      session.signal({
-        data: JSON.stringify(messageData),
-        type: "chat",
-      });
-      setChatInput("");
-    }
-  };
-
-  // 세션이 변경될 때 채팅 메시지를 수신하는 이벤트 리스너 추가
-  useEffect(() => {
-    if (session) {
-      session.on("signal:chat", (event) => {
-        const data = JSON.parse(event.data);
-        setChatMessages((prevMessages) => [
-          ...prevMessages,
-          {
-            ...data,
-            from:
-              data.connectionId === session.connection.connectionId
-                ? data.from // 본인 메시지의 경우 원래 이름 유지
-                : "상대방", // 다른 사람의 메시지는 '상대방'으로 표시
-          },
-        ]);
-      });
-    }
-  }, [session]);
-
   const sendSTTMessage = async (text) => {
     if (text.trim() !== "" && session) {
       const messageData = {
@@ -452,7 +324,7 @@ const VideoChatComponent = () => {
         from: myUserName.current,
         connectionId: session.connection.connectionId,
       };
-      // 욕설 감지 API 호출 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+      // 욕설 감지 API 호출
       try {
         const response = await axios.post(`${apiUrl}/v1/profanity/check`, {
           message: text,
@@ -539,111 +411,22 @@ const VideoChatComponent = () => {
               <h1>부적절한 언어가 감지되었습니다</h1>
             </div>
           )}
-          <div className={styles.menubarArray}>
-            <div className={styles.top}>
-              <div className={styles.menubar}>
-                <div className={styles.logoArray}>
-                  <img src={whitelogo} className={styles.logo} alt="Logo" />
-                </div>
-                {/* <h3>Session: {sessionId}</h3> */}
 
-                {/* 날짜, 시간 */}
-                <div className={styles.dayArray}>
-                  <p>{formattedDate.slice(0, 11)}</p>
-                </div>
-
-                <div className={styles.iconArray}>
-                  {/* 녹화 버튼 */}
-                  <button className={styles.btnIcon} onClick={toggleRecording}>
-                    {isRecording ? (
-                      <img
-                        src={RECOn}
-                        className={styles.imgIcon}
-                        alt="Recording On"
-                      />
-                    ) : (
-                      <img
-                        src={RECOff}
-                        className={styles.imgIcon}
-                        alt="Recording Off"
-                      />
-                    )}
-                  </button>
-
-                  {/* 자막 On / Off */}
-                  <button className={styles.btnIcon} onClick={toggleSubTitle}>
-                    {showSubtitle ? (
-                      <img
-                        src={subtitleOff}
-                        className={styles.imgIcon}
-                        alt="subtitleOff"
-                      />
-                    ) : (
-                      <img
-                        src={subtitleOn}
-                        className={styles.imgIcon}
-                        alt="subtitleOn"
-                      />
-                    )}
-                  </button>
-
-                  {/* 카메라 ON / Off 버튼 */}
-                  <button className={styles.btnIcon} onClick={toggleCamera}>
-                    {isCameraOn ? (
-                      <img
-                        src={cameraOn}
-                        className={styles.imgIcon}
-                        alt="Camera On"
-                      />
-                    ) : (
-                      <img
-                        src={cameraOff}
-                        className={styles.imgIcon}
-                        alt="Camera Off"
-                      />
-                    )}
-                  </button>
-
-                  {/* 마이크 ON / Off 버튼 */}
-                  <button className={styles.btnIcon} onClick={toggleMic}>
-                    {isMicOn ? (
-                      <img
-                        src={mikeOn}
-                        className={styles.imgIcon}
-                        alt="Microphone On"
-                      />
-                    ) : (
-                      <img
-                        src={mikeOff}
-                        className={styles.imgIcon}
-                        alt="Microphone Off"
-                      />
-                    )}
-                  </button>
-
-                  {/* 나가기 버튼 */}
-                  <button
-                    className={`${styles.leaveSession} ${styles.btnIcon}`}
-                    onClick={leaveSession}
-                  >
-                    <h1>X</h1>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* 시간 */}
-            <div className={styles.timeArray}>
-              <div className={styles.time}>
-                <p>시작 시간 : {formattedDate.slice(13, 20)}</p>
-                {!isTimerEnded ? (
-                  <p>남은 시간 : {remainingTime}</p>
-                ) : (
-                  <p>상담 시간 종료</p>
-                )}
-              </div>
-            </div>
-          </div>
+          {/* 메뉴바 */}
+          <MenuBarComponent
+            formattedDate={formattedDate}
+            isRecording={isRecording}
+            toggleRecording={toggleRecording}
+            showSubtitle={showSubtitle}
+            toggleSubTitle={toggleSubTitle}
+            isCameraOn={isCameraOn}
+            toggleCamera={toggleCamera}
+            isMicOn={isMicOn}
+            toggleMic={toggleMic}
+            leaveSession={leaveSession}
+            remainingTime={remainingTime}
+            isTimerEnded={isTimerEnded}
+          />
 
           {/* 화면 */}
           <div className={styles.bottom}>
@@ -669,64 +452,17 @@ const VideoChatComponent = () => {
 
               {/* 자막 */}
               <div>
-                {showSubtitle && (
-                  <div className={styles.subTitleArray}>
-                    <div className={styles.subTitle}>
-                      {sttMessages.map((msg, index) => (
-                        <div key={index}>
-                          <strong>
-                            {msg.connectionId ===
-                            session.connection.connectionId
-                              ? profileData.name == ""
-                                ? "익명"
-                                : profileData.name
-                              : "상대방"}{" "}
-                            :{" "}
-                          </strong>
-                          {msg.message}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                <SubtitleComponent
+                  showSubtitle={showSubtitle}
+                  sttMessages={sttMessages}
+                  session={session}
+                  profileData={profileData}
+                />
               </div>
             </div>
 
             {/* 채팅 */}
-            <div className={styles.right}>
-              <div className={styles.chatingArray}>
-                <div className={styles.chatContainer}>
-                  <div className={styles.chating} ref={chatContainerRef}>
-                    {chatMessages.map((msg, index) => (
-                      <div
-                        key={index}
-                        className={`${styles.chatMessage} ${
-                          msg.connectionId === session.connection.connectionId
-                            ? styles.ownMessage
-                            : styles.otherMessage
-                        }`}
-                      >
-                        <strong>
-                          {msg.connectionId === session.connection.connectionId
-                            ? profileData.name
-                            : "상대방"}{" "}
-                          :{" "}
-                        </strong>
-                        {msg.message}
-                      </div>
-                    ))}
-                  </div>
-                  <input
-                    type="text"
-                    value={chatInput}
-                    className={styles.chatForm}
-                    onChange={(e) => setChatInput(e.target.value)}
-                    onKeyPress={(e) => e.key === "Enter" && sendChatMessage()}
-                    placeholder="채팅을 입력해주세요"
-                  />
-                </div>
-              </div>
-            </div>
+            <ChatComponent session={session} profileData={profileData} />
           </div>
         </div>
       )}

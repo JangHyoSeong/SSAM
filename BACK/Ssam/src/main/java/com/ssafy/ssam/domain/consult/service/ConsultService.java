@@ -135,13 +135,15 @@ public class ConsultService {
 
         Integer userId = userDetails.getUserId();
         LocalDateTime nowDateTime = LocalDateTime.now();
-
+   
         List<Consult> consults = null;
-        if (userDetails.getRole().equals(UserRole.TEACHER)) {
+        if (userDetails.getRole().equals(UserRole.TEACHER.toString())) {
+        	System.out.println("IAM TEACHER");
             consults = consultRepository.findUpcomingConsultForTeacher(userId, nowDateTime, AppointmentStatus.ACCEPTED)
                     .orElse(null);
         }
         else {
+        	System.out.println("IAM STUDENT");
             consults = consultRepository.findUpcomingConsultForStudent(userId, nowDateTime, AppointmentStatus.ACCEPTED)
                     .orElse(null);
         }

@@ -35,10 +35,11 @@ const ConsultationItem = ({
   onApprove,
   onCancel,
 }) => {
+  const apiUrl = import.meta.env.API_URL;
   // 비디오 링크
   const handleConsult = () => {
     if (accessCode) {
-      window.open(`http://localhost:3000/video/${accessCode}`, "_blank");
+      window.open(`${apiUrl}/video/${accessCode}`, "_blank");
     } else {
       console.error("Access code not found for this consultation");
       // 사용자에게 오류 메시지 표시

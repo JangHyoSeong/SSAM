@@ -4,11 +4,14 @@ import DefaultStudentImage from "../../../assets/student.png";
 import { fetchStudentDetail } from "../../../apis/stub/47-49 학생관리/apiStudentDetail";
 import TeacherStudentDelete from "./TeacherStudentDelete";
 import { fetchTeacherConsult } from "../../../apis/stub/55-59 상담/apiTeacherConsult";
+import { fetchConsultDetail } from "../../../apis/stub/72-75 상담요약/apiConsultDetail";
 
 const TeacherStudentDetail = ({ studentId, onBack }) => {
   const [student, setStudent] = useState(null);
   const [consultHistory, setConsultHistory] = useState([]);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [consultDetail, setConsultDetail] = useState(null);
 
   useEffect(() => {
     const loadStudentDetail = async () => {
@@ -39,18 +42,39 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
     loadStudentDetail();
   }, [studentId]);
 
+  const handleConsultClick = async (consultId) => {
+    try {
+      setIsLoading(true); // 요청 시작 시 모달을 표시
+      console.log(`Fetching details for consultId: ${consultId}`);
+      const detail = await fetchConsultDetail(consultId);
+      setConsultDetail(detail);
+    } catch (error) {
+      console.error("상담 상세 정보를 불러오는 데 실패했습니다.", error);
+    }
+    // isLoading 상태를 여기서 더 이상 변경하지 않음
+  };
+
   const handleDeleteClick = () => {
     setIsDeleteModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsLoading(false); // 사용자가 모달 닫기 버튼을 눌렀을 때만 모달을 닫음
   };
 
   const formatDate = (dateTimeString) => {
     return dateTimeString.split("T")[0]; // '2024-08-14T14:00:00' -> '2024-08-14'
   };
 
-  const formatTimeRange = (startTime, endTime) => {
-    const start = startTime.split("T")[1].substring(0, 5); // '14:00'
-    const end = endTime.split("T")[1].substring(0, 5); // '14:20'
-    return `${start} ~ ${end}`;
+  const Modal = ({ message, onClose }) => {
+    return (
+      <div className={styles.modalOverlay}>
+        <div className={styles.modalContent}>
+          <p>{message}</p>
+          <button onClick={onClose}>확인</button>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -92,7 +116,10 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
               <tbody>
                 {consultHistory.length > 0 ? (
                   consultHistory.map((consult, index) => (
-                    <tr key={index}>
+                    <tr
+                      key={index}
+                      onClick={() => handleConsultClick(consult.consultId)}
+                    >
                       <td>{formatDate(consult.startTime)}</td>
                       <td>{consult.topic}</td>
                       <td>{consult.description || "설명 없음"}</td>
@@ -109,12 +136,21 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
 
           <div className={styles.summaryBox}>
             <h3>상담 요약 보고서</h3>
-            <p>상담 요약 보고서가 여기에 표시됩니다.</p>
+            {consultDetail ? (
+              <p>{consultDetail.summary}</p>
+            ) : (
+              <p>상담 요약 보고서가 여기에 표시됩니다.</p>
+            )}
           </div>
         </>
       ) : (
         <p>학생을 찾을 수 없습니다.</p>
       )}
+
+      {isLoading && (
+        <Modal message="상담 요약 중입니다" onClose={handleCloseModal} />
+      )}
+
       {isDeleteModalOpen && (
         <TeacherStudentDelete
           studentId={studentId}

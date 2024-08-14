@@ -49,26 +49,12 @@ const ConsultationItem = ({
   onApprove,
   onCancel,
 }) => {
-    // 비디오 링크
-  // const handleConsult = () => {
-  //   if (accessCode) {
-  //     window.open(`https://i11e201.p.ssafy.io/video/${accessCode}`);
-  //   } else {
-  //     console.error("Access code not found for this consultation");
-  //     // 사용자에게 오류 메시지 표시
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "오류",
-  //       text: "상담 링크를 열 수 없습니다. 관리자에게 문의해주세요.",
-  //     });
-  //   }
-  // };
   const navigate = useNavigate();
 
-  const handleConsult = async () => {
+  const handleConsult = (accessCode) => {
     try {
-      const data = await fetchApiReservationSummary();
-      navigate(`/video/${data.accessCode}`);
+      console.warn(accessCode);
+      navigate(`/video/${accessCode}`);
     } catch (err) {
       console.error("API 요청 에러:", err);
       Swal.fire({
@@ -93,7 +79,9 @@ const ConsultationItem = ({
             <button className={styles.rejectButton} onClick={() => onCancel(appointmentId)}>거절</button>
           </>
         ) : status === "ACCEPTED" ? (
-          <button className={styles.statusButton} onClick={handleConsult}>상담 하기</button>
+
+          <button className={styles.statusButton} onClick={() => handleConsult(accessCode)}>상담 하기</button>
+
         ) : status === "CANCEL" ? (
           <span className={styles.cancelStatus}>상담 취소</span>
         ) : status === "DONE" ? (

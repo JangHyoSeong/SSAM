@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+// api
 import axios from "axios";
+import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
+import { fetchApiReservationList } from "../../../apis/stub/55-59 상담/apiStubReservation";
+const apiUrl = import.meta.env.API_URL;
+// style, modal
 import styles from "./EnterCode.module.scss";
 import ClassEnterModal from "./ClassEnterModal";
-import { useNavigate } from "react-router-dom";
-import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
-
-const apiUrl = import.meta.env.API_URL;
 
 const EnterCode = () => {
   const [isClassModalOpen, setIsClassModalOpen] = useState(false);
@@ -18,6 +20,9 @@ const EnterCode = () => {
     grade: "",
     classroom: "",
   });
+  const [hasAcceptedConsultation, setHasAcceptedConsultation] = useState(false);
+  const [acceptedTeacherName, setAcceptedTeacherName] = useState("");
+  const [consultationTime, setConsultationTime] = useState("");
 
   const navigate = useNavigate();
 
@@ -45,6 +50,31 @@ const EnterCode = () => {
             grade: classroomResponse.data.grade,
             classroom: classroomResponse.data.classroom,
           });
+        }
+
+        // 상담 정보 가져오기
+        const consultationsData = await fetchApiReservationList();
+        const acceptedConsultation = consultationsData.find(
+          (consultation) => consultation.status === "ACCEPTED"
+        );
+
+        if (acceptedConsultation) {
+          setHasAcceptedConsultation(true);
+          setAcceptedTeacherName(acceptedConsultation.teacherName);
+
+          // 상담 시간 처리
+          const startTime = new Date(acceptedConsultation.startTime);
+          const endTime = new Date(acceptedConsultation.endTime);
+          const formattedTime = `${startTime.getHours()}:${String(
+            startTime.getMinutes()
+          ).padStart(2, "0")} ~ ${endTime.getHours()}:${String(
+            endTime.getMinutes()
+          ).padStart(2, "0")}`;
+          setConsultationTime(formattedTime);
+        } else {
+          setHasAcceptedConsultation(false);
+          setAcceptedTeacherName("");
+          setConsultationTime("");
         }
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -94,12 +124,24 @@ const EnterCode = () => {
 
       <div className={styles.codeBox}>
         <h3>
-          예정된 상담이
-          <br /> 있습니다.
+          {hasAcceptedConsultation ? (
+            <>
+              예정된 상담
+              <br />
+              <span>{acceptedTeacherName}</span>
+              <br />
+              <span style={{ color: "orange" }}>{consultationTime}</span>
+              <br />
+            </>
+          ) : (
+            "예정된 상담이 없습니다"
+          )}
         </h3>
-        <button className={styles.classBtn} onClick={handleConsultationStart}>
-          상담 시작하기
-        </button>
+        {hasAcceptedConsultation && (
+          <button className={styles.classBtn} onClick={handleConsultationStart}>
+            상담 시작하기
+          </button>
+        )}
       </div>
     </div>
   );

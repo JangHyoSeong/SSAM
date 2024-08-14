@@ -1,19 +1,55 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+// api
+import axios from "axios";
+import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
+import { fetchApiReservationList } from "../../../apis/stub/55-59 상담/apiStubReservation";
+const apiUrl = import.meta.env.API_URL; // API URL 가져오기
+// style, modal, icon
 import styles from "./InviteCode.module.scss";
 import ClassProduceModal from "./ClassProduceModal";
-import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
+import Swal from "sweetalert2";
 import { FiCopy } from "react-icons/fi";
 import { FiCheck } from "react-icons/fi";
-
-const apiUrl = import.meta.env.API_URL; // API URL 가져오기
-import Swal from "sweetalert2"; // 알림을 위한 SweetAlert2 라이브러리 임포트
 
 const InviteCode = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태를 관리
   const [classInfo, setClassInfo] = useState(null); // 클래스 정보 상태 관리
   const [isCopied, setIsCopied] = useState(false); // 복사 상태를 관리
+  const [hasAcceptedConsultation, setHasAcceptedConsultation] = useState(false); // 수락된 상담 여부 상태 관리
+  const [acceptedStudentName, setAcceptedStudentName] = useState(""); // 상담자 이름
+  const [consultationTime, setConsultationTime] = useState(""); // 상담 예정 시간
+
+  // 상담 목록 가져오기
+  const fetchConsultations = async () => {
+    const data = await fetchApiReservationList();
+    const acceptedConsultation = data.find(
+      (consultation) => consultation.status === "ACCEPTED"
+    );
+
+    if (acceptedConsultation) {
+      setHasAcceptedConsultation(true);
+      setAcceptedStudentName(acceptedConsultation.studentName);
+
+      // 상담 시간 처리
+      const startTime = new Date(acceptedConsultation.startTime);
+      const endTime = new Date(acceptedConsultation.endTime);
+      const formattedTime = `${startTime.getHours()}:${String(
+        startTime.getMinutes()
+      ).padStart(2, "0")} ~ ${endTime.getHours()}:${String(
+        endTime.getMinutes()
+      ).padStart(2, "0")}`;
+      setConsultationTime(formattedTime);
+    } else {
+      setHasAcceptedConsultation(false);
+      setAcceptedStudentName("");
+      setConsultationTime("");
+    }
+  };
+
+  useEffect(() => {
+    fetchConsultations();
+  }, []);
 
   // 모달 토글 함수
   const toggleModal = () => {
@@ -159,7 +195,6 @@ const InviteCode = () => {
 
   return (
     <div className={styles.inviteArray}>
-      {/* Welcome Section */}
       <div className={styles.welcomeBox}>
         <h3>
           {profile.name} 선생님
@@ -167,16 +202,29 @@ const InviteCode = () => {
         </h3>
       </div>
 
-      
       {/* Scheduled Consultation Section */}
       <div className={styles.codeBox}>
         <h3>
-          예정된 상담이
-          <br /> 있습니다.
+          {hasAcceptedConsultation ? (
+            <>
+              <span style={{ marginBottom: "10px", display: "inline-block" }}>
+                예정된 상담
+              </span>
+              <br />
+              <span style={{ color: "orange" }}>{consultationTime}</span>
+              <br />
+              <span style={{ color: "orange" }}>{acceptedStudentName} </span>
+              학생/학부모
+            </>
+          ) : (
+            "상담이 없습니다"
+          )}
         </h3>
-        <button className={styles.classBtn} onClick={handleConsultationStart}>
-          상담 시작하기
-        </button>
+        {hasAcceptedConsultation && (
+          <button className={styles.classBtn} onClick={handleConsultationStart}>
+            상담 시작하기
+          </button>
+        )}
       </div>
 
       {/* Invite Code Section */}
@@ -211,7 +259,10 @@ const InviteCode = () => {
           </>
         ) : (
           <>
-            <h3>학급 만들기를 통해 초대코드를 생성하세요.</h3>
+            <h5 className={styles.classOpen}>
+              학급 만들기를 통해 <br />
+              초대코드를 생성하세요.
+            </h5>
             <button className={styles.classBtn} onClick={toggleModal}>
               학급 생성
             </button>

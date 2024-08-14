@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import styles from "./ParentsClassroom.module.scss";
 import ClassImage from "../../../assets/background.png";
+import LoadingSpinner from "../../../common/ModernLoading"; // 로딩 스피너 컴포넌트 임포트
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
 import { fetchQuestionList } from "../../../apis/stub/28-31 문의사항/apiOnlyQuestion";
 import { fetchStudentData } from "../../../apis/stub/35-43 학급/apiStubStudents";
@@ -12,6 +13,8 @@ const ParentsClassroom = () => {
   const [notice, setNotice] = useState(""); // 알림 사항
   const [questions, setQuestions] = useState([]); // 문의사항 데이터 추가
   const [students, setStudents] = useState([]); // 학생 데이터 추가
+  const [uploadedImageUrl, setUploadedImageUrl] = useState(null); // 업로드된 이미지 URL
+  const [isImageLoading, setIsImageLoading] = useState(true); // 이미지 로딩 상태
   const apiUrl = import.meta.env.API_URL;
 
   // 학급 전체 데이터 불러오기
@@ -26,9 +29,12 @@ const ParentsClassroom = () => {
             Authorization: `${token}`,
           },
         });
+
         const classData = response.data;
         setBanner(classData.banner);
         setNotice(classData.notice);
+        setUploadedImageUrl(classData.bannerImg); // 배너 이미지 URL 설정
+        setIsImageLoading(false); // 이미지 로딩 완료 상태로 설정
 
         const questionResponse = await fetchQuestionList(); // 문의사항 데이터 가져오기
         setQuestions(questionResponse.slice(0, 3)); // 문의사항 데이터 최대 3개 가져오기
@@ -37,6 +43,7 @@ const ParentsClassroom = () => {
         setStudents(studentData.students || []); // 데이터를 설정, students 필드에서 가져옴
       } catch (error) {
         console.error("데이터 불러오기 실패", error);
+        setIsImageLoading(false); // 오류 발생 시 로딩 상태 해제
       }
     };
     classInfoData();
@@ -45,11 +52,15 @@ const ParentsClassroom = () => {
   return (
     <div className={styles.classInfoContainer}>
       <div className={styles.imageContainer}>
-        <img
-          src={ClassImage}
-          alt="Class Management"
-          className={styles.classImage}
-        />
+        {isImageLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <img
+            src={uploadedImageUrl || ClassImage} // bannerImg URL 우선 적용
+            alt="Class Management"
+            className={styles.classImage}
+          />
+        )}
       </div>
       <div className={styles.infoBoxes}>
         <div className={styles.noticeBox}>
@@ -69,7 +80,7 @@ const ParentsClassroom = () => {
                 className={styles.inquiryItem}
                 onClick={() =>
                   (window.location.href =
-                    "http://localhost:3000/studentquestion")
+                    "https://i11e201.p.ssafy.io/studentquestion")
                 }
               >
                 <div className={styles.inquiryQuestion}>{question.content}</div>

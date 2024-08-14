@@ -11,7 +11,7 @@ import TeacherStudentDetail from "./TeacherStudentDetail";
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
 import { fetchQuestionList } from "../../../apis/stub/28-31 문의사항/apiOnlyQuestion";
 import { updateClassImage } from "../../../apis/stub/35-43 학급/apiBanner";
-import LoadingSpinner from "../../../common/ModernLoading"; // LoadingSpinner 컴포넌트 임포트
+import LoadingSpinner from "../../../common/ModernLoading";
 
 const TeacherClassroom = () => {
   const [banner, setBanner] = useState(""); // 학급 배너
@@ -248,7 +248,7 @@ const TeacherClassroom = () => {
                 className={styles.inquiryItem}
                 onClick={() =>
                   (window.location.href =
-                    "http://localhost:3000/teacherquestion")
+                    "https://i11e201.p.ssafy.io/teacherquestion")
                 }
               >
                 <div className={styles.inquiryQuestion}>{question.content}</div>

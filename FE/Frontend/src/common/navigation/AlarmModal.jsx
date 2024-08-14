@@ -16,7 +16,13 @@ const AlarmModal = () => {
           authorization: `${token}`,
         },
       })
-      .then((response) => setAlarms(response.data))
+      .then((response) => {
+        // 알람을 시간 순서로 내림차순 정렬
+        const sortedAlarms = response.data.sort(
+          (a, b) => new Date(b.alarmTime) - new Date(a.alarmTime)
+        );
+        setAlarms(sortedAlarms);
+      })
       .catch((error) => console.error(error));
   }, []);
 
@@ -57,22 +63,22 @@ const AlarmModal = () => {
                 {post.alarmTime.split("T")[0]} {post.alarmTime.split("T")[1]}
               </p>
               {post.alarmType === "QUESTION" && (
-                <a href={`${apiUrl}/teacherquestion`}>
+                <a href={`/teacherquestion`}>
                   <p>문의사항을 확인해주세요</p>
                 </a>
               )}
               {post.alarmType === "ANSWER" && (
-                <a href={`${apiUrl}/studentquestion`}>
+                <a href={`/studentquestion`}>
                   <p>문의사항을 확인해주세요</p>
                 </a>
               )}
               {post.alarmType === "REGISTRATION" && (
-                <a href={`${apiUrl}/teacherauthorization`}>
+                <a href={`/teacherauthorization`}>
                   <p>승인 요청을 보냈습니다</p>
                 </a>
               )}
               {post.alarmType === "ACCEPT" && (
-                <a href={`${apiUrl}/studentsubpage`}>
+                <a href={`/studentsubpage`}>
                   <p>승인 요청이 수락되었습니다</p>
                 </a>
               )}

@@ -105,17 +105,18 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
           </div>
 
           <div className={styles.historyBox}>
-            <table className={styles.consultTable}>
-              <thead>
-                <tr>
-                  <th>날짜</th>
-                  <th>주제</th>
-                  <th>내용</th>
-                </tr>
-              </thead>
-              <tbody>
-                {consultHistory.length > 0 ? (
-                  consultHistory.map((consult, index) => (
+            <h3>상담 내역</h3>
+            {consultHistory.length > 0 ? (
+              <table className={styles.consultTable}>
+                <thead>
+                  <tr>
+                    <th>날짜</th>
+                    <th>주제</th>
+                    <th>내용</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {consultHistory.map((consult, index) => (
                     <tr
                       key={index}
                       onClick={() => handleConsultClick(consult.consultId)}
@@ -124,14 +125,12 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
                       <td>{consult.topic}</td>
                       <td>{consult.description || "설명 없음"}</td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="5">상담 이력이 없습니다.</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p className={styles.noConsultHistory}>상담 이력이 없습니다.</p>
+            )}
           </div>
 
           <div className={styles.summaryBox}>

@@ -207,8 +207,9 @@ const InviteCode = () => {
         <h3>
           {hasAcceptedConsultation ? (
             <>
-              예정된 상담
-              <br />
+              <span style={{ marginBottom: "10px", display: "inline-block" }}>
+                예정된 상담
+              </span>
               <br />
               <span style={{ color: "orange" }}>{consultationTime}</span>
               <br />

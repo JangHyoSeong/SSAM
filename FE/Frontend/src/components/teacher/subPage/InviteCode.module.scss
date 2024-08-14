@@ -33,7 +33,7 @@
   }
 
   .codeBox h3 {
-    font-size: 0.9em;
+    // font-size: 0.9em;
     margin: 0 0 10px 0;
   }
 
@@ -52,9 +52,9 @@
   }
 
   .coreBox h3 {
-    font-size: 0.9em;
+    // font-size: 0.9em;
     margin: 0 0 10px 0;
-    font-size: 20px;
+    // font-size: 20px;
   }
 
   .copyButton {
@@ -66,7 +66,7 @@
 
   .copyButton button {
     padding: 8px 15px; // 버튼 크기를 EnterCode.module.scss의 classBtn과 동일하게 수정
-    font-size: 0.8em; // 폰트 크기 조정
+    // font-size: 0.8em; // 폰트 크기 조정
     border-style: none;
     border-radius: 5px;
     background-color: white;
@@ -91,7 +91,7 @@
     width: 75%; /* 버튼의 크기를 동일하게 설정 */
     padding: 8px 15px; /* 버튼 크기를 동일하게 유지 */
     border-radius: 20px; /* 동일한 border-radius로 수정 */
-    font-size: 0.8em; /* 폰트 크기 조정 */
+    // font-size: 0.8em; /* 폰트 크기 조정 */
     color: #5285ee;
     border-color: #5285ee;
     background-color: white;
@@ -104,7 +104,7 @@
     width: 105%; /* 버튼의 크기를 동일하게 설정 */
     padding: 8px 15px; /* 버튼 크기를 동일하게 유지 */
     border-radius: 20px; /* 동일한 border-radius로 수정 */
-    font-size: 0.8em; /* 폰트 크기 조정 */
+    // font-size: 0.8em; /* 폰트 크기 조정 */
     color: #5285ee;
     border-color: #5285ee;
     background-color: white;

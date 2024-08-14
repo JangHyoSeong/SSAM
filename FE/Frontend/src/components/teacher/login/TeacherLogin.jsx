@@ -44,7 +44,7 @@ const TeacherLogin = () => {
     }
   };
     const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:8081/oauth2/authorization/google";
+    window.location.href = `${apiUrl}/oauth2/authorization/google`
   };
 
   // const handleGoogleLogin = async () => {

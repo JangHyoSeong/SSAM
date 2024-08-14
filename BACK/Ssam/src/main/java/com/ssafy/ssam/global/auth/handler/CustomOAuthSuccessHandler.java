@@ -61,7 +61,7 @@ public class CustomOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     private void loginUser(HttpServletResponse response, User user) throws IOException {
         // 로그인 구현. 토큰을 queryparameter에 보냄
         String token = jwtUtil.createJwt(user.getUsername(), user.getRole().name(), user.getUserId(), null, 3600000L);
-        String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/auth/oauth-response/" + token)
+        String redirectUrl = UriComponentsBuilder.fromUriString("https://i11e201.p.ssafy.io/auth/oauth-response/" + token)
                 .build().toUriString();
         response.sendRedirect(redirectUrl);
     }

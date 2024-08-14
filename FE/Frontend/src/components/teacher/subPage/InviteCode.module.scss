@@ -101,7 +101,7 @@
   }
 
   .classBtn {
-    width: 105%; /* 버튼의 크기를 동일하게 설정 */
+    width: 120%; /* 버튼의 크기를 동일하게 설정 */
     padding: 8px 15px; /* 버튼 크기를 동일하게 유지 */
     border-radius: 20px; /* 동일한 border-radius로 수정 */
     // font-size: 0.8em; /* 폰트 크기 조정 */
@@ -116,9 +116,16 @@
       background-color: #5285ee;
       color: white;
     }
+
+    p {
+      margin: 0px;
+      padding: 0px;
+      text-align: center; // Ensure the text is left-aligned
+    }
   }
 
   .pinBtn {
+    width: 120px;
     color: #5285ee;
     border-color: #5285ee;
 
@@ -129,6 +136,7 @@
   }
 
   .deleteBtn {
+    width: 120px;
     color: #ee5252;
     border-color: #ee5252;
 

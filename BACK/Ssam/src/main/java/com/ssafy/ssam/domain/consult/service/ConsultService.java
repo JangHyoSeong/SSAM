@@ -138,11 +138,11 @@ public class ConsultService {
 
         List<Consult> consults = null;
         if (userDetails.getRole().equals(UserRole.TEACHER)) {
-            consults = consultRepository.findUpcomingConsultForTeacher(userId, nowDateTime)
+            consults = consultRepository.findUpcomingConsultForTeacher(userId, nowDateTime, AppointmentStatus.ACCEPTED)
                     .orElse(null);
         }
         else {
-            consults = consultRepository.findUpcomingConsultForStudent(userId, nowDateTime)
+            consults = consultRepository.findUpcomingConsultForStudent(userId, nowDateTime, AppointmentStatus.ACCEPTED)
                     .orElse(null);
         }
         if (consults == null) {

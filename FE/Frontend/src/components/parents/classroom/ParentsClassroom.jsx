@@ -80,7 +80,7 @@ const ParentsClassroom = () => {
                 className={styles.inquiryItem}
                 onClick={() =>
                   (window.location.href =
-                    "http://localhost:3000/studentquestion")
+                    "https://i11e201.p.ssafy.io/studentquestion")
                 }
               >
                 <div className={styles.inquiryQuestion}>{question.content}</div>

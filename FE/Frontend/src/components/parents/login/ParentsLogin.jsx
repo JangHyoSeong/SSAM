@@ -44,6 +44,9 @@ const ParentsLogin = () => {
       }
     }
   };
+      const handleGoogleLogin = () => {
+    window.location.href = `${apiUrl}/oauth2/authorization/google`
+  };
 
   return (
     <div className={styles.loginArray}>
@@ -76,7 +79,11 @@ const ParentsLogin = () => {
               </NavLink>
               <p>아이디 / 비밀번호 찾기</p>
             </div>
-            <button type="button" className={styles.googleBtn}>
+            <button
+              type="button"
+              className={styles.googleBtn}
+              onClick={handleGoogleLogin}
+            >
               <img src={google} className={styles.googleImg} alt="google" />
               <p>구글로 시작하세요</p>
             </button>

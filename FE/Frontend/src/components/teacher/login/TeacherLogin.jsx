@@ -6,6 +6,7 @@ import round1 from "../../../assets/round1.png";
 import round2 from "../../../assets/round2.png";
 import round3 from "../../../assets/round3.png";
 import google from "../../../assets/google.png";
+const apiUrl = import.meta.env.API_URL;
 // import naver from "../../../assets/naver.png";
 // import kakao from "../../../assets/kakao.png";
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial"
@@ -43,7 +44,7 @@ const TeacherLogin = () => {
     }
   };
     const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:8081/oauth2/authorization/google";
+    window.location.href = `${apiUrl}/oauth2/authorization/google`
   };
 
   // const handleGoogleLogin = async () => {

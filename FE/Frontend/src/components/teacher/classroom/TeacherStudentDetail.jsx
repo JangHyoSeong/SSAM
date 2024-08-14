@@ -12,6 +12,7 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [consultDetail, setConsultDetail] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const loadStudentDetail = async () => {
@@ -44,14 +45,32 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
 
   const handleConsultClick = async (consultId) => {
     try {
-      setIsLoading(true); // 요청 시작 시 모달을 표시
+      setIsLoading(true); // 로딩 시작
+      setError(null); // 에러 메시지 초기화
       console.log(`Fetching details for consultId: ${consultId}`);
       const detail = await fetchConsultDetail(consultId);
-      setConsultDetail(detail);
+      console.log("Fetched consult detail:", detail); // 전체 detail 객체 출력
+
+      const summaryData = {
+        topic: detail.topic || "없음",
+        profanityCount: detail.profanityCount || "없음",
+        profanityLevel: detail.profanityLevel || "없음",
+        keyPoint: detail.keyPoint || "없음",
+        parentConcern: detail.parentConcern || "없음",
+        teacherRecommendation: detail.teacherRecommendation || "없음",
+      };
+
+      console.log("Translated summary data:", summaryData);
+
+      setConsultDetail(summaryData);
     } catch (error) {
       console.error("상담 상세 정보를 불러오는 데 실패했습니다.", error);
+      setError(
+        "상담 요약 정보를 불러오는 데 실패했습니다. 다시 시도해 주세요."
+      );
+    } finally {
+      setIsLoading(false); // 로딩 종료
     }
-    // isLoading 상태를 여기서 더 이상 변경하지 않음
   };
 
   const handleDeleteClick = () => {
@@ -59,7 +78,7 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
   };
 
   const handleCloseModal = () => {
-    setIsLoading(false); // 사용자가 모달 닫기 버튼을 눌렀을 때만 모달을 닫음
+    setError(null); // 에러 모달 닫기
   };
 
   const formatDate = (dateTimeString) => {
@@ -136,7 +155,28 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
           <div className={styles.summaryBox}>
             <h3>상담 요약 보고서</h3>
             {consultDetail ? (
-              <p>{consultDetail.summary}</p>
+              <>
+                <p>
+                  <strong>주제:</strong> {consultDetail.topic}
+                </p>
+                <p>
+                  <strong>공격 발언 횟수:</strong>{" "}
+                  {consultDetail.profanityCount}
+                </p>
+                <p>
+                  <strong>공격 발언 수위:</strong>{" "}
+                  {consultDetail.profanityLevel}
+                </p>
+                <p>
+                  <strong>주요 내용:</strong> {consultDetail.keyPoint}
+                </p>
+                <p>
+                  <strong>학부모:</strong> {consultDetail.parentConcern}
+                </p>
+                <p>
+                  <strong>선생님:</strong> {consultDetail.teacherRecommendation}
+                </p>
+              </>
             ) : (
               <p>상담 요약 보고서가 여기에 표시됩니다.</p>
             )}
@@ -146,16 +186,7 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
         <p>학생을 찾을 수 없습니다.</p>
       )}
 
-      {isLoading && (
-        <Modal message="상담 요약 중입니다" onClose={handleCloseModal} />
-      )}
-
-      {isDeleteModalOpen && (
-        <TeacherStudentDelete
-          studentId={studentId}
-          onClose={() => setIsDeleteModalOpen(false)}
-        />
-      )}
+      {error && <Modal message={error} onClose={handleCloseModal} />}
     </div>
   );
 };

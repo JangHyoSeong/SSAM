@@ -5,8 +5,7 @@
   height: 100%;
 
   // welcomeBox와 codeBox에 공통으로 적용되는 스타일
-  .welcomeBox,
-  .codeBox {
+  .welcomeBox {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,6 +14,19 @@
     border-radius: 15px;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
     padding: 40px;
+    margin-bottom: 10px;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .codeBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: rgba(218, 233, 255, 0.9); // 약간의 투명도 추가
+    border-radius: 15px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 20px 40px;
     margin-bottom: 10px;
     text-align: center;
     white-space: nowrap;

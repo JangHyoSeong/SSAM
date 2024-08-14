@@ -17,7 +17,8 @@ const InviteCode = () => {
   const [classInfo, setClassInfo] = useState(null); // 클래스 정보 상태 관리
   const [isCopied, setIsCopied] = useState(false); // 복사 상태를 관리
   const [hasAcceptedConsultation, setHasAcceptedConsultation] = useState(false); // 수락된 상담 여부 상태 관리
-  const [acceptedStudentName, setAcceptedStudentName] = useState("");
+  const [acceptedStudentName, setAcceptedStudentName] = useState(""); // 상담자 이름
+  const [consultationTime, setConsultationTime] = useState(""); // 상담 예정 시간
 
   // 상담 목록 가져오기
   const fetchConsultations = async () => {
@@ -28,10 +29,21 @@ const InviteCode = () => {
 
     if (acceptedConsultation) {
       setHasAcceptedConsultation(true);
-      setAcceptedStudentName(acceptedConsultation.studentName); // 학생 이름 저장
+      setAcceptedStudentName(acceptedConsultation.studentName);
+
+      // 상담 시간 처리
+      const startTime = new Date(acceptedConsultation.startTime);
+      const endTime = new Date(acceptedConsultation.endTime);
+      const formattedTime = `${startTime.getHours()}:${String(
+        startTime.getMinutes()
+      ).padStart(2, "0")} ~ ${endTime.getHours()}:${String(
+        endTime.getMinutes()
+      ).padStart(2, "0")}`;
+      setConsultationTime(formattedTime);
     } else {
       setHasAcceptedConsultation(false);
       setAcceptedStudentName("");
+      setConsultationTime("");
     }
   };
 
@@ -195,9 +207,10 @@ const InviteCode = () => {
         <h3>
           {hasAcceptedConsultation ? (
             <>
-              예정된 상담이 있습니다.
+              예정된 상담
               <br />
               <br />
+              <span style={{ color: "orange" }}>{consultationTime}</span>
               <br />
               <span style={{ color: "orange" }}>{acceptedStudentName} </span>
               학생/학부모

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 // api
 import axios from "axios";
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
-import { fetchApiReservationList } from "../../../apis/stub/55-59 상담/apiStubReservation";
+// import { fetchApiReservationList } from "../../../apis/stub/55-59 상담/apiStubReservation";
 import { fetchApiReservationSummary } from "../../../apis/stub/72-75 상담요약/apiStubReservationSummary";
 const apiUrl = import.meta.env.API_URL;
 // style, modal
@@ -23,6 +23,7 @@ const EnterCode = () => {
   });
   const [hasAcceptedConsultation, setHasAcceptedConsultation] = useState(false);
   const [acceptedTeacherName, setAcceptedTeacherName] = useState("");
+  const [consultationDate, setConsultationDate] = useState("");
   const [consultationTime, setConsultationTime] = useState("");
 
   const navigate = useNavigate();
@@ -54,27 +55,33 @@ const EnterCode = () => {
         }
 
         // 상담 정보 가져오기
-        const consultationsData = await fetchApiReservationSummary();
-        const acceptedConsultation = consultationsData.find(
-          (consultation) => consultation.status === "ACCEPTED"
-        );
+        const acceptedConsultation = await fetchApiReservationSummary();
 
-        if (acceptedConsultation) {
+        if (acceptedConsultation && acceptedConsultation.accessCode) {
           setHasAcceptedConsultation(true);
-          setAcceptedTeacherName(acceptedConsultation.teacherName);
 
           // 상담 시간 처리
           const startTime = new Date(acceptedConsultation.startTime);
           const endTime = new Date(acceptedConsultation.endTime);
-          const formattedTime = `${startTime.getHours()}:${String(
-            startTime.getMinutes()
-          ).padStart(2, "0")} ~ ${endTime.getHours()}:${String(
-            endTime.getMinutes()
-          ).padStart(2, "0")}`;
+
+          // 날짜 포맷팅
+          const formattedDate = `${
+            startTime.getMonth() + 1
+          }월 ${startTime.getDate()}일`;
+          setConsultationDate(formattedDate);
+
+          // 시간 포맷팅
+          const formattedTime = `${String(startTime.getHours()).padStart(
+            2,
+            "0"
+          )}:${String(startTime.getMinutes()).padStart(2, "0")} ~ ${String(
+            endTime.getHours()
+          ).padStart(2, "0")}:${String(endTime.getMinutes()).padStart(2, "0")}`;
           setConsultationTime(formattedTime);
         } else {
           setHasAcceptedConsultation(false);
           setAcceptedTeacherName("");
+          setConsultationDate("");
           setConsultationTime("");
         }
       } catch (error) {
@@ -129,13 +136,12 @@ const EnterCode = () => {
             <>
               예정된 상담
               <br />
-              <span>{acceptedTeacherName}</span>
+              <span style={{ color: "orange" }}>{consultationDate}</span>
               <br />
               <span style={{ color: "orange" }}>{consultationTime}</span>
-              <br />
             </>
           ) : (
-            "예정된 상담이 없습니다"
+            "상담이 없습니다"
           )}
         </h3>
         {hasAcceptedConsultation && (

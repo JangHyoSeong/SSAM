@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 // api
 import axios from "axios";
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
-import { fetchApiReservationList } from "../../../apis/stub/55-59 상담/apiStubReservation";
+// import { fetchApiReservationList } from "../../../apis/stub/55-59 상담/apiStubReservation";
+import { fetchApiReservationSummary } from "../../../apis/stub/72-75 상담요약/apiStubReservationSummary";
 const apiUrl = import.meta.env.API_URL; // API URL 가져오기
 // style, modal, icon
 import styles from "./InviteCode.module.scss";
@@ -22,12 +23,13 @@ const InviteCode = () => {
 
   // 상담 목록 가져오기
   const fetchConsultations = async () => {
-    const data = await fetchApiReservationList();
-    const acceptedConsultation = data.find(
-      (consultation) => consultation.status === "ACCEPTED"
-    );
+    const acceptedConsultation = await fetchApiReservationSummary();
+    console.log(acceptedConsultation);
+    // const acceptedConsultation = data.find(
+    //   (consultation) => consultation.status === "ACCEPTED"
+    // );
 
-    if (acceptedConsultation) {
+    if (acceptedConsultation && acceptedConsultation.accessCode) {
       setHasAcceptedConsultation(true);
       setAcceptedStudentName(acceptedConsultation.studentName);
 
@@ -217,7 +219,7 @@ const InviteCode = () => {
               학생/학부모
             </>
           ) : (
-            "상담이 없습니다"
+            "상담이 없습니다."
           )}
         </h3>
         {hasAcceptedConsultation && (

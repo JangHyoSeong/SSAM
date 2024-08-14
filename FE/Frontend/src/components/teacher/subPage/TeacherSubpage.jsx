@@ -2,6 +2,7 @@ import InviteCode from "./InviteCode";
 import SubpageImg1 from "../../../assets/subPage1.png";
 import SubpageImg2 from "../../../assets/SSAM_main.png";
 import Light from "../../../assets/Light.gif";
+import Arrow from "../../../assets/arrow1.png";
 
 import TeacherSelect from "./TeacherSelect";
 import styles from "./TeacherSubpage.module.scss";
@@ -16,7 +17,11 @@ const TeacherSubpage = () => {
       <div className={styles.subPageContainer}>
         {/* 배경 이미지 */}
         <div className={styles.imageContainer}>
-          <button className={styles.youtubeLink} onClick={redirectToYouTube} />
+          {/* 영상 보러가기 버튼 */}
+          <div className={styles.videoLink} onClick={redirectToYouTube}>
+            <span>영상 보러가기</span>
+            <img src={Arrow} className={styles.arrowIcon} alt="Arrow" />
+          </div>
           <img
             src={SubpageImg2}
             className={styles.subpageImg}

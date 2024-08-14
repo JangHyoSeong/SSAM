@@ -54,13 +54,13 @@ const VideoChatComponent = () => {
   useEffect(() => {
     // 사용자 이름 GET
     const fetchData = async () => {
-      const token = localStorage.getItem("USER_TOKEN");
+      const userToken = localStorage.getItem("USER_TOKEN");
       try {
         console.log("Fetching profile data with token:", token);
         const response = await axios.get(`${apiUrl}/v1/users`, {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `${token}`,
+            Authorization: `${userToken}`,
           },
         });
         const data = {
@@ -242,19 +242,55 @@ const VideoChatComponent = () => {
   };
 
   // 세션을 떠나는 함수
+  // const leaveSession = async () => {
+  //   if (session) {
+  //     try {
+  //       await axios.delete(`${apiUrl}/v1/video/token`, {
+  //         data: {
+  //           accessCode: accessCode,
+  //           userId: myUserName.current,
+  //         },
+  //       });
+  //     } catch (error) {
+  //       console.error("Error deleting token:", error);
+  //     }
+  //     session.disconnect();
+  //   }
+  //   setSession(null);
+  //   setSubscribers([]);
+  //   setMainStreamManager(null);
+  //   setPublisher(null);
+  // };
   const leaveSession = async () => {
     if (session) {
       try {
+        // 기존의 토큰 삭제 로직
         await axios.delete(`${apiUrl}/v1/video/token`, {
           data: {
             accessCode: accessCode,
             userId: myUserName.current,
           },
         });
+
+        // 사용자의 역할 정보를 가져오는 GET 요청
+        const token = localStorage.getItem("USER_TOKEN");
+        const response = await axios.get(`${apiUrl}/v1/users/initial`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        });
+        const userRole = response.data.role;
+
+        // 역할에 따른 리다이렉션
+        if (userRole === "TEACHER") {
+          window.location.replace("/teachersubpage");
+        } else if (userRole === "STUDENT") {
+          window.location.replace("/studentsubpage");
+        }
       } catch (error) {
-        console.error("Error deleting token:", error);
+        console.error("Error during session leave:", error);
       }
-      window.location.replace("/"); // 선생님과 학생을 각각 이동시키도록 수정해야함
       session.disconnect();
     }
     setSession(null);
@@ -324,7 +360,7 @@ const VideoChatComponent = () => {
     if (chatInput.trim() !== "" && session) {
       const messageData = {
         message: chatInput,
-        from: profileData.name, // .current 대신 .name 사용
+        from: token.userId, // .current 대신 .name 사용
         connectionId: session.connection.connectionId,
       };
       session.signal({
@@ -410,7 +446,7 @@ const VideoChatComponent = () => {
 
   // 토큰을 가져오는 함수
   const getToken = async () => {
-    const token = localStorage.getItem("USER_TOKEN");
+    const userToken = localStorage.getItem("USER_TOKEN");
     try {
       const response = await axios.post(
         `${apiUrl}/v1/video/token`,
@@ -421,7 +457,7 @@ const VideoChatComponent = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: token,
+            Authorization: userToken,
           },
         }
       );
@@ -584,13 +620,7 @@ const VideoChatComponent = () => {
                       {sttMessages.map((msg, index) => (
                         <div key={index}>
                           <strong>
-                            {msg.connectionId ===
-                            session.connection.connectionId
-                              ? profileData.name == ""
-                                ? "익명"
-                                : profileData.name
-                              : "상대방"}{" "}
-                            :{" "}
+                            {msg.from}: 
                           </strong>
                           {msg.message}
                         </div>

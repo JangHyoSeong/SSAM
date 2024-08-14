@@ -53,30 +53,33 @@
   background-color: #e90000;
 }
 
+.historyBox {
+  flex: 1;
+  padding: 2vw;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 1200px;
+  max-height: 600px;
+  min-height: 270px;
+  overflow: auto;
+  background-color: #f9f9f9; /* 전체 배경색 */
+}
+
 .studentDetailBox {
-  flex: 0.1;
+  flex: 0.2;
   padding: 30px;
-  border: 3px solid #ddd;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   height: 100%; /* historyBox와 동일한 높이 */
-}
-
-.historyBox {
-  flex: 1;
-  padding: 2vw;
-  border: 3px solid #ddd;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-width: 1200px;
-  max-height: 500px;
-  min-height: 270px;
-  overflow: auto;
+  background-color: #f9f9f9; /* historyBox와 동일한 배경색 */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* historyBox와 비슷한 그림자 효과 */
+  max-width: 400px; /* 박스 크기를 historyBox 느낌으로 설정 */
+  margin-bottom: 20px; /* historyBox와 유사한 간격 */
 }
 
 .studentPhoto {
@@ -87,18 +90,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 3px solid #ddd;
+  background-color: #fff; /* 사진 배경색 추가 */
 }
 
 .studentInfo {
   position: relative;
   top: 5%;
+  margin-top: 20px; /* 위 요소와의 간격 */
+  font-size: 1.2em; /* 텍스트 크기를 조절 */
+  color: #333; /* 텍스트 색상 추가 */
 }
 
 .studentPhoto img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%;
 }
 
 .historyBox h3 {
@@ -111,10 +118,11 @@
   justify-content: space-between;
   padding: 12px 15px;
   font-weight: bold;
-  // border-bottom: 0.5px solid #ddd;
+  background: #e5e5e5;
   align-items: center;
+  border-radius: 8px;
   text-align: center;
-  background: #f0f0f0;
+  margin-bottom: 10px;
 }
 
 .dateColumn,
@@ -149,10 +157,14 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
   overflow: hidden;
+  background-color: #fff; /* 기본 배경색 */
+  border-radius: 8px; /* 테두리 둥글게 */
+  margin-bottom: 10px; /* 행 사이의 간격 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 행마다 약간의 그림자 효과 */
 }
 
 .consultRow:hover {
-  background-color: #f9f9f9;
+  background-color: #f0f0f0; /* Hover 시 배경색 변경 */
 }
 
 strong {
@@ -178,28 +190,77 @@ strong {
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  max-width: 400px;
+  max-width: 600px;
+  max-height: 600px;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.summaryTitle {
+  font-size: 2rem;
+  color: #007bff; /* 제목을 파란색으로 변경 */
+  margin-bottom: 2rem; /* 제목과 내용 사이에 더 많은 간격 추가 */
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.summaryLabel {
+  flex: 1;
+  text-align: center;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.summaryValue {
+  flex: 2;
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 10px;
+  background-color: #f1f1f1;
+  border-radius: 25px;
+}
+
+.summaryKey {
+  padding: 20px;
+}
+
+.summaryValue .summaryKeypoint {
+  padding: 10px;
+  background-color: #e4ecfb;
+  border-radius: 25px;
+  color: black;
+}
+
+.summaryButton {
+  display: flex;
+  justify-content: center;
+}
+
+.summaryButton button {
+  color: white;
+  background-color: #007bff;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.summaryButton button:hover {
+  background-color: #0056b3;
 }
 
 .modalContent p {
   margin-bottom: 1rem;
   font-size: 1.2rem;
-}
-
-.modalContent button {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.modalContent button:hover {
-  background-color: #0056b3;
 }
 
 .noConsultHistory {

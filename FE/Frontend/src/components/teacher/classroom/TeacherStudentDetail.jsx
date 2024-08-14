@@ -71,7 +71,7 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
       };
 
       setConsultDetail(summaryData);
-      setIsSummaryModalOpen(true); // Summary 모달을 열기
+      setIsSummaryModalOpen(true); // 요약 모달을 열기
     } catch (error) {
       console.error("상담 상세 정보를 불러오는 데 실패했습니다.", error);
       setError("상담 요약 정보를\n생성 중입니다.");
@@ -86,7 +86,7 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
 
   const handleCloseModal = () => {
     setError(null);
-    setIsSummaryModalOpen(false); // Summary 모달을 닫기
+    setIsSummaryModalOpen(false); // 요약 모달을 닫기
   };
 
   const formatDate = (dateTimeString) => {
@@ -94,6 +94,35 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
     const month = date.getMonth() + 1;
     const day = date.getDate();
     return `${month}월 ${day}일`;
+  };
+
+  const formatKeyPoint = (text) => {
+    let spaceCount = 0;
+    let formattedText = [];
+    let tempText = "";
+
+    for (let i = 0; i < text.length; i++) {
+      if (text[i] === " ") {
+        spaceCount++;
+      }
+
+      tempText += text[i];
+
+      if (spaceCount === 5) {
+        console.log("5개의 공백 발견!"); // 공백 5개 발견 시 로그 출력
+        formattedText.push(tempText);
+        formattedText.push(<br key={i} />);
+        tempText = "";
+        spaceCount = 0;
+      }
+    }
+
+    // 마지막으로 남은 텍스트가 있다면 추가
+    if (tempText) {
+      formattedText.push(tempText);
+    }
+
+    return formattedText;
   };
 
   const Modal = ({ message, onClose }) => {
@@ -113,26 +142,54 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
     return (
       <div className={styles.modalOverlay}>
         <div className={styles.modalContent}>
-          <h3>상담 요약 보고서</h3>
-          <p>
-            <strong>주제:</strong> {detail.topic}
-          </p>
-          <p>
-            <strong>공격 발언 횟수:</strong> {detail.profanityCount}
-          </p>
-          <p>
-            <strong>공격 발언 수위:</strong> {detail.profanityLevel}
-          </p>
-          <p>
-            <strong>주요 내용:</strong> {detail.keyPoint}
-          </p>
-          <p>
-            <strong>학부모:</strong> {detail.parentConcern}
-          </p>
-          <p>
-            <strong>선생님:</strong> {detail.teacherRecommendation}
-          </p>
-          <button onClick={onClose}>닫기</button>
+          <h1 className={styles.summaryTitle}>상담 요약 보고서</h1>
+          <div className={styles.summaryRow}>
+            <div className={styles.summaryLabel}>
+              <strong>주제</strong>
+            </div>
+            <div className={styles.summaryValue}>{detail.topic}</div>
+          </div>
+          <div className={styles.summaryRow}>
+            <div className={styles.summaryLabel}>
+              <strong>공격 발언 수위</strong>
+            </div>
+            <div className={styles.summaryValue}>{detail.profanityLevel}</div>
+          </div>
+          <div className={styles.summaryRow}>
+            <div className={styles.summaryLabel}>
+              <strong>공격 발언 횟수</strong>
+            </div>
+            <div className={styles.summaryValue}>{detail.profanityCount}</div>
+          </div>
+          <div className={styles.summaryRow}>
+            <div className={styles.summaryLabel}>
+              <strong>학부모</strong>
+            </div>
+            <div className={styles.summaryValue}>{detail.parentConcern}</div>
+          </div>
+          <div className={styles.summaryRow}>
+            <div className={styles.summaryLabel}>
+              <strong>선생님</strong>
+            </div>
+            <div className={styles.summaryValue}>
+              {detail.teacherRecommendation}
+            </div>
+          </div>
+          <div className={styles.summaryRow}>
+            <div className={styles.summaryLabel}>
+              <div className={styles.summaryKey}>
+                <strong>주요 내용</strong>
+              </div>
+            </div>
+            <div className={styles.summaryValue}>
+              <div className={styles.summaryKeypoint}>
+                {formatKeyPoint(detail.keyPoint)}
+              </div>
+            </div>
+          </div>
+          <div className={styles.summaryButton}>
+            <button onClick={onClose}>닫기</button>
+          </div>
         </div>
       </div>
     );

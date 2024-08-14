@@ -19,7 +19,6 @@ public class ConsultSummaryDetailResponseDto {
     private Integer consultId;
     private LocalDateTime actualDate;
     private Integer runningTime;
-    private String content;
     private Integer attSchool;
     private Integer attGrade;
     private Integer attClassroom;

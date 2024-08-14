@@ -138,12 +138,12 @@ public class ConsultService {
    
         List<Consult> consults = null;
         if (userDetails.getRole().equals(UserRole.TEACHER.toString())) {
-        	System.out.println("IAM TEACHER");
+        	System.out.println("나는 선생이야");
             consults = consultRepository.findUpcomingConsultForTeacher(userId, nowDateTime, AppointmentStatus.ACCEPTED)
                     .orElse(null);
         }
         else {
-        	System.out.println("IAM STUDENT");
+        	System.out.println("나는 학생이야");
             consults = consultRepository.findUpcomingConsultForStudent(userId, nowDateTime, AppointmentStatus.ACCEPTED)
                     .orElse(null);
         }

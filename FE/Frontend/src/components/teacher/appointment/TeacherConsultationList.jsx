@@ -49,6 +49,20 @@ const ConsultationItem = ({
   onApprove,
   onCancel,
 }) => {
+    // 비디오 링크
+  // const handleConsult = () => {
+  //   if (accessCode) {
+  //     window.open(`https://i11e201.p.ssafy.io/video/${accessCode}`);
+  //   } else {
+  //     console.error("Access code not found for this consultation");
+  //     // 사용자에게 오류 메시지 표시
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "오류",
+  //       text: "상담 링크를 열 수 없습니다. 관리자에게 문의해주세요.",
+  //     });
+  //   }
+  // };
   const navigate = useNavigate();
 
   const handleConsult = async () => {

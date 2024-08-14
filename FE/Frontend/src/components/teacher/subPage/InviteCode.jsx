@@ -1,27 +1,38 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./InviteCode.module.scss";
-import ClassProduceModal from "./ClassProduceModal";
-import { FiCopy } from "react-icons/fi";
-import { FiCheck } from "react-icons/fi";
+// api
+import axios from "axios";
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
 import { fetchApiReservationList } from "../../../apis/stub/55-59 상담/apiStubReservation";
-
 const apiUrl = import.meta.env.API_URL; // API URL 가져오기
-import Swal from "sweetalert2"; // 알림을 위한 SweetAlert2 라이브러리 임포트
+// style, modal, icon
+import styles from "./InviteCode.module.scss";
+import ClassProduceModal from "./ClassProduceModal";
+import Swal from "sweetalert2";
+import { FiCopy } from "react-icons/fi";
+import { FiCheck } from "react-icons/fi";
 
 const InviteCode = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태를 관리
   const [classInfo, setClassInfo] = useState(null); // 클래스 정보 상태 관리
   const [isCopied, setIsCopied] = useState(false); // 복사 상태를 관리
   const [hasAcceptedConsultation, setHasAcceptedConsultation] = useState(false); // 수락된 상담 여부 상태 관리
+  const [acceptedStudentName, setAcceptedStudentName] = useState("");
 
   // 상담 목록 가져오기
   const fetchConsultations = async () => {
     const data = await fetchApiReservationList();
-    const hasAccepted = data.some(consultation => consultation.status === 'ACCEPTED');
-    setHasAcceptedConsultation(hasAccepted);
+    const acceptedConsultation = data.find(
+      (consultation) => consultation.status === "ACCEPTED"
+    );
+
+    if (acceptedConsultation) {
+      setHasAcceptedConsultation(true);
+      setAcceptedStudentName(acceptedConsultation.studentName); // 학생 이름 저장
+    } else {
+      setHasAcceptedConsultation(false);
+      setAcceptedStudentName("");
+    }
   };
 
   useEffect(() => {
@@ -184,11 +195,15 @@ const InviteCode = () => {
         <h3>
           {hasAcceptedConsultation ? (
             <>
-              예정된 상담이
-              <br /> 있습니다.
+              예정된 상담이 있습니다.
+              <br />
+              <br />
+              <br />
+              <span style={{ color: "orange" }}>{acceptedStudentName} </span>
+              학생/학부모
             </>
           ) : (
-            '상담이 없습니다'
+            "상담이 없습니다"
           )}
         </h3>
         {hasAcceptedConsultation && (

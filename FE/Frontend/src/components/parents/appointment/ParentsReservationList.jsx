@@ -1,17 +1,19 @@
 import { useEffect, useState, useCallback } from "react";
 import PropTypes from "prop-types";
-import { FiCalendar } from "react-icons/fi";
-import useTeacherCalendarStore, {
-  AppointmentTopic,
-} from "../../../store/TeacherCalendarStore";
-import Modal from "./Modal";
-import styles from "./ParentsReservationList.module.scss";
+// store
+import { AppointmentTopic } from "../../../store/TeacherCalendarStore";
+import useTeacherCalendarStore from "../../../store/TeacherCalendarStore";
+// api
 import {
   fetchApiRequestReservation,
   fetchApiCancelReservation,
 } from "../../../apis/stub/55-59 상담/apiStubReservation";
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
+// style, modal, alert, icon
+import styles from "./ParentsReservationList.module.scss";
+import Modal from "./Modal";
 import Swal from "sweetalert2";
+import { FiCalendar } from "react-icons/fi";
 
 const ParentsReservationList = ({ selectedDate }) => {
   const {
@@ -135,7 +137,10 @@ const ParentsReservationList = ({ selectedDate }) => {
         consultation.studentId === userId
       ) {
         buttonClass += ` ${styles.cancel}`;
-      } else if (!isAvailable(consultation.status)) {
+      } else if (
+        !isAvailable(consultation.status) ||
+        ["ACCEPTED", "DONE", "REJECTED"].includes(consultation.status)
+      ) {
         buttonClass += ` ${styles.unavailable}`;
       } else if (index === clickedIndex) {
         buttonClass += ` ${styles.clicked}`;
@@ -152,6 +157,10 @@ const ParentsReservationList = ({ selectedDate }) => {
         consultation.studentId === userId
       ) {
         return "상담취소";
+      } else if (
+        ["ACCEPTED", "DONE", "REJECTED"].includes(consultation.status)
+      ) {
+        return "신청불가";
       } else if (isAvailable(consultation.status)) {
         return "신청가능";
       } else {
@@ -241,11 +250,6 @@ const ParentsReservationList = ({ selectedDate }) => {
     }
   };
 
-  // 취소 버튼 핸들러
-  // const handleCancel = () => {
-  //   refreshConsultations();
-  // };
-
   return (
     <div className={styles.consultationList}>
       <div className={styles.header}>
@@ -295,9 +299,6 @@ const ParentsReservationList = ({ selectedDate }) => {
         >
           예약하기
         </button>
-        {/* <button className={styles.cancel} onClick={handleCancel}>
-          취소
-        </button> */}
       </div>
 
       <Modal show={showModal} onClose={() => setShowModal(false)} />

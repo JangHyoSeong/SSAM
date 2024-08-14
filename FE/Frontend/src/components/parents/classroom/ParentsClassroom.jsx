@@ -53,9 +53,7 @@ const ParentsClassroom = () => {
     <div className={styles.classInfoContainer}>
       <div className={styles.imageContainer}>
         {isImageLoading ? (
-          <div className={styles.loadingContainer}>
-            <LoadingSpinner /> {/* 로딩 스피너 표시 */}
-          </div>
+          <LoadingSpinner />
         ) : (
           <img
             src={uploadedImageUrl || ClassImage} // bannerImg URL 우선 적용

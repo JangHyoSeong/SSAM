@@ -6,8 +6,12 @@ const Footer = () => {
   return (
     <div className={styles.footerArray}>
       <div className={styles.img}>
-        <img src={git} className={styles.gitImg} />
-        <img src={youtube} className={styles.youtubeImg} />
+        <a href="https://github.com" target="_blank">
+          <img src={git} className={styles.gitImg} />
+        </a>
+        <a href="https://www.youtube.com" target="_blank">
+          <img src={youtube} className={styles.youtubeImg} />
+        </a>
       </div>
       <div className={styles.txt}>
         <p>Home | 개인 정보 처리 방침 | 고객센터</p>

@@ -5,6 +5,7 @@ import { useConsultation } from "../../../store/ConsultationStore";
 import styles from "./TeacherConsultationList.module.scss";
 import ConsultationApproveModal from "./ConsultationApproveModal";
 import ConsultationCancelModal from "./ConsultationCancelModal";
+import LoadingSpinner from "../../../common/ModernLoading";
 import Swal from "sweetalert2";
 
 // topic db랑 화면 매핑
@@ -37,7 +38,7 @@ const ConsultationItem = ({
   // 비디오 링크
   const handleConsult = () => {
     if (accessCode) {
-      window.open("http://localhost:3000/video/CRHDNAP", "_blank");
+      window.open(`http://localhost:3000/video/${accessCode}`, "_blank");
     } else {
       console.error("Access code not found for this consultation");
       // 사용자에게 오류 메시지 표시
@@ -236,7 +237,7 @@ const TeacherConsultationList = () => {
         );
   }, [consultations, activeFilters]);
 
-  if (loading) return <div></div>;
+  if (loading) return <LoadingSpinner />;
   if (error) return <div>에러: {error}</div>;
 
   return (

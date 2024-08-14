@@ -74,6 +74,7 @@ const ChatbotStudyModal = ({ openModal }) => {
       <div className={styles.topArray}>
         <h4>SSAM 학습하기</h4>
       </div>
+      <hr />
       <div className={styles.chatArray}>
         <div className={styles.chatContent}>
           <div className={styles.messagesContainer}>

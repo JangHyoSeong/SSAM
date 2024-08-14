@@ -146,6 +146,16 @@ public class SessionController {
         String accessCode = requestDto.getAccessCode();
         String userId = requestDto.getUserId();
 
+        
+        if(!accessCode.contains("test")) {
+       	 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+            User user = userRepository.findByUserId(userDetails.getUserId())
+                    .orElseThrow(()->new CustomException(ErrorCode.UserNotFoundException));
+       	
+       }
+        
         Map<String, OpenViduSessionDto> sessionUsers = sessionUserMapping.get(accessCode);
         if (sessionUsers != null) {
             sessionUsers.remove(userId);

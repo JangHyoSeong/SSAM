@@ -5,8 +5,7 @@
   height: 100%;
 
   // welcomeBox와 codeBox에 공통으로 적용되는 스타일
-  .welcomeBox,
-  .codeBox {
+  .welcomeBox {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,6 +14,19 @@
     border-radius: 15px;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
     padding: 40px;
+    margin-bottom: 10px;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .codeBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: rgba(218, 233, 255, 0.9); // 약간의 투명도 추가
+    border-radius: 15px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 20px 40px;
     margin-bottom: 10px;
     text-align: center;
     white-space: nowrap;
@@ -76,7 +88,7 @@
 
   .pinBtn,
   .deleteBtn {
-    width: 100%; /* 버튼의 크기를 동일하게 설정 */
+    width: 75%; /* 버튼의 크기를 동일하게 설정 */
     padding: 8px 15px; /* 버튼 크기를 동일하게 유지 */
     border-radius: 20px; /* 동일한 border-radius로 수정 */
     font-size: 0.8em; /* 폰트 크기 조정 */
@@ -89,7 +101,7 @@
   }
 
   .classBtn {
-    width: 100%; /* 버튼의 크기를 동일하게 설정 */
+    width: 105%; /* 버튼의 크기를 동일하게 설정 */
     padding: 8px 15px; /* 버튼 크기를 동일하게 유지 */
     border-radius: 20px; /* 동일한 border-radius로 수정 */
     font-size: 0.8em; /* 폰트 크기 조정 */
@@ -125,4 +137,8 @@
       color: white;
     }
   }
+}
+
+.classOpen {
+  margin: 10%;
 }

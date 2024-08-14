@@ -254,6 +254,7 @@ const VideoChatComponent = () => {
       } catch (error) {
         console.error("Error deleting token:", error);
       }
+      window.location.replace("/"); // 선생님과 학생을 각각 이동시키도록 수정해야함
       session.disconnect();
     }
     setSession(null);
@@ -555,12 +556,12 @@ const VideoChatComponent = () => {
 
           {/* 화면 */}
           <div className={styles.bottom}>
-            <div
-              className={`${styles.screen} ${
-                !showSubtitle ? styles.fullHeight : ""
-              }`}
-            >
-              <div className={styles.videoPosition}>
+            <div className={styles.screen}>
+              <div
+                className={`${styles.videoPosition} ${
+                  !showSubtitle ? styles.fullHeight : ""
+                }`}
+              >
                 {mainStreamManager !== null && (
                   <div className={styles.videoItem}>
                     <UserVideoComponent streamManager={mainStreamManager} />
@@ -585,8 +586,9 @@ const VideoChatComponent = () => {
                           <strong>
                             {msg.connectionId ===
                             session.connection.connectionId
-                              ? (profileData.name == ""?
-                              "익명" : profileData.name)
+                              ? profileData.name == ""
+                                ? "익명"
+                                : profileData.name
                               : "상대방"}{" "}
                             :{" "}
                           </strong>

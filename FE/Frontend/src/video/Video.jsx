@@ -1,14 +1,14 @@
 // Video.jsx
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useVideoChat } from './useVideoChat';
-import { useSTT } from './useSTT';
-import { useProfile } from './useProfile';
-import MenuBar from './MenuBar';
-import VideoScreen from './VideoScreen';
-import ChatBox from './ChatBox';
-import SubtitleBox from './SubtitleBox';
-import styles from './Video.module.scss';
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useVideoChat } from "./useVideoChat";
+import { useSTT } from "./useSTT";
+import { useProfile } from "./useProfile";
+import MenuBar from "./MenuBar";
+import VideoScreen from "./VideoScreen";
+import ChatBox from "./ChatBox";
+import SubtitleBox from "./SubtitleBox";
+import styles from "./Video.module.scss";
 
 const Video = () => {
   const { accessCode } = useParams();
@@ -23,18 +23,25 @@ const Video = () => {
     isCameraOn: true,
     isMicOn: true,
     showSubtitle: true,
-    formattedDate: '',
-    remainingTime: '',
+    formattedDate: "",
+    remainingTime: "",
     isTimerEnded: false,
-    profanityDetected: false
+    profanityDetected: false,
   });
 
   const updateState = (newState) => {
-    setState(prevState => ({ ...prevState, ...newState }));
+    setState((prevState) => ({ ...prevState, ...newState }));
   };
 
-  const { joinSession, leaveSession, toggleRecording, toggleCamera, toggleMic } = useVideoChat(state, updateState, accessCode);
-  const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSTT(state, updateState);
+  const {
+    joinSession,
+    leaveSession,
+    toggleRecording,
+    toggleCamera,
+    toggleMic,
+  } = useVideoChat(state, updateState, accessCode);
+  const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
+    useSTT(state, updateState);
   const { profileData } = useProfile();
 
   useEffect(() => {
@@ -63,8 +70,17 @@ const Video = () => {
       />
       <div className={styles.bottom}>
         <VideoScreen state={state} />
-        {state.showSubtitle && <SubtitleBox sttMessages={state.sttMessages} profileData={profileData} />}
-        <ChatBox state={state} updateState={updateState} profileData={profileData} />
+        {state.showSubtitle && (
+          <SubtitleBox
+            sttMessages={state.sttMessages}
+            profileData={profileData}
+          />
+        )}
+        <ChatBox
+          state={state}
+          updateState={updateState}
+          profileData={profileData}
+        />
       </div>
     </div>
   );

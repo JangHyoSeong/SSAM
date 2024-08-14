@@ -6,6 +6,7 @@ import round1 from "../../../assets/round1.png";
 import round2 from "../../../assets/round2.png";
 import round3 from "../../../assets/round3.png";
 import google from "../../../assets/google.png";
+const apiUrl = import.meta.env.API_URL;
 // import naver from "../../../assets/naver.png";
 // import kakao from "../../../assets/kakao.png";
 
@@ -42,6 +43,9 @@ const ParentsLogin = () => {
       }
     }
   };
+      const handleGoogleLogin = () => {
+    window.location.href = `${apiUrl}/oauth2/authorization/google`
+  };
 
   return (
     <div className={styles.loginArray}>
@@ -74,7 +78,11 @@ const ParentsLogin = () => {
               </NavLink>
               <p>아이디 / 비밀번호 찾기</p>
             </div>
-            <button type="button" className={styles.googleBtn}>
+            <button
+              type="button"
+              className={styles.googleBtn}
+              onClick={handleGoogleLogin}
+            >
               <img src={google} className={styles.googleImg} alt="google" />
               <p>구글로 시작하세요</p>
             </button>

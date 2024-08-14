@@ -5,36 +5,43 @@
   flex-direction: column;
   width: 100vw;
   height: 100vh;
-  background-color: black;
+  background-color: #282c34;
 }
 
-.top {
-  display: flex;
+.entering {
+  color: white;
+  font-size: 300%;
 }
 
 .menubarArray {
   display: flex;
+  align-items: center;
+  width: 100%;
+  height: 15vh;
+}
+
+.top {
+  display: flex;
   justify-content: center;
   align-items: center;
   width: 75vw;
-  height: 15vh;
 }
 
 .menubar {
   display: flex;
-  width: 71vw;
+  width: 71.5vw;
   height: 10vh;
-  border-radius: 25px;
+  border-radius: 15px;
   background-color: #0052e7;
-  margin-left: 2%;
 }
 
 .logoArray {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 20%;
-  height: 10vh;
+  width: 15%;
+  height: 100%;
+  margin: 0% 2%;
 }
 
 .logo {
@@ -47,43 +54,53 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  text-align: center;
-  width: 15vw;
-  height: 10vh;
-}
-
-.dayArray p {
-  font-size: 120%;
+  margin: 0% 5% 0% 2%;
   color: white;
-  margin: 1% 0%;
+  font-size: 200%;
+  white-space: nowrap;
 }
 
 .iconArray {
   display: flex;
+  align-items: center;
   justify-content: space-evenly;
-  width: 41vw;
-  height: 10vh;
+  width: 40vw;
 }
 
-.iconArray img {
-  width: 5vw;
+.btnIcon {
+  border-style: none;
+  background-color: transparent;
 }
 
+.imgIcon {
+  width: 3.5vw;
+  cursor: pointer;
+}
+
+.leaveSession h1 {
+  color: red;
+  font-size: 300%;
+  cursor: pointer;
+}
+
+// 시간
 .timeArray {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 25vw;
-  height: 15vh;
 }
 
 .time {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  font-size: 120%;
+  color: white;
   width: 22vw;
   height: 10vh;
-  border-radius: 25px;
+  border-radius: 15px;
   background-color: #0052e7;
 }
 
@@ -92,66 +109,111 @@
   color: white;
 }
 
+// 아래 화면
 .bottom {
   display: flex;
 }
 
+// 비디오
 .screen {
-  position: absolute;
-  top: 18%;
-  left: 4%;
+  width: 75vw;
+  height: 75vh;
 }
 
-// videoItem 이게 뭔지 모름...
+.videoPosition {
+  position: absolute;
+  top: 33.5%;
+  width: 76%;
+  height: 24%;
+  display: flex;
+  align-items: flex-start; /* 변경: 상단 정렬 */
+  justify-content: center;
+  transition: height 0.3s ease; /* 추가: 부드러운 높이 변화 */
+}
+
+.videoPosition.fullHeight {
+  height: 32%; /* 자막이 없을 때 전체 높이 사용 */
+}
+
+.othervideoItem {
+  cursor: move;
+  position: absolute;
+  top: 31.2%;
+  left: 58.2%;
+  width: 15%;
+  height: auto;
+  z-index: 1; /* 추가: 다른 비디오가 메인 비디오 위에 오도록 */
+}
+
+.othervideoItem video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px;
+}
+
 .videoItem {
-  position: absolute;
-  top: 0%;
-  left: 0%;
+  width: 100%;
+  height: 75%;
+  position: relative;
+  transition: height 0.3s ease;
 }
 
+.videoItem video {
+  position: absolute;
+  top: -10%;
+  left: 2.5%;
+  width: 95%;
+  height: 300%;
+  object-fit: cover;
+  border-radius: 15px;
+  border: 1px solid white;
+}
+
+.subBtn {
+  width: 0%;
+  height: 0%;
+}
+
+// 자막
 .subTitleArray {
   position: absolute;
-  bottom: 0%;
-  left: 0%;
+  top: 86.7%;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 75vw;
-  height: 20vh;
+  height: 18.7vh;
 }
 
 .subTitle {
-  width: 71vw;
+  overflow: auto;
+  width: 71.2vw;
   height: 15vh;
   border: 5px solid white;
-  border-radius: 25px;
-  margin-left: 2%;
+  border-radius: 15px;
+  color: white;
+  padding-left: 2%;
+  font-size: 150%;
 }
 
-.chatingArray {
-  position: absolute;
-  top: 15%;
-  right: -13.5%;
+.right {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50vw;
-  height: 85vh;
-  display: flex;
-  flex-direction: column;
+  width: 25vw;
 }
 
-.chating {
-  position: relative;
-  bottom: 1.5%;
-  right: 1.5%;
+// 채팅
+.chatingArray {
   display: flex;
-  flex-direction: column;
-  width: 22vw;
-  height: 82vh;
-  background-color: white;
-  border-radius: 25px;
-  overflow-y: auto;
+  justify-content: center;
+  align-items: center;
+  height: 75vh;
+}
+
+.chatingArray::-webkit-scrollbar {
+  display: none;
 }
 
 .chatMessage {
@@ -161,30 +223,68 @@
 }
 
 .ownMessage {
+  border-radius: 15px;
   background-color: #007bff;
   color: white;
   align-self: flex-end;
 }
 
 .otherMessage {
+  border-radius: 15px;
   background-color: #f1f3f5;
+  align-self: flex-start;
+}
+
+.chatContainer {
+  display: flex;
+  flex-direction: column;
+  width: 22vw;
+  height: 72vh;
+  border-radius: 15px;
+  background-color: white;
+}
+
+.chating {
+  flex-grow: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.chating::-webkit-scrollbar {
+  display: none;
+}
+
+.chatMessage {
+  margin-bottom: 10px;
 }
 
 .chatForm {
-  position: absolute;
-  bottom: 5%;
-  left: 28%;
-  width: 20.5vw;
+  position: relative;
+  bottom: 2%;
+  right: -5%;
+  width: 20vw;
   height: 6vh;
   border-radius: 100px;
   background-color: #eeeeee;
+  padding: 5%;
   font-size: 100%;
-  padding-left: 3%;
   border-style: none;
 }
 
-.chatSend {
+.profanityOverlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: red;
+  width: 73%;
+  height: 54%;
   position: absolute;
-  bottom: 6.2%;
-  right: 34%;
+  top: 31%;
+  left: 1.5%;
+  border: 10px solid red;
+  border-radius: 15px;
+  z-index: 1;
+  pointer-events: none;
 }

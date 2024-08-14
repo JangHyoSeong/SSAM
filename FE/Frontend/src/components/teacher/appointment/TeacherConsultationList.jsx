@@ -51,7 +51,7 @@ const ConsultationItem = ({
 }) => {
   const navigate = useNavigate();
 
-  const handleConsult = async (accessCode) => {
+  const handleConsult = (accessCode) => {
     try {
       console.warn(accessCode);
       navigate(`/video/${accessCode}`);
@@ -80,7 +80,7 @@ const ConsultationItem = ({
           </>
         ) : status === "ACCEPTED" ? (
 
-        <button className={styles.statusButton} onClick={handleConsult(accessCode)}>상담 하기</button>
+          <button className={styles.statusButton} onClick={() => handleConsult(accessCode)}>상담 하기</button>
 
         ) : status === "CANCEL" ? (
           <span className={styles.cancelStatus}>상담 취소</span>

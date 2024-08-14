@@ -144,7 +144,7 @@
 .approveButton,
 .rejectButton {
   border-radius: 25px;
-  padding: 0.8vh 2vh;
+  padding: 0.8vh 1.8vh;
   margin: 0 0.5vw;
   cursor: pointer;
   font-size: 16px;
@@ -158,7 +158,7 @@
   &:hover {
     background-color: #5285ee;
     color: white;
-    border-style: none;
+    border: 2px solid #5285ee;
   }
 }
 
@@ -168,7 +168,7 @@
   background-color: white;
 
   &:hover {
-    border: none;
+    border: 2px solid #ee5252;
     color: white;
     background-color: #ee5252;
   }

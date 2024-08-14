@@ -144,7 +144,6 @@ const TeacherConsultationList = () => {
   const handleApprove = (appointmentId) => {
     Swal.fire({
       title: "상담을 승인하시겠습니까?",
-      // text: "이 작업은 되돌릴 수 없습니다!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -153,13 +152,27 @@ const TeacherConsultationList = () => {
       cancelButtonText: "취소",
     }).then((result) => {
       if (result.isConfirmed) {
-        approveConsultation(appointmentId);
-        Swal.fire({
-          title: "승인 완료!",
-          text: "상담이 승인되었습니다.",
-          icon: "success",
-          timer: 1500,
-        });
+        approveConsultation(appointmentId)
+          .then(() => {
+            Swal.fire({
+              title: "승인 완료!",
+              text: "상담이 승인되었습니다.",
+              icon: "success",
+              timer: 1500,
+            }).then(() => {
+              // 승인 완료 메시지가 표시된 후 페이지 새로고침
+              window.location.reload();
+            });
+          })
+          .catch((error) => {
+            // 에러 처리
+            Swal.fire({
+              title: "오류 발생",
+              text: "승인 처리 중 문제가 발생했습니다.",
+              icon: "error",
+            });
+            console.error("승인 처리 중 오류:", error);
+          });
       }
     });
   };

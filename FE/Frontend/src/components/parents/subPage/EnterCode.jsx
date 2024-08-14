@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { fetchApiUserInitial } from "../../../apis/stub/20-22 사용자정보/apiStubUserInitial";
 import { fetchApiReservationList } from "../../../apis/stub/55-59 상담/apiStubReservation";
+import { fetchApiReservationSummary } from "../../../apis/stub/72-75 상담요약/apiStubReservationSummary";
 const apiUrl = import.meta.env.API_URL;
 // style, modal
 import styles from "./EnterCode.module.scss";
@@ -53,7 +54,7 @@ const EnterCode = () => {
         }
 
         // 상담 정보 가져오기
-        const consultationsData = await fetchApiReservationList();
+        const consultationsData = await fetchApiReservationSummary();
         const acceptedConsultation = consultationsData.find(
           (consultation) => consultation.status === "ACCEPTED"
         );

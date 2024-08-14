@@ -137,7 +137,10 @@ const ParentsReservationList = ({ selectedDate }) => {
         consultation.studentId === userId
       ) {
         buttonClass += ` ${styles.cancel}`;
-      } else if (!isAvailable(consultation.status)) {
+      } else if (
+        !isAvailable(consultation.status) ||
+        ["ACCEPTED", "DONE", "REJECTED"].includes(consultation.status)
+      ) {
         buttonClass += ` ${styles.unavailable}`;
       } else if (index === clickedIndex) {
         buttonClass += ` ${styles.clicked}`;
@@ -154,6 +157,10 @@ const ParentsReservationList = ({ selectedDate }) => {
         consultation.studentId === userId
       ) {
         return "상담취소";
+      } else if (
+        ["ACCEPTED", "DONE", "REJECTED"].includes(consultation.status)
+      ) {
+        return "신청불가";
       } else if (isAvailable(consultation.status)) {
         return "신청가능";
       } else {

@@ -1,5 +1,6 @@
 import InviteCode from "./InviteCode";
-import SubpageImg1 from "../../../assets/subPage1.png";
+// import SubpageImg1 from "../../../assets/subPage1.png";
+import SubpageImg2 from "../../../assets/SSAM_main.png";
 import TeacherSelect from "./TeacherSelect";
 import styles from "./TeacherSubpage.module.scss";
 const TeacherSubpage = () => {
@@ -13,7 +14,7 @@ const TeacherSubpage = () => {
         <div className={styles.imageContainer}>
           <button className={styles.youtubeLink} onClick={redirectToYouTube} />
           <img
-            src={SubpageImg1}
+            src={SubpageImg2}
             className={styles.subpageImg}
             alt="SubpageImg1"
           />

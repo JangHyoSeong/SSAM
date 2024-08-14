@@ -65,10 +65,9 @@ const ConsultationItem = ({
   // };
   const navigate = useNavigate();
 
-  const handleConsult = async () => {
+  const handleConsult = async (accessCode) => {
     try {
-      const data = await fetchApiReservationSummary();
-      navigate(`/video/${data.accessCode}`);
+      navigate(`/video/${accessCode}`);
     } catch (err) {
       console.error("API 요청 에러:", err);
       Swal.fire({
@@ -93,7 +92,9 @@ const ConsultationItem = ({
             <button className={styles.rejectButton} onClick={() => onCancel(appointmentId)}>거절</button>
           </>
         ) : status === "ACCEPTED" ? (
-          <button className={styles.statusButton} onClick={handleConsult}>상담 하기</button>
+
+        <button className={styles.statusButton} onClick={handleConsult(accessCode)}>상담 하기</button>
+
         ) : status === "CANCEL" ? (
           <span className={styles.cancelStatus}>상담 취소</span>
         ) : status === "DONE" ? (

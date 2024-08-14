@@ -85,6 +85,7 @@ public class SessionController {
     public ResponseEntity<OpenViduSessionDto> getToken(@RequestBody OpenViduSessionDto requestDto) {
         String accessCode = requestDto.getAccessCode();
         String userId = "익명";
+        System.out.println(accessCode);
 
         if(!accessCode.contains("test")) {
         	 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

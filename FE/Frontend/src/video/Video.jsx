@@ -1,5 +1,5 @@
 // Video.jsx
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useVideoChat } from './useVideoChat';
 import { useSTT } from './useSTT';
@@ -47,7 +47,7 @@ const Video = () => {
   }
 
   return (
-    <div className={styles.videoChatContainer}>
+    <div className={styles.videoArray}>
       {state.profanityDetected && (
         <div className={styles.profanityOverlay}>
           <h1>부적절한 언어가 감지되었습니다</h1>

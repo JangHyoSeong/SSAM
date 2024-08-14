@@ -1,7 +1,7 @@
 package com.ssafy.ssam.domain.consult.repository;
 
 import com.ssafy.ssam.domain.consult.dto.response.ConsultSummaryDetailResponseDto;
-import com.ssafy.ssam.domain.consult.dto.response.UpcomingConsultResponseDTO;
+import com.ssafy.ssam.domain.consult.entity.AppointmentStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ssafy.ssam.domain.consult.entity.Appointment;
@@ -44,18 +44,22 @@ public interface ConsultRepository extends JpaRepository<Consult, Integer> {
             "JOIN c.appointment a " +
             "WHERE a.student.userId = :userId " +
             "AND a.startTime > :currentDateTime " +
+            "AND a.status = :status " +
             "ORDER BY a.startTime ASC")
     Optional<List<Consult>> findUpcomingConsultForStudent(
             @Param("userId") Integer userId,
-            @Param("currentDateTime") LocalDateTime currentDateTime);
+            @Param("currentDateTime") LocalDateTime currentDateTime,
+            @Param("status") AppointmentStatus status);
 
-    // 학생기준 가장 빠른 상담 찾아오기
+    // 선생기준 가장 빠른 상담 찾아오기
     @Query("SELECT c FROM Consult c " +
             "JOIN c.appointment a " +
             "WHERE a.teacher.userId = :userId " +
             "AND a.startTime > :currentDateTime " +
+            "AND a.status = :status " +
             "ORDER BY a.startTime ASC")
     Optional<List<Consult>> findUpcomingConsultForTeacher(
             @Param("userId") Integer userId,
-            @Param("currentDateTime") LocalDateTime currentDateTime);
+            @Param("currentDateTime") LocalDateTime currentDateTime,
+            @Param("status") AppointmentStatus status);
 }

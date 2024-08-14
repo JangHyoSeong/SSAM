@@ -145,12 +145,18 @@ public class ConsultService {
             consults = consultRepository.findUpcomingConsultForStudent(userId, nowDateTime, AppointmentStatus.ACCEPTED)
                     .orElse(null);
         }
-        if (consults == null) {
+
+        if (consults.isEmpty()) {
             return new UpcomingConsultResponseDTO().builder().build();
         } else {
+            Appointment appointment = consults.get(0).getAppointment();
+            String studentName = appointment.getStudent().getName();
             return new UpcomingConsultResponseDTO().builder()
                     .consultId(consults.get(0).getConsultId())
                     .accessCode(consults.get(0).getAccessCode())
+                    .startTime(appointment.getStartTime())
+                    .endTime(appointment.getEndTime())
+                    .studentName(studentName)
                     .build();
         }
     }

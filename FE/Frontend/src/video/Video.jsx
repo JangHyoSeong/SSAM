@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { OpenVidu } from "openvidu-browser";
 import styles from "./Video.module.scss";
 
-const API_BASE_URL = "http://localhost:8081/v1/video";
+const apiUrl = import.meta.env.API_URL;
 
 const VideoChatComponent = () => {
   const { accessCode } = useParams();
@@ -26,6 +26,59 @@ const VideoChatComponent = () => {
 
   // 컴포넌트가 마운트 될 때와 언마운트 될 때 이벤트 리스너 추가 및 제거
   useEffect(() => {
+    // 사용자 이름 GET
+    const fetchData = async () => {
+      const userToken = localStorage.getItem("USER_TOKEN");
+      try {
+        console.log("Fetching profile data with token:", token);
+        const response = await axios.get(`${apiUrl}/v1/users`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${userToken}`,
+          },
+        });
+        const data = {
+          name: response.data.name || "",
+        };
+        setProfileData(data);
+        console.log("가져온 프로필 데이터 : ", data);
+      } catch (error) {
+        console.error("Failed to fetch profile data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [chatMessages]);
+
+  useEffect(() => {
+    if (transcript !== lastTranscriptRef.current) {
+      // setTmpMessage(transcript); // 음성 인식 메시지 상태 업데이트
+      lastTranscriptRef.current = transcript;
+
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current); // 기존 타임아웃 초기화
+      }
+
+      timeoutRef.current = setTimeout(() => {
+        if (
+          transcript === lastTranscriptRef.current &&
+          transcript.trim() !== ""
+        ) {
+          sendSTTMessage(transcript); // 음성 인식 메시지를 전송
+          resetTranscript(); // 음성 인식 상태 초기화
+        }
+      }, 1000);
+    }
+  }, [transcript]);
+
+  useEffect(() => {
+    // 페이지를 떠날 때 이벤트 리스너 추가
     window.addEventListener("beforeunload", onBeforeUnload);
     joinSession();
     return () => {
@@ -111,7 +164,7 @@ const VideoChatComponent = () => {
   const leaveSession = async () => {
     if (session) {
       try {
-        await axios.delete(`${API_BASE_URL}/token`, {
+        await axios.delete(`${apiUrl}/token`, {
           data: {
             accessCode: accessCode,
             userId: myUserName.current,
@@ -165,7 +218,7 @@ const VideoChatComponent = () => {
   const toggleRecording = async () => {
     if (!isRecording) {
       try {
-        const response = await axios.post(`${API_BASE_URL}/recording/start`, {
+        const response = await axios.post(`${apiUrl}/recording/start`, {
           accessCode: accessCode,
           outputMode: "COMPOSED",
           hasAudio: true,
@@ -178,7 +231,7 @@ const VideoChatComponent = () => {
       }
     } else {
       try {
-        await axios.post(`${API_BASE_URL}/recording/stop`, {
+        await axios.post(`${apiUrl}/recording/stop`, {
           recordingId: recordingId,
         });
         setIsRecording(false);
@@ -210,7 +263,7 @@ const VideoChatComponent = () => {
     if (chatInput.trim() !== "" && session) {
       const messageData = {
         message: chatInput,
-        from: myUserName.current,
+        from: token.userId, // .current 대신 .name 사용
         connectionId: session.connection.connectionId,
       };
       session.signal({
@@ -236,12 +289,23 @@ const VideoChatComponent = () => {
 
   // 토큰을 가져오는 함수
   const getToken = async () => {
+    const userToken = localStorage.getItem("USER_TOKEN");
     try {
-      const response = await axios.post(`${API_BASE_URL}/token`, {
-        accessCode: accessCode,
-        userId: myUserName.current,
-      });
-      return response.data.token;
+      const response = await axios.post(
+        `${apiUrl}/v1/video/token`,
+        {
+          accessCode: accessCode,
+          userId: myUserName.current,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: userToken,
+          },
+        }
+      );
+      console.warn(response.data);
+      return response.data;
     } catch (error) {
       console.error("Error getting token:", error);
       throw error;
@@ -301,19 +365,40 @@ const VideoChatComponent = () => {
 
           <div className={styles.bottom}>
             <div className={styles.screen}>
-              {mainStreamManager !== null && (
-                <div className={styles.videoItem}>
-                  <UserVideoComponent streamManager={mainStreamManager} />
-                </div>
-              )}
-              {subscribers.map((sub) => (
-                <div
-                  key={sub.stream.connection.connectionId}
-                  className={styles.videoItem}
-                >
-                  <UserVideoComponent streamManager={sub} />
-                </div>
-              ))}
+              <div
+                className={`${styles.videoPosition} ${
+                  !showSubtitle ? styles.fullHeight : ""
+                }`}
+              >
+                {mainStreamManager !== null && (
+                  <div className={styles.videoItem}>
+                    <UserVideoComponent streamManager={mainStreamManager} />
+                  </div>
+                )}
+                {subscribers.map((sub) => (
+                  <Draggable key={sub.stream.connection.connectionId}>
+                    <div className={styles.othervideoItem}>
+                      <UserVideoComponent streamManager={sub} />
+                    </div>
+                  </Draggable>
+                ))}
+              </div>
+
+              {/* 자막 */}
+              <div>
+                {showSubtitle && (
+                  <div className={styles.subTitleArray}>
+                    <div className={styles.subTitle}>
+                      {sttMessages.map((msg, index) => (
+                        <div key={index}>
+                          <strong>{msg.from}:</strong>
+                          {msg.message}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className={styles.subTitleArray}>

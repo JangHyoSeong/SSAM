@@ -25,6 +25,7 @@ import com.ssafy.ssam.domain.openvidu.dto.RecordingDto;
 import com.ssafy.ssam.domain.openvidu.dto.RecordingRequestDto;
 import com.ssafy.ssam.global.auth.dto.CustomUserDetails;
 import com.ssafy.ssam.global.auth.entity.User;
+import com.ssafy.ssam.global.auth.entity.UserRole;
 import com.ssafy.ssam.global.auth.repository.UserRepository;
 import com.ssafy.ssam.global.dto.CommonResponseDto;
 import com.ssafy.ssam.global.error.CustomException;
@@ -83,26 +84,17 @@ public class SessionController {
     @PostMapping("/token")
     public ResponseEntity<OpenViduSessionDto> getToken(@RequestBody OpenViduSessionDto requestDto) {
         String accessCode = requestDto.getAccessCode();
-        String userId = requestDto.getUserId();
+        String userId = "익명";
+        System.out.println(accessCode);
 
         if(!accessCode.contains("test")) {
         	 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
              CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
              User user = userRepository.findByUserId(userDetails.getUserId())
                      .orElseThrow(()->new CustomException(ErrorCode.UserNotFoundException));
-        	
+             userId = user.getName() + (user.getRole() == UserRole.TEACHER ? "선생님" : "학부모님");
         }
-       
-
-        // AccessCode로 Consult 엔티티 조회
-//        Optional<Consult> consults = consultRepository.findByAccessCode(accessCode);
-//
-//        if (consults.isEmpty()) {
-//        	System.out.println("OMG NOT FOUND!!!!");
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-//        }
-
+        System.out.println("CONNECTION START");
         String serverData = "{\"userId\":\"" + userId + "\"}";
         ConnectionProperties connectionProperties = new ConnectionProperties.Builder()
                 .type(ConnectionType.WEBRTC)

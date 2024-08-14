@@ -19,7 +19,7 @@ public class SummaryController {
     private final SummaryService summaryService;
 
     @GetMapping("/teachers/{consultId}")
-    public ResponseEntity<ConsultSummaryDetailResponseDto> getConsult(@PathVariable Integer consultId) {
+    public ResponseEntity<ConsultSummaryDetailResponseDto> getConsult(@PathVariable("consultId") Integer consultId) {
         return ResponseEntity.ok(summaryService.getConsultsAndSummaryDetails(consultId));
     }
 }

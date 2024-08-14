@@ -248,7 +248,7 @@ const TeacherClassroom = () => {
                 className={styles.inquiryItem}
                 onClick={() =>
                   (window.location.href =
-                    "/teacherquestion")
+                    "https://i11e201.p.ssafy.io/teacherquestion")
                 }
               >
                 <div className={styles.inquiryQuestion}>{question.content}</div>

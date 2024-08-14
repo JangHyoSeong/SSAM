@@ -96,6 +96,35 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
     return `${month}월 ${day}일`;
   };
 
+  const formatKeyPoint = (text) => {
+    let spaceCount = 0;
+    let formattedText = [];
+    let tempText = "";
+
+    for (let i = 0; i < text.length; i++) {
+      if (text[i] === " ") {
+        spaceCount++;
+      }
+
+      tempText += text[i];
+
+      if (spaceCount === 5) {
+        console.log("5개의 공백 발견!"); // 공백 5개 발견 시 로그 출력
+        formattedText.push(tempText);
+        formattedText.push(<br key={i} />);
+        tempText = "";
+        spaceCount = 0;
+      }
+    }
+
+    // 마지막으로 남은 텍스트가 있다면 추가
+    if (tempText) {
+      formattedText.push(tempText);
+    }
+
+    return formattedText;
+  };
+
   const Modal = ({ message, onClose }) => {
     return (
       <div className={styles.modalOverlay}>
@@ -113,7 +142,7 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
     return (
       <div className={styles.modalOverlay}>
         <div className={styles.modalContent}>
-          <h1>상담 요약 보고서</h1>
+          <h1 className={styles.summaryTitle}>상담 요약 보고서</h1>
           <div className={styles.summaryRow}>
             <div className={styles.summaryLabel}>
               <strong>주제</strong>
@@ -148,11 +177,19 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
           </div>
           <div className={styles.summaryRow}>
             <div className={styles.summaryLabel}>
-              <strong>주요 내용</strong>
+              <div className={styles.summaryKey}>
+                <strong>주요 내용</strong>
+              </div>
             </div>
-            <div className={styles.summaryValue}>{detail.keyPoint}</div>
+            <div className={styles.summaryValue}>
+              <div className={styles.summaryKeypoint}>
+                {formatKeyPoint(detail.keyPoint)}
+              </div>
+            </div>
           </div>
-          <button onClick={onClose}>닫기</button>
+          <div className={styles.summaryButton}>
+            <button onClick={onClose}>닫기</button>
+          </div>
         </div>
       </div>
     );

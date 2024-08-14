@@ -56,7 +56,6 @@
 .historyBox {
   flex: 1;
   padding: 2vw;
-  // border: 3px solid #ddd;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -78,7 +77,7 @@
   text-align: center;
   height: 100%; /* historyBox와 동일한 높이 */
   background-color: #f9f9f9; /* historyBox와 동일한 배경색 */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); /* historyBox와 비슷한 그림자 효과 */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* historyBox와 비슷한 그림자 효과 */
   max-width: 400px; /* 박스 크기를 historyBox 느낌으로 설정 */
   margin-bottom: 20px; /* historyBox와 유사한 간격 */
 }
@@ -91,7 +90,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  // border: 3px solid #ddd;
   background-color: #fff; /* 사진 배경색 추가 */
 }
 
@@ -125,7 +123,6 @@
   border-radius: 8px;
   text-align: center;
   margin-bottom: 10px;
-  // border-bottom: 2px solid #ddd; /* 헤더 아래에 경계선을 추가하여 구분 */
 }
 
 .dateColumn,
@@ -202,6 +199,12 @@ strong {
   align-items: center;
 }
 
+.summaryTitle {
+  font-size: 2rem;
+  color: #007bff; /* 제목을 파란색으로 변경 */
+  margin-bottom: 2rem; /* 제목과 내용 사이에 더 많은 간격 추가 */
+}
+
 .summaryRow {
   display: flex;
   justify-content: space-between;
@@ -212,33 +215,52 @@ strong {
 .summaryLabel {
   flex: 1;
   text-align: center;
-  padding-right: 20px;
   font-weight: bold;
+  font-size: 22px;
 }
 
 .summaryValue {
   flex: 2;
   text-align: center;
+  font-size: 20px;
+  margin-bottom: 10px;
+  background-color: #f1f1f1;
+  border-radius: 25px;
+}
+
+.summaryKey {
+  padding: 20px;
+}
+
+.summaryValue .summaryKeypoint {
+  padding: 10px;
+  background-color: #e4ecfb;
+  border-radius: 25px;
+  color: black;
+}
+
+.summaryButton {
+  display: flex;
+  justify-content: center;
+}
+
+.summaryButton button {
+  color: white;
+  background-color: #007bff;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.summaryButton button:hover {
+  background-color: #0056b3;
 }
 
 .modalContent p {
   margin-bottom: 1rem;
   font-size: 1.2rem;
-}
-
-.modalContent button {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.modalContent button:hover {
-  background-color: #0056b3;
 }
 
 .noConsultHistory {

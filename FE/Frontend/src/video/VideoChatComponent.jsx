@@ -1,16 +1,16 @@
-// Video.jsx
+// VideoChatComponent.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useVideoChat } from './useVideoChat';
-import { useSTT } from './useSTT';
-import { useProfile } from './useProfile';
-import MenuBar from './MenuBar';
-import VideoScreen from './VideoScreen';
-import ChatBox from './ChatBox';
-import SubtitleBox from './SubtitleBox';
+import { useVideoChat } from './hooks/useVideoChat';
+import { useSTT } from './hooks/useSTT';
+import { useProfile } from './hooks/useProfile';
+import MenuBar from './components/MenuBar';
+import VideoScreen from './components/VideoScreen';
+import ChatBox from './components/ChatBox';
+import SubtitleBox from './components/SubtitleBox';
 import styles from './Video.module.scss';
 
-const Video = () => {
+const VideoChatComponent = () => {
   const { accessCode } = useParams();
   const [state, setState] = useState({
     session: null,
@@ -70,4 +70,4 @@ const Video = () => {
   );
 };
 
-export default Video;
+export default VideoChatComponent;

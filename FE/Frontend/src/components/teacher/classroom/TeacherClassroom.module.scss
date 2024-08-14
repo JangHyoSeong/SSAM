@@ -107,7 +107,7 @@
 
 .noticeBox p {
   position: absolute;
-  top: 9.3vh;
+  top: 8vh;
   left: 2.3vw;
   width: calc(100% - 3vw);
   white-space: pre-wrap;
@@ -158,7 +158,7 @@
 
 .classInfoBox p {
   position: absolute;
-  top: 9.3vh;
+  top: 8vh;
   left: 2.3vw;
   width: calc(100% - 3vw);
   white-space: pre-wrap;
@@ -235,11 +235,13 @@
   width: 100%;
   margin: 4px 0;
   position: relative;
-  top: 4vh;
+  top: 3.5vh;
 }
 
 .inquiryQuestion {
   flex: 1;
+  margin-bottom: 5px;
+  margin-top: -4px;
 }
 
 .classInfoBox h2 {

@@ -135,22 +135,30 @@ public class ConsultService {
 
         Integer userId = userDetails.getUserId();
         LocalDateTime nowDateTime = LocalDateTime.now();
-
+   
         List<Consult> consults = null;
-        if (userDetails.getRole().equals(UserRole.TEACHER)) {
+        if (userDetails.getRole().equals(UserRole.TEACHER.toString())) {
+        	System.out.println("나는 선생이야");
             consults = consultRepository.findUpcomingConsultForTeacher(userId, nowDateTime, AppointmentStatus.ACCEPTED)
                     .orElse(null);
         }
         else {
+        	System.out.println("나는 학생이야");
             consults = consultRepository.findUpcomingConsultForStudent(userId, nowDateTime, AppointmentStatus.ACCEPTED)
                     .orElse(null);
         }
-        if (consults == null) {
+
+        if (consults.isEmpty()) {
             return new UpcomingConsultResponseDTO().builder().build();
         } else {
+            Appointment appointment = consults.get(0).getAppointment();
+            String studentName = appointment.getStudent().getName();
             return new UpcomingConsultResponseDTO().builder()
                     .consultId(consults.get(0).getConsultId())
                     .accessCode(consults.get(0).getAccessCode())
+                    .startTime(appointment.getStartTime())
+                    .endTime(appointment.getEndTime())
+                    .studentName(studentName)
                     .build();
         }
     }

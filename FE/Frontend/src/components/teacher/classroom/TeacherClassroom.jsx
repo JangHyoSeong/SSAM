@@ -251,7 +251,9 @@ const TeacherClassroom = () => {
                     "https://i11e201.p.ssafy.io/teacherquestion")
                 }
               >
-                <div className={styles.inquiryQuestion}>{question.content}</div>
+                <div className={styles.inquiryQuestion}>
+                  ❗ {question.content}
+                </div>
               </div>
             ))
           ) : (

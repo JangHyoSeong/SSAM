@@ -29,6 +29,7 @@ public class GPTSummaryService {
     private final RestTemplate restTemplate;
 
     public SummaryRequestDto GPTsummaryConsult(String talk, String topic) {
+    	System.out.println("TALK ::: " + talk);
         String before = summaryPrompt(topic);
 
         GPTRequest request =

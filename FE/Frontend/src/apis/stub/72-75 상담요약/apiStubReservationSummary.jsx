@@ -14,5 +14,8 @@ export const fetchApiReservationSummary = async () => {
   return {
     consultId: response.data.consultId,
     accessCode: response.data.accessCode,
+    startTime: response.data.startTime,
+    endTime: response.data.endTime,
+    studentName: response.data.studentName,
   };
 };

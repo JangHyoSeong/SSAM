@@ -29,7 +29,7 @@ public class S3TextService {
 
     @Transactional
     public String readText(String sessionId){
-    	String key = sessionId + "/" + sessionId + ".txt";
+    	String key = "recordings/" + sessionId + "/" + sessionId + ".txt";
         try {
             S3Object o = amazonS3.getObject(bucket, key);
             try (S3ObjectInputStream ois = o.getObjectContent()) {

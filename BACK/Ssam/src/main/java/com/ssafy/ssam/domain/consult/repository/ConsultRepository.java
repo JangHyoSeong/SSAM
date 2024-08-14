@@ -29,7 +29,7 @@ public interface ConsultRepository extends JpaRepository<Consult, Integer> {
     Optional<Consult> findByAppointment(Appointment appointment);
 
 
-    @Query("SELECT new com.ssafy.ssam.domain.consult.dto.response.ConsultSummaryDetailResponseDto(c.consultId, c.actualDate, c.runningTime, c.content, " +
+    @Query("SELECT new com.ssafy.ssam.domain.consult.dto.response.ConsultSummaryDetailResponseDto(c.consultId, c.actualDate, c.runningTime, " +
             "c.attSchool, c.attGrade, c.attClassroom, " +
             "s.keyPoint, s.profanityCount, s.profanityLevel, s.parentConcern, s.teacherRecommendation, " +
             "a.student.userId, a.topic) " +

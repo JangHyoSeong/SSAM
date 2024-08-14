@@ -39,7 +39,7 @@ public class SummaryService {
 
         User user = userRepository.findByUserIdAndRole(userDetails.getUserId(), UserRole.TEACHER)
                 .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
-
+        
         Consult consult = consultRepository.findByConsultId(consultId)
         		.orElseThrow(() -> new CustomException(ErrorCode.ConsultNotFountException));
         
@@ -51,9 +51,11 @@ public class SummaryService {
         }
         
         String content = consult.getContent();
+        System.out.println("CONTENT IS :: " + content);
         if(content == null) {
-        	String talk = s3TextService.readText(consult.getWebrtcSessionId());
-        	consult.setContent(talk);
+        	content = s3TextService.readText(consult.getWebrtcSessionId());
+        	consult.setContent(content);
+        	consultRepository.save(consult);
         }
         if(content != null) {
         	Appointment appointment = appointmentRepository.findByAppointmentId(consult.getAppointment().getAppointmentId()).orElseThrow(()->new CustomException(ErrorCode.AppointmentNotFoundException));

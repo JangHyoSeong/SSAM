@@ -8,6 +8,7 @@ import {
   fetchClearTime,
 } from "../../../apis/stub/55-59 상담/apiReservationTime";
 import { fetchApiReservationList } from "../../../apis/stub/55-59 상담/apiStubReservation";
+import Swal from "sweetalert2";
 
 const TeacherReservationList = ({ selectedDate }) => {
   // 날짜를 YYYY-MM-DD 형식으로 포맷팅하는 함수
@@ -15,7 +16,7 @@ const TeacherReservationList = ({ selectedDate }) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`; // 템플릿 리터럴로 수정
+    return `${year}-${month}-${day}`;
   };
 
   const formattedDate = formatDate(selectedDate);
@@ -34,7 +35,7 @@ const TeacherReservationList = ({ selectedDate }) => {
   useEffect(() => {
     const fetchReservations = async () => {
       const savedReservations = localStorage.getItem(
-        `reservations_${formattedDate}` // 템플릿 리터럴로 수정
+        `reservations_${formattedDate}`
       );
       if (savedReservations) {
         setReservationsForDate(formattedDate, JSON.parse(savedReservations));
@@ -54,20 +55,20 @@ const TeacherReservationList = ({ selectedDate }) => {
           const reservationDate = reservation.startTime.split("T")[0];
           const reservationTime = `${reservation.startTime
             .split("T")[1]
-            .slice(0, 5)} ~ ${reservation.endTime.split("T")[1].slice(0, 5)}`; // 템플릿 리터럴로 수정
+            .slice(0, 5)} ~ ${reservation.endTime.split("T")[1].slice(0, 5)}`;
           const match = initialReservations.find(
             (r) => r.time === reservationTime
           );
 
           if (reservationDate === formattedDate && match) {
             match.available = reservation.status !== "REJECT";
-            match.appointmentId = reservation.appointmentId; // appointmentId 저장
+            match.appointmentId = reservation.appointmentId;
           }
         });
 
         setReservationsForDate(formattedDate, initialReservations);
         localStorage.setItem(
-          `reservations_${formattedDate}`, // 템플릿 리터럴로 수정
+          `reservations_${formattedDate}`,
           JSON.stringify(initialReservations)
         );
       }
@@ -78,8 +79,8 @@ const TeacherReservationList = ({ selectedDate }) => {
 
   const handleReservation = async (index) => {
     const reservation = reservations[index];
-    const startTime = `${formattedDate}T${reservation.time.split(" ~ ")[0]}:00`; // 템플릿 리터럴로 수정
-    const endTime = `${formattedDate}T${reservation.time.split(" ~ ")[1]}:00`; // 템플릿 리터럴로 수정
+    const startTime = `${formattedDate}T${reservation.time.split(" ~ ")[0]}:00`;
+    const endTime = `${formattedDate}T${reservation.time.split(" ~ ")[1]}:00`;
 
     try {
       const response = await fetchSetTime(startTime, endTime);
@@ -93,11 +94,25 @@ const TeacherReservationList = ({ selectedDate }) => {
           : reservation
       );
       localStorage.setItem(
-        `reservations_${formattedDate}`, // 템플릿 리터럴로 수정
+        `reservations_${formattedDate}`,
         JSON.stringify(updatedReservations)
       );
+
+      // 성공 메시지 표시
+      Swal.fire({
+        icon: "success",
+        title: "요청 성공",
+        html: '<span style="color: red;">신청불가</span> 시간으로 설정되었습니다.',
+      });
     } catch (error) {
       console.error("예약 실패:", error);
+
+      // 에러 메시지 표시
+      Swal.fire({
+        icon: "error",
+        title: "요청 실패",
+        text: "상담목록을 확인해주세요.",
+      });
     }
   };
 
@@ -115,6 +130,11 @@ const TeacherReservationList = ({ selectedDate }) => {
 
       if (!matchingReservation || !matchingReservation.appointmentId) {
         console.error("Appointment ID가 없습니다.");
+        Swal.fire({
+          icon: "error",
+          title: "요청 실패",
+          text: "상담목록을 확인해주세요.",
+        });
         return;
       }
 
@@ -131,11 +151,25 @@ const TeacherReservationList = ({ selectedDate }) => {
           : reservation
       );
       localStorage.setItem(
-        `reservations_${formattedDate}`, // 템플릿 리터럴로 수정
+        `reservations_${formattedDate}`,
         JSON.stringify(updatedReservations)
       );
+
+      // 성공 메시지 표시
+      Swal.fire({
+        icon: "success",
+        title: "요청 성공",
+        html: '<span style="color: blue;">신청가능</span> 시간으로 설정되었습니다.',
+      });
     } catch (error) {
       console.error("예약 해제 실패:", error);
+
+      // 에러 메시지 표시
+      Swal.fire({
+        icon: "error",
+        title: "요청 실패",
+        text: "상담목록을 확인해주세요.",
+      });
     }
   };
 

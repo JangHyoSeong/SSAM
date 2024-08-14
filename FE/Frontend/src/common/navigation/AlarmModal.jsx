@@ -16,7 +16,13 @@ const AlarmModal = () => {
           authorization: `${token}`,
         },
       })
-      .then((response) => setAlarms(response.data))
+      .then((response) => {
+        // 알람을 시간 순서로 내림차순 정렬
+        const sortedAlarms = response.data.sort(
+          (a, b) => new Date(b.alarmTime) - new Date(a.alarmTime)
+        );
+        setAlarms(sortedAlarms);
+      })
       .catch((error) => console.error(error));
   }, []);
 

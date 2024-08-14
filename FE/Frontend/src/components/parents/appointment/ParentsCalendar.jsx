@@ -1,11 +1,14 @@
+import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
+// fullcalendar
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import koLocale from "@fullcalendar/core/locales/ko";
-import styles from "./ParentsCalendar.module.scss";
-import { useState, useEffect, useRef } from "react";
+// store, api, style
+import useTeacherCalendarStore from "../../../store/TeacherCalendarStore";
 import { fetchApiReservationList } from "../../../apis/stub/55-59 상담/apiStubReservation";
+import styles from "./ParentsCalendar.module.scss";
 
 // TeacherCalendar 컴포넌트: 교사용 상담 일정 달력을 표시합니다.
 const TeacherCalendar = ({ onDateSelect }) => {
@@ -13,8 +16,9 @@ const TeacherCalendar = ({ onDateSelect }) => {
   const [selectedDate, setSelectedDate] = useState(null); // 선택된 날짜
   const [consultations, setConsultations] = useState([]); // 상담 데이터
   const calendarRef = useRef(null); // 달력 참조
+  const { setCurrentDate, fetchReservations } = useTeacherCalendarStore(); // store에서 필요한 함수들을 가져옵니다.
 
-  // 컴포넌트 마운트 시 상담 데이터를 가져옵니다.
+  // 컴포넌트 마운트 시 상담 데이터를 가져온다 : 달력에 상담status 숫자로 나타낼때 필요함
   useEffect(() => {
     const fetchConsultations = async () => {
       try {
@@ -28,10 +32,15 @@ const TeacherCalendar = ({ onDateSelect }) => {
     fetchConsultations();
   }, []);
 
-  // 날짜 클릭 핸들러: 선택된 날짜를 업데이트하고 부모 컴포넌트에 알립니다.
-  const handleDateClick = (info) => {
+  // 날짜 클릭 핸들러
+  const handleDateClick = async (info) => {
+    // 선택된 날짜를 부모 컴포넌트에 전달
     setSelectedDate(info.dateStr);
     onDateSelect(info.dateStr);
+
+    // store의 currentDate를 업데이트하고 예약 정보를 가져옵니다.
+    setCurrentDate(info.dateStr);
+    await fetchReservations();
   };
 
   // 선택된 날짜에 스타일을 적용합니다.

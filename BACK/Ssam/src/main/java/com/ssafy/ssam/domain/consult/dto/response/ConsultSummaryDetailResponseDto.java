@@ -22,7 +22,8 @@ public class ConsultSummaryDetailResponseDto {
     private Integer attSchool;
     private Integer attGrade;
     private Integer attClassroom;
-
+    private String videoUrl;
+    
     //summary
     private String keyPoint;
     private int profanityCount;

@@ -20,6 +20,7 @@ const InviteCode = () => {
   const [hasAcceptedConsultation, setHasAcceptedConsultation] = useState(false); // 수락된 상담 여부 상태 관리
   const [acceptedStudentName, setAcceptedStudentName] = useState(""); // 상담자 이름
   const [consultationTime, setConsultationTime] = useState(""); // 상담 예정 시간
+  const [consultAccessCode, setCosultAccessCode] = useState("");
 
   // 상담 목록 가져오기
   const fetchConsultations = async () => {
@@ -32,7 +33,7 @@ const InviteCode = () => {
     if (acceptedConsultation && acceptedConsultation.accessCode) {
       setHasAcceptedConsultation(true);
       setAcceptedStudentName(acceptedConsultation.studentName);
-
+      setCosultAccessCode(acceptedConsultation.accessCode);
       // 상담 시간 처리
       const startTime = new Date(acceptedConsultation.startTime);
       const endTime = new Date(acceptedConsultation.endTime);
@@ -61,7 +62,7 @@ const InviteCode = () => {
   const navigate = useNavigate(); // useNavigate 훅을 사용해 navigate 정의
 
   const handleConsultationStart = () => {
-    navigate("/video/entry"); // 경로를 videoentry로 이동
+    navigate(`/entry/${consultAccessCode}`);
   };
 
   // 사용자 프로필 정보를 불러오는 훅

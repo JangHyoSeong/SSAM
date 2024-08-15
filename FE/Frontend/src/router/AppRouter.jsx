@@ -153,7 +153,7 @@ const AppRouter = () => {
           <Route path="/webrtc" element={<WebrtcPage />} />
 
           {/* VideoEntry Route */}
-          <Route path="/video/entry/:accessCode" element={<VideoEntry />} />
+          <Route path="/entry/:accessCode" element={<VideoEntry />} />
         </Routes>
       </div>
 

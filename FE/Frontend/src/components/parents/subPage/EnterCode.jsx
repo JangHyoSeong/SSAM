@@ -25,6 +25,7 @@ const EnterCode = () => {
   const [acceptedTeacherName, setAcceptedTeacherName] = useState("");
   const [consultationDate, setConsultationDate] = useState("");
   const [consultationTime, setConsultationTime] = useState("");
+  const [consultAccessCode, setCosultAccessCode] = useState("");
 
   const navigate = useNavigate();
 
@@ -59,7 +60,7 @@ const EnterCode = () => {
 
         if (acceptedConsultation && acceptedConsultation.accessCode) {
           setHasAcceptedConsultation(true);
-
+          setCosultAccessCode(acceptedConsultation.accessCode);
           // 상담 시간 처리
           const startTime = new Date(acceptedConsultation.startTime);
           const endTime = new Date(acceptedConsultation.endTime);
@@ -96,7 +97,7 @@ const EnterCode = () => {
   };
 
   const handleConsultationStart = () => {
-    navigate("/video/entry");
+    navigate(`/entry/${consultAccessCode}`);
   };
 
   return (

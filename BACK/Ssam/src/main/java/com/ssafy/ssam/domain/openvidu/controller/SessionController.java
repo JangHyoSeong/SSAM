@@ -83,16 +83,15 @@ public class SessionController {
 
     @PostMapping("/token")
     public ResponseEntity<OpenViduSessionDto> getToken(@RequestBody OpenViduSessionDto requestDto) {
-        String accessCode = requestDto.getAccessCode();
-        String userId = "익명";
-        System.out.println(accessCode);
+    	String accessCode = requestDto.getAccessCode();
+        String userId = requestDto.getUserId();
+        System.out.println("START FUNCTION :: getToken");
 
         if(!accessCode.contains("test")) {
         	 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
              CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
              User user = userRepository.findByUserId(userDetails.getUserId())
                      .orElseThrow(()->new CustomException(ErrorCode.UserNotFoundException));
-             userId = (user.getRole().equals(UserRole.TEACHER)? "선생님" : "학부모님");
         }
         System.out.println("CONNECTION START");
         String serverData = "{\"userId\":\"" + userId + "\"}";
@@ -137,13 +136,13 @@ public class SessionController {
     public ResponseEntity<CommonResponseDto> deleteToken(@RequestBody OpenViduSessionDto requestDto) {
         String accessCode = requestDto.getAccessCode();
         String userId = requestDto.getUserId();
+        System.out.println("START FUNCTION :: deleteToken");
 
-        
         if(!accessCode.contains("test")) {
        	 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-            User user = userRepository.findByUserId(userDetails.getUserId())
+         User user = userRepository.findByUserId(userDetails.getUserId())
                     .orElseThrow(()->new CustomException(ErrorCode.UserNotFoundException));
        	
        }

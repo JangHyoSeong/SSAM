@@ -288,6 +288,10 @@ const VideoChatComponent = () => {
             accessCode: accessCode,
             userId: myUserName.current,
           },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
         });
 
         // 사용자의 역할 정보를 가져오는 GET 요청

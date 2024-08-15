@@ -124,6 +124,7 @@ public class ConsultService {
         // 2. appointment 설정
         Appointment appointment = appointmentRepository.findByAppointmentId(consult.getAppointment().getAppointmentId()).orElseThrow(()->new CustomException(ErrorCode.AppointmentNotFoundException));
         appointment.setStatus(AppointmentStatus.DONE);
+        appointmentRepository.save(appointment); 
 
         return new CommonResponseDto("end consult");
     }

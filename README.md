@@ -97,7 +97,7 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
 </tr>
 <tr>
 <td align="center">
-      <img src='/uploads/b299e903a43ceedff6baa5a5e5e7b0e3/메인페이지.gif' alt='메인 페이지 이미지' width="300px">
+      <img src='/uploads/b299e903a43ceedff6baa5a5e5e7b0e3/메인페이지.gif' alt='메인 페이지 이미지' width="400px">
     </td>
 </tr>
 </table>
@@ -107,7 +107,7 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
 ### 학급 생성
 |                   학급 생성                   |
 |:-----------------------------------------:|
-| <img src="/uploads/bae2bf5253687a59842a54e1d61985c9/선생님_학급입장.gif" alt="학급 생성" width="300px" /> |
+| <img src="/uploads/bae2bf5253687a59842a54e1d61985c9/선생님_학급입장.gif" alt="학급 생성" width="600px" /> |
 
 ---
 
@@ -116,9 +116,9 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
 |                      교사                      |                      학생                      |
 |:--------------------------------------------:|:--------------------------------------------:|
 |               <b>학급 등록 수락</b>                |                 <b>학급 등록</b>                 |
-| <img src="/uploads/39a54868f034747e689c530dc1249d4a/학급등록수락.gif" alt="학급 등록 수락" width="300px" /> |   <img src="/uploads/c76e66648ba31c143bee8ade120510e8/학생_-_학급_입장.gif" alt="학급 등록" width="300px">    |
+| <img src="/uploads/39a54868f034747e689c530dc1249d4a/학급등록수락.gif" alt="학급 등록 수락" width="400px" /> |   <img src="/uploads/c76e66648ba31c143bee8ade120510e8/학생_-_학급_입장.gif" alt="학급 등록" width="400px">    |
 |               <b>문의 사항 답변</b>                |               <b>문의 사항 작성</b>                |
-| <img src="" alt="문의 사항 답변" width="300px" /> | <img src="/uploads/24c0e923e426d67e739b04a925ea387d/학부모_문의사항.gif" alt="문의 사항 작성" width="300px" /> |
+| <img src="/uploads/773b2d6cd0cf51c44620ed518c23d9fd/질문_답변.gif" alt="문의 사항 답변" width="400px" /> | <img src="/uploads/24c0e923e426d67e739b04a925ea387d/학부모_문의사항.gif" alt="문의 사항 작성" width="400px" /> |
 
 ---
 ### 상담 관리
@@ -126,27 +126,27 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
 |                    교사                    |                    학생                    |
 |:----------------------------------------:|:----------------------------------------:|
 |              <b>상담 수락 </b>               |               <b>상담 신청</b>               |
-| <img src="" alt="상담 수락" width="300px"/> | <img src="" alt="상담 신청" width="300px"/> |
+| <img src="/uploads/3a01345404b2ae0c2fe3636114fcafce/상담신청.gif" alt="상담 수락" width="400px"/> | <img src="/uploads/3a01345404b2ae0c2fe3636114fcafce/상담신청.gif" alt="상담 신청" width="400px"/> |
 
 |                   상담 일정 확인                   |                   상담 거부 날짜 설정                   |
 |:--------------------------------------------:|:-----------------------------------------------:|
-| <img src="/uploads/237fc243682efe7f3af159a68f69e237/상담목록확인.gif" alt="상담 일정 확인" height="300px" /> | <img src="/uploads/4d7006ab43a21b5cb939c2b7892c80c3/선생님_상담신청.gif" alt="상담 거부 날짜 설정" height="300px" /> |
+| <img src="/uploads/237fc243682efe7f3af159a68f69e237/상담목록확인.gif" alt="상담 일정 확인" width="400px" /> | <img src="/uploads/4d7006ab43a21b5cb939c2b7892c80c3/선생님_상담신청.gif" alt="상담 거부 날짜 설정" width="400px" /> |
 
 |                   상담 입장                   |
 |:-----------------------------------------:|
-| <img src="" alt="상담 입장" width="300px" /> |
+| <img src="/uploads/b4c82fc034f3208a140e54796b9e3810/상담_입장.gif" alt="상담 입장" width="600px" /> |
 
 ---
 
 ### 상담
-|                   상담 화면                   |                   욕설 감지                   |
-|:-----------------------------------------:|:-----------------------------------------:|
-| <img src="" alt="상담 화면" width="300px" /> | <img src="" alt="욕설 감지" width="300px" /> |
+|                   상담 화면                   |
+|:-----------------------------------------:|
+| <img src="/uploads/55d98cd509ef06dda0f7f717740f5a33/화상상담_-_2배속.gif" alt="상담 화면" width="600px" /> |
 
 ### 상담 요약 확인
 |                   상담 요약 확인                   |
 |:--------------------------------------------:|
-| <img src="/uploads/67bed84608427c9af9d56e273c99c78f/상담요약.gif" alt="상담 요약 확인" width="500px" /> |
+| <img src="/uploads/67bed84608427c9af9d56e273c99c78f/상담요약.gif" alt="상담 요약 확인" width="600px" /> |
 
 ---
 

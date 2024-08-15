@@ -74,7 +74,17 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
       setIsSummaryModalOpen(true); // 요약 모달을 열기
     } catch (error) {
       console.error("상담 상세 정보를 불러오는 데 실패했습니다.", error);
-      setError("상담 요약 정보를\n생성 중입니다.");
+      setError(
+        <div className={styles.errorModal}>
+          <div className={styles.errorMessage}>
+            <p>상담 요약 정보를</p>
+            <p>생성 중입니다.</p>
+          </div>
+          <div className={styles.errorButton}>
+            <button onClick={handleCloseModal}>확인</button>
+          </div>
+        </div>
+      );
     } finally {
       setIsLoading(false);
     }
@@ -128,12 +138,7 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
   const Modal = ({ message, onClose }) => {
     return (
       <div className={styles.modalOverlay}>
-        <div className={styles.modalContent} style={{ lineHeight: "0.8" }}>
-          {message.split("\n").map((line, index) => (
-            <p key={index}>{line}</p>
-          ))}
-          <button onClick={onClose}>확인</button>
-        </div>
+        <div className={styles.modalContent}>{message}</div>
       </div>
     );
   };

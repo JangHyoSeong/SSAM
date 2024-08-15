@@ -164,7 +164,7 @@
 }
 
 .consultRow:hover {
-  background-color: #f0f0f0; /* Hover 시 배경색 변경 */
+  background-color: #e4ecfb; /* Hover 시 배경색 변경 */
 }
 
 strong {
@@ -251,6 +251,7 @@ strong {
   font-size: 1rem;
   border: none;
   cursor: pointer;
+  border-radius: 16px;
   transition: background-color 0.3s ease;
 }
 
@@ -267,4 +268,36 @@ strong {
   font-size: 1.5em; /* 폰트 사이즈 조절 */
   text-align: center; /* 중앙 정렬 */
   margin-top: 20px; /* 상단에 약간의 여유 공간 추가 */
+}
+
+.errorContent {
+  max-width: 300px; /* 최대 가로 길이 설정 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+.errorMessage {
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+  max-width: 200px;
+  border-radius: 8px;
+}
+
+.errorButton {
+  display: flex;
+  justify-content: center;
+}
+
+.errorButton button {
+  color: white;
+  background-color: #007bff;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.errorButton button:hover {
+  background-color: #0056b3;
 }

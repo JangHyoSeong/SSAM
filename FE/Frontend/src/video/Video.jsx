@@ -18,7 +18,7 @@ const apiUrl = import.meta.env.API_URL;
 const VideoChatComponent = () => {
   const { accessCode } = useParams(); // URL에서 accessCode를 가져옴
   const [session, setSession] = useState(null); // 세션 상태 관리
-  const [token, setToken] = useState(null); // 토큰 상태 관리
+  const [sessionToken, setSessionToken] = useState(null); // 토큰 상태 관리
   const [mainStreamManager, setMainStreamManager] = useState(null); // 주 스트림 관리
   const [publisher, setPublisher] = useState(null); // 발행자 관리
   const [subscribers, setSubscribers] = useState([]); // 구독자 관리
@@ -234,7 +234,7 @@ const VideoChatComponent = () => {
       const currentVideoDevice = videoDevices.find(
         (device) => device.deviceId === currentVideoDeviceId
       );
-      setToken(myToken); // 토큰 상태 설정
+      setSessionToken(myToken); // 토큰 상태 설정
       setSession(mySession); // 세션 상태 설정
       setMainStreamManager(publisher); // 주 스트림 설정
       setPublisher(publisher); // 발행자 설정
@@ -282,6 +282,9 @@ const VideoChatComponent = () => {
   const leaveSession = async () => {
     if (session) {
       try {
+        // 사용자의 역할 정보를 가져오는 GET 요청
+        const token = localStorage.getItem("USER_TOKEN");
+
         // 기존의 토큰 삭제 로직
         await axios.delete(`${apiUrl}/v1/video/token`, {
           data: {
@@ -294,8 +297,6 @@ const VideoChatComponent = () => {
           },
         });
 
-        // 사용자의 역할 정보를 가져오는 GET 요청
-        const token = localStorage.getItem("USER_TOKEN");
         const response = await axios.get(`${apiUrl}/v1/users/initial`, {
           headers: {
             "Content-Type": "application/json",

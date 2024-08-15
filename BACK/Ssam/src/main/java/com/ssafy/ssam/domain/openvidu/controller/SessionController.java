@@ -92,7 +92,7 @@ public class SessionController {
              CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
              User user = userRepository.findByUserId(userDetails.getUserId())
                      .orElseThrow(()->new CustomException(ErrorCode.UserNotFoundException));
-             userId = user.getName() + (user.getRole() == UserRole.TEACHER ? "선생님" : "학부모님");
+             userId = (user.getRole().equals(UserRole.TEACHER)? "선생님" : "학부모님");
         }
         System.out.println("CONNECTION START");
         String serverData = "{\"userId\":\"" + userId + "\"}";

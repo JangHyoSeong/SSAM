@@ -48,6 +48,7 @@ public class QuestionService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails details = (CustomUserDetails) authentication.getPrincipal();
 
+        User user = details.getUserId();
         // 사용자가 학급에 접근할 수 있는 권한이 있는지 검증
         if(!details.getBoardId().equals(boardId)) throw new CustomException(ErrorCode.IllegalArgument);
 

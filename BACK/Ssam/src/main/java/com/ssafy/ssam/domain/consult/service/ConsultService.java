@@ -109,11 +109,7 @@ public class ConsultService {
         consult.setWebrtcSessionId(sessionId);
         // 4)
         consult.setVideoUrl("https://.s3..amazonaws.com/recordings/"+sessionId+"/"+sessionId+".webm");
-
-        // 2. appointment 설정
-        Appointment appointment = appointmentRepository.findByAppointmentId(consult.getAppointment().getAppointmentId()).orElseThrow(()->new CustomException(ErrorCode.AppointmentNotFoundException));
-        appointment.setStatus(AppointmentStatus.DONE);
-
+        
         return new CommonResponseDto("start consult");
     }
     // 학생기준
@@ -125,6 +121,9 @@ public class ConsultService {
         Consult consult = consultRepository.findByAccessCode(accessCode).orElseThrow(()->new CustomException(ErrorCode.ConsultNotFountException));
         consult.setRunningTime((int)Duration.between(consult.getActualDate(), LocalDateTime.now()).toMinutes());
         
+        // 2. appointment 설정
+        Appointment appointment = appointmentRepository.findByAppointmentId(consult.getAppointment().getAppointmentId()).orElseThrow(()->new CustomException(ErrorCode.AppointmentNotFoundException));
+        appointment.setStatus(AppointmentStatus.DONE);
 
         return new CommonResponseDto("end consult");
     }
@@ -138,12 +137,10 @@ public class ConsultService {
    
         List<Consult> consults = null;
         if (userDetails.getRole().equals(UserRole.TEACHER.toString())) {
-        	System.out.println("나는 선생이야");
             consults = consultRepository.findUpcomingConsultForTeacher(userId, nowDateTime, AppointmentStatus.ACCEPTED)
                     .orElse(null);
         }
         else {
-        	System.out.println("나는 학생이야");
             consults = consultRepository.findUpcomingConsultForStudent(userId, nowDateTime, AppointmentStatus.ACCEPTED)
                     .orElse(null);
         }

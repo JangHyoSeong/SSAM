@@ -111,7 +111,13 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
   const Modal = ({ message, onClose }) => {
     return (
       <div className={styles.modalOverlay}>
-        <div className={styles.modalContent}>{message}</div>
+        <div
+          className={
+            message === error ? styles.errorMessage : styles.modalContent
+          }
+        >
+          {message}
+        </div>
       </div>
     );
   };

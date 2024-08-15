@@ -3,7 +3,7 @@
 # SSAM
 
 ### 👩‍🏫교권 보호를 위한 학생 상담 시스템
-<img src="/uploads/cf6354a7a7f22498650fa4c52c7216ce/메인로고.png" alt="메인로고">
+<img src="/uploads/cf6354a7a7f22498650fa4c52c7216ce/메인로고.png" alt="메인로고" width="1000px">
 
 </div>
 
@@ -31,13 +31,22 @@ SSAM에서 제공하는 주요 기능은 다음과 같습니다.
 |                                                               React                                                               |                                      vite                                       |                                                                      node.js                                                                       |
 
 #### Library & Skills
+<div align="center">
+
 | <img src="https://repository-images.githubusercontent.com/180328715/fca49300-e7f1-11ea-9f51-cfd949b31560" alt="zustand" height="50px" /> | <img src="https://openvidu.io/assets/images/openvidu_globe_bg_transp_cropped.png" alt="openVidu" height="50px" /> | <img src="https://raw.githubusercontent.com/JamesBrill/react-speech-recognition/HEAD/docs/logos/speechly.png" alt="vite" height="50px" /> | <img src="https://avatars.githubusercontent.com/u/13825204?s=200&v=4" alt="fullcaldner" height="50px" /> |
 |:----------------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------:|
 |                                                                 zustand                                                                  |                                                     openVidu                                                      |                                                         react speech recognition                                                          |                                               fullcalender                                               |
 
+</div>
+
+
+<div align="center">
+
 | <img src="https://sweetalert2.github.io/images/favicon.png" alt="sweetalert" width="50px" height="50px" /> | <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Socket-io.svg" alt="socketio" height="50px" /> | <img src="https://velog.velcdn.com/images/lsx2003/post/ce6452ce-5ad9-4810-b9dd-bbe1a3b792c1/image.png" alt="Styled-Component" height="50px" /> | <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Axios_logo_%282020%29.svg/2560px-Axios_logo_%282020%29.svg.png" alt="" height="50px" /> |
 |:----------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------:|
 |                                                 sweetalert                                                 |                                                  Socket.io                                                   |                                                                Styled-Component                                                                |                                                                            Axios                                                                            |
+
+</div>
 
 ### **Back-end**
 
@@ -238,6 +247,6 @@ SSAM에서 제공하는 주요 기능은 다음과 같습니다.
 | 정유진 |   Front-end   | **FE** <br> - 선생님 페이지 로직 작성 및 화면 설계                                 |
 
 ## ⚙️ System Architecture
-<img src="" width="500px" alt="시스템 아키텍처 이미지">
+<img src="/uploads/b04d6f3efb374f1a2e6dd8cdcead7cd4/시스템_아키텍처_최x7종.png" width="1000px" alt="시스템 아키텍처 이미지">
 
 ## 🏆 Ground Rules

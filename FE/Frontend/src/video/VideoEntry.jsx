@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "./VideoEntry.module.scss";
-import { fetchApiReservationSummary } from "../apis/stub/72-75 상담요약/apiStubReservationSummary";
 
 const VideoEntry = () => {
   const [pinInput, setPinInput] = useState("");
+  const { accessCode } = useParams(); // URL에서 accessCode를 가져옴
   // const [consultData, setConsultData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const { appointmentId } = useParams(); // URL에서 appointmentId를 가져옵니다
 
   const handleInputChange = (e) => {
     setPinInput(e.target.value);
@@ -21,10 +20,9 @@ const VideoEntry = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await fetchApiReservationSummary(appointmentId);
       // setConsultData(data);
       // 상담 페이지로 이동
-      navigate(`/video/${data.accessCode}`);
+      navigate(`/video/${accessCode}`);
     } catch (err) {
       setError("상담 정보를 가져오는데 실패했습니다. 다시 시도해 주세요.");
       console.error("API 요청 에러:", err);

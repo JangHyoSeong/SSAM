@@ -408,16 +408,16 @@ const VideoChatComponent = () => {
                         <div className={styles.screen}>
                             <div className={`${styles.videoPosition} ${!showSubtitle ? styles.fullHeight : ''}`}>
                                 {mainStreamManager !== null && (
-                                    <div className={styles.othervideoItem}>
-                                        <UserVideoComponent streamManager={mainStreamManager} />
-                                    </div>
-                                )}
-                                {subscribers.map((sub) => (
-                                    <Draggable key={sub.stream.connection.connectionId}>
-                                        <div className={styles.videoItem}>
-                                            <UserVideoComponent streamManager={sub} />
+                                    <Draggable key={myUserName.current}>
+                                        <div className={styles.othervideoItem}>
+                                            <UserVideoComponent streamManager={mainStreamManager} />
                                         </div>
                                     </Draggable>
+                                )}
+                                {subscribers.map((sub) => (
+                                    <div className={styles.videoItem}>
+                                        <UserVideoComponent streamManager={sub} />
+                                    </div>
                                 ))}
                             </div>
 

@@ -15,39 +15,53 @@ const ChatbotStudyModal = ({ openModal }) => {
   const [endDate, setEndDate] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
 
-  // 선택한 날짜의 시간을 00:00:00로 설정하고 9시간 더하는 함수
+  // 날짜와 시간을 서버 형식에 맞게 변환하는 함수
+  const formatDateTimeForServer = (date) => {
+    const yyyy = date.getFullYear();
+    const MM = String(date.getMonth() + 1).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
+    const HH = String(date.getHours()).padStart(2, "0");
+    const mm = String(date.getMinutes()).padStart(2, "0");
+    const ss = String(date.getSeconds()).padStart(2, "0");
+
+    return `${yyyy}-${MM}-${dd}T${HH}:${mm}:${ss}`;
+  };
+
+  // 시작 날짜 변경 시 호출되는 함수
   const handleStartDateChange = (date) => {
     const start = new Date(date);
-    start.setHours(0, 0, 0, 0); // 선택한 날짜의 자정으로 설정
-    start.setTime(start.getTime() + 9 * 60 * 60 * 1000); // 9시간 더하기
+    start.setHours(0, 0, 0, 0); // 자정으로 설정
     setStartDate(start);
   };
 
-  // 선택한 날짜의 시간을 23:59:59로 설정하고 9시간 더하는 함수
+  // 종료 날짜 변경 시 호출되는 함수
   const handleEndDateChange = (date) => {
     const end = new Date(date);
-    end.setHours(23, 59, 59, 999); // 선택한 날짜의 23:59:59로 설정
-    end.setTime(end.getTime() + 9 * 60 * 60 * 1000); // 9시간 더하기
+    end.setHours(23, 59, 59, 999); // 하루의 끝으로 설정
     setEndDate(end);
   };
 
+  // 엔터 키 입력 시 호출되는 함수
   const handleKeyDown = async (event) => {
     if (event.key === "Enter" && inputText.trim() && startDate && endDate) {
       try {
         let response;
 
+        const formattedStartTime = formatDateTimeForServer(startDate);
+        const formattedEndTime = formatDateTimeForServer(endDate);
+
         if (selectedFile) {
           response = await FamilyChatbot(
             inputText,
-            startDate.toISOString(), // UTC 시간으로 변환
-            endDate.toISOString(), // UTC 시간으로 변환
+            formattedStartTime,
+            formattedEndTime,
             selectedFile
           );
         } else {
           response = await NoticeChatbot(
             inputText,
-            startDate.toISOString(), // UTC 시간으로 변환
-            endDate.toISOString() // UTC 시간으로 변환
+            formattedStartTime,
+            formattedEndTime
           );
         }
 
@@ -64,6 +78,7 @@ const ChatbotStudyModal = ({ openModal }) => {
     }
   };
 
+  // 파일 선택 시 호출되는 함수
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {

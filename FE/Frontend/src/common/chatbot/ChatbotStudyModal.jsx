@@ -5,7 +5,7 @@ import styles from "./ChatbotModal.module.scss";
 import book from "../../assets/bookblue.png";
 import chat from "../../assets/chat.png";
 import upload from "../../assets/upload.png";
-import { NoticeChatbot } from "../../apis/stub/78-80 챗봇/apiTeacherChatBot"; // 경로에 맞게 수정하세요
+import { NoticeChatbot } from "../../apis/stub/78-80 챗봇/apiTeacherChatBot";
 import { FamilyChatbot } from "../../apis/stub/78-80 챗봇/apiTeacherFamilyChatBot";
 
 const ChatbotStudyModal = ({ openModal }) => {
@@ -15,19 +15,20 @@ const ChatbotStudyModal = ({ openModal }) => {
   const [endDate, setEndDate] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
 
-  // 한국 시간으로 변환하고, 포맷을 yyyy-MM-ddTHH:mm:ss로 변환하는 함수
-  const formatDateToKST = (date) => {
-    const kstOffset = 9 * 60; // 한국 표준시는 UTC+9
-    const kstDate = new Date(date.getTime() + kstOffset * 60 * 1000);
+  // 선택한 날짜의 시간을 00:00:00로 설정하고 9시간 더하는 함수
+  const handleStartDateChange = (date) => {
+    const start = new Date(date);
+    start.setHours(0, 0, 0, 0); // 선택한 날짜의 자정으로 설정
+    start.setTime(start.getTime() + 9 * 60 * 60 * 1000); // 9시간 더하기
+    setStartDate(start);
+  };
 
-    const yyyy = kstDate.getFullYear();
-    const MM = String(kstDate.getMonth() + 1).padStart(2, "0");
-    const dd = String(kstDate.getDate()).padStart(2, "0");
-    const HH = String(kstDate.getHours()).padStart(2, "0");
-    const mm = String(kstDate.getMinutes()).padStart(2, "0");
-    const ss = String(kstDate.getSeconds()).padStart(2, "0");
-
-    return `${yyyy}-${MM}-${dd}T${HH}:${mm}:${ss}`;
+  // 선택한 날짜의 시간을 23:59:59로 설정하고 9시간 더하는 함수
+  const handleEndDateChange = (date) => {
+    const end = new Date(date);
+    end.setHours(23, 59, 59, 999); // 선택한 날짜의 23:59:59로 설정
+    end.setTime(end.getTime() + 9 * 60 * 60 * 1000); // 9시간 더하기
+    setEndDate(end);
   };
 
   const handleKeyDown = async (event) => {
@@ -36,19 +37,17 @@ const ChatbotStudyModal = ({ openModal }) => {
         let response;
 
         if (selectedFile) {
-          // 파일이 선택된 경우
           response = await FamilyChatbot(
             inputText,
-            formatDateToKST(startDate),
-            formatDateToKST(endDate),
+            startDate.toISOString(), // UTC 시간으로 변환
+            endDate.toISOString(), // UTC 시간으로 변환
             selectedFile
           );
         } else {
-          // 파일이 선택되지 않은 경우
           response = await NoticeChatbot(
             inputText,
-            formatDateToKST(startDate),
-            formatDateToKST(endDate)
+            startDate.toISOString(), // UTC 시간으로 변환
+            endDate.toISOString() // UTC 시간으로 변환
           );
         }
 
@@ -66,7 +65,11 @@ const ChatbotStudyModal = ({ openModal }) => {
   };
 
   const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      setInputText((prevText) => `${prevText} [파일: ${file.name}]`); // inputText에 파일 이름 추가
+    }
   };
 
   return (
@@ -87,24 +90,21 @@ const ChatbotStudyModal = ({ openModal }) => {
           <div className={styles.datePickerContainer}>
             <DatePicker
               selected={startDate}
-              onChange={(date) => setStartDate(date)}
-              selectsStart
-              startDate={startDate}
-              endDate={endDate}
-              dateFormat="yyyy/MM/dd" // 날짜 형식 지정
+              onChange={handleStartDateChange}
+              dateFormat="yyyy/MM/dd"
               placeholderText="시작 날짜"
-              className={styles.startDatePicker} // 시작 날짜 선택기
+              className={styles.startDatePicker}
             />
             <DatePicker
               selected={endDate}
-              onChange={(date) => setEndDate(date)}
+              onChange={handleEndDateChange}
               selectsEnd
               startDate={startDate}
               endDate={endDate}
               minDate={startDate}
-              dateFormat="yyyy/MM/dd" // 날짜 형식 지정
+              dateFormat="yyyy/MM/dd"
               placeholderText="끝나는 날짜"
-              className={styles.endDatePicker} // 끝나는 날짜 선택기
+              className={styles.endDatePicker}
             />
           </div>
         </div>

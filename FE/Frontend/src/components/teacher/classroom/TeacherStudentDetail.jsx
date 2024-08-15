@@ -60,6 +60,7 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
       setError(null);
 
       const detail = await fetchConsultDetail(consultId);
+      console.log(detail); // detail에 담긴 내용을 콘솔에 출력
 
       const summaryData = {
         topic: topicTranslationMap[detail.topic] || "없음",
@@ -68,6 +69,7 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
         keyPoint: detail.keyPoint || "없음",
         parentConcern: detail.parentConcern || "없음",
         teacherRecommendation: detail.teacherRecommendation || "없음",
+        videoUrl: detail.videoUrl || "없음",
       };
 
       setConsultDetail(summaryData);
@@ -104,35 +106,6 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
     const month = date.getMonth() + 1;
     const day = date.getDate();
     return `${month}월 ${day}일`;
-  };
-
-  const formatKeyPoint = (text) => {
-    let spaceCount = 0;
-    let formattedText = [];
-    let tempText = "";
-
-    for (let i = 0; i < text.length; i++) {
-      if (text[i] === " ") {
-        spaceCount++;
-      }
-
-      tempText += text[i];
-
-      if (spaceCount === 5) {
-        console.log("5개의 공백 발견!"); // 공백 5개 발견 시 로그 출력
-        formattedText.push(tempText);
-        formattedText.push(<br key={i} />);
-        tempText = "";
-        spaceCount = 0;
-      }
-    }
-
-    // 마지막으로 남은 텍스트가 있다면 추가
-    if (tempText) {
-      formattedText.push(tempText);
-    }
-
-    return formattedText;
   };
 
   const Modal = ({ message, onClose }) => {
@@ -187,9 +160,25 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
               </div>
             </div>
             <div className={styles.summaryValue}>
-              <div className={styles.summaryKeypoint}>
-                {formatKeyPoint(detail.keyPoint)}
-              </div>
+              <div className={styles.summaryKeypoint}>{detail.keyPoint}</div>
+            </div>
+          </div>
+          <div className={styles.summaryRow}>
+            <div className={styles.summaryLabel}>
+              <strong>상담 파일</strong>
+            </div>
+            <div className={styles.summaryValue}>
+              {detail.videoUrl !== "없음" ? (
+                <a
+                  href={detail.videoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  파일 링크
+                </a>
+              ) : (
+                "없음"
+              )}
             </div>
           </div>
           <div className={styles.summaryButton}>

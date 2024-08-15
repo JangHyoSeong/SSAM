@@ -9,6 +9,7 @@ import com.ssafy.ssam.domain.classroom.entity.Question;
 import com.ssafy.ssam.domain.classroom.repository.QuestionRepository;
 import com.ssafy.ssam.domain.user.dto.request.AlarmCreateRequestDto;
 import com.ssafy.ssam.domain.user.entity.AlarmType;
+import com.ssafy.ssam.domain.user.entity.UserBoardRelation;
 import com.ssafy.ssam.domain.user.entity.UserBoardRelationStatus;
 import com.ssafy.ssam.domain.user.repository.UserBoardRelationRepository;
 import com.ssafy.ssam.domain.user.service.AlarmService;
@@ -48,9 +49,30 @@ public class QuestionService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails details = (CustomUserDetails) authentication.getPrincipal();
 
-        User user = details.getUserId();
+        User user = userRepository.findByUserId(details.getUserId())
+                .orElseThrow(() -> new CustomException(ErrorCode.UserNotFoundException));
+
+        Board board = null;
+        List<UserBoardRelation> relations;
+
+        if(user.getRole() == UserRole.TEACHER){
+            relations = userBoardRelationRepository.findByUserAndStatus(user, UserBoardRelationStatus.OWNER);
+        }
+        else {
+            relations = userBoardRelationRepository.findByUserAndStatus(user, UserBoardRelationStatus.ACCEPTED);
+        }
+
+        for (UserBoardRelation relation : relations) {
+            if(relation.getBoard().getIsDeprecated() == 0) {
+                board  = relation.getBoard();
+            }
+        }
+        if (board == null) {
+            throw new CustomException(ErrorCode.BoardNotFoundException);
+        }
+
         // 사용자가 학급에 접근할 수 있는 권한이 있는지 검증
-        if(!details.getBoardId().equals(boardId)) throw new CustomException(ErrorCode.IllegalArgument);
+        if(!board.getBoardId().equals(boardId)) throw new CustomException(ErrorCode.IllegalArgument);
 
         List<QuestionResponseDto> list = new ArrayList<>();
         List<Question> questions = questionRepository.findByBoard_BoardId(boardId).orElse(new ArrayList<>());

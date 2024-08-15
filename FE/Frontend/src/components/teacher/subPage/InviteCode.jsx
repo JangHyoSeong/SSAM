@@ -62,7 +62,7 @@ const InviteCode = () => {
   const navigate = useNavigate(); // useNavigate 훅을 사용해 navigate 정의
 
   const handleConsultationStart = () => {
-    navigate(`/entry/${consultAccessCode}`);
+    navigate(`/video/${consultAccessCode}`);
   };
 
   // 사용자 프로필 정보를 불러오는 훅

@@ -32,7 +32,6 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
         setStudent(studentDetail);
 
         const consultResponse = await fetchTeacherConsult();
-
         const matchedConsults = consultResponse
           .filter(
             (consult) =>
@@ -41,7 +40,7 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
           )
           .map((consult) => ({
             ...consult,
-            topic: topicTranslationMap[consult.topic] || "없음",
+            topic: topicTranslationMap[consult.topic] || "없음", // 이 부분에서 topicTranslationMap을 참조
           }))
           .sort((a, b) => new Date(b.startTime) - new Date(a.startTime));
 
@@ -59,9 +58,13 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
       setIsLoading(true);
       setError(null);
 
-      const detail = await fetchConsultDetail(consultId);
-      console.log(detail); // detail에 담긴 내용을 콘솔에 출력
+      console.log("Fetching consult detail for ID:", consultId); // 요청 전 로그 출력
 
+      const detail = await fetchConsultDetail(consultId);
+
+      console.log("Consult detail fetched:", detail); // 요청 성공 시 로그 출력
+
+      // summaryData 처리
       const summaryData = {
         topic: topicTranslationMap[detail.topic] || "없음",
         profanityCount: detail.profanityCount || "없음",
@@ -75,7 +78,12 @@ const TeacherStudentDetail = ({ studentId, onBack }) => {
       setConsultDetail(summaryData);
       setIsSummaryModalOpen(true); // 요약 모달을 열기
     } catch (error) {
-      console.error("상담 상세 정보를 불러오는 데 실패했습니다.", error);
+      console.error(
+        "상담 상세 정보를 불러오는 데 실패했습니다. 에러 메시지:",
+        error.message
+      );
+      console.error("에러 전체 내용:", error); // 에러 전체 로그 출력
+
       setError(
         <div className={styles.errorModal}>
           <div className={styles.errorMessage}>

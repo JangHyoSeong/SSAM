@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faSave } from "@fortawesome/free-solid-svg-icons";
 import styles from "./TeacherClassroom.module.scss";
-import ClassImage from "../../../assets/background.png";
+import ClassImage from "../../../assets/resized.png";
 import whiteshare from "../../../assets/whiteshare.png";
 import TeacherStudent from "./TeacherStudent";
 import TeacherStudentDetail from "./TeacherStudentDetail";

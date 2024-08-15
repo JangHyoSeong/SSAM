@@ -355,7 +355,7 @@ const VideoChatComponent = () => {
           }
 
           // 두 개 이상의 연속된 공격적 메시지가 감지되면
-          if (consecutiveOffensiveCount >= 2) {
+          if (consecutiveOffensiveCount >= 1) {
             setProfanityDetected(true);
             // 1초 후에 빨간 박스를 제거합니다.
             setTimeout(() => setProfanityDetected(false), 1000);

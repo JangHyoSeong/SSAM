@@ -31,13 +31,22 @@ SSAM에서 제공하는 주요 기능은 다음과 같습니다.
 |                                                               React                                                               |                                      vite                                       |                                                                      node.js                                                                       |
 
 #### Library & Skills
+<div align="center">
+
 | <img src="https://repository-images.githubusercontent.com/180328715/fca49300-e7f1-11ea-9f51-cfd949b31560" alt="zustand" height="50px" /> | <img src="https://openvidu.io/assets/images/openvidu_globe_bg_transp_cropped.png" alt="openVidu" height="50px" /> | <img src="https://raw.githubusercontent.com/JamesBrill/react-speech-recognition/HEAD/docs/logos/speechly.png" alt="vite" height="50px" /> | <img src="https://avatars.githubusercontent.com/u/13825204?s=200&v=4" alt="fullcaldner" height="50px" /> |
 |:----------------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------:|
 |                                                                 zustand                                                                  |                                                     openVidu                                                      |                                                         react speech recognition                                                          |                                               fullcalender                                               |
 
+</div>
+
+
+<div align="center">
+
 | <img src="https://sweetalert2.github.io/images/favicon.png" alt="sweetalert" width="50px" height="50px" /> | <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Socket-io.svg" alt="socketio" height="50px" /> | <img src="https://velog.velcdn.com/images/lsx2003/post/ce6452ce-5ad9-4810-b9dd-bbe1a3b792c1/image.png" alt="Styled-Component" height="50px" /> | <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Axios_logo_%282020%29.svg/2560px-Axios_logo_%282020%29.svg.png" alt="" height="50px" /> |
 |:----------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------:|
 |                                                 sweetalert                                                 |                                                  Socket.io                                                   |                                                                Styled-Component                                                                |                                                                            Axios                                                                            |
+
+</div>
 
 ### **Back-end**
 

@@ -202,17 +202,17 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
     </td>
     <td align="center" width="120px">
       <a href="" target="_blank">
-        <img src="/uploads/b4f10fce8acfb043f1ad002dbe872853/권혜경프사.jpg" alt="장효승프로필" />
+        <img src="/uploads/b4f10fce8acfb043f1ad002dbe872853/권혜경프사.jpg" alt="권혜경프로필" />
       </a>
     </td>
     <td align="center" width="120px">
       <a href="" target="_blank">
-        <img src="/uploads/a3f83540b8133a20ad8285fc2fcd4bbe/장효승프사.jpg" alt="권혜경프로필" />
+        <img src="/uploads/a3f83540b8133a20ad8285fc2fcd4bbe/장효승프사.jpg" alt="장효승프로필" />
       </a>
     </td>
     <td align="center" width="120px">
       <a href="" target="_blank">
-        <img src="" alt="정종화프로필" />
+        <img src="/uploads/76ab10ce95396142b1b9192d82f4a553/정종화프사.jfif" alt="정종화프로필" />
       </a>
     </td>
   </tr>
@@ -263,5 +263,3 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
 ## ⚙️ System Architecture
 
 <img src="/uploads/b04d6f3efb374f1a2e6dd8cdcead7cd4/시스템_아키텍처_최x7종.png" width="1000px" alt="시스템 아키텍처 이미지">
-
-## 🏆 Ground Rules

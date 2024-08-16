@@ -187,7 +187,7 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
   <tr>
     <td align="center" width="120px">
       <a href="" target="_blank">
-        <img src="/uploads/50255d3d973d08a801287308ffd7cddc/김동현프사.jpg" alt="프로필" />
+        <img src="/uploads/74abb6f9e90d9f7a477d2977593dc648/image.png" alt="프로필" />
       </a>
     </td>
     <td align="center" width="120px">

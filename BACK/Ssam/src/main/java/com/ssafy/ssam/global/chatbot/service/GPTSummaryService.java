@@ -47,6 +47,7 @@ public class GPTSummaryService {
 
         GPTResponse chatGPTResponse = restTemplate.postForObject(apiUrl, request, GPTResponse.class);
 
+        System.out.println(chatGPTResponse.getChoices().get(0).getMessage().getContent());
         return jsonToSummaryRequest(chatGPTResponse.getChoices().get(0).getMessage().getContent());
     }
     public SummaryRequestDto jsonToSummaryRequest(String gptAnswer) {
@@ -56,18 +57,19 @@ public class GPTSummaryService {
                 gptAnswer = gptAnswer.substring(8, gptAnswer.length() - 3);
             }
             JsonNode jsonNode = objectMapper.readTree(gptAnswer);
-//            log.info("{}" , jsonNode.get("요약").asText());
-//            log.info("{}" , jsonNode.get("부모 우려").asText());
-//            log.info("{}" , jsonNode.get("교사 추천").asText());
-//            log.info("{}" , jsonNode.get("욕설 횟수").asText());
-//            log.info("{}" , jsonNode.get("욕설 수준").asText());
+        //     log.info(jsonNode.toString());
+        //    log.info("{}" , jsonNode.get("요약").asText());
+        //    log.info("{}" , jsonNode.get("부모 우려").asText());
+        //    log.info("{}" , jsonNode.get("교사 추천").asText());
+        //    log.info("{}" , jsonNode.get("욕설 횟수").asText());
+        //    log.info("{}" , jsonNode.get("욕설 수준").asText());
 
             return SummaryRequestDto.builder()
                     .keyPoint(jsonNode.get("요약").asText())
                     .parentConcern(jsonNode.get("부모 우려").asText())
                     .teacherRecommendation(jsonNode.get("교사 추천").asText())
-                    .profanityLevel(jsonNode.get("욕설 횟수").asText())
-                    .profanityCount(Integer.parseInt(jsonNode.get("욕설 수준").asText()))
+                    .profanityLevel(jsonNode.get("욕설 수준").asText())
+                    .profanityCount(Integer.parseInt(jsonNode.get("욕설 횟수").asText()))
                     .build();
 
         } catch (JsonProcessingException e) {

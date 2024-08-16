@@ -40,11 +40,11 @@ public class util {
                         "divide by etc\n" +
                         "The results are more than 150 characters in Korean. At this time, if there are multiple contents in one result value, it is not a list, so don't use '[', ']', only availble a \",\" and provides one result.\n" +
                         "And json types\n" +
-                        "요약 :  A one-line summary of the entire conversation\n" +
-                        "부모 우려: \n" +
-                        "교사 추천: \n" +
-                        "후속 예약날짜: yyyymmdd, If there is no follow-up reservation date, blank\n" +
-                        "욕설 횟수: count number\n" +
-                        "욕설 수준: Total level just Integer";
+                        "'요약' : 'A one-line summary of the entire conversation'\n" +
+                        "'부모 우려' : ''\n" +
+                        "'교사 추천' : ''\n" +
+                        "'후속 예약날짜' : 'yyyymmdd, If there is no follow-up reservation date, blank\n'" +
+                        "'욕설 횟수' : 'count number'\n" +
+                        "'욕설 수준' : 'Total level just Integer'";
     }
 }

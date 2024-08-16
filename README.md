@@ -228,7 +228,9 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
       </a>
     </td> 
      <td align="center">
-      <a href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_1goS1RNjIhxMIQ3Dr8xPdxWnVUB2vUls2w&s" target="_blank">
+    <a href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_1goS1RNjIhxMIQ3Dr8xPdxWnVUB2vUls2w&s" target="_blank">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_1goS1RNjIhxMIQ3Dr8xPdxWnVUB2vUls2w&s" alt="정유진 프로필" width="120px" />
+    </a>
        정유진
       </a>
        <td align="center">
@@ -257,7 +259,7 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
 | 장효승 |    Back-end     | **BE** <br> - 학급 및 학급 관리 CRUD 구현 <br> - amazonS3 bucket 저장소 연결 <br> - OAuth2 구글 소셜 로그인 구현                                                                                                                                                                                                                                                                            |
 | 김동현 |    Front-end    | **FE** <br> - 메인 디자인 설계 <br> - 화면 구성 및 설계 <br> - 화상 상담 로직 및 화면 구성                                                                                                                                                                                                                                                                                                  |
 | 박범준 |    Front-end    | **FE** <br> - 학생 페이지 로직 작성 및 화면 설계                                                                                                                                                                                                                                                                                                                                            |
-| 정유진 |    Front-end    | **FE** <br> - 선생님 페이지 로직 작성 및 화면 <br> - 학급 정보 디자인 및 API 연결 <br> 문의사항, 상담 목록 디자인 <br> - 유저 프로필 수정, 학생 정보, 상 담이력 API 연결 설계                                                                                                                                                                                                               |
+| 정유진 |    Front-end    | **FE** <br> - 선생님 페이지 로직 작성 및 화면 <br> - 학급 정보 디자인 및 API 연결 <br> 문의사항, 상담 목록 디자인 <br> - 유저 프로필 수정, 학생 정보, 상담이력 API 연결 설계                                                                                                                                                                                                                |
 
 ## ⚙️ System Architecture
 

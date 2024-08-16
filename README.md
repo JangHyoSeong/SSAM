@@ -229,7 +229,7 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
     </td> 
      <td align="center">
     <a href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_1goS1RNjIhxMIQ3Dr8xPdxWnVUB2vUls2w&s" target="_blank">
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_1goS1RNjIhxMIQ3Dr8xPdxWnVUB2vUls2w&s" alt="정유진 프로필" width="120px" />
+      <img src="/uploads/6a5a520b37434ae87ac0db32cec6eeac/hamo.jfif" alt="정유진 프로필" width="120px" />
     </a>
        정유진
       </a>

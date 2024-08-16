@@ -11,7 +11,7 @@
 ## 🗨️ About SSAM
 
 SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입니다.<br>
-끊임없는 학부모의 연락과 폭언으로부터 교사들을 보호하기 위해 기획된 이 서비스는 교사의 업무를 지원하고 스트레스를 줄이기 위한 다양한 기능을 제공합니다. SSAM의 주요 기능은 다음과 같습니다:
+끊임없는 학부모의 연락과 폭언으로부터 교사들을 보호하기 위해 기획된 이 서비스는 교사의 업무를 지원하고 스트레스를 줄이기 위한 다양한 기능을 제공합니다. SSAM의 주요 기능은 다음과 같습니다:<br>
 
 1. 학급 및 학생 관리
 2. 화상 상담과 실시간 욕설 필터링
@@ -187,12 +187,12 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
   <tr>
     <td align="center" width="120px">
       <a href="" target="_blank">
-        <img src="" alt="프로필" />
+        <img src="/uploads/50255d3d973d08a801287308ffd7cddc/김동현프사.jpg" alt="프로필" />
       </a>
     </td>
     <td align="center" width="120px">
       <a href="" target="_blank">
-        <img src="" alt="프로필" />
+        <img src="/uploads/824c95e953a69e80c1af54348774e5ee/박범준프사.png" alt="프로필" />
       </a>
     </td>
     <td align="center" width="120px">
@@ -202,17 +202,17 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
     </td>
     <td align="center" width="120px">
       <a href="" target="_blank">
-        <img src="" alt="프로필" />
+        <img src="/uploads/b4f10fce8acfb043f1ad002dbe872853/권혜경프사.jpg" alt="장효승프로필" />
       </a>
     </td>
     <td align="center" width="120px">
       <a href="" target="_blank">
-        <img src="" alt="프로필" />
+        <img src="/uploads/a3f83540b8133a20ad8285fc2fcd4bbe/장효승프사.jpg" alt="권혜경프로필" />
       </a>
     </td>
     <td align="center" width="120px">
       <a href="" target="_blank">
-        <img src="" alt="프로필" />
+        <img src="" alt="정종화프로필" />
       </a>
     </td>
   </tr>
@@ -254,9 +254,9 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
 |  이름  |      역할       | <div align="center">개발 내용</div>                                                                                                                                                                                                                                                                                                                                                         |
 | :----: | :-------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | 정종화 | Infra<br />팀장 | **Infra**<br>- CI/CD 환경 구축 및 서버 설계 <br> - openVidu를 통한 WebRTC 세션 관리 체계 구축 <br> - Jenkins와 nginX, Docker를 사용하여 프로젝트 배포 <br> **BE** <br> - Flask 서버 구축 및 STT 환경 세팅 <br> - 공격성 언어 감지 로직 구현 <br> - openVidu 녹음 및 세션관리 기능 <br> **FE** <br> - openVidu WebRTC 접속 <br> - react-speech-recognition 라이브러리를 통한 실시간 STT 구현 |
-| 권혜경 |    Back-end     | **BE** <br> - Spring Security 및 jwt 구현 <br> - 상담 관리 및 상담 기능 구현 <br> - 알림 기능 구현 <br> - chatGPT를 통한 챗봇, 상담요약 기능 구현 <br> - 문의사항 작성, 답변 작성 CRUD 구현                                                                                                                                                                                                 |
-| 장효승 |    Back-end     | **BE** <br> - 학급 및 학급 관리 CRUD 구현 <br> - amazonS3 bucket 저장소 연결 <br> - OAuth2 구글 소셜 로그인 구현                                                                                                                                                                                                                                                                            |
-| 김동현 |    Front-end    | **FE** <br> - 발표 <br> - 메인 디자인 설계 <br> - 화면 구성 및 설계 <br> - 화상 상담 로직 및 화면 구성                                                                                                                                                                                                                                                                                                 |
+| 권혜경 |    Back-end     | **BE** <br> - Spring Security 및 jwt 구현 <br> - 상담 관리 및 상담 기능 구현 <br> - 유저 알림 기능 구현 <br> - AI를 통한 챗봇, 상담 요약 기능 구현 <br> - 학급 문의사항, 답변 기능 구현 <br> - API 엔드포인트 설계                                                                                                                                                                                                |
+| 장효승 |    Back-end     | **BE** <br> - 학급 등록, 생성 시스템 설계 및 제작 <br> - 학생 관리, 기록 열람 기능 구현 <br> - amazonS3 bucket 저장소 연결 <br> - OAuth2 구글 소셜 로그인 구현                                                                                                                                                                                                                                                                            |
+| 김동현 |    Front-end    | **FE** <br> - 메인 디자인 설계 <br> - 화면 구성 및 설계 <br> - 화상 상담 로직 및 화면 구성                                                                                                                                                                                                                                                                                                  |
 | 박범준 |    Front-end    | **FE** <br> - 학생 페이지 로직 작성 및 화면 설계                                                                                                                                                                                                                                                                                                                                            |
 | 정유진 |    Front-end    | **FE** <br> - 선생님 페이지 로직 작성 및 화면 <br> - 학급 정보 디자인 및 API 연결 <br> 문의사항, 상담 목록 디자인 <br> - 유저 프로필 수정, 학생 정보, 상담이력 API 연결 설계                                                                                                                                                                                                                |
 

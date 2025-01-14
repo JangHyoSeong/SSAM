@@ -4,7 +4,7 @@
 
 ### 👩‍🏫교권 보호를 위한 학생 상담 시스템
 
-<img src="/uploads/cf6354a7a7f22498650fa4c52c7216ce/메인로고.png" alt="메인로고" width="700px">
+![image](https://github.com/user-attachments/assets/04dbdf6e-1194-428a-a577-6507eb89288a)
 
 </div>
 
@@ -105,7 +105,7 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
 </tr>
 <tr>
 <td align="center">
-      <img src='/uploads/b299e903a43ceedff6baa5a5e5e7b0e3/메인페이지.gif' alt='메인 페이지 이미지' width="400px">
+      ![메인페이지](https://github.com/user-attachments/assets/cf33354f-daa6-4752-b547-9d9d707bebfc)
     </td>
 </tr>
 </table>
@@ -116,7 +116,7 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
 
 |                                                 학급 생성                                                 |
 | :-------------------------------------------------------------------------------------------------------: |
-| <img src="/uploads/bae2bf5253687a59842a54e1d61985c9/선생님_학급입장.gif" alt="학급 생성" width="600px" /> |
+| ![학급생성](https://github.com/user-attachments/assets/8157c1ef-35d4-4b05-b4a7-eaeb2b6b508d) |
 
 ---
 
@@ -125,9 +125,9 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
 |                                                    교사                                                     |                                                      학생                                                      |
 | :---------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------: |
 |                                            <b>학급 등록 수락</b>                                            |                                                <b>학급 등록</b>                                                |
-| <img src="/uploads/39a54868f034747e689c530dc1249d4a/학급등록수락.gif" alt="학급 등록 수락" width="400px" /> |    <img src="/uploads/c76e66648ba31c143bee8ade120510e8/학생_-_학급_입장.gif" alt="학급 등록" width="400px">    |
+| ![학급등록수락](https://github.com/user-attachments/assets/ae85a22e-a666-433e-bad8-5fb6b432f8ca) |    ![학급등록](https://github.com/user-attachments/assets/4faa4c98-d10c-4897-a8a3-1afe3e3a4fe7)    |
 |                                            <b>문의 사항 답변</b>                                            |                                             <b>문의 사항 작성</b>                                              |
-|  <img src="/uploads/773b2d6cd0cf51c44620ed518c23d9fd/질문_답변.gif" alt="문의 사항 답변" width="400px" />   | <img src="/uploads/24c0e923e426d67e739b04a925ea387d/학부모_문의사항.gif" alt="문의 사항 작성" width="400px" /> |
+|  ![문의사항답변](https://github.com/user-attachments/assets/83e265d6-27c7-433f-92b9-2e2db3b1cf21)   | ![문의사항작성](https://github.com/user-attachments/assets/36a0d235-066f-41a5-91a9-e071791cfd63) |
 
 ---
 
@@ -136,15 +136,15 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
 |                                               교사                                                |                                               학생                                                |
 | :-----------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------: |
 |                                         <b>상담 수락 </b>                                         |                                         <b>상담 신청</b>                                          |
-| <img src="/uploads/3a01345404b2ae0c2fe3636114fcafce/상담신청.gif" alt="상담 수락" width="400px"/> | <img src="/uploads/3a01345404b2ae0c2fe3636114fcafce/상담신청.gif" alt="상담 신청" width="400px"/> |
+| ![상담수락](https://github.com/user-attachments/assets/51eec18f-86ac-416e-bceb-c87b11b8aeab) | ![상담신청](https://github.com/user-attachments/assets/16e7b85a-71f1-4ed4-bc7f-f5b5fe7d2ca3) |
 
 |                                               상담 일정 확인                                                |                                                 상담 거부 날짜 설정                                                 |
 | :---------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------: |
-| <img src="/uploads/237fc243682efe7f3af159a68f69e237/상담목록확인.gif" alt="상담 일정 확인" width="400px" /> | <img src="/uploads/4d7006ab43a21b5cb939c2b7892c80c3/선생님_상담신청.gif" alt="상담 거부 날짜 설정" width="400px" /> |
+| ![상담일정확인](https://github.com/user-attachments/assets/01a5925d-86b5-49f1-a4aa-92e5705b6e42) | ![상담거부날짜설정](https://github.com/user-attachments/assets/b9cf3ca8-8ea8-4460-9086-250e3e746c6d) |
 
 |                                              상담 입장                                              |
 | :-------------------------------------------------------------------------------------------------: |
-| <img src="/uploads/b4c82fc034f3208a140e54796b9e3810/상담_입장.gif" alt="상담 입장" width="600px" /> |
+| ![상담입장](https://github.com/user-attachments/assets/140951ed-8441-4307-a3fa-22fc6c82b31f) |
 
 ---
 
@@ -152,13 +152,13 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
 
 |                                                 상담 화면                                                  |
 | :--------------------------------------------------------------------------------------------------------: |
-| <img src="/uploads/55d98cd509ef06dda0f7f717740f5a33/화상상담_-_2배속.gif" alt="상담 화면" width="600px" /> |
+| ![상담화면 (1)](https://github.com/user-attachments/assets/235832d6-c185-4f75-b211-78c74a98609c) |
 
 ### 상담 요약 확인
 
 |                                             상담 요약 확인                                              |
 | :-----------------------------------------------------------------------------------------------------: |
-| <img src="/uploads/67bed84608427c9af9d56e273c99c78f/상담요약.gif" alt="상담 요약 확인" width="600px" /> |
+| ![상담요약확인](https://github.com/user-attachments/assets/c9409a9b-dda4-41a7-86e6-171bb5396a3c) |
 
 ---
 
@@ -167,7 +167,7 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
 |                                                       교사                                                       |                                                  학생                                                  |
 | :--------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------: |
 |                                               <b>공지사항 추가</b>                                               |                                            <b>챗봇 문의</b>                                            |
-| <img src="/uploads/8689c7dd0d31783e0eef5d4bc3b26266/선생님_-_gpt_학습.gif" alt="공지사항 추가" height="400px" /> | <img src="/uploads/09d25b80459233e348f74487421446a7/학부모_챗봇.gif" alt="챗봇 문의" height="400px" /> |
+| ![공지사항추가](https://github.com/user-attachments/assets/7f730192-289d-4a2d-9390-58a5a861b7be) | ![챗봇문의](https://github.com/user-attachments/assets/d4885d62-fb74-4c21-b7ce-f437a80b9ea6) |
 
 <br/>
 
@@ -187,32 +187,32 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
   <tr>
     <td align="center" width="120px">
       <a href="" target="_blank">
-        <img src="/uploads/74abb6f9e90d9f7a477d2977593dc648/image.png" alt="프로필" />
+        ![image](https://github.com/user-attachments/assets/8920d735-3076-4fb8-a2e1-7b4432605c4b)
       </a>
     </td>
     <td align="center" width="120px">
       <a href="" target="_blank">
-        <img src="/uploads/824c95e953a69e80c1af54348774e5ee/박범준프사.png" alt="프로필" />
+        ![image](https://github.com/user-attachments/assets/2dd9e955-6ff6-40b1-8b09-5a54117ebafb)
       </a>
     </td>
     <td align="center" width="120px">
       <a href="https://www.example.com" target="_blank">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_1goS1RNjIhxMIQ3Dr8xPdxWnVUB2vUls2w&s" alt="정유진 프로필" width="120px" />
+        ![image](https://github.com/user-attachments/assets/fcc7a357-1b99-4779-84c5-6a0361d3c6f7)
       </a>
     </td>
     <td align="center" width="120px">
       <a href="" target="_blank">
-        <img src="/uploads/b4f10fce8acfb043f1ad002dbe872853/권혜경프사.jpg" alt="권혜경프로필" />
+        ![image](https://github.com/user-attachments/assets/7dec5164-9088-4e56-ace3-f41b3b1908c9)
       </a>
     </td>
     <td align="center" width="120px">
       <a href="" target="_blank">
-        <img src="/uploads/a3f83540b8133a20ad8285fc2fcd4bbe/장효승프사.jpg" alt="장효승프로필" />
+        ![image](https://github.com/user-attachments/assets/5ef9762c-0e3c-49ca-88e9-d12e8f2759c7)
       </a>
     </td>
     <td align="center" width="120px">
       <a href="" target="_blank">
-        <img src="/uploads/76ab10ce95396142b1b9192d82f4a553/정종화프사.jfif" alt="정종화프로필" />
+        ![image](https://github.com/user-attachments/assets/0e1fbf26-6129-4a7e-8b65-84c6e9002bc5)
       </a>
     </td>
   </tr>
@@ -262,4 +262,4 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
 
 ## ⚙️ System Architecture
 
-<img src="/uploads/b04d6f3efb374f1a2e6dd8cdcead7cd4/시스템_아키텍처_최x7종.png" width="1000px" alt="시스템 아키텍처 이미지">
+![image](https://github.com/user-attachments/assets/f307bd50-75e4-42e9-a3b9-5ce6a96189d6)

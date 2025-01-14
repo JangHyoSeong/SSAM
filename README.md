@@ -97,18 +97,9 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
 
 ## 🖥️ Service
 
-<table>
-<tr >
-<td align="center">
-메인 페이지
-</td>
-</tr>
-<tr>
-<td align="center">
-      ![메인페이지](https://github.com/user-attachments/assets/cf33354f-daa6-4752-b547-9d9d707bebfc)
-    </td>
-</tr>
-</table>
+| 메인 페이지       |
+|-------------------|
+| ![메인페이지](https://github.com/user-attachments/assets/cf33354f-daa6-4752-b547-9d9d707bebfc) |
 
 ---
 
@@ -174,80 +165,12 @@ SSAM은 추락하는 교권을 보호하기 위해 개발된 상담 시스템입
 ### 학생 기능
 
 ## 👻 Member
+| 프론트엔드            | 프론트엔드            | 프론트엔드            | 백엔드               | 백엔드               | 인프라, 팀장          |
+|-----------------------|-----------------------|-----------------------|----------------------|----------------------|-----------------------|
+| <img src="https://github.com/user-attachments/assets/8920d735-3076-4fb8-a2e1-7b4432605c4b" width="120px"> | <img src="https://github.com/user-attachments/assets/2dd9e955-6ff6-40b1-8b09-5a54117ebafb" width="120px"> | <img src="https://github.com/user-attachments/assets/fcc7a357-1b99-4779-84c5-6a0361d3c6f7" width="120px"> | <img src="https://github.com/user-attachments/assets/7dec5164-9088-4e56-ace3-f41b3b1908c9" width="120px"> | <img src="https://github.com/user-attachments/assets/5ef9762c-0e3c-49ca-88e9-d12e8f2759c7" width="120px"> | <img src="https://github.com/user-attachments/assets/0e1fbf26-6129-4a7e-8b65-84c6e9002bc5" width="120px"> |
+| [김동현](#)           | [박범준](#)           | [정유진](#)           | [권혜경](#)          | [장효승](#)          | [정종화](#)           |
 
-<table>
-<tr>
-<td align="center"> 프론트엔드</td>
-<td align="center"> 프론트엔드</td>
-<td align="center"> 프론트엔드</td>
-<td align="center"> 백엔드</td>
-<td align="center"> 백엔드</td>
-<td align="center"> 인프라, 팀장</td>
-</tr>
-  <tr>
-    <td align="center" width="120px">
-      <a href="" target="_blank">
-        ![image](https://github.com/user-attachments/assets/8920d735-3076-4fb8-a2e1-7b4432605c4b)
-      </a>
-    </td>
-    <td align="center" width="120px">
-      <a href="" target="_blank">
-        ![image](https://github.com/user-attachments/assets/2dd9e955-6ff6-40b1-8b09-5a54117ebafb)
-      </a>
-    </td>
-    <td align="center" width="120px">
-      <a href="https://www.example.com" target="_blank">
-        ![image](https://github.com/user-attachments/assets/fcc7a357-1b99-4779-84c5-6a0361d3c6f7)
-      </a>
-    </td>
-    <td align="center" width="120px">
-      <a href="" target="_blank">
-        ![image](https://github.com/user-attachments/assets/7dec5164-9088-4e56-ace3-f41b3b1908c9)
-      </a>
-    </td>
-    <td align="center" width="120px">
-      <a href="" target="_blank">
-        ![image](https://github.com/user-attachments/assets/5ef9762c-0e3c-49ca-88e9-d12e8f2759c7)
-      </a>
-    </td>
-    <td align="center" width="120px">
-      <a href="" target="_blank">
-        ![image](https://github.com/user-attachments/assets/0e1fbf26-6129-4a7e-8b65-84c6e9002bc5)
-      </a>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <a href="" target="_blank">
-      김동현
-      </a>
-    </td>
-     <td align="center">
-      <a href="" target="_blank">
-       박범준
-      </a>
-    </td> 
-     <td align="center">
-    <a href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_1goS1RNjIhxMIQ3Dr8xPdxWnVUB2vUls2w&s" target="_blank">
-    </a>
-       정유진
-      </a>
-       <td align="center">
-      <a href="" target="_blank">
-        권혜경
-      </a>
-    </td>
-     <td align="center">
-      <a href="" target="_blank">
-       장효승
-      </a>
-    </td> 
-     <td align="center">
-      <a href="" target="_blank">
-       정종화
-      </a>
-  </tr>
-</table>
+
 
 ## 😎 Role
 
